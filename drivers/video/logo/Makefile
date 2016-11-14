@@ -20,6 +20,7 @@ linux_logo-$(CONFIG_LOGO_SUPERH_MONO)          += logo_superh_mono.o
 linux_logo-$(CONFIG_LOGO_SUPERH_VGA16)         += logo_superh_vga16.o
 linux_logo-$(CONFIG_LOGO_SUPERH_CLUT224)       += logo_superh_clut224.o
 linux_logo-$(CONFIG_SPU_BASE)                  += logo_spe_clut224.o
+linux_logo-$(CONFIG_LOGO_VARISCITE_CLUT224)	   += logo_variscite_clut224.o
 
 # How to generate logo's
 
