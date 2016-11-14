@@ -68,4 +68,8 @@ config LOGO_SUPERH_CLUT224
 	depends on SUPERH
 	default y
 
+config LOGO_VARISCITE_CLUT224
+	bool "224-color Variscite Linux logo"
+	default y
+
 endif # LOGO
