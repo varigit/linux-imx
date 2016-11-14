@@ -100,6 +100,10 @@ const struct linux_logo * __ref fb_find_logo(int depth)
 		/* SuperH Linux logo */
 		logo = &logo_superh_clut224;
 #endif
+#ifdef CONFIG_LOGO_VARISCITE_CLUT224
+		/* Variscite Linux logo */
+		logo = &logo_variscite_clut224;
+#endif
 	}
 	return logo;
 }
