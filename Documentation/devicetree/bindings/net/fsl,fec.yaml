@@ -217,6 +217,10 @@ properties:
       Can be omitted thus no delay is observed. Delay is in range of 1ms to 1000ms.
       Other delays are invalid.
 
+  phy-reset-on-resume:
+    description:
+      If present, the phy will be reset upon resume from sleep.
+
 required:
   - compatible
   - reg
