@@ -22,6 +22,8 @@ Optional properties:
 - phy-reset-active-high : If present then the reset sequence using the GPIO
   specified in the "phy-reset-gpios" property is reversed (H=reset state,
   L=operation state).
+- phy-reset-on-resume : If present, the phy will be reset upon resume from
+  sleep.
 - phy-supply : regulator that powers the Ethernet PHY.
 - phy-handle : phandle to the PHY device connected to this device.
 - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
