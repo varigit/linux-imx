@@ -2332,13 +2332,13 @@ static int gpmi_nand_init(struct gpmi_nand_data *this)
 		if (of_property_read_bool(this->dev->of_node,
 						"fsl,no-blockmark-swap"))
 			this->swap_block_mark = false;
-
-		if (of_property_read_bool(this->dev->of_node,
-				"fsl,legacy-bch-geometry"))
-			this->legacy_bch_geometry = true;
 	}
 	dev_dbg(this->dev, "Blockmark swapping %sabled\n",
 		this->swap_block_mark ? "en" : "dis");
+
+	if (of_property_read_bool(this->dev->of_node,
+			"fsl,legacy-bch-geometry"))
+		this->legacy_bch_geometry = true;
 
 	ret = gpmi_init_last(this);
 	if (ret)
