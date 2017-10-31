@@ -1,0 +1,59 @@
+/*
+ * Copyright (C) 2017 Variscite, Ltd. All Rights Reserved
+ *
+ * The code contained herein is licensed under the GNU General Public
+ * License. You may obtain a copy of the GNU General Public License
+ * Version 2 or later at the following locations:
+ *
+ * http://www.opensource.org/licenses/gpl-license.html
+ * http://www.gnu.org/copyleft/gpl.html
+ */
+
+#include "imx6q-var-som.dtsi"
+#include "imx6qp.dtsi"
+
+/ {
+	model = "Variscite i.MX6 QUAD/DUAL PLUS VAR-SOM-MX6";
+};
+
+&mxcfb1 {
+	prefetch;
+};
+
+&mxcfb2 {
+	prefetch;
+};
+
+&mxcfb3 {
+	prefetch;
+};
+
+&mxcfb4 {
+	prefetch;
+};
+
+&pre1 {
+	status = "okay";
+};
+
+&pre2 {
+	status = "okay";
+};
+
+&pre3 {
+	status = "okay";
+};
+
+&pre4 {
+	status = "okay";
+};
+
+&prg1 {
+	memory-region = <&memory>;
+	status = "okay";
+};
+
+&prg2 {
+	memory-region = <&memory>;
+	status = "okay";
+};

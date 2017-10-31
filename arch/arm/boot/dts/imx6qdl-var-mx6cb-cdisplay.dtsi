@@ -1,0 +1,75 @@
+/*
+ * Copyright (C) 2016 Variscite, Ltd. All Rights Reserved
+ *
+ * Copyright 2012 Freescale Semiconductor, Inc.
+ * Copyright 2011 Linaro Ltd.
+ *
+ * The code contained herein is licensed under the GNU General Public
+ * License. You may obtain a copy of the GNU General Public License
+ * Version 2 or later at the following locations:
+ *
+ * http://www.opensource.org/licenses/gpl-license.html
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ * Capacitive Display for VAR-MX6CustomBoard
+ */
+&mxcfb1 {
+	interface_pix_fmt = "RGB24";
+};
+
+&i2c3 {
+	/* Touch */
+	ctw6120_tsc@38 {
+		compatible = "edt,edt-ft5206";
+		reg = <0x38>;
+		interrupt-parent = <&gpio3>;
+		interrupts = <7 0>;
+	};
+};
+
+&ldb {
+	status = "okay";
+
+	lvds-channel@0 {
+		fsl,data-mapping = "spwg";
+		fsl,data-width = <24>;
+		status = "okay";
+		primary;
+
+		display-timings {
+			native-mode = <&timing0c>;
+			timing0c: hsd100pxn1 {
+				clock-frequency = <32000000>;
+				hactive = <800>;
+				vactive = <480>;
+				hback-porch = <39>;
+				hfront-porch = <39>;
+				vback-porch = <29>;
+				vfront-porch = <13>;
+				hsync-len = <47>;
+				vsync-len = <2>;
+			};
+		};
+	};
+
+	lvds-channel@1 {
+		fsl,data-mapping = "spwg";
+		fsl,data-width = <24>;
+		status = "okay";
+
+		display-timings {
+			native-mode = <&timing1>;
+			timing1: hsd100pxn1 {
+				clock-frequency = <38251000>;
+				hactive = <800>;
+				vactive = <600>;
+				hback-porch = <112>;
+				hfront-porch = <32>;
+				vback-porch = <3>;
+				vfront-porch = <17>;
+				hsync-len = <80>;
+				vsync-len = <4>;
+			};
+		};
+	};
+};

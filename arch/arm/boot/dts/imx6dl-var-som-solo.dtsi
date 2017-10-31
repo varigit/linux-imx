@@ -1,0 +1,53 @@
+/*
+ * Copyright (C) 2014-2016 Variscite, Ltd. All Rights Reserved
+ * Donio Ron: ron.d@variscite.com
+ *
+ * Copyright (C) 2013 Freescale Semiconductor, Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include "imx6dl.dtsi"
+#include "imx6qdl-var-som.dtsi"
+
+/ {
+	model = "Variscite i.MX6 DL/Solo SOM-SOLO SOM-DUAL";
+	compatible = "fsl,imx6dl-var-som", "fsl,imx6dl";
+};
+
+&ldb {
+	lvds-channel@0 {
+		crtc = "ipu1-di0";
+	};
+	lvds-channel@1 {
+		crtc = "ipu1-di1";
+	};
+};
+
+&mxcfb1 {
+	status = "okay";
+};
+
+&mxcfb2 {
+	status = "okay";
+};
+
+&pxp {
+	status = "okay";
+};
+
+&cpu0 {
+	arm-supply = <&reg_arm>;
+	soc-supply = <&reg_soc>;
+	pu-supply = <&reg_pu>; /* use pu_dummy if VDDSOC share with VDDPU */
+};
+
+&gpc {
+	/* use ldo-enable, u-boot will check it and configure */
+	fsl,ldo-bypass = <0>;
+};
+

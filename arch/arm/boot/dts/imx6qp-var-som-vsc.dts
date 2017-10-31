@@ -1,0 +1,87 @@
+/*
+ * Copyright (C) 2014-2016 Variscite, Ltd. All Rights Reserved
+ * Donio Ron: ron.d@variscite.com
+ *
+ * Copyright 2012 Freescale Semiconductor, Inc.
+ * Copyright 2011 Linaro Ltd.
+ *
+ * The code contained herein is licensed under the GNU General Public
+ * License. You may obtain a copy of the GNU General Public License
+ * Version 2 or later at the following locations:
+ *
+ * http://www.opensource.org/licenses/gpl-license.html
+ * http://www.gnu.org/copyleft/gpl.html
+ */
+
+#include "imx6qp-var-som.dtsi"
+#include "imx6qdl-var-solocb-dt6cb-displays.dtsi"
+#include "imx6qdl-var-solocb-buttons.dtsi"
+
+/ {
+	model = "Variscite i.MX6 QUAD PLUS VAR-SOM-MX6 SoloCustomBoard";
+	compatible = "fsl,imx6q-var-som", "fsl,imx6q";
+};
+
+&fec {
+	phy-reset-on-resume;
+};
+
+&iomuxc {
+	imx6qdl-var-som-mx6 {
+		pinctrl_usbotg_1: usbotggrp-1 {
+			fsl,pins = <
+				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
+			>;
+		};
+
+		pinctrl_ft5406_pins: ft5406_pins {
+			fsl,pins = <
+				MX6QDL_PAD_DISP0_DAT23__GPIO5_IO17	0x1B0B0
+			>;
+		};
+	};
+};
+
+&reg_usb_otg_vbus {
+	gpio = <&gpio3 22 0>;
+	enable-active-high;
+};
+
+&reg_usb_h1_vbus {
+	gpio = <&gpio4 15 0>;
+	enable-active-high;
+};
+
+&usbotg {
+	pinctrl-0 = <&pinctrl_usbotg_1>;
+	dr_mode = "otg"; /* Use "host" if you would like to use the USB0 type A connector */
+};
+
+&touch {
+	interrupt-parent = <&gpio5>;
+	interrupts = <17 0>;
+};
+
+&usdhc2 {	/* uSDHC2, MMC/SD card */
+	wp-gpios = <>;
+};
+
+&mxcfb1 {
+	status = "okay";
+};
+
+&mxcfb2 {
+	status = "okay";
+};
+
+&mxcfb3 {
+	status = "okay";
+};
+
+&mxcfb4 {
+	status = "okay";
+};
+
+&sata {
+	status = "okay";
+};

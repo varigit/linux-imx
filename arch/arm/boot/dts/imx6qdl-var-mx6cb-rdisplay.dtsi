@@ -1,0 +1,89 @@
+/*
+ * Copyright (C) 2016 Variscite, Ltd. All Rights Reserved
+ *
+ * Copyright 2012 Freescale Semiconductor, Inc.
+ * Copyright 2011 Linaro Ltd.
+ *
+ * The code contained herein is licensed under the GNU General Public
+ * License. You may obtain a copy of the GNU General Public License
+ * Version 2 or later at the following locations:
+ *
+ * http://www.opensource.org/licenses/gpl-license.html
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ * Resistive Display for VAR-MX6CustomBoard
+ */
+
+&mxcfb1 {
+	interface_pix_fmt = "RGB24";
+};
+
+&ecspi3 {
+	/* Touch */
+	ads7846@0 {
+		reg = <0>;	/* CS0 */
+		compatible = "ti,ads7846";
+		interrupt-parent = <&gpio4>;
+		interrupts = <25 0>;
+		spi-max-frequency = <1500000>;
+		pendown-gpio = <&gpio4 25 0>;
+		ti,x-min = /bits/ 16 <125>;
+		ti,x-max = /bits/ 16 <4008>;
+		ti,y-min = /bits/ 16 <282>;
+		ti,y-max = /bits/ 16 <3864>;
+		ti,x-plate-ohms = /bits/ 16 <180>;
+		ti,pressure-max = /bits/ 16 <255>;
+		ti,debounce-max = /bits/ 16 <10>;
+		ti,debounce-tol = /bits/ 16 <3>;
+		ti,debounce-rep = /bits/ 16 <1>;
+		ti,settle-delay-usec = /bits/ 16 <150>;
+		ti,keep-vref-on;
+	};
+};
+
+&ldb {
+	status = "okay";
+
+	lvds-channel@0 {
+		fsl,data-mapping = "spwg";
+		fsl,data-width = <24>;
+		status = "okay";
+		primary;
+
+		display-timings {
+			native-mode = <&timing0r>;
+			timing0r: hsd100pxn1 {
+				clock-frequency = <30000000>;
+				hactive = <800>;
+				vactive = <480>;
+				hback-porch = <28>;
+				hfront-porch = <17>;
+				vback-porch = <13>;
+				vfront-porch = <20>;
+				hsync-len = <20>;
+				vsync-len = <13>;
+			};
+		};
+	};
+
+	lvds-channel@1 {
+		fsl,data-mapping = "spwg";
+		fsl,data-width = <24>;
+		status = "okay";
+
+		display-timings {
+			native-mode = <&timing1>;
+			timing1: hsd100pxn1 {
+				clock-frequency = <38251000>;
+				hactive = <800>;
+				vactive = <600>;
+				hback-porch = <112>;
+				hfront-porch = <32>;
+				vback-porch = <3>;
+				vfront-porch = <17>;
+				hsync-len = <80>;
+				vsync-len = <4>;
+			};
+		};
+	};
+};

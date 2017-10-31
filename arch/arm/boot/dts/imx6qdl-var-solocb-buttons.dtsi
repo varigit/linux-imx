@@ -1,0 +1,40 @@
+/*
+ * Copyright (C) 2016 Variscite, Ltd. All Rights Reserved
+ *
+ * The code contained herein is licensed under the GNU General Public
+ * License. You may obtain a copy of the GNU General Public License
+ * Version 2 or later at the following locations:
+ *
+ * http://www.opensource.org/licenses/gpl-license.html
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ * Buttons for VAR-SoloCustomBoard
+ */
+
+/ {
+	/* Buttons in the motherboard */
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		home {
+			label = "Home";
+			gpios = <&gpio5 14 1>;
+			linux,code = <KEY_HOMEPAGE>; /* KEY_HOMEPAGE */
+			gpio-key,wakeup;
+		};
+
+		back {
+			label = "Back";
+			gpios = <&gpio5 20 1>;
+			linux,code = <KEY_BACK>; /* KEY_BACK */
+			gpio-key,wakeup;
+		};
+
+		menu {
+			label = "Menu";
+			gpios = <&gpio5 12 1>;
+			linux,code = <KEY_MENU>; /* KEY_MENU */
+			gpio-key,wakeup;
+		};
+	};
+};
