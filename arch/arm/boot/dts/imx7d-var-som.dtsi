@@ -53,14 +53,13 @@
 
 		sound_master: simple-audio-card,cpu {
 			sound-dai = <&sai1 0>;
-			system-clock-direction = "out";
+			system-clock-direction-out;
 		};
 
 		simple-audio-card,codec {
 			sound-dai = <&wm8731>;
 			system-clock-type = "mclk";
 			system-clock-frequency = <12288000>;
-			system-clock-direction = "in";
 		};
 	};
 
