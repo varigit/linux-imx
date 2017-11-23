@@ -89,6 +89,7 @@ Optional CPU/CODEC subnodes properties:
 - system-clock-direction-out		: specifies clock direction as 'out' on
 					  initialization. It is useful for some aCPUs with
 					  fixed clocks.
+- system-clock-id			: DAI specific clock ID
 
 Example 1 - single DAI link:
 
