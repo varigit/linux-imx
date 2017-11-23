@@ -3337,7 +3337,7 @@ static int fec_prepare_for_phy_reset(struct platform_device *pdev, struct fec_en
 	struct device_node *np = pdev->dev.of_node;
 
 	if (!np)
-		return -EINVAL;
+		return 0;
 
 	fep->phy_reset_active_high = false;
 	fep->phy_reset_duration = 1;
@@ -3351,7 +3351,7 @@ static int fec_prepare_for_phy_reset(struct platform_device *pdev, struct fec_en
 	if (fep->phy_reset_gpios == -EPROBE_DEFER)
 		return fep->phy_reset_gpios;
 	else if (!gpio_is_valid(fep->phy_reset_gpios))
-		return -EINVAL;
+		return 0;
 
 	fep->phy_reset_active_high = of_property_read_bool(np, "phy-reset-active-high");
 
@@ -3362,6 +3362,8 @@ static int fec_prepare_for_phy_reset(struct platform_device *pdev, struct fec_en
 		dev_err(&pdev->dev, "failed to get phy-reset-gpios: %d\n", err);
 		return err;
 	}
+
+	fep->phy_reset_on_resume = of_property_read_bool(np, "phy-reset-on-resume");
 
 	return 0;
 }
@@ -3374,7 +3376,7 @@ static void fec_reset_phy(struct fec_enet_private *fep)
 	else
 		usleep_range(fep->phy_reset_duration * 1000, fep->phy_reset_duration * 1000 + 1000);
 
-	gpio_set_value_cansleep(fep->phy_reset_gpios, !fep->phy_reset_active_high);
+	gpio_set_value_cansleep(fep->phy_reset_gpios, !(fep->phy_reset_active_high));
 }
 #else /* CONFIG_OF */
 static int fec_prepare_for_phy_reset(struct platform_device *pdev, struct fec_enet_private *fep)
@@ -3618,11 +3620,13 @@ fec_probe(struct platform_device *pdev)
 	pm_runtime_set_active(&pdev->dev);
 	pm_runtime_enable(&pdev->dev);
 
-	fec_ready_for_phy_reset = !fec_prepare_for_phy_reset(pdev, fep);
+	ret = fec_prepare_for_phy_reset(pdev, fep);
+	if (ret)
+		goto failed_reset;
+
+	fec_ready_for_phy_reset = gpio_is_valid(fep->phy_reset_gpios);
 	if (fec_ready_for_phy_reset)
 		fec_reset_phy(fep);
-	else
-		goto failed_reset;
 
 	if (fep->bufdesc_ex)
 		fec_ptp_init(pdev);
