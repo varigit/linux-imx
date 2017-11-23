@@ -58,7 +58,7 @@
 
 		simple-audio-card,codec {
 			sound-dai = <&wm8731>;
-			system-clock-type = "mclk";
+			system-clock-id = <2>;  /* WM8731_SYSCLK_MCLK */
 			system-clock-frequency = <12288000>;
 		};
 	};
