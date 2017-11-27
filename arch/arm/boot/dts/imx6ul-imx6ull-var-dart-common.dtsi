@@ -691,6 +691,6 @@
 };
 
 &snvs_rtc {
-       status = "disabled";
+	status = "disabled";
 };
 

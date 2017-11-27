@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2017 Variscite, Ltd. All Rights Reserved
+ * Copyright (C) 2015-2017 Variscite Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -738,7 +738,6 @@
 	status = "okay";
 };
 
-
 &ssi2 {
 	fsl,mode = "i2s-slave";
 	status = "okay";
@@ -877,11 +876,9 @@
 		/* if a 12xx card is there, configure the clock to WL12XX_REFCLOCK_38_XTAL */
 		ref-clock-frequency = <38400000>;
 	};
-
 };
 
-
 &snvs_rtc {
-       status = "disabled";
+	status = "disabled";
 };
 

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2015 Freescale Semiconductor, Inc.
+ * Copyright (C) 2016-2017 Variscite Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -47,7 +48,7 @@
 		/*simple-audio-card,bitclock-inversion;*/
 
 		assigned-clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_SRC>,
-			          <&clks IMX7D_AUDIO_MCLK_ROOT_CLK>;
+				  <&clks IMX7D_AUDIO_MCLK_ROOT_CLK>;
 		assigned-clock-parents = <&clks IMX7D_PLL_AUDIO_POST_DIV>;
 		assigned-clock-rates = <0>, <12288000>;
 
@@ -120,15 +121,6 @@
 			gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
 			startup-delay-us = <200000>;
 			enable-active-high;
-		};
-
-		reg_can2_3v3: regulator@4 {
-			compatible = "regulator-fixed";
-			reg = <4>;
-			regulator-name = "can2-3v3";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			gpio = <&gpio2 14 GPIO_ACTIVE_LOW>;
 		};
 
 		reg_vref_1v8: regulator@5 {
@@ -320,7 +312,6 @@
 &flexcan2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_flexcan2>;
-	xceiver-supply = <&reg_can2_3v3>;
 	status = "okay";
 };
 
@@ -997,6 +988,6 @@
 };
 
 &snvs_rtc {
-       status = "disabled";
+	status = "disabled";
 };
 

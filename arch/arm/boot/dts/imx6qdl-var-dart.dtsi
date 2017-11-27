@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2017 Variscite, Ltd. All Rights Reserved
+ * Copyright (C) 2015-2017 Variscite Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -66,7 +66,6 @@
 			regulator-always-on;
 			status = "okay";
 		};
-
 	};
 
 	wlan_en_reg: fixedregulator@2 {
@@ -146,7 +145,6 @@
 		status = "disabled";
 	};
 
-#if 0
 	lcd@0 {
 		compatible = "fsl,lcd";
 		ipu_id = <0>;
@@ -154,9 +152,8 @@
 		default_ifmt = "RGB565";
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_ipu1>;
-		status = "okay";
+		status = "disabled";
 	};
-#endif
 
 	backlight {
 		compatible = "pwm-backlight";
@@ -173,8 +170,6 @@
 		mclk_source = <0>;
 		status = "okay";
 	};
-
-
 
 	v4l2_out {
 		compatible = "fsl,mxc_v4l2_output";
@@ -219,7 +214,7 @@
 		compatible = "fsl,imx6-hdmi-i2c";
 		reg = <0x50>;
 	};
-	
+
 	ov564x_mipi: ov564x_mipi@3c {
 		compatible = "ovti,ov564x_mipi";
 		reg = <0x3c>;
@@ -270,6 +265,7 @@
 				regulator-always-on;
 				regulator-ramp-delay = <6250>;
 			};
+
 			sw1c_reg: sw1c {
 				regulator-min-microvolt = <300000>;
 				regulator-max-microvolt = <1875000>;
@@ -315,38 +311,7 @@
 				regulator-boot-on;
 				regulator-always-on;
 			};
-#if 0
-			vgen1_reg: vgen1 {
-				regulator-min-microvolt = <800000>;
-				regulator-max-microvolt = <1550000>;
-			};
 
-			vgen2_reg: vgen2 {
-				regulator-min-microvolt = <800000>;
-				regulator-max-microvolt = <1550000>;
-			};
-
-			vgen3_reg: vgen3 {
-				regulator-min-microvolt = <1800000>;
-				regulator-max-microvolt = <3300000>;
-				regulator-always-on;
-				regulator-boot-on;
-			};
-
-			vgen4_reg: vgen4 {
-				regulator-min-microvolt = <1800000>;
-				regulator-max-microvolt = <3300000>;
-				regulator-always-on;
-				regulator-boot-on;
-			};
-
-			vgen5_reg: vgen5 {
-				regulator-min-microvolt = <1800000>;
-				regulator-max-microvolt = <3300000>;
-				regulator-always-on;
-				regulator-boot-on;
-			};
-#endif
 			vgen6_reg: vgen6 {
 				regulator-min-microvolt = <2800000>;
 				regulator-max-microvolt = <2800000>;
@@ -757,10 +722,10 @@
 &usbotg {
 	vbus-supply = <&reg_usb_otg_vbus>;
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_usbotg_2>;
+	pinctrl-0 = <&pinctrl_usbotg_var>;
 	disable-over-current;
 	/* dr_mode: One of "host", "peripheral" or "otg". Defaults to "otg" */
-	dr_mode = "host";	/* Use "host" if you would like to use the USB0 type A connector */
+	dr_mode = "otg";	/* Use "host" if you would like to use the USB0 type A connector */
 	srp-disable;
 	hnp-disable;
 	adp-disable;
