@@ -1,0 +1,35 @@
+/*
+ * Copyright (C) 2015-2017 Variscite Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * Buttons for VAR-MX6CustomBoard
+ */
+/ {
+	/* Buttons in the motherboard */
+	gpio-keys {
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_keys>;
+
+		back {
+			label = "Back";
+			gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_BACK>; /* KEY_BACK */
+			gpio-key,wakeup;
+		};
+	};
+};
+
+&iomuxc {
+	imx6qdl-var-som-mx6 {
+		pinctrl_gpio_keys: gpio_keysgrp {
+			fsl,pins = <
+				/* user button */
+				MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20 0x17059
+			>;
+		};
+	};
+};
