@@ -255,8 +255,9 @@
 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
 	assigned-clock-rates = <0>, <100000000>;
-	phy-mode = "rgmii";
+	phy-mode = "rgmii-txid";
 	phy-handle = <&ethphy0>;
+	phy-reset-gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
 	fsl,magic-packet;
 	status = "okay";
 
