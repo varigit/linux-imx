@@ -565,6 +565,7 @@ config SOC_IMX6UL
 config SOC_IMX6ULL
 	bool "i.MX6 ULL support"
 	select SOC_IMX6UL
+	select HAVE_IMX_RNG
 
 	help
 	  This enables support for Freescale i.MX6 ULL processor.
