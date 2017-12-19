@@ -440,11 +440,9 @@
 	ov5640_mipi: ov5640_mipi@3c {
 		compatible = "ovti,ov5640_mipi";
 		reg = <0x3c>;
-		clocks = <&clks IMX7D_CLK_DUMMY>;
+		clocks = <&clks IMX7D_CLKO2_ROOT_CG>;
 		clock-names = "csi_mclk";
 		csi_id = <0>;
-		pwn-gpios = <&gpio4 9 1>;
-		rst-gpios = <&gpio4 10 0>;
 		AVDD-supply = <&vgen6_reg>;
 		mclk = <24000000>;
 		mclk_source = <0>;
