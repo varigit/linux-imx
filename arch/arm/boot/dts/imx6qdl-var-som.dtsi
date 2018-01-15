@@ -168,6 +168,18 @@
 		compatible = "fsl,mxc_v4l2_output";
 		status = "okay";
 	};
+
+	btwilink {
+		compatible = "btwilink";
+	};
+
+	kim {
+		compatible = "kim";
+		nshutdown_gpio = <178>;	/* GPIO6_18 */
+		dev_name = "/dev/ttymxc1";
+		flow_cntrl = <1>;
+		baud_rate = <3000000>;
+	};
 };
 
 &audmux {

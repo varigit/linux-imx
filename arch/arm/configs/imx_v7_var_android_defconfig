@@ -1489,6 +1489,7 @@ CONFIG_EEPROM_AT25=y
 # Texas Instruments shared transport line discipline
 #
 CONFIG_TI_ST=y
+CONFIG_ST_HCI=y
 # CONFIG_SENSORS_LIS3_SPI is not set
 # CONFIG_SENSORS_LIS3_I2C is not set
 
