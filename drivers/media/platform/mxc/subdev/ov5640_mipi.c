@@ -121,6 +121,40 @@ struct ov5640 {
  */
 static struct ov5640 ov5640_data;
 static int pwn_gpio, rst_gpio;
+static s32 ov5640_read_reg(u16 reg, u8 *val);
+static s32 ov5640_write_reg(u16 reg, u8 val);
+
+#ifdef CONFIG_VIDEO_ADV_DEBUG
+static int ov5640_get_register(struct v4l2_subdev *sd,
+					struct v4l2_dbg_register *reg)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(sd);
+	int ret;
+	u8 val;
+
+	if (reg->reg & ~0xffff)
+		return -EINVAL;
+
+	reg->size = 1;
+
+	ret = ov5640_read_reg(reg->reg, &val);
+	if (!ret)
+		reg->val = (__u64)val;
+
+	return ret;
+}
+
+static int ov5640_set_register(struct v4l2_subdev *sd,
+					const struct v4l2_dbg_register *reg)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(sd);
+
+	if (reg->reg & ~0xffff || reg->val & ~0xff)
+		return -EINVAL;
+
+	return ov5640_write_reg(reg->reg, reg->val);
+}
+#endif
 
 static struct reg_value ov5640_init_setting_30fps_VGA[] = {
 
@@ -155,7 +189,7 @@ static struct reg_value ov5640_init_setting_30fps_VGA[] = {
 	{0x3a0d, 0x04, 0, 0}, {0x3a14, 0x03, 0, 0}, {0x3a15, 0xd8, 0, 0},
 	{0x4001, 0x02, 0, 0}, {0x4004, 0x02, 0, 0}, {0x3000, 0x00, 0, 0},
 	{0x3002, 0x1c, 0, 0}, {0x3004, 0xff, 0, 0}, {0x3006, 0xc3, 0, 0},
-	{0x300e, 0x45, 0, 0}, {0x302e, 0x08, 0, 0}, {0x4300, 0x30, 0, 0},
+	{0x300e, 0x45, 0, 0}, {0x302e, 0x08, 0, 0}, {0x4300, 0x32, 0, 0},
 	{0x501f, 0x00, 0, 0}, {0x4713, 0x03, 0, 0}, {0x4407, 0x04, 0, 0},
 	{0x440e, 0x00, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
 	{0x4837, 0x0a, 0, 0}, {0x4800, 0x04, 0, 0}, {0x3824, 0x02, 0, 0},
@@ -348,9 +382,7 @@ static struct ov5640_mode_info ov5640_mode_info_data[2][ov5640_mode_MAX + 1] = {
 		{ov5640_mode_NTSC_720_480, -1, 0, 0, NULL, 0},
 		{ov5640_mode_720P_1280_720, -1, 0, 0, NULL, 0},
 		{ov5640_mode_1080P_1920_1080, -1, 0, 0, NULL, 0},
-		{ov5640_mode_QSXGA_2592_1944, SCALING, 2592, 1944,
-		ov5640_setting_15fps_QSXGA_2592_1944,
-		ARRAY_SIZE(ov5640_setting_15fps_QSXGA_2592_1944)},
+		{ov5640_mode_QSXGA_2592_1944, -1, 0, 0, NULL, 0},
 	},
 	{
 		{ov5640_mode_VGA_640_480, SUBSAMPLING, 640,  480,
@@ -365,7 +397,9 @@ static struct ov5640_mode_info ov5640_mode_info_data[2][ov5640_mode_MAX + 1] = {
 		{ov5640_mode_1080P_1920_1080, SCALING, 1920, 1080,
 		ov5640_setting_30fps_1080P_1920_1080,
 		ARRAY_SIZE(ov5640_setting_30fps_1080P_1920_1080)},
-		{ov5640_mode_QSXGA_2592_1944, -1, 0, 0, NULL, 0},
+		{ov5640_mode_QSXGA_2592_1944, SCALING, 2592, 1944,
+		ov5640_setting_15fps_QSXGA_2592_1944,
+		ARRAY_SIZE(ov5640_setting_15fps_QSXGA_2592_1944)},
 	},
 };
 
@@ -378,8 +412,6 @@ static int ov5640_probe(struct i2c_client *adapter,
 				const struct i2c_device_id *device_id);
 static int ov5640_remove(struct i2c_client *client);
 
-static s32 ov5640_read_reg(u16 reg, u8 *val);
-static s32 ov5640_write_reg(u16 reg, u8 val);
 
 static const struct i2c_device_id ov5640_id[] = {
 	{"ov5640_mipi", 0},
@@ -863,8 +895,10 @@ static int ov5640_download_firmware(struct reg_value *pModeSetting, s32 ArySize)
 
 		if (Mask) {
 			retval = ov5640_read_reg(RegAddr, &RegVal);
-			if (retval < 0)
+			if (retval < 0) {
+				pr_err("Error reading OV5640 register\n");
 				goto err;
+			}
 
 			RegVal &= ~(u8)Mask;
 			Val &= Mask;
@@ -872,8 +906,10 @@ static int ov5640_download_firmware(struct reg_value *pModeSetting, s32 ArySize)
 		}
 
 		retval = ov5640_write_reg(RegAddr, Val);
-		if (retval < 0)
+		if (retval < 0) {
+			pr_err("Error Writing OV5640 register\n");
 			goto err;
+		}
 
 		if (Delay_ms)
 			msleep(Delay_ms);
@@ -1033,8 +1069,10 @@ static int ov5640_change_mode_direct(enum ov5640_frame_rate frame_rate,
 		ov5640_mode_info_data[frame_rate][mode].height;
 
 	if (ov5640_data.pix.width == 0 || ov5640_data.pix.height == 0 ||
-		pModeSetting == NULL || ArySize == 0)
+		pModeSetting == NULL || ArySize == 0) {
+		pr_err("Wrong Width Height settings Passed\n");
 		return -EINVAL;
+	}
 
 	/* turn off AE/AG */
 	OV5640_turn_on_AE_AG(0);
