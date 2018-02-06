@@ -1307,9 +1307,6 @@ static int mx6s_vidioc_g_input(struct file *file, void *priv, unsigned int *i)
 
 static int mx6s_vidioc_s_input(struct file *file, void *priv, unsigned int i)
 {
-	if (i > 0)
-		return -EINVAL;
-
 	return 0;
 }
 
@@ -1491,11 +1488,23 @@ static int mx6s_vidioc_g_fmt_vid_cap(struct file *file, void *priv,
 				    struct v4l2_format *f)
 {
 	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct mx6s_fmt *fmt6s = NULL;
 
 	WARN_ON(priv != file->private_data);
 
 	f->fmt.pix = csi_dev->pix;
+	fmt6s = format_by_mbus(csi_dev->mbus_code);
 
+	if (fmt6s != NULL) {
+		f->fmt.pix.pixelformat = fmt6s->pixelformat;
+		csi_dev->pix.pixelformat = fmt6s->pixelformat;
+	}
+
+	f->fmt.pix.width = csi_dev->pix.width;
+	f->fmt.pix.height = csi_dev->pix.height;
+	f->fmt.pix.sizeimage = csi_dev->pix.sizeimage;
+	f->fmt.pix.field = csi_dev->pix.field;
+	f->type = csi_dev->type;
 	return 0;
 }
 
