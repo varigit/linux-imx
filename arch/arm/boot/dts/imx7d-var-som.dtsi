@@ -14,14 +14,6 @@
 		reg = <0x80000000 0x80000000>;
 	};
 
-	backlight {
-		compatible = "pwm-backlight";
-		pwms = <&pwm2 0 5000000>;
-		brightness-levels = <0 4 8 16 32 64 128 255>;
-		default-brightness-level = <7>;
-		status = "okay";
-	};
-
 	pxp_v4l2_out {
 		compatible = "fsl,imx7d-pxp-v4l2", "fsl,imx6sx-pxp-v4l2", "fsl,imx6sl-pxp-v4l2";
 		status = "okay";
@@ -61,30 +53,6 @@
 			sound-dai = <&wm8731>;
 			system-clock-id = <2>;  /* WM8731_SYSCLK_MCLK */
 			system-clock-frequency = <12288000>;
-		};
-	};
-
-	gpio-keys {
-		compatible = "gpio-keys";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_gpio_keys>;
-
-		menu {
-			label = "Menu";
-			gpios = <&gpio2 28 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_MENU>;
-		};
-
-		home {
-			label = "Home";
-			gpios = <&gpio2 29 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_HOME>;
-		};
-
-		back {
-			label = "Back";
-			gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_BACK>;
 		};
 	};
 
@@ -187,17 +155,6 @@
 	assigned-clock-rates = <884736000>;
 };
 
-&csi1 {
-	csi-mux-mipi = <&gpr 0x14 4>;
-	status = "okay";
-
-	port {
-		csi_ep: endpoint {
-			remote-endpoint = <&csi_mipi_ep>;
-		};
-	};
-};
-
 &epxp {
 	status = "okay";
 };
@@ -208,7 +165,7 @@
 	pinctrl-0 = <&pinctrl_ecspi1>;
 	pinctrl-1 = <&pinctrl_ecspi1_sleep>;
 	cs-gpios = <&gpio4 19 0>;
-	status = "okay";
+	status = "disabled";
 
 	/* Touch */
 	ads7846@0 {
@@ -294,26 +251,7 @@
 
 &mipi_csi {
 	clock-frequency = <240000000>;
-	status = "okay";
-	port {
-		mipi_sensor_ep: endpoint1 {
-			remote-endpoint = <&ov5640_mipi_ep>;
-			data-lanes = <2>;
-			csis-hs-settle = <13>;
-			csis-clk-settle = <2>;
-			csis-wclk;
-		};
-
-		csi_mipi_ep: endpoint2 {
-			remote-endpoint = <&csi_ep>;
-		};
-	};
-};
-
-&flexcan2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_flexcan2>;
-	status = "okay";
+	status = "disabled";
 };
 
 &i2c1 {
@@ -437,39 +375,6 @@
 		reg = <0x68>;
 	};
 
-	ov5640_mipi: ov5640_mipi@3c {
-		compatible = "ovti,ov5640_mipi";
-		reg = <0x3c>;
-		clocks = <&clks IMX7D_CLKO2_ROOT_CG>;
-		clock-names = "csi_mclk";
-		csi_id = <0>;
-		AVDD-supply = <&vgen6_reg>;
-		mclk = <24000000>;
-		mclk_source = <0>;
-		port {
-			ov5640_mipi_ep: endpoint {
-				remote-endpoint = <&mipi_sensor_ep>;
-			};
-		};
-	};
-};
-
-&i2c4 {
-	clock-frequency = <100000>;
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_i2c4>;
-	status = "okay";
-
-	ft5x06_ts@38 {
-		compatible = "edt,edt-ft5x06";
-		reg = <0x38>;
-		interrupt-parent = <&gpio2>;
-		interrupts = <30 0>;
-		touchscreen-size-x = <800>;
-		touchscreen-size-y = <480>;
-		touchscreen-inverted-x;
-		touchscreen-inverted-y;
-	};
 };
 
 &gpmi {
@@ -577,13 +482,6 @@
 			>;
 		};
 
-		pinctrl_flexcan2: flexcan2grp {
-			fsl,pins = <
-				MX7D_PAD_I2C3_SCL__FLEXCAN2_RX		0x59
-				MX7D_PAD_I2C3_SDA__FLEXCAN2_TX		0x59
-			>;
-		};
-
 		pinctrl_i2c1: i2c1grp {
 			fsl,pins = <
 				MX7D_PAD_I2C1_SDA__I2C1_SDA	0x4000007f
@@ -602,37 +500,6 @@
 			fsl,pins = <
 				MX7D_PAD_I2C3_SDA__I2C3_SDA	0x4000007f
 				MX7D_PAD_I2C3_SCL__I2C3_SCL	0x4000007f
-			>;
-		};
-
-		pinctrl_i2c4: i2c4grp {
-			fsl,pins = <
-				MX7D_PAD_I2C4_SDA__I2C4_SDA	0x4000007f
-				MX7D_PAD_I2C4_SCL__I2C4_SCL	0x4000007f
-			>;
-		};
-
-		pinctrl_lcdif_dat: lcdifdatgrp {
-			fsl,pins = <
-				MX7D_PAD_LCD_DATA00__GPIO3_IO5		0x79
-				MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
-				MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
-				MX7D_PAD_EPDC_DATA04__LCD_DATA4		0x79
-				MX7D_PAD_EPDC_DATA05__LCD_DATA5		0x79
-				MX7D_PAD_EPDC_DATA06__LCD_DATA6		0x79
-				MX7D_PAD_EPDC_DATA07__LCD_DATA7		0x79
-				MX7D_PAD_EPDC_DATA10__LCD_DATA10	0x79
-				MX7D_PAD_EPDC_DATA11__LCD_DATA11	0x79
-				MX7D_PAD_EPDC_DATA12__LCD_DATA12	0x79
-				MX7D_PAD_EPDC_DATA13__LCD_DATA13	0x79
-				MX7D_PAD_EPDC_DATA14__LCD_DATA14	0x79
-				MX7D_PAD_EPDC_DATA15__LCD_DATA15	0x79
-				MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
-				MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
-				MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
-				MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
-				MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
-				MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
 			>;
 		};
 
@@ -781,47 +648,15 @@
 	};
 };
 
-&lcdif {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_lcdif_dat
-		     &pinctrl_lcdif_ctrl>;
-	display = <&display0>;
-	status = "okay";
-
-	display0: display0 {
-		bits-per-pixel = <32>;
-		bus-width = <24>;
-
-		display-timings {
-			native-mode = <&timing0>;
-			timing0: timing0 {
-				clock-frequency = <29232000>;
-				hactive = <800>;
-				vactive = <480>;
-				hfront-porch = <40>;
-				hback-porch = <40>;
-				hsync-len = <48>;
-				vback-porch = <29>;
-				vfront-porch = <13>;
-				vsync-len = <3>;
-				hsync-active = <0>;
-				vsync-active = <0>;
-				de-active = <1>;
-				pixelclk-active = <0>;
-			};
-		};
-	};
-};
-
 &pcie_phy {
-	status = "okay";
+	status = "disabled";
 };
 
 &pcie {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pcie>;
 	reset-gpio = <&gpio2 31 GPIO_ACTIVE_LOW>;
-	status = "okay";
+	status = "disabled";
 };
 
 &sai1 {
