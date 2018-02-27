@@ -1941,6 +1941,34 @@ static const struct panel_desc_dsi panasonic_vvx10f004b00 = {
 	.lanes = 4,
 };
 
+static const struct drm_display_mode sgd_gktw70sdae4sd_mode = {
+	.clock = 29250,
+	.hdisplay = 800,
+	.hsync_start = 800 + 40,
+	.hsync_end = 800 + 40 + 48,
+	.htotal = 800 + 40 + 48 + 40,
+	.vdisplay = 480,
+	.vsync_start = 480 + 23,
+	.vsync_end = 480 + 23 + 3,
+	.vtotal = 480 + 23 + 3 + 39,
+	.vrefresh = 60,
+};
+
+static const struct panel_desc_dsi sgd_gktw70sdae4sd = {
+	.desc = {
+		.modes = &sgd_gktw70sdae4sd_mode,
+		.num_modes = 1,
+		.bpc = 8,
+		.size = {
+			.width = 154,
+			.height = 87,
+		},
+	},
+	.flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_HSE /*| MIPI_DSI_CLOCK_NON_CONTINUOUS*/,
+	.format = MIPI_DSI_FMT_RGB888,
+	.lanes = 4,
+};
+
 static const struct of_device_id dsi_of_match[] = {
 	{
 		.compatible = "auo,b080uan01",
@@ -1957,6 +1985,9 @@ static const struct of_device_id dsi_of_match[] = {
 	}, {
 		.compatible = "panasonic,vvx10f004b00",
 		.data = &panasonic_vvx10f004b00
+	}, {
+		.compatible = "sgd,gktw70sdae4sd",
+		.data = &sgd_gktw70sdae4sd
 	}, {
 		/* sentinel */
 	}
