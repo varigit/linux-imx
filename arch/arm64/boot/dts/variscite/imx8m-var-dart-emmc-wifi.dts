@@ -62,19 +62,20 @@
 			enable-active-high;
 			regulator-always-on;
 			startup-delay-us = <10000>;
-
 		};
 
 		/* Enables WIFI interface */
 		reg_wifi_en: regulator_wifi_en {
 			compatible = "regulator-fixed";
-			regulator-name = "WIFI_EN";
+			regulator-name = "WIFI_REG_ON";
 			vin-supply = <&reg_wifi_pwr_on>;
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
 			gpio = <&gpio3 2 GPIO_ACTIVE_HIGH>;
 			enable-active-high;
-			regulator-always-on;
+			regulator-state-mem {
+				regulator-off-in-suspend;
+			};
 		};
 
 		reg_gpio_dvfs: regulator-gpio {
@@ -387,9 +388,9 @@
 			fsl,pins = <
 				MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4               0xc1    /* WIFI_PWR_VSEL */
 				MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8               0xc1    /* WIFI_PWR_ON   */
-				MX8MQ_IOMUXC_NAND_CE1_B_GPIO3_IO2               0xc1    /* WIFI_18V_ON   */
+				MX8MQ_IOMUXC_NAND_CE1_B_GPIO3_IO2               0xc1    /* WIFI_REG_ON   */
 				MX8MQ_IOMUXC_GPIO1_IO00_ANAMIX_REF_CLK_32K      0xc1    /* WIFI_CLK_32K  */
-				MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4               0xc1    /* BT_PWR_ON     */
+				MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4               0xc1    /* BT_REG_ON     */
 				MX8MQ_IOMUXC_SD2_WP_GPIO2_IO20                  0xc1    /* BT_BUF_EN     */     
 			>;
 		};
@@ -701,6 +702,7 @@
 	status = "okay";
 };
 
+/* EMMC */
 &usdhc1 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
 	pinctrl-0 = <&pinctrl_usdhc1>;
@@ -711,17 +713,15 @@
 	status = "okay";
 };
 
+/* WIFI */
 &usdhc2 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
 	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_wifi>;
 	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wifi>;
 	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi>;
 	bus-width = <4>;
-#if 0
 	vmmc-supply = <&reg_wifi_en>;
-#endif
 	status = "okay";
-	enable-sdio-wakeup;
 };
 
 &usb3_phy0 {
