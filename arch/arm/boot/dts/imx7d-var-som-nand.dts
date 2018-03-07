@@ -48,16 +48,16 @@
 	fsl,legacy-bch-geometry;
 	status = "okay";
 
-	/* a 3 MiB partition */
+	/* a 2 MiB partition */
 	partition@0 {
-		label = "u-boot";
-		reg = <0x00000000 0x00300000>;
+		label = "spl";
+		reg = <0x00000000 0x00200000>;
 	};
 
-	/* a 1 MiB partition */
+	/* a 2 MiB partition */
 	partition@1 {
-		label = "reserved";
-		reg = <0x00300000 0x00100000>;
+		label = "u-boot";
+		reg = <0x00200000 0x00200000>;
 	};
 
 	/* a 2 MiB partition */
