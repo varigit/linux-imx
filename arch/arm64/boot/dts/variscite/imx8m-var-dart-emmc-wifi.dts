@@ -77,18 +77,6 @@
 				regulator-off-in-suspend;
 			};
 		};
-
-		reg_gpio_dvfs: regulator-gpio {
-			compatible = "regulator-gpio";
-			pinctrl-names = "default";
-			pinctrl-0 = <&pinctrl_dvfs>;
-			regulator-min-microvolt = <900000>;
-			regulator-max-microvolt = <1000000>;
-			regulator-name = "gpio_dvfs";
-			regulator-type = "voltage";
-			gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-			states = <900000 0x1 1000000 0x0>;
-		};
 	};
 
 	sound-wm8904 {
@@ -224,12 +212,6 @@
 			fsl,pins = <
 				MX8MQ_IOMUXC_GPIO1_IO12_GPIO1_IO12	0x16	/* disable */
 				MX8MQ_IOMUXC_SAI1_RXD5_GPIO4_IO7	0x16	/* reset */
-			>;
-		};
-
-		pinctrl_dvfs: dvfsgrp {
-			fsl,pins = <
-				MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13	0x16
 			>;
 		};
 
@@ -832,7 +814,6 @@
 		1000000 900000
 		800000  900000
 	>;
-	dc-supply = <&reg_gpio_dvfs>;
 };
 
 &irqsteer_dcss {
