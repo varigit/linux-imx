@@ -10,6 +10,16 @@
 #include "imx7d.dtsi"
 
 / {
+	cpus {
+		cpu0: cpu@0 {
+			operating-points = <
+				/* KHz	uV */
+				996000	1075000
+				792000	975000
+			>;
+		};
+	};
+
 	memory {
 		reg = <0x80000000 0x80000000>;
 	};
