@@ -852,7 +852,7 @@
 			  <&clks IMX7D_SAI2_ROOT_CLK>;
 	assigned-clock-parents = <&clks IMX7D_PLL_AUDIO_POST_DIV>;
 	assigned-clock-rates = <0>, <36864000>;
-	status = "okay";
+	status = "disabled";
 };
 
 &sdma {
