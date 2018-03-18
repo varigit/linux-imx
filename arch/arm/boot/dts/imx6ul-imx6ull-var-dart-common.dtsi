@@ -449,9 +449,9 @@
 		touchscreen-inverted-y;
 	};
 
-	/* DS1307 RTC module */
+	/* DS1337 RTC module */
 	rtc@0x68 {
-		compatible = "dallas,ds1307";
+		compatible = "dallas,ds1337";
 		reg = <0x68>;
 	};
 };
