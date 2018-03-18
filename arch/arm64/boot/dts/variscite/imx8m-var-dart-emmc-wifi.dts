@@ -376,6 +376,12 @@
 				MX8MQ_IOMUXC_SD2_WP_GPIO2_IO20                  0xc1    /* BT_BUF_EN     */     
 			>;
 		};
+
+		pinctrl_rtc: rtcgrp {
+			fsl,pins = <
+				MX8MQ_IOMUXC_GPIO1_IO15_GPIO1_IO15 		0xc1	/* RTC alarm IRQ */
+			>;
+		};
 	};
 };
 
@@ -538,11 +544,15 @@
 	pinctrl-0 = <&pinctrl_i2c2>;
 	status = "okay";
 
-        /* DS1307 RTC module */
+        /* DS1337 RTC module */
 	rtc@0x68 {
 		status = "okay";
-		compatible = "dallas,ds1307";
+		compatible = "dallas,ds1337";
 		reg = <0x68>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_rtc>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
         };
 
 	/* Capacitive touch controller */
