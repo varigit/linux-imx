@@ -48,5 +48,11 @@
 #endif
 			>;
 		};
+
+		pinctrl_rtc: rtcgrp {
+			fsl,pins = <
+				MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0 /* RTC alarm IRQ */
+			>;
+		};
 	};
 };

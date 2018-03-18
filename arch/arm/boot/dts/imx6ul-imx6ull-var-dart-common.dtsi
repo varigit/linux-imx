@@ -453,6 +453,10 @@
 	rtc@0x68 {
 		compatible = "dallas,ds1337";
 		reg = <0x68>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_rtc>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
 	};
 };
 
