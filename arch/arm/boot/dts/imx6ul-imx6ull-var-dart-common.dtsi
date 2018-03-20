@@ -46,45 +46,12 @@
 		};
 
 #ifdef WIFI
-#ifdef WIFI_5G
-		reg_1v8_wlan: regulator_1v8_wlan {
-			compatible = "regulator-fixed";
-			regulator-name = "VWLAN_1V8";
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
-			gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;	/* WL_1V8_ON: SNVS_TAMPER2 (gpio5_2) */
-			enable-active-high;
-			regulator-boot-on;
-			startup-delay-us = <50000>;
-			regulator-state-mem {
-				regulator-off-in-suspend;
-			};
-		};
-
-		reg_sd1_vmmc: regulator_sd1_vmmc {
-			compatible = "regulator-fixed";
-			regulator-name = "VSD_3V3";
-			vin-supply = <&reg_1v8_wlan>;
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			gpio = <&gpio5 6 GPIO_ACTIVE_HIGH>;	/* WL_REG_ON: SNVS_TAMPER6 (gpio5_6) */
-			enable-active-high;
-			regulator-state-mem {
-				regulator-off-in-suspend;
-			};
-		};
-#else
-/* force VMMC1 to always on so BT can operate independently of Wi-Fi */
 		reg_sd1_vmmc: regulator_sd1_vmmc {
 			compatible = "regulator-fixed";
 			regulator-name = "VSD_3V3";
 			regulator-min-microvolt = <3300000>;
 			regulator-max-microvolt = <3300000>;
-			gpio = <&gpio5 6 GPIO_ACTIVE_HIGH>;	/* WL_REG_ON: SNVS_TAMPER6 (gpio5_6) */
-			enable-active-high;
-			regulator-always-on;
 		};
-#endif
 #endif
 		reg_gpio_dvfs: regulator-gpio {
 			compatible = "regulator-gpio";
@@ -334,9 +301,7 @@
 	assigned-clock-parents = <&clks IMX6UL_CLK_PLL2_PFD2>;
 	assigned-clock-rates = <0>, <132000000>;
 	fsl,tuning-step= <2>;
-	enable-sdio-wakeup;
 	vmmc-supply = <&reg_sd1_vmmc>;
-	wifi-host;			/* add hook for SD card detect mechanism */
 	status = "okay";
 };
 #else
@@ -347,9 +312,7 @@
 	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
 	no-1-8-v;
 	keep-power-in-suspend;
-	enable-sdio-wakeup;
 	vmmc-supply = <&reg_sd1_vmmc>;
-	wifi-host;			/* add hook for SD card detect mechanism */
 	non-removable;
 	status = "okay";
 };
