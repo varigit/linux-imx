@@ -146,9 +146,6 @@
 			regulator-min-microvolt = <3300000>;
 			regulator-max-microvolt = <3300000>;
 			regulator-name = "wlreg_on";
-			gpio = <&gpio1 4 GPIO_ACTIVE_HIGH>;	/* WL_REG_ON: PAD_GPIO1_IO04__GPIO1_IO4*/
-			startup-delay-us = <100>;
-			enable-active-high;
 		};
 
 		reg_touch_3v3: reg_touch_3v3 {
@@ -902,7 +899,7 @@
 
 		pinctrl_wlan: wlangrp {
 			fsl,pins = <
-				MX7D_PAD_GPIO1_IO04__GPIO1_IO4		0x59 /* WL_REG_ON */
+				MX7D_PAD_GPIO1_IO04__GPIO1_IO4		0x09 /* WL_REG_ON */
 				MX7D_PAD_GPIO1_IO03__OSC32K_32K_OUT	0xb0 /* WIFI Slow clock */
 			>;
 		};
@@ -977,11 +974,9 @@
 	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wlan>;
 	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wlan>;
 	pinctrl-3 = <&pinctrl_usdhc2_sleep>, <&pinctrl_wlan_sleep>;
-	enable-sdio-wakeup;
 	keep-power-in-suspend;
 	non-removable;
 	pm-ignore-notify;
-	wifi-host;
 	vmmc-supply = <&wlreg_on>;
 	status = "okay";
 };
