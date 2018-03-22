@@ -16,6 +16,26 @@
 	compatible = "fsl,imx6qp-var-som", "fsl,imx6qp";
 };
 
+&cpu0 {
+	operating-points = <
+		/* kHz    uV */
+		1200000	1350000
+		996000	1250000
+		852000	1250000
+		792000	1175000
+		396000	1175000
+	>;
+
+	fsl,soc-operating-points = <
+		/* ARM kHz  SOC-PU uV */
+		1200000	1275000
+		996000	1250000
+		852000	1250000
+		792000	1250000
+		396000	1250000
+	>;
+};
+
 &ldb {
 	lvds-channel@0 {
 		crtc = "ipu2-di0";
