@@ -134,6 +134,28 @@
 			status = "okay";
 		};
 	};
+
+	gpio-leds {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_leds>;
+
+		red {
+			label = "Red";
+			gpios = <&gpio2 1 GPIO_ACTIVE_LOW>;
+		};
+
+		green {
+			label = "Green";
+			gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+		};
+
+		blue {
+			label = "Blue";
+			gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
+		};
+	};
 };
 
 &adc1 {
@@ -403,11 +425,11 @@
 			>;
 		};
 
-		pinctrl_gpio_keys: gpio_keysgrp {
+		pinctrl_gpio_leds: gpio_ledsgrp {
 			fsl,pins = <
-				MX7D_PAD_EPDC_BDR0__GPIO2_IO28		0x32
-				MX7D_PAD_EPDC_BDR1__GPIO2_IO29		0x32
-				MX7D_PAD_GPIO1_IO11__GPIO1_IO11		0x32
+				MX7D_PAD_EPDC_DATA01__GPIO2_IO1		0x32 /* Red */
+				MX7D_PAD_EPDC_DATA02__GPIO2_IO2		0x32 /* Green */
+				MX7D_PAD_EPDC_DATA03__GPIO2_IO3		0x32 /* Blue */
 			>;
 		};
 
