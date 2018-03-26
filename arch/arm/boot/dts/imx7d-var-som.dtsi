@@ -389,14 +389,16 @@
 		pinctrl_hog_1: hoggrp-1 {
 			fsl,pins = <
 				MX7D_PAD_GPIO1_IO14__GPIO1_IO14		0x80000000  /* bt reg on */
-				MX7D_PAD_EPDC_PWR_COM__GPIO2_IO30	0x59  /* /MDM_RST */
-				MX7D_PAD_EPDC_DATA04__GPIO2_IO4		0x59  /* GPIO2_4 */
-				MX7D_PAD_EPDC_DATA05__GPIO2_IO5		0x59  /* GPIO2_5 */
+				MX7D_PAD_LCD_RESET__GPIO3_IO4		0x59  /* MDM_DTR */
+				MX7D_PAD_EPDC_BDR0__GPIO2_IO28		0x59  /* MDM_RI */
+				MX7D_PAD_LCD_DATA22__GPIO3_IO27		0x0C  /* /MDM_RST, pulled up by MDM */
+				MX7D_PAD_LCD_DATA23__GPIO3_IO28		0x0C  /* MDM_PWR_ON, pulled up by MDM */
 				MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x59  /* ethphy0 reset */
 				MX7D_PAD_UART2_TX_DATA__GPIO4_IO3	0x59  /* ethphy1 reset */
-				MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x59  /* hsic hub reset */
-				MX7D_PAD_GPIO1_IO12__GPIO1_IO12		0x59  /* hsic hub connect */
-				MX7D_PAD_GPIO1_IO13__GPIO1_IO13		0x59  /* LED */
+				MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x0C  /* SOM_SIG1 */
+				MX7D_PAD_GPIO1_IO11__GPIO1_IO11		0x0C  /* SOM_SIG2 */
+				MX7D_PAD_GPIO1_IO12__GPIO1_IO12		0x0C  /* SOM_SIG3 */
+				MX7D_PAD_GPIO1_IO13__GPIO1_IO13		0x0C  /* EN_3V3_HC_SOM, pulled down externally */
 				MX7D_PAD_SD1_WP__CCM_CLKO2		0xb0  /* camera clock */
 			>;
 		};
