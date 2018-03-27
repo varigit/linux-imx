@@ -92,4 +92,11 @@ config DRM_ITE_IT6263
 	---help---
 	  ITE IT6263 bridge chip driver.
 
+config DRM_TI_SN65DSI84
+	tristate "SN65DSI84 DSI to LVDS bridge"
+	select REGMAP_I2C
+	---help---
+	  Support for the Texas Intruments SN65DSI84 bridge.
+
+
 endmenu
