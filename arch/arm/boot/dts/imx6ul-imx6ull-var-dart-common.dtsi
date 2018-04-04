@@ -65,15 +65,33 @@
 	};
 
 	sound {
-		compatible = "fsl,imx-audio-wm8731";
-		model = "wm8731-audio";
-		cpu-dai = <&sai2>;
-		audio-codec = <&codec>;
-		audio-routing =
-			"Headphone Jack",	"LHPOUT",
-			"Headphone Jack",	"RHPOUT",
-			"LLINEIN",		"Line Jack",
-			"RLINEIN",		"Line Jack";
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "wm8731audio";
+		simple-audio-card,widgets =
+			"Headphone", "Headphone Jack",
+			"Line", "Line Jack",
+			"Microphone", "Mic Jack";
+		simple-audio-card,routing =
+			"Headphone Jack", "RHPOUT",
+			"Headphone Jack", "LHPOUT",
+			"LLINEIN", "Line Jack",
+			"RLINEIN", "Line Jack",
+			"MICIN", "Mic Bias",
+			"Mic Bias", "Mic Jack";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&sound_master>;
+		simple-audio-card,frame-master = <&sound_master>;
+		/*simple-audio-card,bitclock-inversion;*/
+
+		sound_master: simple-audio-card,cpu {
+			sound-dai = <&sai2>;
+		};
+
+		simple-audio-card,codec {
+			sound-dai = <&codec>;
+			system-clock-id = <2>;  /* WM8731_SYSCLK_MCLK */
+			system-clock-frequency = <12288000>;
+		};
 	};
 
 	keys {
@@ -113,8 +131,8 @@
 };
 
 &clks {
-	assigned-clocks = <&clks IMX6UL_CLK_PLL4_POST_DIV>;
-	assigned-clock-rates = <812851200>;
+	assigned-clocks = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
+	assigned-clock-rates = <786432000>;
 };
 
 &fec1 {
@@ -224,9 +242,11 @@
 &sai2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_sai2>;
-	assigned-clocks = <&clks IMX6UL_CLK_SAI2_SEL>,<&clks IMX6UL_CLK_SAI2>;
+	assigned-clocks = <&clks IMX6UL_CLK_SAI2_SEL>,
+			  <&clks IMX6UL_CLK_SAI2>;
 	assigned-clock-parents = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
-	assigned-clock-rates = <0>, <11289600>;
+	assigned-clock-rates = <0>, <12288000>;
+	fsl,sai-mclk-direction-output;
 	status = "okay";
 };
 
@@ -395,6 +415,7 @@
 	status = "okay";
 
 	codec: wm8731@1a {
+		#sound-dai-cells = <0>;
 		compatible = "wlf,wm8731";
 		reg = <0x1a>;
 		clocks = <&clks IMX6UL_CLK_SAI2>;
@@ -649,7 +670,7 @@
 				MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC	0x17088
 				MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x11088
 				MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x11088
-				MX6UL_PAD_JTAG_TMS__CCM_CLKO1		0x17088
+				MX6UL_PAD_JTAG_TMS__SAI2_MCLK		0x17088
 			>;
 		};
 
