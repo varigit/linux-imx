@@ -42,9 +42,8 @@
 		simple-audio-card,name = "wm8731audio";
 		simple-audio-card,widgets =
 			"Headphone", "Headphone Jack",
-			"Line", "Line Out",
-			"Microphone", "Mic Jack",
-			"Line", "Line In";
+			"Line", "Line Jack",
+			"Microphone", "Mic Jack";
 		simple-audio-card,routing =
 			"Headphone Jack", "RHPOUT",
 			"Headphone Jack", "LHPOUT",
