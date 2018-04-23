@@ -37,6 +37,9 @@
 		serial5 = &uart6;
 		serial6 = &uart7;
 		serial7 = &uart8;
+		sai1 = &sai1;
+		sai2 = &sai2;
+		sai3 = &sai3;
 		spi0 = &ecspi1;
 		spi1 = &ecspi2;
 		spi2 = &ecspi3;
@@ -338,6 +341,7 @@
 				};
 
 				esai: esai@02024000 {
+					#sound-dai-cells = <0>;
 					compatible = "fsl,imx6ull-esai";
 					reg = <0x02024000 0x4000>;
 					interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
@@ -355,6 +359,7 @@
 				};
 
 				sai1: sai@02028000 {
+					#sound-dai-cells = <0>;
 					compatible = "fsl,imx6ul-sai",
 						     "fsl,imx6sx-sai";
 					reg = <0x02028000 0x4000>;
@@ -370,6 +375,7 @@
 				};
 
 				sai2: sai@0202c000 {
+					#sound-dai-cells = <0>;
 					compatible = "fsl,imx6ul-sai",
 						     "fsl,imx6sx-sai";
 					reg = <0x0202c000 0x4000>;
@@ -385,6 +391,7 @@
 				};
 
 				sai3: sai@02030000 {
+					#sound-dai-cells = <0>;
 					compatible = "fsl,imx6ul-sai",
 						     "fsl,imx6sx-sai";
 					reg = <0x02030000 0x4000>;
