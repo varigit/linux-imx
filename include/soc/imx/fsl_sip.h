@@ -59,5 +59,6 @@
 
 #define FSL_SIP_NOC			0xc2000008
 #define FSL_SIP_NOC_LCDIF		0x0
+#define FSL_SIP_NOC_TUNE		0x1
 
 #endif

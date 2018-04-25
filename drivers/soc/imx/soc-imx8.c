@@ -259,26 +259,11 @@ static struct device_attribute imx8_uid =
 
 static void __init imx8mq_noc_init(void)
 {
-	struct device_node *np;
-	const char *status;
-	int statlen;
 	struct arm_smccc_res res;
 
-	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mq-lcdif");
-	if (!np)
-		return;
+	pr_info("NOC Tuning .... \n");
 
-	status = of_get_property(np, "status", &statlen);
-	if (status == NULL)
-		return;
-
-	if (statlen > 0) {
-		if (!strcmp(status, "disabled"))
-			return;
-	}
-
-	pr_info("Config NOC for VPU and CPU\n");
-	arm_smccc_smc(FSL_SIP_NOC, FSL_SIP_NOC_LCDIF, 0,
+	arm_smccc_smc(FSL_SIP_NOC, FSL_SIP_NOC_TUNE, 0,
 			0, 0, 0, 0, 0, &res);
 	if (res.a0)
 		pr_err("Config NOC for VPU and CPU fail!\n");
