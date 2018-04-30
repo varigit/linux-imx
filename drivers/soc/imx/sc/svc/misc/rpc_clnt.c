@@ -554,6 +554,8 @@ sc_err_t sc_misc_otp_fuse_write(sc_ipc_t ipc, uint32_t word, uint32_t val)
 	return (sc_err_t)result;
 }
 
+EXPORT_SYMBOL(sc_misc_otp_fuse_read);
+
 sc_err_t sc_misc_set_temp(sc_ipc_t ipc, sc_rsrc_t resource,
 			  sc_misc_temp_t temp, int16_t celsius, int8_t tenths)
 {
