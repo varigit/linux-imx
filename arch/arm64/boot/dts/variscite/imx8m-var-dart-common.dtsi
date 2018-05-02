@@ -420,6 +420,21 @@
 				MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8		0xc1
 			>;
 		};
+
+		pinctrl_ecspi1: ecspi1grp {
+			fsl,pins = <
+				MX8MQ_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK		0x11
+				MX8MQ_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI		0x11
+				MX8MQ_IOMUXC_ECSPI1_MISO_ECSPI1_MISO		0x11
+				MX8MQ_IOMUXC_ECSPI1_SS0_ECSPI1_SS0		0x11
+			>;
+		};
+
+		pinctrl_ads7846: ads7846grp {
+			fsl,pins = <
+				MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3		0xc0
+			>;
+		};
 	};
 };
 
@@ -960,6 +975,40 @@
 			remote-endpoint = <&panel_in>;
 		};
 	};
+};
+
+&ecspi1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	num-cs = <1>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi1>;
+	status = "okay";
+
+	/* Resistive touch controller */
+	ads7846@0 {
+		reg = <0>;
+		compatible = "ti,ads7846";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_ads7846>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
+		spi-max-frequency = <1500000>;
+		pendown-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
+		ti,x-min = /bits/ 16 <125>;
+		ti,x-max = /bits/ 16 <4008>;
+		ti,y-min = /bits/ 16 <282>;
+		ti,y-max = /bits/ 16 <3864>;
+		ti,x-plate-ohms = /bits/ 16 <180>;
+		ti,pressure-max = /bits/ 16 <255>;
+		ti,debounce-max = /bits/ 16 <10>;
+		ti,debounce-tol = /bits/ 16 <3>;
+		ti,debounce-rep = /bits/ 16 <1>;
+		ti,settle-delay-usec = /bits/ 16 <150>;
+		ti,keep-vref-on;
+		wakeup-source;
+		status = "disabled";
+        };
 };
 
 &snvs_rtc {
