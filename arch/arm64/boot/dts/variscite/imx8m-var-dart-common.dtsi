@@ -18,6 +18,43 @@
 #include "../freescale/fsl-imx8mq.dtsi"
 
 / {
+	firmware {
+		android {
+			compatible = "android,firmware";
+			fstab {
+				compatible = "android,fstab";
+				vendor {
+					compatible = "android,vendor";
+					/* sd card node which used if androidboot.storage_type=sd */
+					dev_sd = "/dev/block/platform/30b50000.usdhc/by-name/vendor";
+					/* emmc node which used if androidboot.storage_type=emmc */
+					dev_emmc = "/dev/block/platform/30b40000.usdhc/by-name/vendor";
+					type = "ext4";
+					mnt_flags = "ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb";
+				};
+			};
+			vbmeta {
+				/*we need use FirstStageMountVBootV2 if we enable avb*/
+				compatible = "android,vbmeta";
+				/*parts means the partition witch can be mount in first stage*/
+				parts = "vbmeta,boot,system,vendor";
+			};
+		};
+	};
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
+};
+
+/ {
 	compatible = "variscite,imx8m-dart", "fsl,imx8mq";
 
 	chosen {
@@ -436,6 +473,11 @@
 				MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8		0xc1    /* WIFI_PWR_ON   */
 				MX8MQ_IOMUXC_NAND_CE1_B_GPIO3_IO2		0xc1    /* WIFI_REG_ON   */
 				MX8MQ_IOMUXC_GPIO1_IO00_ANAMIX_REF_CLK_32K      0xc1    /* WIFI_CLK_32K  */
+			>;
+		};
+
+		pinctrl_bt: btgrp {
+			fsl,pins = <
 				MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4               0xc1    /* BT_REG_ON     */
 				MX8MQ_IOMUXC_SPDIF_EXT_CLK_GPIO5_IO5            0xc1    /* BT_BUF_EN     */
 			>;
