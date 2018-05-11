@@ -36,6 +36,16 @@
 /* Default DAI format without Master and Slave flag */
 #define DAI_FMT_BASE (SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF)
 
+enum {
+	FSL_CODEC_UNKNOWN,
+	FSL_CODEC_CS42888,
+	FSL_CODEC_CS427X,
+	FSL_CODEC_SGTL5000,
+	FSL_CODEC_WM8962,
+	FSL_CODEC_WM8960,
+	FSL_CODEC_AC97,
+};
+
 /**
  * CODEC private data
  *
@@ -43,12 +53,14 @@
  * @mclk_id: MCLK (or main clock) id for set_sysclk()
  * @fll_id: FLL (or secordary clock) id for set_sysclk()
  * @pll_id: PLL id for set_pll()
+ * @codec_type: which codec we're configured for
  */
 struct codec_priv {
 	unsigned long mclk_freq;
 	u32 mclk_id;
 	u32 fll_id;
 	u32 pll_id;
+	int codec_type;
 };
 
 /**
@@ -527,10 +539,13 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
 	/* Assign a default DAI format, and allow each card to overwrite it */
 	priv->dai_fmt = DAI_FMT_BASE;
 
+	priv->codec_priv.codec_type = FSL_CODEC_UNKNOWN;
+
 	/* Diversify the card configurations */
 	if (of_device_is_compatible(np, "fsl,imx-audio-cs42888")) {
 		codec_dai_name = "cs42888";
 		priv->card.set_bias_level = NULL;
+		priv->codec_priv.codec_type = FSL_CODEC_CS42888;
 		priv->cpu_priv.sysclk_freq[TX] = priv->codec_priv.mclk_freq;
 		priv->cpu_priv.sysclk_freq[RX] = priv->codec_priv.mclk_freq;
 		priv->cpu_priv.sysclk_dir[TX] = SND_SOC_CLOCK_OUT;
@@ -539,15 +554,18 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
 		priv->dai_fmt |= SND_SOC_DAIFMT_CBS_CFS;
 	} else if (of_device_is_compatible(np, "fsl,imx-audio-cs427x")) {
 		codec_dai_name = "cs4271-hifi";
+		priv->codec_priv.codec_type = FSL_CODEC_CS427X;
 		priv->codec_priv.mclk_id = CS427x_SYSCLK_MCLK;
 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
 	} else if (of_device_is_compatible(np, "fsl,imx-audio-sgtl5000")) {
 		codec_dai_name = "sgtl5000";
+		priv->codec_priv.codec_type = FSL_CODEC_SGTL5000;
 		priv->codec_priv.mclk_id = SGTL5000_SYSCLK;
 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8962")) {
 		codec_dai_name = "wm8962";
 		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
+		priv->codec_priv.codec_type = FSL_CODEC_WM8962;
 		priv->codec_priv.mclk_id = WM8962_SYSCLK_MCLK;
 		priv->codec_priv.fll_id = WM8962_SYSCLK_FLL;
 		priv->codec_priv.pll_id = WM8962_FLL;
@@ -555,12 +573,14 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8960")) {
 		codec_dai_name = "wm8960-hifi";
 		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
+		priv->codec_priv.codec_type = FSL_CODEC_WM8960;
 		priv->codec_priv.fll_id = WM8960_SYSCLK_AUTO;
 		priv->codec_priv.pll_id = WM8960_SYSCLK_AUTO;
 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
 	} else if (of_device_is_compatible(np, "fsl,imx-audio-ac97")) {
 		codec_dai_name = "ac97-hifi";
 		priv->card.set_bias_level = NULL;
+		priv->codec_priv.codec_type = FSL_CODEC_AC97;
 		priv->dai_fmt = SND_SOC_DAIFMT_AC97;
 	} else {
 		dev_err(&pdev->dev, "unknown Device Tree compatible\n");
