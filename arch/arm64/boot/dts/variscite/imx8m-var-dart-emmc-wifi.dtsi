@@ -51,7 +51,6 @@
 	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi>;
 	bus-width = <4>;
 	vmmc-supply = <&reg_wifi_en>;
-	max-frequency = <50000000>; 
 	status = "okay";
 };
 
