@@ -1293,9 +1293,6 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
 	if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
 		boarddata->delay_line = 0;
 
-	if (of_find_property(np, "no-hs400", NULL))
-		host->quirks2 &= ~SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400;
-
 	mmc_of_parse_voltage(np, &host->ocr_mask);
 
 	/* sdr50 and sdr104 needs work on 1.8v signal voltage */
