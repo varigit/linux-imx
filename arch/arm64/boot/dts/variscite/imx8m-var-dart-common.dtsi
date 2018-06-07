@@ -808,7 +808,6 @@
 	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
 	bus-width = <8>;
 	non-removable;
-	no-hs400;
 	status = "okay";
 };
 
