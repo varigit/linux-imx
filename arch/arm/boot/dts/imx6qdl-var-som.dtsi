@@ -94,8 +94,7 @@
 			"Headphone Jack",	"HPROUT",
 			"Line In Jack",		"LINE1L",
 			"Line In Jack",		"LINE1R",
-			"Playback",		"CPU-Playback",
-			"CPU-Capture",		"Capture";
+			"Mic Jack",		"DMIC";
 		mux-int-port = <2>;
 		mux-ext-port = <3>;
 	};
