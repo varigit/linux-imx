@@ -1950,6 +1950,7 @@ static const struct drm_display_mode sgd_gktw70sdae4sd_mode = {
 	.vsync_end = 480 + 23 + 3,
 	.vtotal = 480 + 23 + 3 + 39,
 	.vrefresh = 60,
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct panel_desc_dsi sgd_gktw70sdae4sd = {
@@ -1961,8 +1962,9 @@ static const struct panel_desc_dsi sgd_gktw70sdae4sd = {
 			.width = 154,
 			.height = 87,
 		},
+		.bus_flags = DRM_BUS_FLAG_DE_LOW,
 	},
-	.flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_HSE /*| MIPI_DSI_CLOCK_NON_CONTINUOUS*/,
+	.flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS,
 	.format = MIPI_DSI_FMT_RGB888,
 	.lanes = 4,
 };
