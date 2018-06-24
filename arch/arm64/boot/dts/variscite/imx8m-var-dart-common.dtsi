@@ -1009,8 +1009,8 @@
                 compatible = "sgd,gktw70sdae4sd";
                 backlight = <&backlight>;
 		dsi-lanes = <4>;
-		panel-width-mm  = <800>;
-		panel-height-mm = <480>;
+		panel-width-mm  = <154>;
+		panel-height-mm = <87>;
 
 		port {
 			panel_in: endpoint {
