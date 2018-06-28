@@ -150,6 +150,9 @@ Optional properties:
   Documentation/devicetree/bindings/media/video-interfaces.txt.
   ports 0 and 1 should correspond to display interface 0 and
   display interface 1, respectively.
+- disable-cpuidle: boolean, set to disable cpu idle state so it
+  doesn't influence DCSS performance (at the expense of consuming
+  more power) - mostly needed for 4K@60 mode.
 
 
 example:

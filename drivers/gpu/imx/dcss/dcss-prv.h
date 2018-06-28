@@ -59,6 +59,7 @@ struct dcss_soc {
 
 	bool bus_freq_req;
 	bool clks_on;
+	bool disable_cpuidle;
 
 	struct pm_qos_request pm_qos_req;
 };

@@ -440,6 +440,9 @@ static int dcss_probe(struct platform_device *pdev)
 	dcss->dev = &pdev->dev;
 	dcss->devtype = devtype;
 
+	dcss->disable_cpuidle = device_property_read_bool(&pdev->dev, "disable-cpuidle");
+	dev_info(&pdev->dev, "cpuidle %s\n", dcss->disable_cpuidle ? "disabled" : "enabled");
+
 	platform_set_drvdata(pdev, dcss);
 
 	ret = dcss_clks_init(dcss);
@@ -492,7 +495,8 @@ static int dcss_suspend(struct device *dev)
 
 	dcss_clocks_enable(dcss, false);
 
-	pm_qos_remove_request(&dcss->pm_qos_req);
+	if (dcss->disable_cpuidle)
+		pm_qos_remove_request(&dcss->pm_qos_req);
 
 	dcss_bus_freq(dcss, false);
 
@@ -509,7 +513,8 @@ static int dcss_resume(struct device *dev)
 
 	dcss_bus_freq(dcss, true);
 
-	pm_qos_add_request(&dcss->pm_qos_req, PM_QOS_CPU_DMA_LATENCY, 0);
+	if (dcss->disable_cpuidle)
+		pm_qos_add_request(&dcss->pm_qos_req, PM_QOS_CPU_DMA_LATENCY, 0);
 
 	dcss_clocks_enable(dcss, true);
 
@@ -534,7 +539,8 @@ static int dcss_runtime_suspend(struct device *dev)
 
 	dcss_clocks_enable(dcss, false);
 
-	pm_qos_remove_request(&dcss->pm_qos_req);
+	if (dcss->disable_cpuidle)
+		pm_qos_remove_request(&dcss->pm_qos_req);
 
 	dcss_bus_freq(dcss, false);
 
@@ -548,7 +554,8 @@ static int dcss_runtime_resume(struct device *dev)
 
 	dcss_bus_freq(dcss, true);
 
-	pm_qos_add_request(&dcss->pm_qos_req, PM_QOS_CPU_DMA_LATENCY, 0);
+	if (dcss->disable_cpuidle)
+		pm_qos_add_request(&dcss->pm_qos_req, PM_QOS_CPU_DMA_LATENCY, 0);
 
 	dcss_clocks_enable(dcss, true);
 
