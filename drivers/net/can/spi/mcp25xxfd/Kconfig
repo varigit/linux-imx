@@ -1,0 +1,5 @@
+config CAN_MCP25XXFD
+	tristate "Microchip MCP25xxFD SPI CAN controllers"
+	depends on HAS_DMA
+	help
+	  Driver for the Microchip MCP25XXFD SPI FD-CAN controller family.
