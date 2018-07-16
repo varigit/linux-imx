@@ -576,10 +576,16 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
 	imx6ul-14x14-lpddr2-arm2.dtb \
 	imx6ul-14x14-evk-pf1550.dtb \
 	imx6ul-9x9-evk.dtb \
-	imx6ul-9x9-evk-csi.dtb \
 	imx6ul-9x9-evk-btwifi.dtb \
 	imx6ul-9x9-evk-btwifi-oob.dtb \
-	imx6ul-9x9-evk-ldo.dtb
+	imx6ul-9x9-evk-csi.dtb \
+	imx6ul-9x9-evk-ldo.dtb \
+	imx6ul-var-dart-5g-emmc_wifi.dtb \
+	imx6ul-var-dart-5g-nand_wifi.dtb \
+	imx6ul-var-dart-emmc_wifi.dtb \
+	imx6ul-var-dart-nand_wifi.dtb \
+	imx6ul-var-dart-sd_emmc.dtb \
+	imx6ul-var-dart-sd_nand.dtb
 dtb-$(CONFIG_SOC_IMX6ULL) += \
 	imx6ull-14x14-ddr3-arm2.dtb \
 	imx6ull-14x14-ddr3-arm2-adc.dtb \
@@ -606,12 +612,13 @@ dtb-$(CONFIG_SOC_IMX6ULL) += \
 	imx6ull-9x9-evk.dtb \
 	imx6ull-9x9-evk-btwifi.dtb \
 	imx6ull-9x9-evk-btwifi-oob.dtb \
-	imx6ull-9x9-evk-ldo.dtb		\
-	imx6ulz-14x14-evk.dtb \
-	imx6ulz-14x14-evk-btwifi.dtb \
-	imx6ulz-14x14-evk-btwifi-oob.dtb \
-	imx6ulz-14x14-evk-emmc.dtb \
-	imx6ulz-14x14-evk-gpmi-weim.dtb
+	imx6ull-9x9-evk-ldo.dtb \
+	imx6ull-var-dart-5g-emmc_wifi.dtb \
+	imx6ull-var-dart-5g-nand_wifi.dtb \
+	imx6ull-var-dart-emmc_wifi.dtb \
+	imx6ull-var-dart-nand_wifi.dtb \
+	imx6ull-var-dart-sd_emmc.dtb \
+	imx6ull-var-dart-sd_nand.dtb
 dtb-$(CONFIG_SOC_IMX6SLL) += \
 	imx6sll-lpddr2-arm2.dtb \
 	imx6sll-lpddr3-arm2.dtb \

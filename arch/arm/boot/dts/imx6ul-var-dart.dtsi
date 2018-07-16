@@ -1,0 +1,58 @@
+/*
+ * Copyright (C) 2015 Freescale Semiconductor, Inc.
+ *
+ * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+/* #define WIFI */
+/* #define EMMC */
+/* #define  NAND  */
+/dts-v1/;
+
+#include <dt-bindings/input/input.h>
+#include "imx6ul.dtsi"
+#include "imx6ul-imx6ull-var-dart-common.dtsi"
+
+/ {
+#ifdef NAND
+#ifdef WIFI
+	model = "Variscite i.MX6 UltraLite DART NAND/WIFI";
+#else
+	model = "Variscite i.MX6 UltraLite DART NAND/SD";
+#endif
+#endif
+#ifdef EMMC
+#ifdef WIFI
+	model = "Variscite i.MX6 UltraLite DART EMMC/WIFI";
+#else
+	model = "Variscite i.MX6 UltraLite DART EMMC/SD";
+#endif
+#endif
+	compatible = "fsl,imx6ul-var-dart", "fsl,imx6ul";
+};
+
+&iomuxc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hog_1
+		     &pinctrl_hog_2>;
+	imx6ul-evk {
+		pinctrl_hog_2: hoggrp-2 {
+			fsl,pins = <
+				MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0
+#ifdef WIFI
+				MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT Enable */
+				MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x03029	/* WLAN enable */
+#endif
+			>;
+		};
+
+		pinctrl_rtc: rtcgrp {
+			fsl,pins = <
+				MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0 /* RTC alarm IRQ */
+			>;
+		};
+	};
+};
