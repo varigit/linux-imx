@@ -13,27 +13,7 @@
  * GNU General Public License for more details.
  */
 
-/ {
-	display-subsystem {
-		status = "disabled";
-	};
-};
-
-&irqsteer_dcss {
-	status = "disabled";
-};
-
-&dcss {
-	status = "disabled";
-};
-
-&hdmi {
-	status = "disabled";
-};
-
-&hdmi_cec {
-	status = "disabled";
-};
+#include "imx8m-var-dart-hdmi.dtsi"
 
 &lcdif {
 	status = "okay";
