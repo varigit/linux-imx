@@ -1,0 +1,11 @@
+/*
+ * Copyright (C) 2015-2017 Variscite Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include "imx6q-var-som.dtsi"
+#include "imx6qdl-var-mx6cb-rdisplay.dtsi"
+#include "imx6qdl-var-mx6cb-buttons.dtsi"
