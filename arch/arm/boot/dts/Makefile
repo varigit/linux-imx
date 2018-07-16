@@ -600,7 +600,12 @@ dtb-$(CONFIG_SOC_IMX7D) += \
 	imx7d-sdb-reva-m4.dtb \
 	imx7d-sdb-reva-qspi.dtb \
 	imx7d-sdb-reva-touch.dtb \
-	imx7d-sdb-reva-wm8960.dtb
+	imx7d-sdb-reva-wm8960.dtb \
+	imx7d-sdb-reva-wm8960.dtb \
+	imx7d-var-som-emmc.dtb \
+	imx7d-var-som-nand.dtb \
+	imx7d-var-som-emmc-m4.dtb \
+	imx7d-var-som-nand-m4.dtb
 dtb-$(CONFIG_SOC_IMX7ULP) += \
 	imx7ulp-14x14-arm2.dtb \
 	imx7ulp-evk.dtb \
