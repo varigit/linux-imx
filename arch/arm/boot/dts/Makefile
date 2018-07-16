@@ -723,7 +723,11 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
 	imx7ulp-evkb-lpuart.dtb \
 	imx7ulp-evkb-mipi.dtb \
 	imx7ulp-evkb-rm68200-wxga.dtb \
-	imx7ulp-evkb-rm68191-qhd.dtb
+	imx7ulp-evkb-rm68191-qhd.dtb \
+	imx7d-var-som-emmc.dtb \
+	imx7d-var-som-nand.dtb \
+	imx7d-var-som-emmc-m4.dtb \
+	imx7d-var-som-nand-m4.dtb
 dtb-$(CONFIG_SOC_LS1021A) += \
 	ls1021a-moxa-uc-8410a.dtb \
 	ls1021a-qds.dtb \
