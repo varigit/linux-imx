@@ -19,6 +19,10 @@
 
 / {
 	model = "Variscite DART-MX8M EMMC+WIFI+HDMI-4K";
+
+	chosen {
+		add_bootargs = "androidboot.primary_display=imx-drm androidboot.fbTileSupport=enable androidboot.gui_resolution=1080p androidboot.displaymode=4k";
+	};
 };
 
 &dcss {
