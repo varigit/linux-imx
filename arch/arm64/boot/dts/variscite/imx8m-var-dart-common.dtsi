@@ -596,6 +596,17 @@
 					0x28 0x00 0x00 0x00 0x00 0x00 0x00 0x00
 					0x00 0x00 0x00 0x01>;
 	};
+
+	reg_cpu_dvfs: tps62361@60 {
+		reg = <0x60>;
+		compatible = "ti,tps62361";
+		regulator-min-microvolt = <900000>;
+		regulator-max-microvolt = <1000000>;
+		regulator-name = "arm-supply";
+		regulator-boot-on;
+		regulator-always-on;
+		ti,enable-force-pwm;
+	};
 };
 
 &i2c2 {
@@ -885,6 +896,7 @@
 		1000000 900000
 		800000  900000
 	>;
+	dc-supply = <&reg_cpu_dvfs>;
 };
 
 &csi1_bridge {
