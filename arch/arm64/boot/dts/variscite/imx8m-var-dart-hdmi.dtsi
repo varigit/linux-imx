@@ -15,7 +15,7 @@
 
 / {
 	chosen {
-		add_bootargs = "androidboot.primary_display=imx-drm androidboot.fbTileSupport=enable video=HDMI-A-1:1920x1080-32@60";
+		bootargs-append = "androidboot.primary_display=imx-drm androidboot.fbTileSupport=enable video=HDMI-A-1:1920x1080-32@60";
 	};
 };
 

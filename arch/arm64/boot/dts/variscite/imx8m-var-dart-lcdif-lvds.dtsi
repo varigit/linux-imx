@@ -15,7 +15,7 @@
 
 / {
 	chosen {
-		add_bootargs = "androidboot.primary_display=mxsfb-drm";
+		bootargs-append = "androidboot.primary_display=mxsfb-drm";
 	};
 
 	display-subsystem {
