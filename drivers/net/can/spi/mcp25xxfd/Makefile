@@ -9,4 +9,5 @@ mcp25xxfd-objs			+= mcp25xxfd_cmd.o
 mcp25xxfd-objs			+= mcp25xxfd_crc.o
 mcp25xxfd-objs			+= mcp25xxfd_debugfs.o
 mcp25xxfd-objs			+= mcp25xxfd_ecc.o
+mcp25xxfd-objs			+= mcp25xxfd_gpio.o
 mcp25xxfd-objs			+= mcp25xxfd_int.o
