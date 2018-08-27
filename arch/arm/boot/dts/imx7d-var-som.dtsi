@@ -123,22 +123,6 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_gpio_leds>;
 
-		red {
-			label = "Red";
-			gpios = <&gpio2 1 GPIO_ACTIVE_LOW>;
-		};
-
-		green {
-			label = "Green";
-			gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
-			default-state = "on";
-		};
-
-		blue {
-			label = "Blue";
-			gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
-		};
-
 		power {
 			label = "Power";
 			gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
@@ -407,8 +391,6 @@
 				MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x59  /* ethphy0 reset */
 				MX7D_PAD_UART2_TX_DATA__GPIO4_IO3	0x59  /* ethphy1 reset */
 				MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x0C  /* SOM_SIG1 */
-				MX7D_PAD_GPIO1_IO11__GPIO1_IO11		0x0C  /* SOM_SIG2 */
-				MX7D_PAD_GPIO1_IO12__GPIO1_IO12		0x0C  /* SOM_SIG3 */
 				MX7D_PAD_GPIO1_IO13__GPIO1_IO13		0x0C  /* EN_3V3_HC_SOM, pulled down externally */
 				MX7D_PAD_SD1_WP__CCM_CLKO2		0xb0  /* camera clock */
 			>;
