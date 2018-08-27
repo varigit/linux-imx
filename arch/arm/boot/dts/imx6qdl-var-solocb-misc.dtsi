@@ -1,0 +1,49 @@
+/*
+ * Copyright (C) 2015-2017 Variscite Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * Miscellaneous settings for VAR-SoloCustomBoard
+ */
+
+&iomuxc {
+	imx6qdl-var-som-mx6 {
+		pinctrl_usbotg_1: usbotggrp-1 {
+			fsl,pins = <
+				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
+			>;
+		};
+
+		pinctrl_ft5406_pins: ft5406_pins {
+			fsl,pins = <
+				MX6QDL_PAD_DISP0_DAT23__GPIO5_IO17	0x1B0B0
+			>;
+		};
+	};
+};
+
+&reg_usb_h1_vbus {
+	gpio = <&gpio4 15 0>;
+	enable-active-high;
+};
+
+&reg_usb_otg_vbus {
+	gpio = <&gpio3 22 0>;
+	enable-active-high;
+};
+
+&usbotg {
+	pinctrl-0 = <&pinctrl_usbotg_1>;
+	dr_mode = "otg"; /* Use "host" if you would like to use the USB0 type A connector */
+};
+
+&usdhc2 {	/* uSDHC2, MMC/SD card */
+	wp-gpios = <>;
+};
+
+&touch {
+	interrupt-parent = <&gpio5>;
+	interrupts = <17 0>;
+};

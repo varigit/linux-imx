@@ -477,7 +477,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
 	struct skb_data		*entry;
 	int			retval = 0;
 	unsigned long		lockflags;
-	size_t			size = dev->rx_urb_size;
+	size_t			size = (16*1024);
 
 	/* prevent rx skb allocation when error ratio is high */
 	if (test_bit(EVENT_RX_KILL, &dev->flags)) {

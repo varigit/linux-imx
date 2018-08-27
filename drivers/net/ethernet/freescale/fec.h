@@ -605,6 +605,13 @@ struct fec_enet_private {
 	u64 ethtool_stats[0];
 
 	struct fec_enet_stop_mode gpr;
+
+	bool phy_reset_on_resume;
+	bool phy_reset_active_high;
+	int phy_reset_gpios;
+
+	/* phy reset duration in ms */
+	int phy_reset_duration;
 };
 
 void fec_ptp_init(struct platform_device *pdev);

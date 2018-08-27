@@ -1,0 +1,37 @@
+/*
+ * Copyright (C) 2015-2017 Variscite Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * Buttons for VAR-DT6CustomBoard
+ */
+/ {
+	/* Buttons in the motherboard */
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		home {
+			label = "Home";
+			gpios = <&gpio5 11 1>;
+			linux,code = <KEY_HOMEPAGE>; /* KEY_HOMEPAGE */
+			gpio-key,wakeup;
+		};
+
+		back {
+			label = "Back";
+			gpios = <&gpio4 26 1>;
+			linux,code = <KEY_BACK>; /* KEY_BACK */
+			gpio-key,wakeup;
+		};
+
+		menu {
+			label = "Menu";
+			gpios = <&gpio4 25 1>;
+			linux,code = <KEY_MENU>; /* KEY_MENU */
+			gpio-key,wakeup;
+		};
+	};
+};
+
