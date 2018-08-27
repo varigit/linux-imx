@@ -116,23 +116,6 @@
 			status = "okay";
 		};
 
-		reg_hsic_hub_pwr_on: reg_hsic_hub_pwr_on {
-			compatible = "regulator-fixed";
-			regulator-name = "hsic_hub_pwr_on";
-			gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
-			enable-active-high;
-			regulator-always-on;
-			status = "okay";
-		};
-
-		reg_hsic_hub_connect: reg_hsic_hub_connect {
-			compatible = "regulator-fixed";
-			regulator-name = "reg_hsic_hub_connect";
-			gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-			enable-active-high;
-			regulator-always-on;
-			status = "okay";
-		};
 	};
 
 	gpio-leds {
@@ -154,6 +137,12 @@
 		blue {
 			label = "Blue";
 			gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
+		};
+
+		power {
+			label = "Power";
+			gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
 		};
 	};
 };
@@ -823,11 +812,6 @@
 	assigned-clocks = <&clks IMX7D_UART6_ROOT_SRC>;
 	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
 	status = "okay";
-};
-
-&usbh {
-	status = "okay";
-	vbus-supply = <&reg_hsic_hub_pwr_on>;
 };
 
 &usbotg1 {
