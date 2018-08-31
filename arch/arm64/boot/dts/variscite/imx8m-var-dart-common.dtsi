@@ -49,7 +49,7 @@
 			"Headphone Jack", "HPOUTR",
 			"IN2L", "Line In Jack",
 			"IN2R", "Line In Jack",
-			"IN1L", "Mic",
+			"IN1L", "Mic Jack",
 			"Playback", "CPU-Playback",
 			"CPU-Capture", "Capture";
 		status = "okay";
