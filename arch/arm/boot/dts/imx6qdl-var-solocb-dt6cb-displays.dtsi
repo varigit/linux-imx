@@ -29,7 +29,6 @@
 	lvds-channel@0 {
 		fsl,data-mapping = "spwg";
 		fsl,data-width = <24>;
-		crtc = "ipu1-di0";
 		status = "okay";
 
 		display-timings {
@@ -51,7 +50,6 @@
 	lvds-channel@1 {
 		fsl,data-mapping = "spwg";
 		fsl,data-width = <18>;
-		crtc = "ipu1-di1";
 		primary;
 		status = "okay";
 
