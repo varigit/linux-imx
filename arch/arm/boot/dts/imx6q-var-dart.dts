@@ -37,6 +37,16 @@
 	>;
 };
 
+&ldb {
+	lvds-channel@0 {
+		crtc = "ipu2-di0";
+	};
+
+	lvds-channel@1 {
+		crtc = "ipu2-di1";
+	};
+};
+
 &touch {
 	interrupt-parent = <&gpio1>;
 	interrupts = <4 0>;
