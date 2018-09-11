@@ -801,6 +801,13 @@ static int m41t80_probe(struct i2c_client *client,
 	m41t80_data->features = id->driver_data;
 	i2c_set_clientdata(client, m41t80_data);
 
+	rtc = devm_rtc_device_register(&client->dev, client->name,
+				       &m41t80_rtc_ops, THIS_MODULE);
+	if (IS_ERR(rtc))
+		return PTR_ERR(rtc);
+
+	m41t80_data->rtc = rtc;
+
 	if (client->irq > 0) {
 		rc = devm_request_threaded_irq(&client->dev, client->irq,
 					       NULL, m41t80_handle_irq,
@@ -817,13 +824,6 @@ static int m41t80_probe(struct i2c_client *client,
 			device_init_wakeup(&client->dev, true);
 		}
 	}
-
-	rtc = devm_rtc_device_register(&client->dev, client->name,
-				       &m41t80_rtc_ops, THIS_MODULE);
-	if (IS_ERR(rtc))
-		return PTR_ERR(rtc);
-
-	m41t80_data->rtc = rtc;
 
 	/* Make sure HT (Halt Update) bit is cleared */
 	rc = i2c_smbus_read_byte_data(client, M41T80_REG_ALARM_HOUR);
