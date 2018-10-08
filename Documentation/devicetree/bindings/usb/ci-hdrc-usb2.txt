@@ -87,6 +87,7 @@ Optional properties:
   and the "active" state needs to pull up the strobe pin.
 - pinctrl-n: alternate pin modes
 - ci-disable-lpm: Some chipidea hardware need to disable low power mode
+- phy-charger-detection: enable USB PHY charger detection function
 
 i.mx specific properties
 - fsl,usbmisc: phandler of non-core register device, with one
