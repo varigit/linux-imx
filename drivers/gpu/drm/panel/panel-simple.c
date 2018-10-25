@@ -1964,7 +1964,7 @@ static const struct panel_desc_dsi sgd_gktw70sdae4sd = {
 		},
 		.bus_flags = DRM_BUS_FLAG_DE_LOW,
 	},
-	.flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS,
+	.flags = MIPI_DSI_MODE_VIDEO,
 	.format = MIPI_DSI_FMT_RGB888,
 	.lanes = 4,
 };
