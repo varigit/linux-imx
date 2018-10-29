@@ -386,6 +386,7 @@
 		pinctrl_touch: touchgrp {
 			fsl,pins = <
 				MX8MQ_IOMUXC_SAI1_RXD3_GPIO4_IO5 		0x16
+				MX8MQ_IOMUXC_GPIO1_IO14_GPIO1_IO14		0x16
 			>;
 		};
 
@@ -443,6 +444,19 @@
 				MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3		0xc0
 			>;
 		};
+
+		pinctrl_typec: typecgrp {
+			fsl,pins = <
+				MX8MQ_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x16
+			>;
+		};
+
+		pinctrl_lvds: lvdsgrp {
+			fsl,pins = <
+				MX8MQ_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x16
+			>;
+		};
+
 	};
 };
 
@@ -580,6 +594,8 @@
 		reg = <0x2c>;
 		status = "disabled";
 		compatible = "ti,sn65dsi84";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_lvds>;
 		enable-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
 
 		sn65dsi84,addresses = <	0x09 0x0A 0x0B 0x0D 0x10 0x11 0x12 0x13
@@ -647,6 +663,8 @@
 		status = "okay";
 		compatible = "nxp,ptn5150";
 		reg = <0x3d>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_typec>;
 		connect-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
 	};
 
