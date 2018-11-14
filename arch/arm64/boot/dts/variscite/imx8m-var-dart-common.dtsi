@@ -74,6 +74,13 @@
 			regulator-max-microvolt = <3300000>;
 			regulator-always-on;
 		};
+
+		reg_wifi_en: wifi_en {
+			compatible = "regulator-fixed";
+			regulator-name = "WIFI_REG_ON";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+		};
 	};
 
 	sound-wm8904 {
@@ -186,7 +193,7 @@
 &iomuxc {
 	pinctrl-names = "default";
 
-	imx8mq-evk {
+	imx8m-var-dart {
 
 		pinctrl_csi1: csi1grp {
 			fsl,pins = <
@@ -456,13 +463,14 @@
 				MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4		0xc1    /* WIFI_PWR_VSEL */
 				MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8		0xc1    /* WIFI_PWR_ON   */
 				MX8MQ_IOMUXC_NAND_CE1_B_GPIO3_IO2		0xc1    /* WIFI_REG_ON   */
+				MX8MQ_IOMUXC_GPIO1_IO00_ANAMIX_REF_CLK_32K	0xc1    /* WIFI_CLK_32K  */
 			>;
 		};
 
 		pinctrl_bt: btgrp {
 			fsl,pins = <
 				MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4		0xc1    /* BT_REG_ON     */
-   				MX8MQ_IOMUXC_SPDIF_EXT_CLK_GPIO5_IO5		0xc1    /* BT_BUF_EN     */  
+				MX8MQ_IOMUXC_SPDIF_EXT_CLK_GPIO5_IO5		0xc1    /* BT_BUF_EN     */
 			>;
 		};
 
@@ -498,7 +506,6 @@
 				MX8MQ_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x16
 			>;
 		};
-
 	};
 };
 
