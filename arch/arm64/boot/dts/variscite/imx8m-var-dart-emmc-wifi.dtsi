@@ -13,31 +13,6 @@
  * GNU General Public License for more details.
  */
 
-/ {
-	regulators {
-		reg_wifi_en: wifi_en {
-			compatible = "regulator-fixed";
-			regulator-name = "WIFI_REG_ON";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-		};
-	};
-};
-
-&iomuxc {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_hog>;
-
-	/* Start WIFI slow clock before WIFI power is switched on */ 
-	imx8mq-evk {
-		pinctrl_hog: hoggrp {
-			fsl,pins = <
-				MX8MQ_IOMUXC_GPIO1_IO00_ANAMIX_REF_CLK_32K	0xc1    /* WIFI slow clock  */
-			>;
-		};
-	};
-};
-
 /* Bluetooth */
 &uart4 {
 	status = "okay";
