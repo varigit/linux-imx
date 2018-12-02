@@ -1948,9 +1948,9 @@ static const struct drm_display_mode sgd_gktw70sdae4sd_mode = {
 	.hsync_end = 800 + 40 + 48,
 	.htotal = 800 + 40 + 48 + 40,
 	.vdisplay = 480,
-	.vsync_start = 480 + 23,
-	.vsync_end = 480 + 23 + 3,
-	.vtotal = 480 + 23 + 3 + 39,
+	.vsync_start = 480 + 13,
+	.vsync_end = 480 + 13 + 3,
+	.vtotal = 480 + 13 + 3 + 29,
 	.vrefresh = 60,
 	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
