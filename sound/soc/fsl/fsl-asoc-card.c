@@ -154,6 +154,32 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
 	priv->sample_rate = params_rate(params);
 	priv->sample_format = params_format(params);
 
+	if (priv->codec_priv.pll_src != priv->codec_priv.mclk_id) {
+		struct snd_soc_dai *codec_dai = rtd->codec_dai;
+		struct codec_priv *codec_priv = &priv->codec_priv;
+		unsigned int pll_out;
+
+		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
+			pll_out = priv->sample_rate * 384;
+		else
+			pll_out = priv->sample_rate * 256;
+
+		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id,
+					  codec_priv->pll_src,
+					  codec_priv->mclk_freq, pll_out);
+		if (ret) {
+			dev_err(dev, "failed to start FLL: %d\n", ret);
+			return ret;
+		}
+
+		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->fll_id,
+					     pll_out, SND_SOC_CLOCK_IN);
+		if (ret) {
+			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
+			return ret;
+		}
+	}
+
 	/*
 	 * If codec-dai is DAI Master and all configurations are already in the
 	 * set_bias_level(), bypass the remaining settings in hw_params().
@@ -255,6 +281,9 @@ static int fsl_asoc_card_set_bias_level(struct snd_soc_card *card,
 	switch (level) {
 	case SND_SOC_BIAS_PREPARE:
 		if (dapm->bias_level != SND_SOC_BIAS_STANDBY)
+			break;
+
+		if (priv->codec_priv.pll_src != priv->codec_priv.mclk_id)
 			break;
 
 		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
