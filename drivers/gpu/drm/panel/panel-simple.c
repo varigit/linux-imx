@@ -1942,7 +1942,7 @@ static const struct panel_desc_dsi panasonic_vvx10f004b00 = {
 };
 
 static const struct drm_display_mode sgd_gktw70sdae4sd_mode = {
-	.clock = 29250,
+	.clock = 33000,
 	.hdisplay = 800,
 	.hsync_start = 800 + 40,
 	.hsync_end = 800 + 40 + 48,
