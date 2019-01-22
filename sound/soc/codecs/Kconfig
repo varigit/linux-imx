@@ -1090,6 +1090,7 @@ config SND_SOC_WM8903
 	depends on I2C
 
 config SND_SOC_WM8904
+	tristate "Wolfson Microelectronics WM8904 CODEC"
 	tristate
 
 config SND_SOC_WM8940
