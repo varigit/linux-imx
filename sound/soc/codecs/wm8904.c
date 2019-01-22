@@ -857,6 +857,26 @@ static int out_pga_event(struct snd_soc_dapm_widget *w,
 	return 0;
 }
 
+static const char *dmic_text[] = {
+	"DMIC1", "DMIC2"
+};
+
+static SOC_ENUM_SINGLE_DECL(dmic_enum,
+			    WM8904_DIGITAL_MICROPHONE_0, 11, dmic_text);
+
+static const struct snd_kcontrol_new dmic_mux =
+	SOC_DAPM_ENUM("DMIC Mux", dmic_enum);
+
+static const char *cin_text[] = {
+	"ADC", "DMIC"
+};
+
+static SOC_ENUM_SINGLE_DECL(cin_enum,
+			    WM8904_DIGITAL_MICROPHONE_0, 12, cin_text);
+
+static const struct snd_kcontrol_new cin_mux =
+	SOC_DAPM_ENUM("Capture Input", cin_enum);
+
 static const char *lin_text[] = {
 	"IN1L", "IN2L", "IN3L"
 };
@@ -931,6 +951,10 @@ SND_SOC_DAPM_INPUT("IN2L"),
 SND_SOC_DAPM_INPUT("IN2R"),
 SND_SOC_DAPM_INPUT("IN3L"),
 SND_SOC_DAPM_INPUT("IN3R"),
+
+SND_SOC_DAPM_MUX("DMIC Mux", SND_SOC_NOPM, 0, 0, &dmic_mux),
+SND_SOC_DAPM_MUX("Left Capture Input", SND_SOC_NOPM, 0, 0, &cin_mux),
+SND_SOC_DAPM_MUX("Right Capture Input", SND_SOC_NOPM, 0, 0, &cin_mux),
 
 SND_SOC_DAPM_SUPPLY("MICBIAS", WM8904_MIC_BIAS_CONTROL_0, 0, 0, NULL, 0),
 
@@ -1084,11 +1108,19 @@ static const struct snd_soc_dapm_route adc_intercon[] = {
 	{ "AIFOUTL", NULL, "AIFOUTL Mux" },
 	{ "AIFOUTR", NULL, "AIFOUTR Mux" },
 
+	{ "DMIC Mux", "DMIC1", "IN1L" },
+	{ "DMIC Mux", "DMIC2", "IN1R" },
+
+	{ "Left Capture Input", "ADC", "Left Capture PGA" },
+	{ "Left Capture Input", "DMIC", "DMIC Mux" },
+	{ "Right Capture Input", "ADC", "Right Capture PGA" },
+	{ "Right Capture Input", "DMIC", "DMIC Mux" },
+
 	{ "ADCL", NULL, "CLK_DSP" },
-	{ "ADCL", NULL, "Left Capture PGA" },
+	{ "ADCL", NULL, "Left Capture Input" },
 
 	{ "ADCR", NULL, "CLK_DSP" },
-	{ "ADCR", NULL, "Right Capture PGA" },
+	{ "ADCR", NULL, "Right Capture Input" },
 };
 
 static const struct snd_soc_dapm_route dac_intercon[] = {
@@ -2249,6 +2281,21 @@ static int wm8904_i2c_probe(struct i2c_client *i2c,
 					   WM8904_MIC_BIAS_CONTROL_0 + i,
 					   0xffff,
 					   wm8904->pdata->mic_cfg[i]);
+	} else if (i2c->dev.of_node) {
+		u32 gpio_cfg[WM8904_GPIO_REGS];
+		const struct device_node *np = i2c->dev.of_node;
+		if (of_property_read_u32_array(np, "gpio-cfg", gpio_cfg,
+					       ARRAY_SIZE(gpio_cfg)) >= 0) {
+			for (i = 0; i < WM8904_GPIO_REGS; i++) {
+				/* 0xffff means "don't touch" */
+				if (gpio_cfg[i] == 0xffff)
+					continue;
+
+				regmap_update_bits(wm8904->regmap,
+						   WM8904_GPIO_CONTROL_1 + i,
+						   0xffff, gpio_cfg[i]);
+			}
+		}
 	}
 
 	/* Set Class W by default - this will be managed by the Class
