@@ -16,6 +16,7 @@
 #include <drm/drm_edid.h>
 #include <drm/drm_mipi_dsi.h>
 #include <drm/drm_connector.h>
+#include <drm/drm_crtc_helper.h>
 #include <video/mipi_display.h>
 #include <video/of_videomode.h>
 #include <video/videomode.h>
@@ -124,7 +125,7 @@ int drm_helper_probe_single_connector_modes(struct drm_connector *connector,
                         uint32_t maxX, uint32_t maxY);
 
 static struct drm_connector_funcs sn65dsi83_connector_funcs = {
-    .dpms = drm_atomic_helper_connector_dpms,
+    .dpms = drm_helper_connector_dpms,
     .fill_modes = drm_helper_probe_single_connector_modes,
     .detect = sn65dsi83_connector_detect,
     .destroy = drm_connector_cleanup,
