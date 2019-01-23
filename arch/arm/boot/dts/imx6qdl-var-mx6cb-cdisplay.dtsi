@@ -8,9 +8,21 @@
  * Capacitive Display for VAR-MX6CustomBoard
  */
 
+&iomuxc {
+	imx6qdl-var-som-mx6 {
+		pinctrl_ft5206_pins: ft5206_pins {
+			fsl,pins = <
+				MX6QDL_PAD_EIM_DA7__GPIO3_IO07	0x80000000
+			>;
+		};
+	};
+};
+
 &i2c3 {
 	/* Touch */
 	ctw6120_tsc@38 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_ft5206_pins>;
 		compatible = "edt,edt-ft5206";
 		reg = <0x38>;
 		interrupt-parent = <&gpio3>;

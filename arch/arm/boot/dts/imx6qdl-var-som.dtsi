@@ -424,8 +424,6 @@
 
 		pinctrl_hog: hoggrp {
 			fsl,pins = <
-				/* CTW6120 IRQ */
-				MX6QDL_PAD_EIM_DA7__GPIO3_IO07 		0x80000000
 				/* for Bluetooth/wifi enable */
 				MX6QDL_PAD_SD3_DAT6__GPIO6_IO18		0x1b0b1
 				/* SDMMC2 CD/WP */
