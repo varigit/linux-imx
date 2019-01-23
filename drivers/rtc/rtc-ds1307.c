@@ -2069,9 +2069,37 @@ exit:
 	return err;
 }
 
+#ifdef CONFIG_PM_SLEEP
+static int ds1307_suspend(struct device *dev)
+{
+	struct i2c_client *client = to_i2c_client(dev);
+
+	if (client->irq && device_may_wakeup(dev))
+		return enable_irq_wake(client->irq);
+
+	return 0;
+}
+
+static int ds1307_resume(struct device *dev)
+{
+	struct i2c_client *client = to_i2c_client(dev);
+
+	if (client->irq && device_may_wakeup(dev))
+		return disable_irq_wake(client->irq);
+
+	return 0;
+}
+
+static SIMPLE_DEV_PM_OPS(ds1307_pm_ops, ds1307_suspend, ds1307_resume);
+#endif
+
+
 static struct i2c_driver ds1307_driver = {
 	.driver = {
 		.name	= "rtc-ds1307",
+#ifdef CONFIG_PM_SLEEP
+		.pm     = &ds1307_pm_ops,
+#endif
 		.of_match_table = of_match_ptr(ds1307_of_match),
 		.acpi_match_table = ACPI_PTR(ds1307_acpi_ids),
 	},
