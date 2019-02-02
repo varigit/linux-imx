@@ -38,24 +38,163 @@
  * for timestamping of RX frames as well as for TEF entries.
  */
 
-/* Implementation notes:
- *
- * Right now we only use the CAN controller block to put us into deep sleep
- * this means that the oscillator clock is turned off.
- * So this is the only thing that we implement here right now
- */
-
+#include <linux/can/core.h>
+#include <linux/can/dev.h>
 #include <linux/device.h>
+#include <linux/interrupt.h>
 #include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/of.h>
+#include <linux/regulator/consumer.h>
 #include <linux/spi/spi.h>
 
+#include "mcp25xxfd_base.h"
 #include "mcp25xxfd_can.h"
+#include "mcp25xxfd_can_debugfs.h"
+#include "mcp25xxfd_can_fifo.h"
+#include "mcp25xxfd_can_int.h"
+#include "mcp25xxfd_can_priv.h"
 #include "mcp25xxfd_clock.h"
 #include "mcp25xxfd_cmd.h"
+#include "mcp25xxfd_int.h"
 #include "mcp25xxfd_priv.h"
 #include "mcp25xxfd_regs.h"
 
-static int mcp25xxfd_can_get_mode(struct mcp25xxfd_priv *priv, u32 *reg)
+#include <uapi/linux/can/netlink.h>
+
+/* module parameters */
+static unsigned int bw_sharing_log2bits;
+module_param(bw_sharing_log2bits, uint, 0664);
+MODULE_PARM_DESC(bw_sharing_log2bits,
+		 "Delay between 2 transmissions in number of arbitration bit times\n");
+static bool enable_edge_filter;
+module_param(enable_edge_filter, bool, 0664);
+MODULE_PARM_DESC(enable_edge_filter,
+		 "Enable ISO11898-1:2015 edge_filtering");
+static unsigned int tdc_mode = 2;
+module_param(tdc_mode, uint, 0664);
+MODULE_PARM_DESC(tdc_mode,
+		 "Transmitter Delay Mode - 0 = disabled, 1 = fixed, 2 = auto\n");
+static unsigned int tdc_value;
+module_param(tdc_value, uint, 0664);
+MODULE_PARM_DESC(tdc_value,
+		 "Transmission Delay Value - range: [0:63] SCLK");
+static int tdc_offset = 64; /* outside of range to use computed values */
+module_param(tdc_offset, int, 0664);
+MODULE_PARM_DESC(tdc_offset,
+		 "Transmission Delay offset - range: [-64:63] SCLK");
+
+/* everything related to bit timing */
+static
+const struct can_bittiming_const mcp25xxfd_can_nominal_bittiming_const = {
+	.name           = DEVICE_NAME,
+	.tseg1_min      = 2,
+	.tseg1_max      = BIT(MCP25XXFD_CAN_NBTCFG_TSEG1_BITS),
+	.tseg2_min      = 1,
+	.tseg2_max      = BIT(MCP25XXFD_CAN_NBTCFG_TSEG2_BITS),
+	.sjw_max        = BIT(MCP25XXFD_CAN_NBTCFG_SJW_BITS),
+	.brp_min        = 1,
+	.brp_max        = BIT(MCP25XXFD_CAN_NBTCFG_BRP_BITS),
+	.brp_inc        = 1,
+};
+
+static
+const struct can_bittiming_const mcp25xxfd_can_data_bittiming_const = {
+	.name           = DEVICE_NAME,
+	.tseg1_min      = 1,
+	.tseg1_max      = BIT(MCP25XXFD_CAN_DBTCFG_TSEG1_BITS),
+	.tseg2_min      = 1,
+	.tseg2_max      = BIT(MCP25XXFD_CAN_DBTCFG_TSEG2_BITS),
+	.sjw_max        = BIT(MCP25XXFD_CAN_DBTCFG_SJW_BITS),
+	.brp_min        = 1,
+	.brp_max        = BIT(MCP25XXFD_CAN_DBTCFG_BRP_BITS),
+	.brp_inc        = 1,
+};
+
+static int mcp25xxfd_can_do_set_nominal_bittiming(struct net_device *net)
+{
+	struct mcp25xxfd_can_priv *cpriv = netdev_priv(net);
+	struct can_bittiming *bt = &cpriv->can.bittiming;
+
+	int sjw = bt->sjw;
+	int pseg2 = bt->phase_seg2;
+	int pseg1 = bt->phase_seg1;
+	int propseg = bt->prop_seg;
+	int brp = bt->brp;
+
+	int tseg1 = propseg + pseg1;
+	int tseg2 = pseg2;
+
+	/* calculate nominal bit timing */
+	cpriv->regs.nbtcfg = ((sjw - 1) << MCP25XXFD_CAN_NBTCFG_SJW_SHIFT) |
+		((tseg2 - 1) << MCP25XXFD_CAN_NBTCFG_TSEG2_SHIFT) |
+		((tseg1 - 1) << MCP25XXFD_CAN_NBTCFG_TSEG1_SHIFT) |
+		((brp - 1) << MCP25XXFD_CAN_NBTCFG_BRP_SHIFT);
+
+	return mcp25xxfd_cmd_write(cpriv->priv->spi, MCP25XXFD_CAN_NBTCFG,
+				   cpriv->regs.nbtcfg);
+}
+
+static int mcp25xxfd_can_do_set_data_bittiming(struct net_device *net)
+{
+	struct mcp25xxfd_can_priv *cpriv = netdev_priv(net);
+	struct mcp25xxfd_priv *priv = cpriv->priv;
+	struct can_bittiming *bt = &cpriv->can.data_bittiming;
+	struct spi_device *spi = priv->spi;
+
+	int sjw = bt->sjw;
+	int pseg2 = bt->phase_seg2;
+	int pseg1 = bt->phase_seg1;
+	int propseg = bt->prop_seg;
+	int brp = bt->brp;
+
+	int tseg1 = propseg + pseg1;
+	int tseg2 = pseg2;
+
+	int tdco;
+	int ret;
+
+	/* set up Transmitter delay compensation */
+	cpriv->regs.tdc = 0;
+	/* configure TDC mode */
+	if (tdc_mode < 4)
+		cpriv->regs.tdc = tdc_mode << MCP25XXFD_CAN_TDC_TDCMOD_SHIFT;
+	else
+		cpriv->regs.tdc = MCP25XXFD_CAN_TDC_TDCMOD_AUTO <<
+			MCP25XXFD_CAN_TDC_TDCMOD_SHIFT;
+
+	/* configure TDC offsets */
+	if ((tdc_offset >= -64) && tdc_offset < 64)
+		tdco = tdc_offset;
+	else
+		tdco = clamp_t(int, bt->brp * tseg1, -64, 63);
+	cpriv->regs.tdc |= (tdco << MCP25XXFD_CAN_TDC_TDCO_SHIFT) &
+		MCP25XXFD_CAN_TDC_TDCO_MASK;
+
+	/* configure TDC value */
+	if (tdc_value < 64)
+		cpriv->regs.tdc |= tdc_value << MCP25XXFD_CAN_TDC_TDCV_SHIFT;
+
+	/* enable edge filtering */
+	if (enable_edge_filter)
+		cpriv->regs.tdc |= MCP25XXFD_CAN_TDC_EDGFLTEN;
+
+	/* set TDC */
+	ret = mcp25xxfd_cmd_write(spi, MCP25XXFD_CAN_TDC, cpriv->regs.tdc);
+	if (ret)
+		return ret;
+
+	/* calculate data bit timing */
+	cpriv->regs.dbtcfg = ((sjw - 1) << MCP25XXFD_CAN_DBTCFG_SJW_SHIFT) |
+		((tseg2 - 1) << MCP25XXFD_CAN_DBTCFG_TSEG2_SHIFT) |
+		((tseg1 - 1) << MCP25XXFD_CAN_DBTCFG_TSEG1_SHIFT) |
+		((brp - 1) << MCP25XXFD_CAN_DBTCFG_BRP_SHIFT);
+
+	return mcp25xxfd_cmd_write(spi, MCP25XXFD_CAN_DBTCFG,
+				   cpriv->regs.dbtcfg);
+}
+
+int mcp25xxfd_can_get_mode(struct mcp25xxfd_priv *priv, u32 *reg)
 {
 	int ret;
 
@@ -67,11 +206,11 @@ static int mcp25xxfd_can_get_mode(struct mcp25xxfd_priv *priv, u32 *reg)
 		MCP25XXFD_CAN_CON_OPMOD_SHIFT;
 }
 
-static int mcp25xxfd_can_switch_mode(struct mcp25xxfd_priv *priv,
-				     u32 *reg, int mode)
+int mcp25xxfd_can_switch_mode_no_wait(struct mcp25xxfd_priv *priv,
+				      u32 *reg, int mode)
 {
 	u32 dummy;
-	int ret, i;
+	int ret;
 
 	/* get the current mode/register - if reg is NULL
 	 * when the can controller is not setup yet
@@ -79,9 +218,11 @@ static int mcp25xxfd_can_switch_mode(struct mcp25xxfd_priv *priv,
 	 * (this only happens during initialization phase)
 	 */
 	if (reg) {
-		ret = mcp25xxfd_can_get_mode(priv, reg);
-		if (ret < 0)
-			return ret;
+		if (!*reg) {
+			ret = mcp25xxfd_can_get_mode(priv, reg);
+			if (ret < 0)
+				return ret;
+		}
 	} else {
 		/* alternatively use dummy */
 		dummy = 0;
@@ -101,7 +242,15 @@ static int mcp25xxfd_can_switch_mode(struct mcp25xxfd_priv *priv,
 		mcp25xxfd_clock_fake_sleep(priv);
 
 	/* request the mode switch */
-	ret = mcp25xxfd_cmd_write(priv->spi, MCP25XXFD_CAN_CON, *reg);
+	return mcp25xxfd_cmd_write(priv->spi, MCP25XXFD_CAN_CON, *reg);
+}
+
+int mcp25xxfd_can_switch_mode(struct mcp25xxfd_priv *priv, u32 *reg, int mode)
+{
+	int ret, i;
+
+	/* trigger the mode switch itself */
+	ret = mcp25xxfd_can_switch_mode_no_wait(priv, reg, mode);
 	if (ret)
 		return ret;
 
@@ -229,4 +378,298 @@ int mcp25xxfd_can_probe(struct mcp25xxfd_priv *priv)
 	}
 	/* check that modeswitch is really working */
 	return mcp25xxfd_can_probe_modeswitch(priv);
+}
+
+static int mcp25xxfd_can_config(struct net_device *net)
+{
+	struct mcp25xxfd_can_priv *cpriv = netdev_priv(net);
+	struct mcp25xxfd_priv *priv = cpriv->priv;
+	struct spi_device *spi = priv->spi;
+	int ret;
+
+	/* setup value of con_register */
+	cpriv->regs.con = MCP25XXFD_CAN_CON_STEF; /* enable TEF, disable TXQ */
+
+	/* transmission bandwidth sharing bits */
+	if (bw_sharing_log2bits > 12)
+		bw_sharing_log2bits = 12;
+	cpriv->regs.con |= bw_sharing_log2bits <<
+		MCP25XXFD_CAN_CON_TXBWS_SHIFT;
+
+	/* non iso FD mode */
+	if (!(cpriv->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO))
+		cpriv->regs.con |= MCP25XXFD_CAN_CON_ISOCRCEN;
+
+	/* one shot */
+	if (cpriv->can.ctrlmode & CAN_CTRLMODE_ONE_SHOT)
+		cpriv->regs.con |= MCP25XXFD_CAN_CON_RTXAT;
+
+	/* apply it now together with a mode switch */
+	ret = mcp25xxfd_can_switch_mode(cpriv->priv, &cpriv->regs.con,
+					MCP25XXFD_CAN_CON_MODE_CONFIG);
+	if (ret)
+		return 0;
+
+	/* time stamp control register - 1ns resolution */
+	cpriv->regs.tscon = 0;
+	ret = mcp25xxfd_cmd_write(spi, MCP25XXFD_CAN_TBC, 0);
+	if (ret)
+		return ret;
+
+	cpriv->regs.tscon = MCP25XXFD_CAN_TSCON_TBCEN |
+		((cpriv->can.clock.freq / 1000000)
+		 << MCP25XXFD_CAN_TSCON_TBCPRE_SHIFT);
+	ret = mcp25xxfd_cmd_write(spi, MCP25XXFD_CAN_TSCON, cpriv->regs.tscon);
+	if (ret)
+		return ret;
+
+	/* setup fifos */
+	ret = mcp25xxfd_can_fifo_setup(cpriv);
+	if (ret)
+		return ret;
+
+	/* setup can bittiming now - the do_set_bittiming methods
+	 * are not used as they get callled before open
+	 */
+	ret = mcp25xxfd_can_do_set_nominal_bittiming(net);
+	if (ret)
+		return ret;
+	ret = mcp25xxfd_can_do_set_data_bittiming(net);
+	if (ret)
+		return ret;
+
+	return ret;
+}
+
+/* mode setting */
+static int mcp25xxfd_can_do_set_mode(struct net_device *net,
+				     enum can_mode mode)
+{
+	switch (mode) {
+	case CAN_MODE_START:
+		break;
+	default:
+		return -EOPNOTSUPP;
+	}
+
+	return 0;
+}
+
+/* binary error counters */
+static int mcp25xxfd_can_get_berr_counter(const struct net_device *net,
+					  struct can_berr_counter *bec)
+{
+	struct mcp25xxfd_can_priv *cpriv = netdev_priv(net);
+
+	bec->txerr = (cpriv->status.trec & MCP25XXFD_CAN_TREC_TEC_MASK) >>
+		MCP25XXFD_CAN_TREC_TEC_SHIFT;
+	bec->rxerr = (cpriv->status.trec & MCP25XXFD_CAN_TREC_REC_MASK) >>
+		MCP25XXFD_CAN_TREC_REC_SHIFT;
+
+	return 0;
+}
+
+static int mcp25xxfd_can_open(struct net_device *net)
+{
+	struct mcp25xxfd_can_priv *cpriv = netdev_priv(net);
+	struct spi_device *spi = cpriv->priv->spi;
+	int ret;
+
+	ret = open_candev(net);
+	if (ret) {
+		netdev_err(net, "unable to set initial baudrate!\n");
+		return ret;
+	}
+
+	/* clear those statistics */
+	memset(&cpriv->stats, 0, sizeof(cpriv->stats));
+
+	/* request an IRQ but keep disabled for now */
+	ret = request_threaded_irq(spi->irq, NULL,
+				   mcp25xxfd_can_int,
+				   IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+				   cpriv->priv->device_name, cpriv);
+	if (ret) {
+		dev_err(&spi->dev, "failed to acquire irq %d - %i\n",
+			spi->irq, ret);
+		goto out_candev;
+	}
+	disable_irq(spi->irq);
+	cpriv->irq.allocated = true;
+	cpriv->irq.enabled = false;
+
+	/* enable power to the transceiver */
+	ret = mcp25xxfd_base_power_enable(cpriv->transceiver, 1);
+	if (ret)
+		goto out_irq;
+
+	/* enable clock (so that spi works) */
+	ret = mcp25xxfd_clock_start(cpriv->priv, MCP25XXFD_CLK_USER_CAN);
+	if (ret)
+		goto out_transceiver;
+
+	/* configure controller for reception */
+	ret = mcp25xxfd_can_config(net);
+	if (ret)
+		goto out_canclock;
+
+	/* setting up state */
+	cpriv->can.state = CAN_STATE_ERROR_ACTIVE;
+
+	/* enable interrupts */
+	ret = mcp25xxfd_int_enable(cpriv->priv, true);
+	if (ret)
+		goto out_canconfig;
+
+	/* switch to active mode */
+	ret = mcp25xxfd_can_switch_mode(cpriv->priv, &cpriv->regs.con,
+					(net->mtu == CAN_MTU) ?
+					MCP25XXFD_CAN_CON_MODE_CAN2_0 :
+					MCP25XXFD_CAN_CON_MODE_MIXED);
+	if (ret)
+		goto out_int;
+
+	return 0;
+
+out_int:
+	mcp25xxfd_int_enable(cpriv->priv, false);
+out_canconfig:
+	mcp25xxfd_can_fifo_release(cpriv);
+out_canclock:
+	mcp25xxfd_clock_stop(cpriv->priv, MCP25XXFD_CLK_USER_CAN);
+out_transceiver:
+	mcp25xxfd_base_power_enable(cpriv->transceiver, 0);
+out_irq:
+	free_irq(spi->irq, cpriv);
+	cpriv->irq.allocated = false;
+	cpriv->irq.enabled = false;
+out_candev:
+	close_candev(net);
+	return ret;
+}
+
+static void mcp25xxfd_can_shutdown(struct mcp25xxfd_can_priv *cpriv)
+{
+	/* switch us to CONFIG mode - this disables the controller */
+	mcp25xxfd_can_switch_mode(cpriv->priv, &cpriv->regs.con,
+				  MCP25XXFD_CAN_CON_MODE_CONFIG);
+}
+
+static int mcp25xxfd_can_stop(struct net_device *net)
+{
+	struct mcp25xxfd_can_priv *cpriv = netdev_priv(net);
+	struct mcp25xxfd_priv *priv = cpriv->priv;
+	struct spi_device *spi = priv->spi;
+
+	/* disable inerrupts on controller */
+	mcp25xxfd_int_enable(cpriv->priv, false);
+
+	/* release fifos and debugfs */
+	mcp25xxfd_can_fifo_release(cpriv);
+
+	/* shutdown the can controller */
+	mcp25xxfd_can_shutdown(cpriv);
+
+	/* stop the clock */
+	mcp25xxfd_clock_stop(cpriv->priv, MCP25XXFD_CLK_USER_CAN);
+
+	/* and disable the transceiver */
+	mcp25xxfd_base_power_enable(cpriv->transceiver, 0);
+
+	/* disable interrupt on host */
+	free_irq(spi->irq, cpriv);
+	cpriv->irq.allocated = false;
+	cpriv->irq.enabled = false;
+
+	/* close the can_decice */
+	close_candev(net);
+
+	return 0;
+}
+
+static const struct net_device_ops mcp25xxfd_netdev_ops = {
+	.ndo_open = mcp25xxfd_can_open,
+	.ndo_stop = mcp25xxfd_can_stop,
+	.ndo_change_mtu = can_change_mtu,
+};
+
+/* probe and remove */
+int mcp25xxfd_can_setup(struct mcp25xxfd_priv *priv)
+{
+	struct spi_device *spi = priv->spi;
+	struct mcp25xxfd_can_priv *cpriv;
+	struct net_device *net;
+	struct regulator *transceiver;
+	int ret;
+
+	/* get transceiver power regulator*/
+	transceiver = devm_regulator_get_optional(&spi->dev,
+						  "xceiver");
+	if (PTR_ERR(transceiver) == -EPROBE_DEFER)
+		return -EPROBE_DEFER;
+
+	/* allocate can device */
+	net = alloc_candev(sizeof(*cpriv), TX_ECHO_SKB_MAX);
+	if (!net)
+		return -ENOMEM;
+
+	/* and do some cross-asignments */
+	cpriv = netdev_priv(net);
+	cpriv->priv = priv;
+	priv->cpriv = cpriv;
+
+	/* setup network */
+	SET_NETDEV_DEV(net, &spi->dev);
+	net->netdev_ops = &mcp25xxfd_netdev_ops;
+	net->flags |= IFF_ECHO;
+
+	/* assign transceiver */
+	cpriv->transceiver = transceiver;
+
+	/* setup can */
+	cpriv->can.clock.freq = priv->clock_freq;
+	cpriv->can.bittiming_const =
+		&mcp25xxfd_can_nominal_bittiming_const;
+	cpriv->can.data_bittiming_const =
+		&mcp25xxfd_can_data_bittiming_const;
+	/* we are not setting bit-timing methods here as they get
+	 * called by the framework before open so the controller is
+	 * still in sleep mode, which does not help
+	 * things are configured in open instead
+	 */
+	cpriv->can.do_set_mode =
+		mcp25xxfd_can_do_set_mode;
+	cpriv->can.do_get_berr_counter =
+		mcp25xxfd_can_get_berr_counter;
+	cpriv->can.ctrlmode_supported =
+		CAN_CTRLMODE_FD |
+		CAN_CTRLMODE_FD_NON_ISO |
+		CAN_CTRLMODE_LOOPBACK |
+		CAN_CTRLMODE_LISTENONLY |
+		CAN_CTRLMODE_BERR_REPORTING |
+		CAN_CTRLMODE_ONE_SHOT;
+
+	ret = register_candev(net);
+	if (ret) {
+		dev_err(&spi->dev, "Failed to register can device\n");
+		goto out;
+	}
+
+	mcp25xxfd_can_debugfs_setup(cpriv);
+
+	return 0;
+out:
+	free_candev(net);
+	priv->cpriv = NULL;
+
+	return ret;
+}
+
+void mcp25xxfd_can_remove(struct mcp25xxfd_priv *priv)
+{
+	if (priv->cpriv) {
+		unregister_candev(priv->cpriv->can.dev);
+		free_candev(priv->cpriv->can.dev);
+		priv->cpriv = NULL;
+	}
 }
