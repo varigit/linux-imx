@@ -15,6 +15,12 @@
 
 #include "imx8m-var-dart-hdmi.dtsi"
 
+/ {
+	chosen {
+		bootargs-append = "androidboot.primary_display=imx-drm androidboot.gui_resolution=1080p";
+	};
+};
+
 &lcdif {
 	status = "okay";
 
