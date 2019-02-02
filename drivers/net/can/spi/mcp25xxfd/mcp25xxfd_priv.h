@@ -24,10 +24,12 @@ enum mcp25xxfd_model {
 	CAN_MCP2518FD	= 0x2518,
 };
 
+struct mcp25xxfd_can_priv;
 struct mcp25xxfd_priv {
 	struct spi_device *spi;
 	struct clk *clk;
 	struct gpio_chip gpio;
+	struct mcp25xxfd_can_priv *cpriv;
 
 	/* the actual model of the mcp25xxfd */
 	enum mcp25xxfd_model model;
