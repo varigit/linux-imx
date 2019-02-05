@@ -1,6 +1,6 @@
 /*
  * Copyright 2017 NXP
- * Copyright 2018-2019 Variscite Ltd.
+ * Copyright 2018 Variscite Ltd.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -13,35 +13,13 @@
  * GNU General Public License for more details.
  */
 
-&hdmi {
-	status = "disabled";
-};
+#include "fsl-imx8mq-var-dart-hdmi.dtsi"
 
-&dcss {
+&lcdif {
 	status = "okay";
-	disp-dev = "mipi_disp";
 
-	clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>,
-		 <&clk IMX8MQ_CLK_DISP_AXI_ROOT>,
-		 <&clk IMX8MQ_CLK_DISP_RTRM_ROOT>,
-		 <&clk IMX8MQ_CLK_DC_PIXEL>,
-		 <&clk IMX8MQ_CLK_DUMMY>,
-		 <&clk IMX8MQ_CLK_DISP_DTRC>;
-	clock-names = "apb", "axi", "rtrm", "pix_div", "pix_out", "dtrc";
-	assigned-clocks = <&clk IMX8MQ_CLK_DC_PIXEL>,
-			  <&clk IMX8MQ_CLK_DISP_AXI>,
-			  <&clk IMX8MQ_CLK_DISP_RTRM>;
-	assigned-clock-parents = <&clk IMX8MQ_VIDEO_PLL1_OUT>,
-				 <&clk IMX8MQ_SYS1_PLL_800M>,
-				 <&clk IMX8MQ_SYS1_PLL_800M>;
-	assigned-clock-rates = <594000000>,
-			       <800000000>,
-			       <400000000>;
-
-	dcss_disp0: port@0 {
-		reg = <0>;
-
-		dcss_disp0_mipi_dsi: mipi_dsi {
+	port@0 {
+		lcdif_mipi_dsi: mipi-dsi-endpoint {
 			remote-endpoint = <&mipi_dsi_in>;
 		};
 	};
@@ -53,10 +31,13 @@
 
 &mipi_dsi {
 	status = "okay";
+	as_bridge;
+	sync-pol = <1>;
+	pwr-delay = <10>;
 
 	port@1 {
 		mipi_dsi_in: endpoint {
-			remote-endpoint = <&dcss_disp0_mipi_dsi>;
+			remote-endpoint = <&lcdif_mipi_dsi>;
 		};
 	};
 };
@@ -80,4 +61,3 @@
 &ft5x06_ts {
 	status = "okay";
 };
-

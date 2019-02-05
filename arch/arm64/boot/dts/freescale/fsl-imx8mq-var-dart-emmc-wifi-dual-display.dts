@@ -13,24 +13,10 @@
  * GNU General Public License for more details.
  */
 
-/* Bluetooth */
-&uart4 {
-	status = "okay";
-};
+#include "fsl-imx8mq-var-dart-common.dtsi"
+#include "fsl-imx8mq-var-dart-emmc-wifi.dtsi"
+#include "fsl-imx8mq-var-dart-dual-display.dtsi"
 
-/* WIFI */
-&usdhc2 {
-	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi>;
-	bus-width = <4>;
-	vmmc-supply = <&reg_wifi_en>;
-	status = "okay";
+/ {
+	model = "Variscite DART-MX8M EMMC+WIFI+DUAL";
 };
-
-&fec1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_fec1>;
-};
-

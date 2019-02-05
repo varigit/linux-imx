@@ -13,11 +13,10 @@
  * GNU General Public License for more details.
  */
 
-#include "imx8m-var-dart-common.dtsi"
-#include "imx8m-var-dart-emmc-wifi.dtsi"
-#include "imx8m-var-dart-hdmi.dtsi"
+#include "fsl-imx8mq-var-dart-common.dtsi"
+#include "fsl-imx8mq-var-dart-sd-emmc.dtsi"
+#include "fsl-imx8mq-var-dart-dual-display.dtsi"
 
 / {
-	model = "Variscite DART-MX8M EMMC+WIFI+HDMI";
+	model = "Variscite DART-MX8M SD+EMMC+DUAL";
 };
-
