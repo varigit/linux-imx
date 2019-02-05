@@ -15,7 +15,7 @@
 
 /dts-v1/;
 
-#include "../freescale/fsl-imx8mq.dtsi"
+#include "fsl-imx8mq.dtsi"
 
 / {
 	firmware {
@@ -97,7 +97,7 @@
 			"Playback", "CPU-Playback",
 			"CPU-Capture", "Capture";
 		status = "okay";
-        };
+	};
 
 	sound-hdmi {
 		compatible = "fsl,imx8mq-evk-cdnhdmi",
@@ -133,8 +133,8 @@
 		status = "disabled";
 	};
 
-        backlight: backlight {
-                compatible = "pwm-backlight";
+	backlight: backlight {
+		compatible = "pwm-backlight";
 		pwms = <&pwm1 0 1000000 0>;
 		brightness-levels = < 0  1  2  3  4  5  6  7  8  9
 				     10 11 12 13 14 15 16 17 18 19
@@ -148,44 +148,44 @@
 				     90 91 92 93 94 95 96 97 98 99
 				    100>;
 		default-brightness-level = <80>;
-                status = "disabled";
-        };
+		status = "disabled";
+	};
 
-        gpio-keys {
-                compatible = "gpio-keys";
-                pinctrl-names = "default";
-                pinctrl-0 = <&pinctrl_gpio_keys>;
+	gpio-keys {
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_keys>;
 
-                up {
-                        label = "Up";
-                        gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
-                        linux,code = <KEY_UP>;
-                };
+		up {
+			label = "Up";
+			gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_UP>;
+		};
 
-                down {
-                        label = "Down";
-                        gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
-                        linux,code = <KEY_DOWN>;
-                };
+		down {
+			label = "Down";
+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_DOWN>;
+		};
 
-                home {
-                        label = "Home";
-                        gpios = <&gpio4 13 GPIO_ACTIVE_LOW>;
-                        linux,code = <KEY_HOME>;
-                };
+		home {
+			label = "Home";
+			gpios = <&gpio4 13 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_HOME>;
+		};
 
-                back {
-                        label = "Back";
-                        gpios = <&gpio4 6 GPIO_ACTIVE_LOW>;
-                        linux,code = <KEY_BACK>;
-                };
-        };
+		back {
+			label = "Back";
+			gpios = <&gpio4 6 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_BACK>;
+		};
+	};
 
 	leds {
 		compatible = "gpio-leds";
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_leds>;
-	
+
 		emmc {
 			label = "eMMC";
 			gpios = <&gpio4 17 GPIO_ACTIVE_HIGH>;
@@ -301,10 +301,10 @@
 
 		pinctrl_uart4: uart4grp {
 			fsl,pins = <
-				MX8MQ_IOMUXC_ECSPI2_SCLK_UART4_DCE_RX           0xc1
-				MX8MQ_IOMUXC_ECSPI2_MOSI_UART4_DCE_TX           0xc1
-				MX8MQ_IOMUXC_ECSPI2_MISO_UART4_DCE_CTS_B        0xc1
-				MX8MQ_IOMUXC_ECSPI2_SS0_UART4_DCE_RTS_B         0xc1
+				MX8MQ_IOMUXC_ECSPI2_SCLK_UART4_DCE_RX		0xc1
+				MX8MQ_IOMUXC_ECSPI2_MOSI_UART4_DCE_TX		0xc1
+				MX8MQ_IOMUXC_ECSPI2_MISO_UART4_DCE_CTS_B	0xc1
+				MX8MQ_IOMUXC_ECSPI2_SS0_UART4_DCE_RTS_B		0xc1
 			>;
 		};
 
@@ -407,13 +407,13 @@
 
 		pinctrl_sai3: sai3grp {
 			fsl,pins = <
-				MX8MQ_IOMUXC_SAI3_RXFS_SAI3_RX_SYNC             0xd6
-				MX8MQ_IOMUXC_SAI3_RXC_SAI3_RX_BCLK              0xd6
-				MX8MQ_IOMUXC_SAI3_RXD_SAI3_RX_DATA0             0xd6
-				MX8MQ_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC             0xd6
-				MX8MQ_IOMUXC_SAI3_TXC_SAI3_TX_BCLK              0xd6
-				MX8MQ_IOMUXC_SAI3_TXD_SAI3_TX_DATA0             0xd6
-				MX8MQ_IOMUXC_SAI3_MCLK_SAI3_MCLK                0xd6
+				MX8MQ_IOMUXC_SAI3_RXFS_SAI3_RX_SYNC		0xd6
+				MX8MQ_IOMUXC_SAI3_RXC_SAI3_RX_BCLK		0xd6
+				MX8MQ_IOMUXC_SAI3_RXD_SAI3_RX_DATA0		0xd6
+				MX8MQ_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC		0xd6
+				MX8MQ_IOMUXC_SAI3_TXC_SAI3_TX_BCLK		0xd6
+				MX8MQ_IOMUXC_SAI3_TXD_SAI3_TX_DATA0		0xd6
+				MX8MQ_IOMUXC_SAI3_MCLK_SAI3_MCLK		0xd6
 			>;
 		};
 
@@ -469,17 +469,17 @@
 
 		pinctrl_wifi: wifigrp {
 			fsl,pins = <
-				MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4		0xc1    /* WIFI_PWR_VSEL */
-				MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8		0xc1    /* WIFI_PWR_ON   */
-				MX8MQ_IOMUXC_NAND_CE1_B_GPIO3_IO2		0xc1    /* WIFI_REG_ON   */
-				MX8MQ_IOMUXC_GPIO1_IO00_ANAMIX_REF_CLK_32K      0xc1    /* WIFI_CLK_32K  */
+				MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4		0xc1	/* WIFI_PWR_VSEL */
+				MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8		0xc1	/* WIFI_PWR_ON   */
+				MX8MQ_IOMUXC_NAND_CE1_B_GPIO3_IO2		0xc1	/* WIFI_REG_ON   */
+				MX8MQ_IOMUXC_GPIO1_IO00_ANAMIX_REF_CLK_32K	0xc1	/* WIFI_CLK_32K  */
 			>;
 		};
 
 		pinctrl_bt: btgrp {
 			fsl,pins = <
-				MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4               0xc1    /* BT_REG_ON     */
-				MX8MQ_IOMUXC_SPDIF_EXT_CLK_GPIO5_IO5            0xc1    /* BT_BUF_EN     */
+				MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4		0xc1	/* BT_REG_ON     */
+				MX8MQ_IOMUXC_SPDIF_EXT_CLK_GPIO5_IO5		0xc1	/* BT_BUF_EN     */
 			>;
 		};
 
@@ -710,7 +710,7 @@
 	pinctrl-0 = <&pinctrl_i2c2>;
 	status = "okay";
 
-        /* DS1337 RTC module */
+	/* DS1337 RTC module */
 	rtc@0x68 {
 		status = "okay";
 		compatible = "dallas,ds1337";
@@ -719,7 +719,7 @@
 		pinctrl-0 = <&pinctrl_rtc>;
 		interrupt-parent = <&gpio1>;
 		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
-        };
+	};
 
 	/* Capacitive touch controller */
 	ft5x06_ts: ft5x06_ts@38 {
@@ -735,7 +735,7 @@
 		touchscreen-size-y = <480>;
 		touchscreen-inverted-x;
 		touchscreen-inverted-y;
-        };
+	};
 
 	/* USB-C controller */
 	typec_ptn5150: typec@3d {
@@ -1101,7 +1101,7 @@
 		ti,keep-vref-on;
 		wakeup-source;
 		status = "disabled";
-        };
+	};
 };
 
 &pwm1 {
@@ -1112,4 +1112,3 @@
 &snvs_rtc {
 	status = "disabled";
 };
-

@@ -13,29 +13,10 @@
  * GNU General Public License for more details.
  */
 
+#include "fsl-imx8mq-var-dart-common.dtsi"
+#include "fsl-imx8mq-var-dart-emmc-wifi.dtsi"
+#include "fsl-imx8mq-var-dart-lvds.dtsi"
+
 / {
-	chosen {
-		bootargs-append = "androidboot.primary_display=imx-drm androidboot.gui_resolution=1080p androidboot.fbTileSupport=enable";
-	};
+	model = "Variscite DART-MX8M EMMC+WIFI+LVDS";
 };
-
-&dcss {
-	status = "okay";
-	disp-dev = "hdmi_disp";
-};
-
-&hdmi {
-	status = "okay";
-};
-
-&gpio1 {
-	hdmi_on_hog {
-		gpio-hog;
-		gpios = <5 0>;
-		output-low;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_hdmi>;
-		line-name = "hdmi_on";
-	};
-};
-

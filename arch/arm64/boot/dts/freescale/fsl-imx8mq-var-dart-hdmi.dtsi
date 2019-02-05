@@ -13,11 +13,28 @@
  * GNU General Public License for more details.
  */
 
-#include "imx8m-var-dart-common.dtsi"
-#include "imx8m-var-dart-sd-emmc.dtsi"
-#include "imx8m-var-dart-dual.dtsi"
-
 / {
-	model = "Variscite DART-MX8M SD+EMMC+DUAL";
+	chosen {
+		bootargs-append = "androidboot.primary_display=imx-drm androidboot.gui_resolution=1080p androidboot.fbTileSupport=enable";
+	};
 };
 
+&dcss {
+	status = "okay";
+	disp-dev = "hdmi_disp";
+};
+
+&hdmi {
+	status = "okay";
+};
+
+&gpio1 {
+	hdmi_on_hog {
+		gpio-hog;
+		gpios = <5 0>;
+		output-low;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_hdmi>;
+		line-name = "hdmi_on";
+	};
+};
