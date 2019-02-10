@@ -102,6 +102,12 @@ int mcp25xxfd_can_rx_submit_frame(struct mcp25xxfd_can_priv *cpriv, int fifo)
 	if (rx->flags & MCP25XXFD_CAN_OBJ_FLAGS_FDF)
 		MCP25XXFD_DEBUGFS_INCR(cpriv->fifos.rx.fd_count);
 
+	/* add to rx_history */
+	cpriv->rx_history.dlc[cpriv->rx_history.index] = dlc;
+	cpriv->rx_history.index++;
+	if (cpriv->rx_history.index >= MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE)
+		cpriv->rx_history.index = 0;
+
 	/* allocate the skb buffer */
 	if (rx->flags & MCP25XXFD_CAN_OBJ_FLAGS_FDF) {
 		flags = 0;
@@ -237,6 +243,40 @@ static int mcp25xxfd_can_read_rx_frame_bulk(struct mcp25xxfd_can_priv *cpriv,
 	return 0;
 }
 
+/* predict dlc size based on historic behaviour */
+static int mcp25xxfd_can_rx_predict_prefetch(struct mcp25xxfd_can_priv *cpriv)
+{
+	int dlc, i, top;
+	u8 histo[16];
+
+	/* if we have a prfecth set then use that one */
+	if (rx_prefetch_bytes != -1)
+		return min_t(int, rx_prefetch_bytes,
+			     (cpriv->can.dev->mtu == CANFD_MTU) ? 64 : 8);
+
+	/* memset */
+	memset(histo, 0, sizeof(histo));
+
+	/* for all others compute the histogram */
+	for (i = 0; i < MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE; i++)
+		histo[cpriv->rx_history.dlc[i]]++;
+
+	/* and now find the highest fit */
+	for (i = (cpriv->can.dev->mtu == CANFD_MTU) ? 15 : 8, dlc = 8, top = 0;
+	      i >= 0; i--) {
+		if (top < histo[i]) {
+			top = histo[i];
+			dlc = i;
+		}
+	}
+
+	/* compute length from dlc */
+	cpriv->rx_history.predicted_len = can_dlc2len(dlc);
+
+	/* return the predicted length */
+	return cpriv->rx_history.predicted_len;
+}
+
 /* at least in can2.0 mode we can read multiple RX-fifos in one go
  * in case they are ajactent to each other and thus we can reduce
  * the number of spi messages produced and this improves spi-bus
@@ -367,10 +407,7 @@ static int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
 	int ret;
 
 	/* calculate optimal prefetch to use */
-	if (rx_prefetch_bytes != -1)
-		prefetch = min_t(int, rx_prefetch_bytes, 64);
-	else
-		prefetch = 8;
+	prefetch = mcp25xxfd_can_rx_predict_prefetch(cpriv);
 
 	/* loop all frames */
 	for (i = 0, f = cpriv->fifos.rx.start; i < cpriv->fifos.rx.count;
