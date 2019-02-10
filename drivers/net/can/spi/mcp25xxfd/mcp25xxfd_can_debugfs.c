@@ -93,6 +93,17 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
 		       rx_reads_prefetched_too_many);
 	DEBUGFS_CREATE("rx_reads_prefetched_too_many_bytes",
 		       rx_reads_prefetched_too_many_bytes);
+	DEBUGFS_CREATE("rx_single_reads",	 rx_single_reads);
+	DEBUGFS_CREATE("rx_bulk_reads",		 rx_bulk_reads);
+
+	for (i = 0; i < MCP25XXFD_CAN_RX_BULK_READ_BINS - 1; i++) {
+		snprintf(name, sizeof(name), "rx_bulk_reads_%i", i + 1);
+		data = &cpriv->stats.rx_bulk_read_sizes[i];
+		debugfs_create_u64(name, 0444, dir, data);
+	}
+	snprintf(name, sizeof(name), "rx_bulk_reads_%i+", i + 1);
+	debugfs_create_u64(name, 0444, dir,
+			   &cpriv->stats.rx_bulk_read_sizes[i]);
 #undef DEBUGFS_CREATE
 }
 
