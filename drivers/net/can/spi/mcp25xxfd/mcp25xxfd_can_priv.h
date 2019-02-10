@@ -178,6 +178,7 @@ struct mcp25xxfd_can_priv {
 	struct {
 #define MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE 32
 		u8 dlc[MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE];
+		u8 brs[MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE];
 		u8 index;
 		u32 predicted_len;
 	} rx_history;
