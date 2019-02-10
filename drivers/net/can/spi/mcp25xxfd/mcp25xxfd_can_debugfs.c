@@ -104,6 +104,10 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
 	snprintf(name, sizeof(name), "rx_bulk_reads_%i+", i + 1);
 	debugfs_create_u64(name, 0444, dir,
 			   &cpriv->stats.rx_bulk_read_sizes[i]);
+
+	if (cpriv->can.dev->mtu == CANFD_MTU)
+		debugfs_create_u32("rx_reads_prefetch_predicted_len", 0444,
+				   dir, &cpriv->rx_history.predicted_len);
 #undef DEBUGFS_CREATE
 }
 
