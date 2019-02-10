@@ -167,6 +167,10 @@ struct mcp25xxfd_can_priv {
 		u64 rx_reads_prefetched_too_few_bytes;
 		u64 rx_reads_prefetched_too_many;
 		u64 rx_reads_prefetched_too_many_bytes;
+		u64 rx_single_reads;
+		u64 rx_bulk_reads;
+#define MCP25XXFD_CAN_RX_BULK_READ_BINS 8
+		u64 rx_bulk_read_sizes[MCP25XXFD_CAN_RX_BULK_READ_BINS];
 	} stats;
 #endif /* CONFIG_DEBUG_FS */
 
