@@ -174,6 +174,14 @@ struct mcp25xxfd_can_priv {
 	} stats;
 #endif /* CONFIG_DEBUG_FS */
 
+	/* history of rx-dlc */
+	struct {
+#define MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE 32
+		u8 dlc[MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE];
+		u8 index;
+		u32 predicted_len;
+	} rx_history;
+
 	/* bus state */
 	struct {
 		u32 state;
