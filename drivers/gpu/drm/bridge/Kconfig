@@ -134,4 +134,6 @@ config DRM_ITE_IT6263
 	---help---
 	  ITE IT6263 bridge chip driver.
 
+source "drivers/gpu/drm/bridge/sn65dsi83/Kconfig"
+
 endmenu
