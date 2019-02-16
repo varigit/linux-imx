@@ -16,6 +16,7 @@ config DRM_PANEL_BRIDGE
 menu "Display Interface Bridges"
 	depends on DRM && DRM_BRIDGE
 
+
 config DRM_CDNS_DSI
 	tristate "Cadence DPI/DSI bridge"
 	select DRM_KMS_HELPER
@@ -86,10 +87,10 @@ config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
 	select DRM_KMS_HELPER
 	select DRM_PANEL
 	help
-	  This is a driver for the display bridges of
-	  GE B850v3 that convert dual channel LVDS
-	  to DP++. This is used with the i.MX6 imx-ldb
-	  driver. You are likely to say N here.
+          This is a driver for the display bridges of
+          GE B850v3 that convert dual channel LVDS
+          to DP++. This is used with the i.MX6 imx-ldb
+          driver. You are likely to say N here.
 
 config DRM_NWL_MIPI_DSI
 	tristate "Northwest Logic MIPI DSI Host controller"
@@ -106,7 +107,6 @@ config DRM_NWL_MIPI_DSI
 	help
 	  This enables the Northwest Logic MIPI DSI Host controller as
 	  for example found on NXP's i.MX8 Processors.
-
 config DRM_SEC_MIPI_DSIM
 	tristate "Samsung MIPI DSIM Bridge"
 	depends on OF
@@ -148,7 +148,6 @@ config DRM_PARADE_PS8640
 	  Choose this option if you have PS8640 for display
 	  The PS8640 is a high-performance and low-power
 	  MIPI DSI to eDP converter
-
 config DRM_SIL_SII8620
 	tristate "Silicon Image SII8620 HDMI/MHL bridge"
 	depends on OF
@@ -184,7 +183,6 @@ config DRM_SIMPLE_BRIDGE
 	help
 	  Support for non-programmable DRM bridges, such as ADI ADV7123, TI
 	  THS8134 and THS8135 or passive resistor ladder DACs.
-
 config DRM_THINE_THC63LVD1024
 	tristate "Thine THC63LVD1024 LVDS decoder bridge"
 	depends on OF
@@ -198,7 +196,6 @@ config DRM_TOSHIBA_TC358762
 	select DRM_PANEL_BRIDGE
 	help
 	  Toshiba TC358762 DSI/DPI bridge driver.
-
 config DRM_TOSHIBA_TC358764
 	tristate "TC358764 DSI/LVDS bridge"
 	depends on OF
@@ -237,7 +234,6 @@ config DRM_TOSHIBA_TC358775
 	select DRM_MIPI_DSI
 	help
 	  Toshiba TC358775 DSI/LVDS bridge chip driver.
-
 config DRM_TI_TFP410
 	tristate "TI TFP410 DVI/HDMI bridge"
 	depends on OF
@@ -262,10 +258,10 @@ config DRM_TI_TPD12S015
 	help
 	  Texas Instruments TPD12S015 HDMI level shifter and ESD protection
 	  driver.
-
 source "drivers/gpu/drm/bridge/analogix/Kconfig"
 
 source "drivers/gpu/drm/bridge/adv7511/Kconfig"
+
 
 source "drivers/gpu/drm/bridge/cadence/Kconfig"
 
@@ -278,7 +274,6 @@ config DRM_ITE_IT6263
 	select REGMAP_I2C
 	help
 	  ITE IT6263 bridge chip driver.
-
 config DRM_ITE_IT6161
 	tristate "ITE IT6161 MIPI/HDMI bridge"
 	depends on OF
@@ -286,5 +281,7 @@ config DRM_ITE_IT6161
 	select REGMAP_I2C
 	help
 	  ITE IT6161 bridge chip driver.
+
+source "drivers/gpu/drm/bridge/sn65dsi83/Kconfig"
 
 endmenu
