@@ -3731,7 +3731,7 @@ void brcmf_sdio_isr(struct brcmf_sdio *bus)
 		atomic_set(&bus->ipend, 1);
 	else
 		if (brcmf_sdio_intr_rstatus(bus)) {
-			brcmf_err("failed backplane access\n");
+			brcmf_dbg(SDIO, "failed backplane access\n");
 		}
 
 	/* Disable additional interrupts (is this needed now)? */

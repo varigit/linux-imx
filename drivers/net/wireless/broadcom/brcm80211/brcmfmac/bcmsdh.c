@@ -345,7 +345,7 @@ static int brcmf_sdiod_regrw_helper(struct brcmf_sdio_dev *sdiodev, u32 addr,
 		 * in the logs.
 		 */
 		if (addr != SBSDIO_FUNC1_SLEEPCSR)
-			brcmf_err("failed to %s data F%d@0x%05x, err: %d\n",
+			brcmf_dbg(SDIO, "failed to %s data F%d@0x%05x, err: %d\n",
 				  write ? "write" : "read", func, addr, ret);
 		else
 			brcmf_dbg(SDIO, "failed to %s data F%d@0x%05x, err: %d\n",
