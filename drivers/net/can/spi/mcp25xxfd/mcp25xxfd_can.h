@@ -23,12 +23,13 @@ int mcp25xxfd_can_targetmode(struct mcp25xxfd_can_priv *cpriv)
 
 static inline
 void mcp25xxfd_can_queue_frame(struct mcp25xxfd_can_priv *cpriv,
-			       s32 fifo, u16 ts)
+			       s32 fifo, u16 ts, bool is_rx)
 {
 	int idx = cpriv->fifos.submit_queue_count;
 
 	cpriv->fifos.submit_queue[idx].fifo = fifo;
 	cpriv->fifos.submit_queue[idx].ts = ts;
+	cpriv->fifos.submit_queue[idx].is_rx = is_rx;
 
 	MCP25XXFD_DEBUGFS_INCR(cpriv->fifos.submit_queue_count);
 }

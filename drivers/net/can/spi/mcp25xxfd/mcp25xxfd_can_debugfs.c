@@ -11,6 +11,7 @@
 #include <linux/debugfs.h>
 #include "mcp25xxfd_can_debugfs.h"
 #include "mcp25xxfd_can_priv.h"
+#include "mcp25xxfd_can_tx.h"
 
 static void mcp25xxfd_can_debugfs_regs(struct mcp25xxfd_can_priv *cpriv,
 				       struct dentry *root)
@@ -55,10 +56,15 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
 	DEBUGFS_CREATE("int_system_error_rx",	 int_serr_rx_count);
 	DEBUGFS_CREATE("int_mode_switch",	 int_mod_count);
 	DEBUGFS_CREATE("int_rx",		 int_rx_count);
+	DEBUGFS_CREATE("int_tx_attempt",	 int_txat_count);
+	DEBUGFS_CREATE("int_tef",		 int_tef_count);
 	DEBUGFS_CREATE("int_rx_overflow",	 int_rxov_count);
 	DEBUGFS_CREATE("int_ecc_error",		 int_ecc_count);
 	DEBUGFS_CREATE("int_rx_invalid_message", int_ivm_count);
 	DEBUGFS_CREATE("int_crcerror",		 int_cerr_count);
+
+	DEBUGFS_CREATE("tx_frames_fd",		 tx_fd_count);
+	DEBUGFS_CREATE("tx_frames_brs",		 tx_brs_count);
 
 	DEBUGFS_CREATE("rx_reads",		 rx_reads);
 	DEBUGFS_CREATE("rx_reads_prefetched_too_few",
@@ -72,6 +78,15 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
 #undef DEBUGFS_CREATE
 }
 
+static void mcp25xxfd_can_debugfs_tef(struct mcp25xxfd_can_priv *cpriv,
+				      struct dentry *root)
+{
+	struct dentry *dir = debugfs_create_dir("tef", root);
+
+	debugfs_create_u32("count", 0444, dir, &cpriv->fifos.tef.count);
+	debugfs_create_u32("size",  0444, dir, &cpriv->fifos.tef.size);
+}
+
 static void mcp25xxfd_can_debugfs_fifo_info(struct mcp25xxfd_fifo_info *info,
 					    int index, struct dentry *root)
 {
@@ -81,6 +96,7 @@ static void mcp25xxfd_can_debugfs_fifo_info(struct mcp25xxfd_fifo_info *info,
 	snprintf(name, sizeof(name), "%02i", index);
 	dir = debugfs_create_dir(name, root);
 
+	debugfs_create_u32("is_rx",     0444, dir, &info->is_rx);
 	debugfs_create_x32("offset",    0444, dir, &info->offset);
 	debugfs_create_u32("priority",  0444, dir, &info->priority);
 
@@ -125,6 +141,37 @@ static void mcp25xxfd_can_debugfs_rx_fifos(struct mcp25xxfd_can_priv *cpriv,
 	mcp25xxfd_can_debugfs_rxtx_fifos(&cpriv->fifos.rx, dir);
 }
 
+static void mcp25xxfd_can_debugfs_tx_fifos(struct mcp25xxfd_can_priv *cpriv,
+					   struct dentry *root)
+{
+	struct dentry *dir = debugfs_create_dir("tx_fifos", root);
+
+	mcp25xxfd_can_debugfs_rxtx_fifos(&cpriv->fifos.rx, dir);
+}
+
+static void mcp25xxfd_can_debugfs_tx_queue(struct mcp25xxfd_can_priv *cpriv,
+					   struct dentry *root)
+{
+	struct mcp25xxfd_tx_spi_message_queue *queue = cpriv->fifos.tx_queue;
+	struct dentry *dir;
+
+	if (!queue)
+		return;
+
+	dir = debugfs_create_dir("tx_queue", root);
+
+	debugfs_create_u32("state", 0444, dir, &queue->state);
+	debugfs_create_x32("fifos_idle", 0444, dir, &queue->idle);
+	debugfs_create_x32("fifos_in_fill_fifo_transfer",
+			   0444, dir, &queue->in_fill_fifo_transfer);
+	debugfs_create_x32("fifos_in_trigger_fifo_transfer",
+			   0444, dir, &queue->in_trigger_fifo_transfer);
+	debugfs_create_x32("fifos_in_can_transfer",
+			   0444, dir, &queue->in_can_transfer);
+	debugfs_create_x32("fifos_transferred",
+			   0444, dir, &queue->transferred);
+}
+
 void mcp25xxfd_can_debugfs_remove(struct mcp25xxfd_can_priv *cpriv)
 {
 	debugfs_remove_recursive(cpriv->debugfs_dir);
@@ -146,8 +193,11 @@ void mcp25xxfd_can_debugfs_setup(struct mcp25xxfd_can_priv *cpriv)
 	mcp25xxfd_can_debugfs_regs(cpriv, root);
 	mcp25xxfd_can_debugfs_stats(cpriv, root);
 	mcp25xxfd_can_debugfs_status(cpriv, root);
+	mcp25xxfd_can_debugfs_tef(cpriv, root);
 	mcp25xxfd_can_debugfs_fifos(cpriv, root);
 	mcp25xxfd_can_debugfs_rx_fifos(cpriv, root);
+	mcp25xxfd_can_debugfs_tx_fifos(cpriv, root);
+	mcp25xxfd_can_debugfs_tx_queue(cpriv, root);
 }
 
 #endif
