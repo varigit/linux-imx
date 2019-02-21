@@ -54,6 +54,7 @@
 #include "mcp25xxfd_can_fifo.h"
 #include "mcp25xxfd_can_int.h"
 #include "mcp25xxfd_can_priv.h"
+#include "mcp25xxfd_can_tx.h"
 #include "mcp25xxfd_clock.h"
 #include "mcp25xxfd_cmd.h"
 #include "mcp25xxfd_int.h"
@@ -529,6 +530,10 @@ static int mcp25xxfd_can_open(struct net_device *net)
 	if (ret)
 		goto out_int;
 
+	/* start the tx_queue */
+	mcp25xxfd_can_tx_queue_manage(cpriv,
+				      MCP25XXFD_CAN_TX_QUEUE_STATE_STARTED);
+
 	return 0;
 
 out_int:
@@ -564,6 +569,10 @@ static int mcp25xxfd_can_stop(struct net_device *net)
 	/* disable inerrupts on controller */
 	mcp25xxfd_int_enable(cpriv->priv, false);
 
+	/* stop transmit queue */
+	mcp25xxfd_can_tx_queue_manage(cpriv,
+				      MCP25XXFD_CAN_TX_QUEUE_STATE_STOPPED);
+
 	/* release fifos and debugfs */
 	mcp25xxfd_can_fifo_release(cpriv);
 
@@ -590,6 +599,7 @@ static int mcp25xxfd_can_stop(struct net_device *net)
 static const struct net_device_ops mcp25xxfd_netdev_ops = {
 	.ndo_open = mcp25xxfd_can_open,
 	.ndo_stop = mcp25xxfd_can_stop,
+	.ndo_start_xmit = mcp25xxfd_can_tx_start_xmit,
 	.ndo_change_mtu = can_change_mtu,
 };
 
