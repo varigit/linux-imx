@@ -14,7 +14,21 @@
 #include "mcp25xxfd_can.h"
 #include "mcp25xxfd_can_fifo.h"
 #include "mcp25xxfd_can_priv.h"
+#include "mcp25xxfd_can_tx.h"
 #include "mcp25xxfd_cmd.h"
+
+/* some controller parameters are currently not configurable via netlink
+ * so we allow to control them via module parameters (that can changed
+ * in /sys if needed) - theses are only needed during setup if the can_device
+ */
+static unsigned int tx_fifos;
+module_param(tx_fifos, uint, 0664);
+MODULE_PARM_DESC(tx_fifos,
+		 "Number of tx-fifos to configure - recommended value is < 7\n");
+
+static bool three_shot;
+module_param(three_shot, bool, 0664);
+MODULE_PARM_DESC(three_shot, "Use 3 shots when one-shot is requested");
 
 static int mcp25xxfd_can_fifo_get_address(struct mcp25xxfd_can_priv *cpriv)
 {
@@ -57,6 +71,15 @@ static int mcp25xxfd_can_fifo_setup_config(struct mcp25xxfd_can_priv *cpriv,
 		/* select the effective value */
 		val = (c > 1) ? flags : flags_last;
 
+		/* are we in tx mode */
+		if (flags & MCP25XXFD_CAN_FIFOCON_TXEN) {
+			cpriv->fifos.info[f].is_rx = false;
+			cpriv->fifos.info[f].priority = p;
+			val |= (p << MCP25XXFD_CAN_FIFOCON_TXPRI_SHIFT);
+		} else {
+			cpriv->fifos.info[f].is_rx = true;
+		}
+
 		/* write the config to the controller in one go */
 		ret = mcp25xxfd_cmd_write(cpriv->priv->spi,
 					  MCP25XXFD_CAN_FIFOCON(f), val);
@@ -65,6 +88,31 @@ static int mcp25xxfd_can_fifo_setup_config(struct mcp25xxfd_can_priv *cpriv,
 	}
 
 	return 0;
+}
+
+static int mcp25xxfd_can_fifo_setup_tx(struct mcp25xxfd_can_priv *cpriv)
+{
+	u32 tx_flags = MCP25XXFD_CAN_FIFOCON_FRESET |     /* reset FIFO */
+		MCP25XXFD_CAN_FIFOCON_TXEN |              /* a tx FIFO */
+		MCP25XXFD_CAN_FIFOCON_TXATIE |            /* state in txatif */
+		(cpriv->fifos.payload_mode <<
+		 MCP25XXFD_CAN_FIFOCON_PLSIZE_SHIFT) |    /* paylod size */
+		(0 << MCP25XXFD_CAN_FIFOCON_FSIZE_SHIFT); /* 1 FIFO deep */
+
+	/* handle oneshot/three-shot */
+	if (cpriv->can.ctrlmode & CAN_CTRLMODE_ONE_SHOT)
+		if (three_shot)
+			tx_flags |= MCP25XXFD_CAN_FIFOCON_TXAT_THREE_SHOT <<
+				MCP25XXFD_CAN_FIFOCON_TXAT_SHIFT;
+		else
+			tx_flags |= MCP25XXFD_CAN_FIFOCON_TXAT_ONE_SHOT <<
+				MCP25XXFD_CAN_FIFOCON_TXAT_SHIFT;
+	else
+		tx_flags |= MCP25XXFD_CAN_FIFOCON_TXAT_UNLIMITED <<
+			MCP25XXFD_CAN_FIFOCON_TXAT_SHIFT;
+
+	return mcp25xxfd_can_fifo_setup_config(cpriv, &cpriv->fifos.tx,
+					       tx_flags, tx_flags);
 }
 
 static int mcp25xxfd_can_fifo_setup_rx(struct mcp25xxfd_can_priv *cpriv)
@@ -108,7 +156,7 @@ static int mcp25xxfd_can_fifo_setup_rxfilter(struct mcp25xxfd_can_priv *cpriv)
 
 static int mcp25xxfd_can_fifo_compute(struct mcp25xxfd_can_priv *cpriv)
 {
-	int rx_memory_available;
+	int tef_memory_used, tx_memory_used, rx_memory_available;
 
 	/* default settings as per MTU/CANFD */
 	switch (cpriv->can.dev->mtu) {
@@ -116,6 +164,9 @@ static int mcp25xxfd_can_fifo_compute(struct mcp25xxfd_can_priv *cpriv)
 		/* mtu is 8 */
 		cpriv->fifos.payload_size = 8;
 		cpriv->fifos.payload_mode = MCP25XXFD_CAN_TXQCON_PLSIZE_8;
+
+		/* 6 tx fifos */
+		cpriv->fifos.tx.count = 6;
 
 		break;
 	case CANFD_MTU:
@@ -126,17 +177,57 @@ static int mcp25xxfd_can_fifo_compute(struct mcp25xxfd_can_priv *cpriv)
 		cpriv->fifos.payload_size = 64;
 		cpriv->fifos.payload_mode = MCP25XXFD_CAN_TXQCON_PLSIZE_64;
 
+		/* 6 tx fifos */
+		cpriv->fifos.tx.count = 6;
+
 		break;
 	default:
 		return -EINVAL;
 	}
 
 	/* compute effective sizes */
+	cpriv->fifos.tef.size = sizeof(struct mcp25xxfd_can_obj_tef);
+	cpriv->fifos.tx.size = sizeof(struct mcp25xxfd_can_obj_tx) +
+		cpriv->fifos.payload_size;
 	cpriv->fifos.rx.size = sizeof(struct mcp25xxfd_can_obj_rx) +
 		cpriv->fifos.payload_size;
 
+	/* if defined as a module parameter modify the number of tx_fifos */
+	if (tx_fifos) {
+		netdev_info(cpriv->can.dev,
+			    "Using %i tx-fifos as per module parameter\n",
+			    tx_fifos);
+		cpriv->fifos.tx.count = tx_fifos;
+		if (tx_fifos > 6)
+			netdev_info(cpriv->can.dev,
+				    "You may trigger a bug where during a spi transfer bit 7, 15, 23 or 31 of TXREQ may flip due to CAN bus activity or similar so the recommended value is < 7\n");
+	}
+
+	/* there can be at the most 30 tx fifos (TEF and at least 1 RX fifo */
+	if (cpriv->fifos.tx.count > 30) {
+		netdev_err(cpriv->can.dev,
+			   "There is an absolute maximum of 30 tx-fifos\n");
+		return -EINVAL;
+	}
+
+	/* set tef fifos to the number of tx fifos */
+	cpriv->fifos.tef.count = cpriv->fifos.tx.count;
+
+	/* compute size of the tx fifos and TEF */
+	tx_memory_used = cpriv->fifos.tx.count * cpriv->fifos.tx.size;
+	tef_memory_used = cpriv->fifos.tef.count * cpriv->fifos.tef.size;
+
 	/* calculate evailable memory for RX_fifos */
-	rx_memory_available = MCP25XXFD_SRAM_SIZE;
+	rx_memory_available = MCP25XXFD_SRAM_SIZE - tx_memory_used -
+		tef_memory_used;
+
+	/* we need at least one RX Frame */
+	if (rx_memory_available < cpriv->fifos.rx.size) {
+		netdev_err(cpriv->can.dev,
+			   "Configured %i tx-fifos exceeds available memory already\n",
+			   cpriv->fifos.tx.count);
+		return -EINVAL;
+	}
 
 	/* calculate possible amount of RX fifos */
 	cpriv->fifos.rx.count = rx_memory_available / cpriv->fifos.rx.size;
@@ -145,11 +236,12 @@ static int mcp25xxfd_can_fifo_compute(struct mcp25xxfd_can_priv *cpriv)
 	 * there are only 31 fifos available in total,
 	 * so we need to limit ourselves
 	 */
-	if (cpriv->fifos.rx.count > 31)
-		cpriv->fifos.rx.count = 31;
+	if (cpriv->fifos.rx.count + cpriv->fifos.tx.count > 31)
+		cpriv->fifos.rx.count = 31 - cpriv->fifos.tx.count;
 
 	/* define the layout now that we have gotten everything */
-	cpriv->fifos.rx.start = 1;
+	cpriv->fifos.tx.start = 1;
+	cpriv->fifos.rx.start = cpriv->fifos.tx.start + cpriv->fifos.tx.count;
 
 	return 0;
 }
@@ -177,6 +269,7 @@ static int mcp25xxfd_can_fifo_clear(struct mcp25xxfd_can_priv *cpriv)
 	int ret;
 
 	memset(&cpriv->fifos.info, 0, sizeof(cpriv->fifos.info));
+	memset(&cpriv->fifos.tx, 0, sizeof(cpriv->fifos.tx));
 	memset(&cpriv->fifos.rx, 0, sizeof(cpriv->fifos.rx));
 
 	/* clear FIFO config */
@@ -205,7 +298,15 @@ int mcp25xxfd_can_fifo_setup(struct mcp25xxfd_can_priv *cpriv)
 		return ret;
 
 	/* configure TEF */
-	cpriv->regs.tefcon = 0;
+	if (cpriv->fifos.tef.count)
+		cpriv->regs.tefcon =
+			MCP25XXFD_CAN_TEFCON_FRESET |
+			MCP25XXFD_CAN_TEFCON_TEFNEIE |
+			MCP25XXFD_CAN_TEFCON_TEFTSEN |
+			((cpriv->fifos.tef.count - 1) <<
+			 MCP25XXFD_CAN_TEFCON_FSIZE_SHIFT);
+	else
+		cpriv->regs.tefcon = 0;
 	ret = mcp25xxfd_cmd_write(cpriv->priv->spi, MCP25XXFD_CAN_TEFCON,
 				  cpriv->regs.tefcon);
 	if (ret)
@@ -217,6 +318,9 @@ int mcp25xxfd_can_fifo_setup(struct mcp25xxfd_can_priv *cpriv)
 		return ret;
 
 	/* configure FIFOS themselves */
+	ret = mcp25xxfd_can_fifo_setup_tx(cpriv);
+	if (ret)
+		return ret;
 	ret = mcp25xxfd_can_fifo_setup_rx(cpriv);
 	if (ret)
 		return ret;
@@ -229,6 +333,11 @@ int mcp25xxfd_can_fifo_setup(struct mcp25xxfd_can_priv *cpriv)
 	if (ret)
 		return ret;
 
+	/* setup tx_fifo_queue */
+	ret = mcp25xxfd_can_tx_queue_alloc(cpriv);
+	if (ret)
+		return ret;
+
 	/* add the can info to debugfs */
 	mcp25xxfd_can_debugfs_setup(cpriv);
 
@@ -237,6 +346,7 @@ int mcp25xxfd_can_fifo_setup(struct mcp25xxfd_can_priv *cpriv)
 
 void mcp25xxfd_can_fifo_release(struct mcp25xxfd_can_priv *cpriv)
 {
+	mcp25xxfd_can_tx_queue_free(cpriv);
 	mcp25xxfd_can_fifo_clear(cpriv);
 	mcp25xxfd_can_debugfs_remove(cpriv);
 }
