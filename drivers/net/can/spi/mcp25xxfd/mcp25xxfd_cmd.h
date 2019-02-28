@@ -20,6 +20,8 @@
 #define MCP25XXFD_INSTRUCTION_WRITE_SAVE	0xC000
 
 #define MCP25XXFD_ADDRESS_MASK			0x0fff
+/* a bit to use CRC commands if possible */
+#define MCP25XXFD_ADDRESS_WITH_CRC		BIT(31)
 
 static inline void mcp25xxfd_cmd_convert_to_cpu(u32 *data, int n)
 {
