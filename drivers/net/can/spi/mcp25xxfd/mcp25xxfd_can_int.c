@@ -627,7 +627,12 @@ irqreturn_t mcp25xxfd_can_int(int irq, void *dev_id)
 					      MCP25XXFD_CAN_INT,
 					      &cpriv->status.intf,
 					      sizeof(cpriv->status));
-		if (ret) {
+		switch (ret) {
+		case 0: /* no errors, so process */
+			break;
+		case -EILSEQ: /* a crc error, so run the loop again */
+			continue;
+		default: /* all other error cases */
 			netdev_err(cpriv->can.dev,
 				   "reading can registers returned with error code %i\n",
 				   ret);
@@ -642,10 +647,15 @@ irqreturn_t mcp25xxfd_can_int(int irq, void *dev_id)
 		       cpriv->status.intf) == 0)
 			break;
 
-		/* handle the status */
+		/* handle the interrupts for real */
 		ret = mcp25xxfd_can_int_handle_status(cpriv);
-		if (ret)
+		switch (ret) {
+		case 0: /* no errors, so process */
+		case -EILSEQ: /* a crc error, so run the loop again */
+			break;
+		default: /* all other error cases */
 			goto fail;
+		}
 
 		/* allow voluntarily rescheduling every so often to avoid
 		 * long CS lows at the end of a transfer on low power CPUs
@@ -664,6 +674,9 @@ fail:
 	netdev_err(cpriv->can.dev,
 		   "experienced unexpected error %i in interrupt handler - disabling interrupts\n",
 		   ret);
+	/* note that if we experienced an spi error,
+	 * then this would produce another error
+	 */
 	mcp25xxfd_int_enable(cpriv->priv, false);
 
 	/* we could also put the driver in bus-off mode */

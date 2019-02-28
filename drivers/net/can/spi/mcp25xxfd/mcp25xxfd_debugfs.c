@@ -76,6 +76,12 @@ static void mcp25xxfd_debugfs_mod_setup(struct mcp25xxfd_priv *priv)
 			   &priv->spi_use_speed_hz);
 	debugfs_create_u32("clk_user_mask", 0444, root, &priv->clk_user_mask);
 
+	/* some statistics */
+	debugfs_create_u64("spi_crc_read", 0444, root,
+			   &priv->stats.spi_crc_read);
+	debugfs_create_u64("spi_crc_read_split", 0444, root,
+			   &priv->stats.spi_crc_read_split);
+
 	/* expose the system registers */
 	priv->debugfs_regs_dir = debugfs_create_dir("regs", root);
 	regs = priv->debugfs_regs_dir;

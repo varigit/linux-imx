@@ -81,6 +81,10 @@ struct mcp25xxfd_priv {
 #if defined(CONFIG_DEBUG_FS)
 	struct dentry *debugfs_dir;
 	struct dentry *debugfs_regs_dir;
+	struct {
+		u64 spi_crc_read;
+		u64 spi_crc_read_split;
+	} stats;
 #endif
 };
 
