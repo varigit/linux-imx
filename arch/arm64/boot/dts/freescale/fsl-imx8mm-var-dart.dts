@@ -1106,3 +1106,7 @@
 &snvs_rtc {
 	status = "disabled";
 };
+
+&crypto {
+       status = "disabled";
+};
