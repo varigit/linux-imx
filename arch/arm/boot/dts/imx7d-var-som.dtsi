@@ -878,45 +878,45 @@
 	imx7d-sdb {
 		pinctrl_hog_2: hoggrp-2 {
 			fsl,pins = <
-				MX7D_PAD_GPIO1_IO05__GPIO1_IO5		0x14
+				MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5		0x14
 			>;
 		};
 
 		pinctrl_pwm2: pwm2grp {
 			fsl,pins = <
-				MX7D_PAD_GPIO1_IO02__PWM2_OUT		0x110b0
+				MX7D_PAD_LPSR_GPIO1_IO02__PWM2_OUT		0x110b0
 			>;
 		};
 
 		pinctrl_usbotg2_pwr_2: usbotg2-2 {
 			fsl,pins = <
-				MX7D_PAD_GPIO1_IO07__GPIO1_IO7		0x14
+				MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7		0x14
 			>;
 		};
 
 		pinctrl_wdog: wdoggrp {
 			fsl,pins = <
-				MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B	0x74
+				MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_B		0x74
 			>;
 		};
 
 		pinctrl_sai1_mclk: sai1grp_mclk {
 			fsl,pins = <
-				MX7D_PAD_GPIO1_IO01__SAI1_MCLK		0x1f
+				MX7D_PAD_LPSR_GPIO1_IO01__SAI1_MCLK		0x1f
 			>;
 		};
 
 		pinctrl_wlan: wlangrp {
 			fsl,pins = <
-				MX7D_PAD_GPIO1_IO04__GPIO1_IO4		0x09 /* WL_REG_ON */
-				MX7D_PAD_GPIO1_IO03__OSC32K_32K_OUT	0xb0 /* WIFI Slow clock */
+				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4		0x09 /* WL_REG_ON */
+				MX7D_PAD_LPSR_GPIO1_IO03__OSC32K_32K_OUT	0xb0 /* WIFI Slow clock */
 			>;
 		};
 
 		pinctrl_wlan_sleep: wlangrp_sleep {
 			fsl,pins = <
-				MX7D_PAD_GPIO1_IO04__GPIO1_IO4		0x14 /* WL_REG_ON */
-				MX7D_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x14 /* WIFI Slow clock */
+				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4		0x14 /* WL_REG_ON */
+				MX7D_PAD_LPSR_GPIO1_IO03__OSC32K_32K_OUT	0x14 /* WIFI Slow clock */
 			>;
 		};
 	};
