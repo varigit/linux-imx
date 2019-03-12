@@ -275,6 +275,22 @@
 		status = "disabled";
 	};
 
+	counter1: counter@30640000 {
+		compatible = "fsl,ftm-quaddec";
+		reg = <0x30640000 0x10000>;
+		clocks = <&clks IMX7D_FLEXTIMER1_ROOT_CLK>;
+		clock-names = "ipg";
+		status = "disabled";
+	};
+
+	counter2: counter@30650000 {
+		compatible = "fsl,ftm-quaddec";
+		reg = <0x30650000 0x10000>;
+		clocks = <&clks IMX7D_FLEXTIMER2_ROOT_CLK>;
+		clock-names = "ipg";		
+		status = "disabled";
+	};
+
 	system_counter_rd: system-counter-rd@306a0000 {
 		compatible = "fsl,imx7d-system-counter-rd";
 		reg = <0x306a0000 0x10000>;

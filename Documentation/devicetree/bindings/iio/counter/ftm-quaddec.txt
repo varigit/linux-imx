@@ -1,0 +1,22 @@
+FlexTimer Quadrature decoder counter
+
+This driver exposes a simple counter for the quadrature decoder mode.
+
+Required properties:
+- compatible:		Must be "fsl,ftm-quaddec".
+- reg:			Must be set to the memory region of the flextimer.
+- clocks:		Must be set to the root clk of the FlexTimer device
+- clock-name:		Must be set to "ipg"
+
+Optional property:
+- big-endian:		Access the device registers in big-endian mode.
+
+Example:
+		counter1: counter@30640000 {
+			compatible = "fsl,ftm-quaddec";
+			reg = <0x30640000 0x10000>;
+			clocks = <&clks IMX7D_FLEXTIMER1_ROOT_CLK>;
+			clock-names = "ipg";
+			big-endian;
+			status = "disabled";
+		};
