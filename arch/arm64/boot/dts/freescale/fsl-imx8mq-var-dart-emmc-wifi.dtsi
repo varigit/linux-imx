@@ -18,6 +18,29 @@
 	status = "okay";
 };
 
+/* WIFI voltage select pin */
+&iomuxc {
+	imx8m-var-dart {
+		pinctrl_usdhc2_vsel: usdhc2grpvsel {
+			fsl,pins = <
+				MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4	0xc1
+			>;
+		};
+	};
+};
+
+/* Set WIFI SDIO voltage at 1.8V */
+&gpio1 {
+	wifi_vsel_hog {
+		gpio-hog;
+		gpios = <4 0>;
+		output-high;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_usdhc2_vsel>;
+		line-name = "wifi_vsel";
+	};
+};
+
 /* WIFI */
 &usdhc2 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";

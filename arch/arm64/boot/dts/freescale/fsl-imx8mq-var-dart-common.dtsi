@@ -399,12 +399,6 @@
 			>;
 		};
 
-		pinctrl_usdhc2_vsel: usdhc2grpvsel {
-			fsl,pins = <
-				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-			>;
-		};
-
 		pinctrl_sai3: sai3grp {
 			fsl,pins = <
 				MX8MQ_IOMUXC_SAI3_RXFS_SAI3_RX_SYNC		0xd6
