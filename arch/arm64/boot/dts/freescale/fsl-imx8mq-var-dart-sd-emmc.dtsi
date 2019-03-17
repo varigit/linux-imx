@@ -35,6 +35,17 @@
 	};
 };
 
+/* SD card voltage select pin */
+&iomuxc {
+	imx8m-var-dart {
+		pinctrl_usdhc2_vsel: usdhc2grpvsel {
+			fsl,pins = <
+				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0xc1
+			>;
+		};
+	};
+};
+
 /* SD card */
 &usdhc2 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
