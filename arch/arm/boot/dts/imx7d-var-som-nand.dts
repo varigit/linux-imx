@@ -11,11 +11,6 @@
 #include "imx7d.dtsi"
 #include "imx7d-var-som.dtsi"
 
-/ {
-	model = "Variscite i.MX7 DUAL Smart Device Board";
-	compatible = "fsl,imx7d-var-som", "fsl,imx7d";
-};
-
 &iomuxc {
 	imx7d-sdb {
 		pinctrl_gpmi_nand_1: gpmi-nand-1 {

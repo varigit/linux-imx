@@ -19,19 +19,19 @@
 / {
 #ifdef NAND
 #ifdef WIFI
-	model = "Variscite i.MX6 UltraLite DART NAND/WIFI";
+	model = "Variscite i.MX6 UltraLite DART-6UL NAND/WIFI";
 #else
-	model = "Variscite i.MX6 UltraLite DART NAND/SD";
+	model = "Variscite i.MX6 UltraLite DART-6UL NAND/SD";
 #endif
 #endif
 #ifdef EMMC
 #ifdef WIFI
-	model = "Variscite i.MX6 UltraLite DART EMMC/WIFI";
+	model = "Variscite i.MX6 UltraLite DART-6UL EMMC/WIFI";
 #else
-	model = "Variscite i.MX6 UltraLite DART EMMC/SD";
+	model = "Variscite i.MX6 UltraLite DART-6UL EMMC/SD";
 #endif
 #endif
-	compatible = "fsl,imx6ul-var-dart", "fsl,imx6ul";
+	compatible = "variscite,imx6ul-var-dart", "fsl,imx6ul";
 };
 
 &iomuxc {

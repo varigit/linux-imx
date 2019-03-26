@@ -9,7 +9,7 @@
 #include "imx6dl-var-som.dtsi"
 
 / {
-	model = "Variscite i.MX6 DL/Solo SOM-SOLO SOM-DUAL";
+	model = "Variscite i.MX6 DualLite/Solo VAR-SOM-DUAL/VAR-SOM-SOLO";
 };
 
 &fec {

@@ -8,8 +8,6 @@
  */
 
 / {
-	model = "Variscite i.MX7 DUAL Smart Device Board with M4 support";
-
 	memory {
 		linux,usable-memory = <0x80000000 0x1ff00000>,
 				<0xa0000000 0x1ff00000>;

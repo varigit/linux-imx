@@ -12,8 +12,8 @@
 #include "imx6qdl-var-som.dtsi"
 
 / {
-	model = "Variscite i.MX6 DL/Solo VAR-SOM-MX6";
-	compatible = "fsl,imx6dl-var-som", "fsl,imx6dl";
+	model = "Variscite i.MX6 DualLite/Solo VAR-SOM-MX6";
+	compatible = "variscite,imx6dl-var-som", "fsl,imx6dl";
 };
 
 &ldb {

@@ -10,6 +10,9 @@
 #include "imx7d.dtsi"
 
 / {
+	model = "Variscite i.MX7 Dual VAR-SOM-MX7";
+	compatible = "variscite,imx7d-var-som", "fsl,imx7d";
+
 	cpus {
 		cpu0: cpu@0 {
 			operating-points = <

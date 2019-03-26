@@ -12,8 +12,8 @@
 #include "imx6qdl-var-som.dtsi"
 
 / {
-	model = "Variscite i.MX6 QUAD/DUAL VAR-SOM-MX6";
-	compatible = "fsl,imx6q-var-som", "fsl,imx6q";
+	model = "Variscite i.MX6 Quad/Dual VAR-SOM-MX6";
+	compatible = "variscite,imx6q-var-som", "fsl,imx6q";
 };
 
 &cpu0 {
