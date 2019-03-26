@@ -15,6 +15,7 @@
 #include <linux/io.h>
 #include <linux/irq.h>
 #include <linux/genalloc.h>
+#include <linux/gpio.h>
 #include <linux/mfd/syscon.h>
 #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
 #include <linux/of.h>
@@ -921,8 +922,20 @@ static int imx6q_pm_enter(suspend_state_t state)
 					sizeof(struct qspi_regs));
 		}
 
+		if (of_machine_is_compatible("variscite,imx6dl-var-som") ||
+		    of_machine_is_compatible("variscite,imx6q-var-som")  ||
+		    of_machine_is_compatible("variscite,imx6qp-var-som")) {
+			gpio_request_one(95, 2, "33_per");
+			gpio_set_value(95, 0);
+		}
+
 		/* Zzz ... */
 		cpu_suspend(0, imx6q_suspend_finish);
+
+		if (of_machine_is_compatible("variscite,imx6dl-var-som") ||
+		    of_machine_is_compatible("variscite,imx6q-var-som")  ||
+		    of_machine_is_compatible("variscite,imx6qp-var-som"))
+			gpio_set_value(95, 1);
 
 		if (cpu_is_imx6sx() && imx_gpc_is_mf_mix_off()) {
 			writel_relaxed(ccm_ccgr4, ccm_base + CCGR4);
