@@ -694,25 +694,6 @@
 		};
 	};
 
-	wm8904: codec@1a {
-		compatible = "wlf,wm8904";
-		reg = <0x1a>;
-		clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
-		clock-names = "mclk";
-		DCVDD-supply = <&ldo5_reg>;
-		DBVDD-supply = <&reg_audio>;
-		AVDD-supply = <&ldo5_reg>;
-		CPVDD-supply = <&ldo5_reg>;
-		MICVDD-supply = <&ldo5_reg>;
-		status = "okay";
-		gpio-cfg = <
-			0x0018 /* GPIO1 => DMIC_CLK */
-			0xffff /* GPIO2 => don't touch */
-			0xffff /* GPIO3 => don't touch */
-			0xffff /* GPIO4 => don't touch */
-		>;
-	};
-
 	dsi_lvds_bridge: sn65dsi84@2c {
 		compatible = "ti,sn65dsi83";
 		reg = <0x2c>;
@@ -822,6 +803,25 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c3>;
 	status = "okay";
+
+	wm8904: codec@1a {
+		compatible = "wlf,wm8904";
+		reg = <0x1a>;
+		clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
+		clock-names = "mclk";
+		DCVDD-supply = <&ldo5_reg>;
+		DBVDD-supply = <&reg_audio>;
+		AVDD-supply = <&ldo5_reg>;
+		CPVDD-supply = <&ldo5_reg>;
+		MICVDD-supply = <&ldo5_reg>;
+		status = "okay";
+		gpio-cfg = <
+			0x0018 /* GPIO1 => DMIC_CLK */
+			0xffff /* GPIO2 => don't touch */
+			0xffff /* GPIO3 => don't touch */
+			0xffff /* GPIO4 => don't touch */
+		>;
+	};
 };
 
 &i2c4 {
