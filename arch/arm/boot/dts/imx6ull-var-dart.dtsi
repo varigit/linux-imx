@@ -35,7 +35,7 @@
 };
 
 &iomuxc_snvs {
-	pinctrl-names = "default_snvs";
+	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_hog_2>;
 	imx6ul-evk {
 		pinctrl_hog_2: hoggrp-2 {
