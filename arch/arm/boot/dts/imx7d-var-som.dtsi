@@ -324,8 +324,9 @@
 
 &i2c1 {
 	clock-frequency = <100000>;
-	pinctrl-names = "default";
+	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c1>;
+	pinctrl-1 = <&pinctrl_i2c1_gpio>;
 	status = "okay";
 
 	pmic: pfuze3000@08 {
@@ -424,8 +425,9 @@
 
 &i2c2 {
 	clock-frequency = <100000>;
-	pinctrl-names = "default";
+	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c2>;
+	pinctrl-1 = <&pinctrl_i2c2_gpio>;
 	status = "okay";
 
 	wm8731: wm8731@1a {
@@ -462,8 +464,9 @@
 
 &i2c4 {
 	clock-frequency = <100000>;
-	pinctrl-names = "default";
+	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c4>;
+	pinctrl-1 = <&pinctrl_i2c4_gpio>;
 	status = "okay";
 
 	ft5x06_ts@38 {
@@ -597,10 +600,24 @@
 			>;
 		};
 
+		pinctrl_i2c1_gpio: i2c1gpiogrp {
+			fsl,pins = <
+				MX7D_PAD_I2C1_SDA__GPIO4_IO9 0x4000007f
+				MX7D_PAD_I2C1_SCL__GPIO4_IO8 0x4000007f
+			>;
+		};
+
 		pinctrl_i2c2: i2c2grp {
 			fsl,pins = <
 				MX7D_PAD_I2C2_SDA__I2C2_SDA	0x4000007f
 				MX7D_PAD_I2C2_SCL__I2C2_SCL	0x4000007f
+			>;
+		};
+
+		pinctrl_i2c2_gpio: i2c2gpiogrp {
+			fsl,pins = <
+				MX7D_PAD_I2C2_SCL__GPIO4_IO10	0x4000007f
+				MX7D_PAD_I2C2_SDA__GPIO4_IO11	0x4000007f
 			>;
 		};
 
@@ -611,10 +628,24 @@
 			>;
 		};
 
+		pinctrl_i2c3_gpio: i2c3gpiogrp {
+			fsl,pins = <
+				MX7D_PAD_I2C3_SDA__GPIO4_IO13	0x4000007f
+				MX7D_PAD_I2C3_SCL__GPIO4_IO12	0x4000007f
+			>;
+		};
+
 		pinctrl_i2c4: i2c4grp {
 			fsl,pins = <
 				MX7D_PAD_I2C4_SDA__I2C4_SDA	0x4000007f
 				MX7D_PAD_I2C4_SCL__I2C4_SCL	0x4000007f
+			>;
+		};
+
+		pinctrl_i2c4_gpio: i2c4gpiogrp {
+			fsl,pins = <
+				MX7D_PAD_I2C4_SDA__GPIO4_IO15	0x4000007f
+				MX7D_PAD_I2C4_SCL__GPIO4_IO14	0x4000007f
 			>;
 		};
 

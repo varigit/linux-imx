@@ -406,15 +406,17 @@
 
 &i2c1 {
 	clock-frequency = <400000>;
-	pinctrl-names = "default";
+	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c1>;
+	pinctrl-1 = <&pinctrl_i2c1_gpio>;
 	status = "okay";
 };
 
 &i2c2 {
 	clock_frequency = <100000>;
-	pinctrl-names = "default";
+	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c2>;
+	pinctrl-1 = <&pinctrl_i2c2_gpio>;
 	status = "okay";
 
 	codec: wm8731@1a {
@@ -676,10 +678,24 @@
 			>;
 		};
 
+		pinctrl_i2c1_gpio: i2c1gpiogrp {
+			fsl,pins = <
+				MX6UL_PAD_UART4_TX_DATA__GPIO1_IO28		0x4001b8b0
+				MX6UL_PAD_UART4_RX_DATA__GPIO1_IO29		0x4001b8b0
+			>;
+		};
+
 		pinctrl_i2c2: i2c2grp {
 			fsl,pins = <
 				MX6UL_PAD_UART5_TX_DATA__I2C2_SCL	0x4001b8b0
 				MX6UL_PAD_UART5_RX_DATA__I2C2_SDA	0x4001b8b0
+			>;
+		};
+
+		pinctrl_i2c2_gpio: i2c2gpiogrp {
+			fsl,pins = <
+				MX6UL_PAD_UART5_TX_DATA__GPIO1_IO30		0x4001b8b0
+				MX6UL_PAD_UART5_RX_DATA__GPIO1_IO31		0x4001b8b0
 			>;
 		};
 
