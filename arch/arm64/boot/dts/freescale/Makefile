@@ -119,7 +119,13 @@ dtb-$(CONFIG_ARCH_FSL_IMX8MQ) += fsl-imx8mq-ddr3l-arm2.dtb \
 				 fsl-imx8mq-var-dart-emmc-wifi-dual-display.dtb \
 				 fsl-imx8mq-var-dart-sd-emmc-hdmi.dtb \
 				 fsl-imx8mq-var-dart-sd-emmc-lvds.dtb \
-				 fsl-imx8mq-var-dart-sd-emmc-dual-display.dtb
+				 fsl-imx8mq-var-dart-sd-emmc-dual-display.dtb \
+				 fsl-imx8mq-var-dart-m4-emmc-wifi-hdmi.dtb \
+				 fsl-imx8mq-var-dart-m4-emmc-wifi-lvds.dtb \
+				 fsl-imx8mq-var-dart-m4-emmc-wifi-dual-display.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-emmc-hdmi.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-emmc-lvds.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-emmc-dual-display.dtb
 dtb-$(CONFIG_ARCH_FSL_IMX8MM) += fsl-imx8mm-evk.dtb \
 				 fsl-imx8mm-evk-ak4497.dtb \
 				 fsl-imx8mm-evk-m4.dtb \
