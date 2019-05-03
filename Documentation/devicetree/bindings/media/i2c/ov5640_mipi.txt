@@ -23,6 +23,7 @@ Required Properties:
 Optional Properties:
 - rst-gpios: reference to the GPIO connected to the resetb pin, if any.
 - pwn-gpios: reference to the GPIO connected to the pwdn pin, if any.
+- uyvy-fmt: set the default output format to UYVY (instead of YUYV).
 
 The device node must contain one 'port' child node for its digital output
 video port, in accordance with the video interface bindings defined in

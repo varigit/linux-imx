@@ -112,6 +112,7 @@ struct ov5640 {
 	int blue;
 	int ae_mode;
 
+	bool uyvy_fmt;
 	u32 mclk;
 	u8 mclk_source;
 	struct clk *sensor_clk;
@@ -172,6 +173,8 @@ struct ov5640_res ov5640_valid_res[] = {
 	[3] = {1920, 1080},
 	[4] = {2592, 1944},
 };
+
+#define OV5640_FMT_OFFSET_VGA (95)
 
 static struct reg_value ov5640_init_setting_30fps_VGA[] = {
 
@@ -1170,6 +1173,10 @@ static int ov5640_init_mode(struct ov5640 *sensor,
 		return -1;
 	}
 
+	if (sensor->uyvy_fmt == true)
+		ov5640_init_setting_30fps_VGA[OV5640_FMT_OFFSET_VGA].u8Val =  \
+								0x32;
+
 	dn_mode = ov5640_mode_info_data[frame_rate][mode].dn_mode;
 	orig_dn_mode = ov5640_mode_info_data[frame_rate][orig_mode].dn_mode;
 	if (mode == ov5640_mode_INIT) {
@@ -1715,6 +1722,8 @@ static int ov5640_probe(struct i2c_client *client,
 		dev_err(dev, "csi id missing or invalid\n");
 		return retval;
 	}
+
+	sensor->uyvy_fmt = of_property_read_bool(dev->of_node, "uyvy-fmt");
 
 	clk_prepare_enable(sensor->sensor_clk);
 
