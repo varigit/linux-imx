@@ -464,6 +464,7 @@
 		AVDD-supply = <&vgen6_reg>;
 		mclk = <24000000>;
 		mclk_source = <0>;
+		uyvy-fmt;
 		port {
 			ov5640_mipi_ep: endpoint {
 				remote-endpoint = <&mipi_sensor_ep>;
