@@ -3293,6 +3293,17 @@ static int ioctl_s_ctrl(struct v4l2_int_device *s, struct v4l2_control *vc)
 	case V4L2_CID_FOCUS_AUTO:
 		retval = ov5640_af_set_auto(1);
 		break;
+	case V4L2_CID_FOCUS_ABSOLUTE:
+		/* Custom implementation that sets the ROI */
+		retval = ov5640_af_set_region((vc->value >> 16),
+					      (vc->value & 0xffff));
+		break;
+	case V4L2_CID_3A_LOCK:
+		retval = ov5640_af_set_focus_lock(vc->value);
+		break;
+	case V4L2_CID_AUTO_FOCUS_RANGE:
+		retval = ov5640_af_set_focus_range(vc->value);
+		break;
 	default:
 		retval = -EPERM;
 		break;
