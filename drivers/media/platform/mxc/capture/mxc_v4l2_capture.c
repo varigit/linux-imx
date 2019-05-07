@@ -1273,6 +1273,7 @@ static int mxc_v4l2_s_ctrl(cam_data *cam, struct v4l2_control *c)
 	case V4L2_CID_FOCUS_ABSOLUTE:
 	case V4L2_CID_AUTO_FOCUS_START:
 	case V4L2_CID_AUTO_FOCUS_STOP:
+	case V4L2_CID_AUTO_FOCUS_RANGE:
 	case V4L2_CID_3A_LOCK:
 		if (cam->sensor)
 			ret = vidioc_int_s_ctrl(cam->sensor, c);
