@@ -97,7 +97,7 @@ static const struct reg_default wm8904_reg_defaults[] = {
 	{ 7,   0x0000 },     /* R7   - Mic Bias Control 1 */
 	{ 8,   0x0001 },     /* R8   - Analogue DAC 0 */
 	{ 9,   0x9696 },     /* R9   - mic Filter Control */
-	{ 10,  0x0001 },     /* R10  - Analogue ADC 0 */
+	{ 10,  0x0000 },     /* R10  - Analogue ADC 0 */
 	{ 12,  0x0000 },     /* R12  - Power Management 0 */
 	{ 14,  0x0000 },     /* R14  - Power Management 2 */
 	{ 15,  0x0000 },     /* R15  - Power Management 3 */
