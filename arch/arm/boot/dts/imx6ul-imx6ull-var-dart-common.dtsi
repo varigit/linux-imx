@@ -311,7 +311,6 @@
 };
 
 #ifdef WIFI
-#ifdef WIFI_5G
 /*  Wi-Fi/BT SD Card Slot Definition */
 &usdhc1 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
@@ -322,22 +321,10 @@
 	assigned-clock-parents = <&clks IMX6UL_CLK_PLL2_PFD2>;
 	assigned-clock-rates = <0>, <132000000>;
 	fsl,tuning-step= <2>;
-	vmmc-supply = <&reg_sd1_vmmc>;
-	status = "okay";
-};
-#else
-&usdhc1 {
-	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc1>;
-	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-	no-1-8-v;
 	keep-power-in-suspend;
 	vmmc-supply = <&reg_sd1_vmmc>;
-	non-removable;
 	status = "okay";
 };
-#endif /* WIFI_5G */
 #else
 &usdhc1 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
