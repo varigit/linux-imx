@@ -622,7 +622,15 @@ dtb-$(CONFIG_SOC_IMX6ULL) += \
 	imx6ull-var-som-concerto-board-emmc-sd-card.dtb \
 	imx6ull-var-som-concerto-board-emmc-wifi.dtb \
 	imx6ull-var-som-concerto-board-nand-sd-card.dtb \
-	imx6ull-var-som-concerto-board-nand-wifi.dtb
+	imx6ull-var-som-concerto-board-nand-wifi.dtb \
+	imx6ulz-var-dart-6ulcustomboard-emmc-sd-card.dtb \
+	imx6ulz-var-dart-6ulcustomboard-emmc-wifi.dtb \
+	imx6ulz-var-dart-6ulcustomboard-nand-sd-card.dtb \
+	imx6ulz-var-dart-6ulcustomboard-nand-wifi.dtb \
+	imx6ulz-var-som-concerto-board-emmc-sd-card.dtb \
+	imx6ulz-var-som-concerto-board-emmc-wifi.dtb \
+	imx6ulz-var-som-concerto-board-nand-sd-card.dtb \
+	imx6ulz-var-som-concerto-board-nand-wifi.dtb
 dtb-$(CONFIG_SOC_IMX6SLL) += \
 	imx6sll-lpddr2-arm2.dtb \
 	imx6sll-lpddr3-arm2.dtb \

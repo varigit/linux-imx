@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) 2019 Variscite Ltd. - https://www.variscite.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include "imx6ull.dtsi"
+
+/*
+ * Most of the below modules are already disabled
+ * by default in imx6ull.dtsi, but we disable them
+ * here again to emphasize which modules are missing
+ * in the i.MX6ULZ SOC, compared to i.MX6ULL.
+ *
+ * We do not use "/delete-node/" here so that dtsi files
+ * of 6ull boards can be reused for 6ulz boards, but note
+ * that in the final DT blob for a 6ulz board, the
+ * following modules should be disabled.
+ */
+
+&adc1 {
+	status = "disabled";
+};
+
+&can1 {
+	status = "disabled";
+};
+
+&can2 {
+	status = "disabled";
+};
+
+&ecspi3 {
+	status = "disabled";
+};
+
+&ecspi4 {
+	status = "disabled";
+};
+
+&epit2 {
+	status = "disabled";
+};
+
+&fec1 {
+	status = "disabled";
+};
+
+&fec2 {
+	status = "disabled";
+};
+
+&gpt2 {
+	status = "disabled";
+};
+
+&i2c3 {
+	status = "disabled";
+};
+
+&i2c4 {
+	status = "disabled";
+};
+
+&lcdif {
+	status = "disabled";
+};
+
+&pwm5 {
+	status = "disabled";
+};
+
+&pwm6 {
+	status = "disabled";
+};
+
+&pwm7 {
+	status = "disabled";
+};
+
+&pwm8 {
+	status = "disabled";
+};
+
+&pxp {
+	status = "disabled";
+};
+
+&tsc {
+	status = "disabled";
+};
+
+&uart5 {
+	status = "disabled";
+};
+
+&uart6 {
+	status = "disabled";
+};
+
+&uart7 {
+	status = "disabled";
+};
+
+&uart8 {
+	status = "disabled";
+};
