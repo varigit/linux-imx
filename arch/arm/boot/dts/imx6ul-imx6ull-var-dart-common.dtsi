@@ -161,6 +161,7 @@
 		ethphy0: ethernet-phy@1 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			micrel,rmii-reference-clock-select-25-mhz;
+			micrel,led-mode = <1>;
 			clocks = <&rmii_ref_clk>;
 			clock-names = "rmii-ref";
 			reg = <1>;
@@ -169,6 +170,7 @@
 		ethphy1: ethernet-phy@3 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			micrel,rmii-reference-clock-select-25-mhz;
+			micrel,led-mode = <1>;
 			clocks = <&rmii_ref_clk>;
 			clock-names = "rmii-ref";
 			reg = <3>;
