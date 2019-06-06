@@ -214,7 +214,7 @@
 		pinctrl_csi2: csi2grp {
 			fsl,pins = <
 				MX8MQ_IOMUXC_SAI1_RXD7_GPIO4_IO9		0x19
-				MX8MQ_IOMUXC_UART4_TXD_GPIO5_IO29		0x19
+				MX8MQ_IOMUXC_SAI1_TXD0_GPIO4_IO12		0x19
 			>;
 		};
 
@@ -802,7 +802,7 @@
 #endif
 		csi_id = <1>;
 		pwn-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-		rst-gpios = <&gpio5 29 GPIO_ACTIVE_HIGH>;
+		rst-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
 		mclk = <24000000>;
 		mclk_source = <0>;
 		port {
