@@ -13,11 +13,10 @@
  */
 
 #include "fsl-imx8qxp-var-som-common.dtsi"
-#include "fsl-imx8qxp-var-som-sd-emmc.dtsi"
+#include "fsl-imx8qxp-var-som-wifi.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8X SD+EMMC";
+	model = "Variscite VAR-SOM-MX8X EMMC+WIFI";
 };
-
 
 
