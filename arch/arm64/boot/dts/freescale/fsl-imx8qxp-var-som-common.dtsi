@@ -629,12 +629,14 @@
 &fec2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_fec2>;
-	phy-mode = "rgmii";
+	phy-mode = "rgmii-rxid";
 	phy-handle = <&ethphy1>;
 	fsl,magic-packet;
 	status = "okay";
 	phy-supply = <&reg_ethphy1>;
 	phy-reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
+	phy-reset-duration = <100>;
+	phy-reset-post-delay = <100>;
 };
 
 &flexcan3 {
