@@ -140,8 +140,6 @@
 
         gpio-keys {
                 compatible = "gpio-keys";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_gpio_keys>;
 
                 back {
                         label = "Back";
@@ -237,7 +235,6 @@
 			fsl,pins = <
 				SC_P_MCLK_OUT0_ADMA_ACM_MCLK_OUT0		0x0600004c
 				SC_P_COMP_CTL_GPIO_1V8_3V3_GPIORHB_PAD		0x000514a0
-				SC_P_UART1_RTS_B_LSIO_GPT1_CAPTURE              0x06000020
 			>;
 		};
 
@@ -475,7 +472,9 @@
 
 		pinctrl_captouch: captouchgrp {
 			fsl,pins = <
-                        	SC_P_UART1_CTS_B_LSIO_GPIO0_IO24		0xC0000041      
+				SC_P_UART1_CTS_B_LSIO_GPIO0_IO24		0xC0000041
+				/* Workaround for capacitive touch problem on Symphony board 1.1 */
+				SC_P_UART1_RTS_B_LSIO_GPT1_CAPTURE              0x06000020
 			>;
 		};
 
@@ -524,12 +523,6 @@
 				SC_P_QSPI0B_SS1_B_LSIO_GPIO3_IO24		0xC0000041 /* CAM_BUF_EN */
 				SC_P_SPDIF0_EXT_CLK_LSIO_GPIO0_IO12		0xC0000041 /* CAM_RST */
 				SC_P_SAI0_TXC_LSIO_GPIO0_IO26			0xC0000041 /* CAM_PWR */
-			>;
-		};
-
-		pinctrl_gpio_keys: keygrp {
-			fsl,pins = <
-				SC_P_UART1_CTS_B_LSIO_GPIO0_IO24		0x00000021		
 			>;
 		};
 	};
