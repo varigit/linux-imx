@@ -92,6 +92,16 @@
 			enable-active-high;
 			regulator-off-in-suspend;
 		};
+
+		reg_usdhc2_vmmc: regulator-usdhc2-vmmc {
+			compatible = "regulator-fixed";
+			regulator-name = "reg_sd_pwr";
+			regulator-min-microvolt = <3000000>;
+			regulator-max-microvolt = <3000000>;
+			gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+			off-on-delay = <3480>;
+			enable-active-high;
+		};
 	};
 
 	sound-wm8904 {
@@ -409,6 +419,7 @@
 
 		pinctrl_usdhc2_gpio: usdhc2gpiogrp {
 			fsl,pins = <
+				SC_P_SPI0_CS1_LSIO_GPIO1_IO07			0x00000021
 				SC_P_USDHC1_CD_B_LSIO_GPIO4_IO22		0x00000021
 			>;
 		};
