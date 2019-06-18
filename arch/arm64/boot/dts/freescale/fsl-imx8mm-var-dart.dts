@@ -65,6 +65,11 @@
 		};
 	};
 
+	reserved-memory {
+		/* cma region is provided by kernel command line as cma=<size>MB */
+		/delete-node/ linux,cma;
+	};
+
 	sound-spdif {
 		compatible = "fsl,imx-audio-spdif";
 		model = "imx-spdif";
