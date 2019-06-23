@@ -43,7 +43,7 @@
 
 		gpled2 {
 			gpios = <&gpio1 25 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "disk-activity";
+			linux,default-trigger = "heartbeat";
 		};
 	};
 };
