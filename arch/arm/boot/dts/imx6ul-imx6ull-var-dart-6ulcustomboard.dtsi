@@ -38,7 +38,7 @@
 
 		d16_led {
 			gpios = <&gpio4 20 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "disk-activity";
+			linux,default-trigger = "heartbeat";
 		};
 	};
 };
