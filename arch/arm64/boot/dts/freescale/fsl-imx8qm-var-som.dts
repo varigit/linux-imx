@@ -543,7 +543,9 @@
 
 		pinctrl_captouch: captouchgrp {
 			fsl,pins = <
-				SC_P_GPT0_COMPARE_LSIO_GPIO0_IO16			0x00000021
+				SC_P_GPT1_COMPARE_LSIO_GPIO0_IO19			0x06000021
+				/* Workaround for capacitive touch problem on Symphony board 1.1 */
+				SC_P_GPT0_COMPARE_LSIO_GPIO0_IO16			0x06000021
 			>;
 		};
 
