@@ -73,6 +73,27 @@
 			gpio = <&gpio0 18 GPIO_ACTIVE_HIGH>;
 			enable-active-high;
 		};
+
+		reg_vselect: regulator-vselect {
+			compatible = "regulator-fixed";
+			regulator-name = "reg_vselect";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+			gpio = <&pca9534 6 GPIO_ACTIVE_HIGH>;
+			enable-active-high;
+		};
+
+		reg_ethphy1: regulator-ethphy1 {
+			compatible = "regulator-fixed";
+			vin-supply = <&reg_vselect>;
+			regulator-name = "reg_ethphy1";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
+			gpio = <&pca9534 7 GPIO_ACTIVE_HIGH>;
+			enable-active-high;
+			regulator-off-in-suspend;
+		};
 	};
 
         backlight: backlight@0 {
@@ -706,8 +727,9 @@
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy1>;
 	fsl,magic-packet;
+	phy-supply = <&reg_ethphy1>;
 	phy-reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
-	status = "disabled";
+	status = "okay";
 };
 
 &flexcan1 {
@@ -1250,20 +1272,6 @@
                 gpios = <4 GPIO_ACTIVE_HIGH>;
                 output-low;
                 line-name = "usb3_signal_route";
-        };
-
-        fec2_voltage_select {
-                gpio-hog;
-                gpios = <6 GPIO_ACTIVE_HIGH>;
-                output-high;
-                line-name = "fec2_voltage_select";
-        };
-
-        fec2_signal_route {
-                gpio-hog;
-                gpios = <7 GPIO_ACTIVE_HIGH>;
-                output-high;
-                line-name = "fec2_signal_route";
         };
 };
 
