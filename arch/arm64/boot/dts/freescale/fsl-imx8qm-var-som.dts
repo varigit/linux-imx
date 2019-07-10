@@ -633,6 +633,12 @@
 				SC_P_ESAI1_TX5_RX0_LSIO_GPIO2_IO13              	0x06000020
 			>;
 		};
+
+		pinctrl_hdmi_i2c: hdmii2cgrp  {
+			fsl,pins = <
+				SC_P_MIPI_DSI1_GPIO0_00_LSIO_GPIO1_IO22			0x00000041
+			>;
+		};
 	};
 };
 
@@ -643,6 +649,18 @@
 		output-high;
 		line-name = "cam_buf_en";
 	};
+};
+
+&gpio1 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_hdmi_i2c>;
+
+        hmdm_i2c_signal_route {
+                gpio-hog;
+                gpios = <22 GPIO_ACTIVE_HIGH>;
+                output-low;
+                line-name = "hdmi_i2c_signal_route";
+        };
 };
 
 &lvds0_pwm {
