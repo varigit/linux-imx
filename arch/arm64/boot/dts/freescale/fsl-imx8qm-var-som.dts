@@ -96,7 +96,7 @@
 		};
 	};
 
-        backlight: backlight@0 {
+        backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&lvds0_pwm 0 100000 0>;
 		brightness-levels = < 0  1  2  3  4  5  6  7  8  9
