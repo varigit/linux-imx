@@ -282,10 +282,10 @@
 };
 
 &iomuxc {
-	imx8qm-var-som {
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_hog>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hog>;
 
+	imx8qm-var-som {
 		pinctrl_hog: hoggrp {
 			fsl,pins = <
 				SC_P_ESAI1_FSR_LSIO_GPIO2_IO04				0x00000041
