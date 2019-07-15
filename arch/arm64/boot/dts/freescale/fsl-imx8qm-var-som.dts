@@ -140,12 +140,12 @@
                 compatible = "gpio-leds";
                 status = "okay";
 
-                exp_led {
-                        label = "gp-led";
-                        gpios = <&pca9534 0 GPIO_ACTIVE_LOW>;
+		heartbeat {
+			label = "heartbeat";
+			gpios = <&pca9534 0 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "heartbeat";
-                };
-        };
+		};
+	};
 
 	sound-wm8904 {
 		compatible = "fsl,imx-audio-var-wm8904";		
