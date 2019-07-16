@@ -156,6 +156,7 @@
 			"Headphone Jack", "HPOUTR",
 			"IN2L", "Line In Jack",
 			"IN2R", "Line In Jack",
+			"IN1L", "Mic",
                         "Playback", "CPU-Playback",
                         "CPU-Capture", "Capture";
 		esai-controller = <&esai0>;
