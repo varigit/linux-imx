@@ -12,3 +12,12 @@
 &ov5640_mipi2 {
 	rst-gpios = <&gpio5 29 GPIO_ACTIVE_HIGH>;
 };
+
+&ecspi1 {
+	cs-gpios = <&gpio5 9 0>;
+	fsl,spi-num-chipselects = <1>;
+
+	can0: can@1 {
+		status = "disabled";
+	};
+};
