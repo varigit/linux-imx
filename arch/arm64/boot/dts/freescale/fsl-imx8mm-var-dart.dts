@@ -102,6 +102,12 @@
 		};
 	};
 
+	can0_osc: can0_osc {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <20000000>;
+	};
+
 	sound-spdif {
 		compatible = "fsl,imx-audio-spdif";
 		model = "imx-spdif";
@@ -524,10 +530,17 @@
 
 		pinctrl_ecspi1: ecspi1grp {
 			fsl,pins = <
-				MX8MM_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK		0x11
-				MX8MM_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI		0x11
-				MX8MM_IOMUXC_ECSPI1_MISO_ECSPI1_MISO		0x11
-				MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x11
+				MX8MM_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK		0x13
+				MX8MM_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI		0x13
+				MX8MM_IOMUXC_ECSPI1_MISO_ECSPI1_MISO		0x13
+				MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x13
+				MX8MM_IOMUXC_GPIO1_IO12_GPIO1_IO12		0x13
+			>;
+		};
+
+		pinctrl_can: cangrp {
+			fsl,pins = <
+				MX8MM_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x16
 			>;
 		};
 
@@ -1083,8 +1096,11 @@
 &ecspi1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_ecspi1>;
-	cs-gpios = <&gpio5 9 0>;
-	fsl,spi-num-chipselects = <1>;
+	cs-gpios = <&gpio5  9 GPIO_ACTIVE_HIGH>,
+		   <&gpio1 12 GPIO_ACTIVE_HIGH>;
+	fsl,spi-num-chipselects = <2>;
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 	status = "okay";
 
 	/* Resistive touch controller */
@@ -1110,6 +1126,18 @@
 		ti,keep-vref-on;
 		wakeup-source;
 		status = "disabled";
+	};
+
+	can0: can@1 {
+		compatible = "microchip,mcp2517fd";
+		reg = <1>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_can>;
+		clocks = <&can0_osc>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
+		spi-max-frequency = <20000000>;
+		status = "okay";
 	};
 };
 
