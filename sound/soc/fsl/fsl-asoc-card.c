@@ -27,7 +27,6 @@
 #include "../codecs/sgtl5000.h"
 #include "../codecs/wm8962.h"
 #include "../codecs/wm8960.h"
-#include "../codecs/wm8904.h"
 
 #define CS427x_SYSCLK_MCLK 0
 
@@ -50,7 +49,6 @@ struct codec_priv {
 	u32 mclk_id;
 	u32 fll_id;
 	u32 pll_id;
-	u32 pll_src;
 };
 
 /**
@@ -153,32 +151,6 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
 
 	priv->sample_rate = params_rate(params);
 	priv->sample_format = params_format(params);
-
-	if (priv->codec_priv.pll_src != priv->codec_priv.mclk_id) {
-		struct snd_soc_dai *codec_dai = rtd->codec_dai;
-		struct codec_priv *codec_priv = &priv->codec_priv;
-		unsigned int pll_out;
-
-		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
-			pll_out = priv->sample_rate * 384;
-		else
-			pll_out = priv->sample_rate * 256;
-
-		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id,
-					  codec_priv->pll_src,
-					  codec_priv->mclk_freq, pll_out);
-		if (ret) {
-			dev_err(dev, "failed to start FLL: %d\n", ret);
-			return ret;
-		}
-
-		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->fll_id,
-					     pll_out, SND_SOC_CLOCK_IN);
-		if (ret) {
-			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
-			return ret;
-		}
-	}
 
 	/*
 	 * If codec-dai is DAI Master and all configurations are already in the
@@ -283,16 +255,13 @@ static int fsl_asoc_card_set_bias_level(struct snd_soc_card *card,
 		if (dapm->bias_level != SND_SOC_BIAS_STANDBY)
 			break;
 
-		if (priv->codec_priv.pll_src != priv->codec_priv.mclk_id)
-			break;
-
 		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
 			pll_out = priv->sample_rate * 384;
 		else
 			pll_out = priv->sample_rate * 256;
 
 		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id,
-					  codec_priv->pll_src,
+					  codec_priv->mclk_id,
 					  codec_priv->mclk_freq, pll_out);
 		if (ret) {
 			dev_err(dev, "failed to start FLL: %d\n", ret);
@@ -309,9 +278,6 @@ static int fsl_asoc_card_set_bias_level(struct snd_soc_card *card,
 
 	case SND_SOC_BIAS_STANDBY:
 		if (dapm->bias_level != SND_SOC_BIAS_PREPARE)
-			break;
-
-		if (codec_priv->mclk_id != codec_priv->pll_src)
 			break;
 
 		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->mclk_id,
@@ -592,14 +558,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
 		priv->codec_priv.fll_id = WM8960_SYSCLK_AUTO;
 		priv->codec_priv.pll_id = WM8960_SYSCLK_AUTO;
 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
-	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8904")) {
-		codec_dai_name = "wm8904-hifi";
-		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
-		priv->codec_priv.mclk_id = WM8904_CLK_FLL;
-		priv->codec_priv.fll_id = WM8904_CLK_FLL;
-		priv->codec_priv.pll_id = WM8904_FLL_MCLK;
-		priv->codec_priv.pll_src = WM8904_FLL_MCLK;
-		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
 	} else if (of_device_is_compatible(np, "fsl,imx-audio-ac97")) {
 		codec_dai_name = "ac97-hifi";
 		priv->card.set_bias_level = NULL;
@@ -609,9 +567,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
 		ret = -EINVAL;
 		goto asrc_fail;
 	}
-
-	if (priv->codec_priv.pll_src == 0)
-		priv->codec_priv.pll_src = priv->codec_priv.mclk_id;
 
 	if (!fsl_asoc_card_is_ac97(priv) && !codec_dev) {
 		dev_err(&pdev->dev, "failed to find codec device\n");
@@ -747,7 +702,6 @@ static const struct of_device_id fsl_asoc_card_dt_ids[] = {
 	{ .compatible = "fsl,imx-audio-sgtl5000", },
 	{ .compatible = "fsl,imx-audio-wm8962", },
 	{ .compatible = "fsl,imx-audio-wm8960", },
-	{ .compatible = "fsl,imx-audio-wm8904", },
 	{}
 };
 MODULE_DEVICE_TABLE(of, fsl_asoc_card_dt_ids);
