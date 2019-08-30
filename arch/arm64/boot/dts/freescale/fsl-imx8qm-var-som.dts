@@ -148,19 +148,18 @@
 	};
 
 	sound-wm8904 {
-		compatible = "fsl,imx-audio-var-wm8904";		
+		compatible = "fsl,imx-audio-wm8904";
 		model = "imx-wm8904";
 		audio-codec = <&wm8904>;
+		audio-cpu = <&esai0>;
 		audio-routing =
 			"Headphone Jack", "HPOUTL",
 			"Headphone Jack", "HPOUTR",
 			"IN2L", "Line In Jack",
 			"IN2R", "Line In Jack",
-			"IN1L", "Mic",
-                        "Playback", "CPU-Playback",
-                        "CPU-Capture", "Capture";
-		esai-controller = <&esai0>;
-		codec-master;
+			"IN1L", "Mic Jack",
+			"Playback", "CPU-Playback",
+			"CPU-Capture", "Capture";
 		status = "okay";
 	};
 
