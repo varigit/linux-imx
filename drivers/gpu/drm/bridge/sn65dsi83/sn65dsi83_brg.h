@@ -26,6 +26,7 @@ struct sn65dsi83_brg {
     u32 bpp;
 
     u8 num_dsi_lanes;
+    u8 burst_mode;
     struct sn65dsi83_brg_funcs *funcs;
 };
 struct sn65dsi83_brg *sn65dsi83_brg_get(void);
