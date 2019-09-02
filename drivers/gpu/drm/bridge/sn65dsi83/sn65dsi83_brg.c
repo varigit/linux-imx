@@ -167,6 +167,9 @@ static int sn65dsi83_brg_start_stream(struct sn65dsi83_brg *brg)
     dev_dbg(&client->dev, "CHA (0x%02x) = 0x%02x",
          SN65DSI83_CHA_ERR, regval);
 
+    if (!IS_ERR(brg->gpio_panel_enable))
+        gpiod_set_value_cansleep(brg->gpio_panel_enable, 1);
+
     return 0;
 }
 
@@ -176,6 +179,9 @@ static void sn65dsi83_brg_stop_stream(struct sn65dsi83_brg *brg)
     dev_dbg(&client->dev,"%s\n",__func__);
     /* Clear the PLL_EN bit (CSR 0x0D.0) */
     SN65DSI83_WRITE(SN65DSI83_PLL_EN, 0x00);
+
+    if (!IS_ERR(brg->gpio_panel_enable))
+        gpiod_set_value_cansleep(brg->gpio_panel_enable, 0);
 }
 
 static int sn65dsi83_calk_clk_range(int min_regval, int max_regval,
