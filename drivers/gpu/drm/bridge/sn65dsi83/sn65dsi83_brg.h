@@ -18,6 +18,7 @@ struct sn65dsi83_brg_funcs {
 struct sn65dsi83_brg {
     struct i2c_client *client;
     struct gpio_desc *gpio_enable;
+    struct gpio_desc *gpio_panel_enable;
     /* Bridge Panel Parameters */
     struct videomode vm;
     u32 width_mm;
