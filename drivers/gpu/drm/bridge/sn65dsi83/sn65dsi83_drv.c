@@ -206,6 +206,7 @@ static int sn65dsi83_parse_dt(struct device_node *np,
     struct device *dev = &sn65dsi83->brg->client->dev;
     u32 num_lanes = 2, bpp = 24, format = 2, width = 149, height = 93;
     u8 burst_mode = 0;
+    u8 de_neg_polarity = 0;
     struct device_node *endpoint;
 
     endpoint = of_graph_get_next_endpoint(np, NULL);
@@ -224,6 +225,7 @@ static int sn65dsi83_parse_dt(struct device_node *np,
     of_property_read_u32(np, "ti,width-mm", &width);
     of_property_read_u32(np, "ti,height-mm", &height);
     burst_mode = of_property_read_bool(np, "ti,burst-mode");
+    de_neg_polarity = of_property_read_bool(np, "ti,de-neg-polarity");
 
     if (num_lanes < 1 || num_lanes > 4) {
         dev_err(dev, "Invalid dsi-lanes: %d\n", num_lanes);
@@ -231,6 +233,7 @@ static int sn65dsi83_parse_dt(struct device_node *np,
     }
     sn65dsi83->brg->num_dsi_lanes = num_lanes;
     sn65dsi83->brg->burst_mode = burst_mode;
+    sn65dsi83->brg->de_neg_polarity = de_neg_polarity;
 
     sn65dsi83->brg->gpio_enable = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
     if (IS_ERR(sn65dsi83->brg->gpio_enable)) {
