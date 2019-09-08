@@ -381,7 +381,7 @@
 
 		pinctrl_typec: typecgrp {
 			fsl,pins = <
-				SC_P_ENET0_REFCLK_125M_25M_LSIO_GPIO5_IO09	0x60
+				SC_P_ENET0_REFCLK_125M_25M_LSIO_GPIO5_IO09	0x00000060
 			>;
 		};
 
@@ -511,7 +511,7 @@
 
 		pinctrl_lpspi2_cs: lpspi2csgrp {
 			fsl,pins = <
-				SC_P_SPI2_CS0_LSIO_GPIO1_IO00			0x21
+				SC_P_SPI2_CS0_LSIO_GPIO1_IO00			0x00000021
 			>;
 		};
 
@@ -525,7 +525,7 @@
 
 		pinctrl_lpspi3_cs: lpspi3csgrp {
 			fsl,pins = <
-				SC_P_SPI3_CS0_LSIO_GPIO0_IO16			0x21
+				SC_P_SPI3_CS0_LSIO_GPIO0_IO16			0x00000021
 			>;
 		};
 
@@ -979,15 +979,15 @@
 };
 
 &ldb1_phy {
-	status = "ok";
+	status = "okay";
 };
 
 &ldb1 {
-	status = "ok";
+	status = "okay";
 	lvds-channel@0 {
 		fsl,data-mapping = "jeida";
 		fsl,data-width = <24>;
-		status = "ok";
+		status = "okay";
 
 		display-timings {
 			lvds {
