@@ -15,7 +15,55 @@
 
 /dts-v1/;
 
-#include "../freescale/fsl-imx8qxp.dtsi"
+#include "fsl-imx8qxp.dtsi"
+
+/ {
+	firmware {
+		android {
+			compatible = "android,firmware";
+			fstab {
+				compatible = "android,fstab";
+				vendor {
+					compatible = "android,vendor";
+					/* sd card node which used if androidboot.storage_type=sd */
+					dev_sd = "/dev/block/platform/5b020000.usdhc/by-name/vendor";
+					/* emmc node which used if androidboot.storage_type=emmc */
+					dev_emmc = "/dev/block/platform/5b010000.usdhc/by-name/vendor";
+					type = "ext4";
+					mnt_flags = "ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb";
+				};
+			};
+			vbmeta {
+				/*we need use FirstStageMountVBootV2 if we enable avb*/
+				compatible = "android,vbmeta";
+				/*parts means the partition witch can be mount in first stage*/
+				parts = "vbmeta,boot,system,vendor";
+			};
+		};
+	};
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		carveout_region: imx_ion@0 {
+			compatible = "imx-ion-pool";
+			reg = <0x0 0xf8000000 0 0x8000000>;
+		};
+	};
+};
 
 / {
 	compatible = "variscite,var-som-mx8x", "fsl,imx8qxp";
@@ -469,6 +517,11 @@
 				SC_P_QSPI0A_SCLK_LSIO_GPIO3_IO16		0x06000021 /* WIFI_3V3     */
 				SC_P_QSPI0A_DQS_LSIO_GPIO3_IO13			0x06000021 /* WIFI_1V8     */
 				SC_P_QSPI0A_DATA0_LSIO_GPIO3_IO09		0x06000021 /* WIFI_REG_ON  */
+			>;
+		};
+
+		pinctrl_bt: btgrp {
+			fsl,pins = <
 				SC_P_QSPI0A_DATA1_LSIO_GPIO3_IO10		0x06000021 /* BT_REG_ON    */
 				SC_P_MIPI_DSI1_I2C0_SCL_LSIO_GPIO1_IO29		0x06000021 /* BT_BUF       */
 				SC_P_QSPI0A_DATA2_LSIO_GPIO3_IO11		0x06000021 /* BT_HOST_WAKE */
@@ -1145,5 +1198,9 @@
 };
 
 &rtc {
+	status = "disabled";
+};
+
+&crypto {
 	status = "disabled";
 };
