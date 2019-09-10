@@ -19,6 +19,54 @@
 #include "fsl-imx8qm.dtsi"
 
 / {
+	firmware {
+		android {
+			compatible = "android,firmware";
+			fstab {
+				compatible = "android,fstab";
+				vendor {
+					compatible = "android,vendor";
+					/* sd card node which used if androidboot.storage_type=sd */
+					dev_sd = "/dev/block/platform/5b020000.usdhc/by-name/vendor";
+					/* emmc node which used if androidboot.storage_type=emmc */
+					dev_emmc = "/dev/block/platform/5b010000.usdhc/by-name/vendor";
+					type = "ext4";
+					mnt_flags = "ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb";
+				};
+			};
+			vbmeta {
+				/*we need use FirstStageMountVBootV2 if we enable avb*/
+				compatible = "android,vbmeta";
+				/*parts means the partition witch can be mount in first stage*/
+				parts = "vbmeta,boot,system,vendor";
+			};
+		};
+	};
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio0 30 GPIO_ACTIVE_HIGH>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		carveout_region: imx_ion@0 {
+			compatible = "imx-ion-pool";
+			reg = <0x0 0xf8000000 0 0x8000000>;
+		};
+	};
+};
+
+/ {
 	model = "Variscite i.MX8QM VAR-SOM-MX8";
 	compatible = "fsl,imx8qm-var-som", "fsl,imx8qm";
 
@@ -595,6 +643,11 @@
 			fsl,pins = <
 				SC_P_SCU_GPIO0_07_SCU_DSC_RTC_CLOCK_OUTPUT_32K		0xc600004c /* WIFI_32K_CLK */
 				SC_P_SCU_GPIO0_03_LSIO_GPIO0_IO31			0x06000021 /* WIFI_REG_ON  */
+			>;
+		};
+
+		pinctrl_bt: btgrp {
+			fsl,pins = <
 				SC_P_SCU_GPIO0_02_LSIO_GPIO0_IO30			0x00000021 /* BT_REG_ON    */
 				SC_P_QSPI1A_DATA0_LSIO_GPIO4_IO26			0x00000021 /* BT_BUF       */
 			>;
@@ -1307,5 +1360,9 @@
 };
 
 &rtc {
+	status = "disabled";
+};
+
+&crypto {
 	status = "disabled";
 };
