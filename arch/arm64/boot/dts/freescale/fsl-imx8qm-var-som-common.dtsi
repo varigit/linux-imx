@@ -67,7 +67,6 @@
 };
 
 / {
-	model = "Variscite i.MX8QM VAR-SOM-MX8";
 	compatible = "fsl,imx8qm-var-som", "fsl,imx8qm";
 
 	chosen {
@@ -159,7 +158,7 @@
 				     90 91 92 93 94 95 96 97 98 99
 				    100>;
 		default-brightness-level = <80>;
-		status = "okay";
+		status = "disabled";
 	};
 
 	gpio_keys {
@@ -351,7 +350,7 @@
 				SC_P_ESAI0_SCKR_AUD_ESAI0_SCKR				0xc6000040
 				SC_P_ESAI0_SCKT_AUD_ESAI0_SCKT				0xc6000040
 				SC_P_ESAI0_TX0_AUD_ESAI0_TX0				0xc6000040
-				SC_P_ESAI0_TX5_RX0_AUD_ESAI0_TX5_RX0	 		0xc6000040
+				SC_P_ESAI0_TX5_RX0_AUD_ESAI0_TX5_RX0			0xc6000040
 				SC_P_MCLK_OUT0_AUD_ESAI0_TX_HF_CLK			0xc600004c
 			>;
 		};
@@ -701,18 +700,6 @@
 		gpios = <22 0>;
 		output-high;
 		line-name = "cam_buf_en";
-	};
-};
-
-&gpio1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_hdmi_i2c>;
-
-	hmdm_i2c_signal_route {
-		gpio-hog;
-		gpios = <22 GPIO_ACTIVE_HIGH>;
-		output-low;
-		line-name = "hdmi_i2c_signal_route";
 	};
 };
 
@@ -1294,46 +1281,6 @@
 	vdev-nums = <1>;
 	reg = <0x0 0x90100000 0x0 0x10000>;
 	status = "okay";
-};
-
-&ldb1_phy {
-	status = "okay";
-};
-
-&ldb1 {
-	status = "okay";
-
-	lvds-channel@0 {
-		fsl,data-mapping = "spwg";
-		fsl,data-width = <18>;
-		status = "okay";
-
-		display-timings {
-			lvds {
-				clock-frequency = <35714000>;
-				hactive = <800>;
-				vactive = <480>;
-				hback-porch = <39>;
-				hfront-porch = <39>;
-				vback-porch = <29>;
-				vfront-porch = <13>;
-				hsync-len = <47>;
-				vsync-len = <2>;
-				hsync-active = <0>;
-				vsync-active = <0>;
-				de-active = <1>;
-				pixelclk-active = <0>;
-			};
-		};
-	};
-};
-
-&ldb2_phy {
-	status = "disabled";
-};
-
-&ldb2 {
-	status = "disabled";
 };
 
 &wdog {
