@@ -935,18 +935,14 @@
 };
 
 &resmem {
-	/* cma region is provided by kernel command line as cma=<size>MB */
+	/* cma region is provided by kernel command line as cma=<size>M */
 	/delete-node/ linux,cma;
-};
 
-&rpmsg{
-	/*
-	 * 64K for one rpmsg instance:
-	 * --0xb8000000~0xb800ffff: pingpong
-	 */
-	vdev-nums = <1>;
-	reg = <0x0 0xb8000000 0x0 0x10000>;
-	status = "okay";
+	/delete-node/ rpmsg@0xb8000000;
+	rpmsg_reserved: rpmsg@0x40000000 {
+		no-map;
+		reg = <0 0x40000000 0 0x400000>;
+	};
 };
 
 &A53_0 {
