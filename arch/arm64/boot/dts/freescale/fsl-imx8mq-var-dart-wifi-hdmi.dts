@@ -18,5 +18,5 @@
 #include "fsl-imx8mq-var-dart-hdmi.dtsi"
 
 / {
-	model = "Variscite DART-MX8M EMMC+WIFI+HDMI";
+	model = "Variscite DART-MX8M WIFI+HDMI";
 };

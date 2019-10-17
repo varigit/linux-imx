@@ -18,5 +18,5 @@
 #include "fsl-imx8mq-var-dart-dual-display.dtsi"
 
 / {
-	model = "Variscite DART-MX8M EMMC+WIFI+DUAL";
+	model = "Variscite DART-MX8M WIFI+DUAL";
 };

@@ -18,5 +18,5 @@
 #include "fsl-imx8mq-var-dart-lvds.dtsi"
 
 / {
-	model = "Variscite DART-MX8M EMMC+WIFI+LVDS";
+	model = "Variscite DART-MX8M WIFI+LVDS";
 };

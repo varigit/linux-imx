@@ -19,5 +19,5 @@
 #include "fsl-imx8mq-var-dart-cb12.dtsi"
 
 / {
-	model = "Variscite DART-MX8M CB-1.2 EMMC+WIFI+LVDS";
+	model = "Variscite DART-MX8M CB-1.2 WIFI+LVDS";
 };
