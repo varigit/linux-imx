@@ -173,7 +173,9 @@ dtb-$(CONFIG_ARCH_FSL_IMX8MM) += fsl-imx8mm-evk.dtb \
 				 fsl-imx8mm-ddr4-evk-rm67191.dtb \
 				 fsl-imx8mm-trusty-evk.dtb \
 				 fsl-imx8mm-ddr4-qca9377-evk.dtb \
-				 fsl-imx8mm-var-dart.dtb
+				 fsl-imx8mm-var-dart.dtb \
+				 fsl-imx8mm-var-dart-m4.dtb
+
 always		:= $(dtb-y)
 subdir-y	:= $(dts-dirs)
 clean-files	:= *.dtb
