@@ -18,6 +18,43 @@
 #include "fsl-imx8mq.dtsi"
 
 / {
+	firmware {
+		android {
+			compatible = "android,firmware";
+			fstab {
+				compatible = "android,fstab";
+				vendor {
+					compatible = "android,vendor";
+					/* sd card node which used if androidboot.storage_type=sd */
+					dev_sd = "/dev/block/platform/30b50000.usdhc/by-name/vendor";
+					/* emmc node which used if androidboot.storage_type=emmc */
+					dev_emmc = "/dev/block/platform/30b40000.usdhc/by-name/vendor";
+					type = "ext4";
+					mnt_flags = "ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb";
+				};
+			};
+			vbmeta {
+				/*we need use FirstStageMountVBootV2 if we enable avb*/
+				compatible = "android,vbmeta";
+				/*parts means the partition witch can be mount in first stage*/
+				parts = "vbmeta,boot,system,vendor";
+			};
+		};
+	};
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
+};
+
+/ {
 	compatible = "variscite,imx8m-dart", "fsl,imx8mq";
 
 	chosen {
@@ -436,6 +473,11 @@
 				MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8		0xc1	/* WIFI_PWR_ON   */
 				MX8MQ_IOMUXC_NAND_CE1_B_GPIO3_IO2		0xc1	/* WIFI_REG_ON   */
 				MX8MQ_IOMUXC_GPIO1_IO00_ANAMIX_REF_CLK_32K	0xc1	/* WIFI_CLK_32K  */
+			>;
+		};
+
+		pinctrl_bt: btgrp {
+			fsl,pins = <
 				MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4		0xc1	/* BT_REG_ON     */
 				MX8MQ_IOMUXC_SPDIF_EXT_CLK_GPIO5_IO5		0xc1	/* BT_BUF_EN     */
 			>;
@@ -916,6 +958,7 @@
 };
 
 &gpu {
+	gpu-noc-priority = <0x80000600>;
 	status = "okay";
 };
 
@@ -938,7 +981,7 @@
 	/* cma region is provided by kernel command line as cma=<size>M */
 	/delete-node/ linux,cma;
 
-	/delete-node/ rpmsg@0xb8000000;
+	/delete-node/ rpmsg@0x98000000;
 	rpmsg_reserved: rpmsg@0x40000000 {
 		no-map;
 		reg = <0 0x40000000 0 0x400000>;
@@ -954,6 +997,53 @@
 		800000  900000
 	>;
 	dc-supply = <&reg_cpu_dvfs>;
+};
+
+/* Data for energy-aware-scheduling */
+/{
+	cpus {
+		energy-costs {
+			CPU_COST_A53: core-cost-a53 {
+				busy-cost-data = <
+					546  1017
+					682  1272
+					887  2041
+					1024 2356
+				>;
+				idle-cost-data = <
+					94
+					94
+					0
+				>;
+			};
+			CLUSTER_COST_A53: cluster-cost-a53 {
+				busy-cost-data = <
+					546  1017
+					682  1272
+					887  2041
+					1024 3095
+				>;
+				idle-cost-data = <
+					1037
+					1037
+					1037
+				>;
+			};
+		};
+	};
+};
+
+&A53_0 {
+	sched-energy-costs = <&CPU_COST_A53 &CLUSTER_COST_A53>;
+};
+&A53_1 {
+	sched-energy-costs = <&CPU_COST_A53 &CLUSTER_COST_A53>;
+};
+&A53_2 {
+	sched-energy-costs = <&CPU_COST_A53 &CLUSTER_COST_A53>;
+};
+&A53_3 {
+	sched-energy-costs = <&CPU_COST_A53 &CLUSTER_COST_A53>;
 };
 
 &csi1_bridge {
@@ -1076,4 +1166,15 @@
 
 &snvs_rtc {
 	status = "disabled";
+};
+
+&crypto {
+       status = "disabled";
+};
+
+&resmem {
+	carveout_region: imx_ion@0 {
+		compatible = "imx-ion-pool";
+		reg = <0x0 0xf8000000 0 0x8000000>;
+	};
 };
