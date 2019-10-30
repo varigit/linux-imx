@@ -49,8 +49,7 @@
 
 /* Maximum Video PLL frequency */
 #define MAX_PLL_FREQ 1200000000
-/* Mininum pixel clock in Hz */
-#define MIN_PIX_CLK  74250000
+
 enum mxsfb_devtype {
 	MXSFB_V3,
 	MXSFB_V4,
@@ -244,14 +243,6 @@ mxsfb_pipe_mode_valid(struct drm_crtc *crtc,
 	 */
 	if (!mxsfb->clk_src[0] || !mxsfb->clk_src[1])
 		return MODE_OK;
-
-	/*
-	 * TODO: Currently, only modes with pixel clock higher or equal to
-	 * 74250kHz are working. Limit to these modes until we figure out how
-	 * to handle the rest of the display modes.
-	 */
-	if (clock < MIN_PIX_CLK)
-		return MODE_NOCLOCK;
 
 	if (!crtc_clock)
 		crtc_clock = clock;
