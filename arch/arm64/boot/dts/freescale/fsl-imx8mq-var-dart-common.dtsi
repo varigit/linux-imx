@@ -676,7 +676,7 @@
 
 		display-timings {
 			lvds {
-				clock-frequency = <74250000>;
+				clock-frequency = <33000000>;
 				hactive = <800>;
 				vactive = <480>;
 				hback-porch = <40>;
