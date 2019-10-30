@@ -91,8 +91,6 @@
 
 /* Maximum Video PLL frequency */
 #define MAX_PLL_FREQ 1200000000
-/* Mininum pixel clock in kHz */
-#define MIN_PIX_CLK 74250
 
 static struct dcss_debug_reg dtg_debug_reg[] = {
 	DCSS_DBG_REG(DCSS_DTG_TC_CONTROL_STATUS),
@@ -364,14 +362,6 @@ int dcss_dtg_mode_valid(struct dcss_soc *dcss, int clock, int crtc_clock)
 	 */
 	if (dtg->hdmi_output || !dcss->src_clk[0] || !dcss->src_clk[1])
 		return 0;
-
-	/*
-	 * TODO: Currently, only modes with pixel clock higher or equal to
-	 * 74250kHz are working. Limit to these modes until we figure out how
-	 * to handle the rest of the display modes.
-	 */
-	if (clock < MIN_PIX_CLK)
-		return 1;
 
 	/* Transform clocks in Hz */
 	clock *= 1000;
