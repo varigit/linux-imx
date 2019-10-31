@@ -13,5 +13,11 @@
  * GNU General Public License for more details.
  */
 
-#include "fsl-imx8mq-var-dart-sd-dual-display.dts"
-#include "fsl-imx8mq-var-dart-m4.dtsi"
+#include "fsl-imx8mq-var-dart-common.dtsi"
+#include "fsl-imx8mq-var-dart-sd.dtsi"
+#include "fsl-imx8mq-var-dart-lvds-lcdif.dtsi"
+#include "fsl-imx8mq-var-dart-dp.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M SD+LVDS+DP";
+};

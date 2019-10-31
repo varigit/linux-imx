@@ -13,52 +13,12 @@
  * GNU General Public License for more details.
  */
 
+#include "fsl-imx8mq-var-dart-common.dtsi"
+#include "fsl-imx8mq-var-dart-sd.dtsi"
+#include "fsl-imx8mq-var-dart-lvds-lcdif.dtsi"
 #include "fsl-imx8mq-var-dart-hdmi.dtsi"
+#include "fsl-imx8mq-var-dart-cb12.dtsi"
 
-&lcdif {
-	status = "okay";
-	max-res = <1280>, <720>;
-
-	port@0 {
-		lcdif_mipi_dsi: mipi-dsi-endpoint {
-			remote-endpoint = <&mipi_dsi_in>;
-		};
-	};
-};
-
-&mipi_dsi_phy {
-	status = "okay";
-};
-
-&mipi_dsi {
-	status = "okay";
-	as_bridge;
-	sync-pol = <1>;
-	pwr-delay = <10>;
-
-	port@1 {
-		mipi_dsi_in: endpoint {
-			remote-endpoint = <&lcdif_mipi_dsi>;
-		};
-	};
-};
-
-&mipi_dsi_bridge {
-	status = "okay";
-};
-
-&pwm1 {
-	status = "okay";
-};
-
-&backlight {
-	status = "okay";
-};
-
-&dsi_lvds_bridge {
-	status = "okay";
-};
-
-&ft5x06_ts {
-	status = "okay";
+/ {
+	model = "Variscite DART-MX8M CB-1.2 SD+LVDS+HDMI";
 };

@@ -14,10 +14,11 @@
  */
 
 #include "fsl-imx8mq-var-dart-common.dtsi"
-#include "fsl-imx8mq-var-dart-wifi.dtsi"
-#include "fsl-imx8mq-var-dart-dual-display.dtsi"
-#include "fsl-imx8mq-var-dart-cb12.dtsi"
+#include "fsl-imx8mq-var-dart-sd.dtsi"
+#include "fsl-imx8mq-var-dart-lvds-lcdif.dtsi"
+#include "fsl-imx8mq-var-dart-dp.dtsi"
+#include "fsl-imx8mq-var-dart-m4.dtsi"
 
 / {
-	model = "Variscite DART-MX8M CB-1.2 WIFI+DUAL";
+	model = "Variscite DART-MX8M M4+SD+LVDS+DP";
 };

@@ -1,6 +1,6 @@
 /*
  * Copyright 2017 NXP
- * Copyright 2018-2019 Variscite Ltd.
+ * Copyright 2019 Variscite Ltd.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,10 +14,13 @@
  */
 
 #include "fsl-imx8mq-var-dart-common.dtsi"
-#include "fsl-imx8mq-var-dart-sd.dtsi"
-#include "fsl-imx8mq-var-dart-dual-display.dtsi"
+#include "fsl-imx8mq-var-dart-wifi.dtsi"
+#include "fsl-imx8mq-var-dart-lvds-lcdif.dtsi"
+#include "fsl-imx8mq-var-dart-hdmi.dtsi"
+#include "fsl-imx8mq-var-dart-m4.dtsi"
 #include "fsl-imx8mq-var-dart-cb12.dtsi"
 
 / {
-	model = "Variscite DART-MX8M CB-1.2 SD+DUAL";
+	model = "Variscite DART-MX8M CB-1.2 M4+WIFI+LVDS+HDMI";
 };
+
