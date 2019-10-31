@@ -15,7 +15,7 @@
 
 #include "fsl-imx8mq-var-dart-common.dtsi"
 #include "fsl-imx8mq-var-dart-wifi.dtsi"
-#include "fsl-imx8mq-var-dart-lvds.dtsi"
+#include "fsl-imx8mq-var-dart-lvds-dcss.dtsi"
 
 / {
 	model = "Variscite DART-MX8M WIFI+LVDS";
