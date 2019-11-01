@@ -15,8 +15,8 @@
 
 #include "fsl-imx8mq-var-dart-common.dtsi"
 #include "fsl-imx8mq-var-dart-sd.dtsi"
-#include "fsl-imx8mq-var-dart-lvds-lcdif.dtsi"
 #include "fsl-imx8mq-var-dart-dp.dtsi"
+#include "fsl-imx8mq-var-dart-lvds-lcdif.dtsi"
 #include "fsl-imx8mq-var-dart-m4.dtsi"
 
 / {

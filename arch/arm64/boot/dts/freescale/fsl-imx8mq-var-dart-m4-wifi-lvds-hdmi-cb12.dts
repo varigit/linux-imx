@@ -15,8 +15,8 @@
 
 #include "fsl-imx8mq-var-dart-common.dtsi"
 #include "fsl-imx8mq-var-dart-wifi.dtsi"
-#include "fsl-imx8mq-var-dart-lvds-lcdif.dtsi"
 #include "fsl-imx8mq-var-dart-hdmi.dtsi"
+#include "fsl-imx8mq-var-dart-lvds-lcdif.dtsi"
 #include "fsl-imx8mq-var-dart-m4.dtsi"
 #include "fsl-imx8mq-var-dart-cb12.dtsi"
 
