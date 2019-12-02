@@ -427,7 +427,7 @@
 
 		pinctrl_typec: typecgrp {
 			fsl,pins = <
-				MX8MM_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x16
+				MX8MM_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x16
 			>;
 		};
 
@@ -733,7 +733,7 @@
 		reg = <0x3d>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_typec>;
-		connect-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;	
+		connect-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
 	};
 };
 
