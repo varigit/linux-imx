@@ -172,7 +172,7 @@
 			fsl,pins = <
 				MX8MM_IOMUXC_GPIO1_IO13_GPIO1_IO13		0x19 /* CAM_RST */
 				MX8MM_IOMUXC_ECSPI2_MISO_GPIO5_IO12		0x19 /* CAM_PWR */
-				MX8MM_IOMUXC_ECSPI2_SCLK_GPIO5_IO10		0x19 /* CAM_BUF */
+				MX8MM_IOMUXC_SAI1_RXD3_GPIO4_IO5		0x19 /* CAM_BUF */
 			>;
 		};
 
@@ -1070,16 +1070,18 @@
 	status = "disabled";
 };
 
-&gpio5 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_usbhost>;
-
+&gpio4 {
 	cam_buf_hog {
 		gpio-hog;
-		gpios = <10 0>;
+		gpios = <5 0>;
 		output-low;
 		line-name = "cam_buf_en";
 	};
+};
+
+&gpio5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usbhost>;
 
 	usb_hostpwr_hog {
 		gpio-hog;
