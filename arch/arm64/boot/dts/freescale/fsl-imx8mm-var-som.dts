@@ -18,6 +18,43 @@
 #include "fsl-imx8mm.dtsi"
 
 / {
+	firmware {
+		android {
+			compatible = "android,firmware";
+			fstab {
+				compatible = "android,fstab";
+				vendor {
+					compatible = "android,vendor";
+					/* sd card node which used if androidboot.storage_type=sd */
+					dev_sd = "/dev/block/platform/30b50000.mmc/by-name/vendor";
+					/* emmc node which used if androidboot.storage_type=emmc */
+					dev_emmc = "/dev/block/platform/30b60000.mmc/by-name/vendor";
+					type = "ext4";
+					mnt_flags = "ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb";
+				};
+			};
+			vbmeta {
+				/*we need use FirstStageMountVBootV2 if we enable avb*/
+				compatible = "android,vbmeta";
+				/*parts means the partition witch can be mount in first stage*/
+				parts = "vbmeta,boot,system,vendor";
+			};
+		};
+	};
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
+};
+
+/ {
 	model = "Variscite VAR-SOM-MX8MM board";
 	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
 
@@ -421,6 +458,11 @@
 				MX8MM_IOMUXC_SD1_DATA5_GPIO2_IO7		0xc1	/* WIFI_3V3_PWR_EN */
 				MX8MM_IOMUXC_SD2_WP_GPIO2_IO20			0x140	/* WIFI_1V8_PWR_EN */
 				MX8MM_IOMUXC_SD1_RESET_B_GPIO2_IO10		0xc1	/* WIFI_REG_ON     */
+			>;
+		};
+
+		pinctrl_bt: btgrp {
+			fsl,pins = <
 				MX8MM_IOMUXC_SD1_DATA4_GPIO2_IO6		0xc1	/* BT_REG_ON       */
 			>;
 		};
@@ -1119,4 +1161,8 @@
 		output-low;
 		line-name = "enet_sel";
 	};
+};
+
+&crypto {
+	status = "disabled";
 };
