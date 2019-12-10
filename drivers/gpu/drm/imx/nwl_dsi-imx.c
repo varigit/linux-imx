@@ -39,14 +39,6 @@
 
 #define DRIVER_NAME "nwl_dsi-imx"
 
-/* 8MQ SRC specific registers */
-#define SRC_MIPIPHY_RCR				0x28
-#define RESET_BYTE_N				BIT(1)
-#define RESET_N					BIT(2)
-#define DPI_RESET_N				BIT(3)
-#define ESC_RESET_N				BIT(4)
-#define PCLK_RESET_N				BIT(5)
-
 #define DC_ID(x)	SC_R_DC_ ## x
 #define MIPI_ID(x)	SC_R_MIPI_ ## x
 #define SYNC_CTRL(x)	SC_C_SYNC_CTRL ## x
@@ -68,10 +60,10 @@ struct imx_mipi_dsi {
 
 	/* Optional external regs */
 	struct regmap			*csr;
-	struct regmap			*reset;
 	struct regmap			*mux_sel;
 
 	/* Optional clocks */
+	struct clk			*clk_lcdif;
 	struct clk_config		*clk_config;
 	size_t				clk_num;
 
@@ -81,7 +73,6 @@ struct imx_mipi_dsi {
 	u32				instance;
 	u32				sync_pol;
 	u32				power_on_delay;
-	bool				no_clk_reset;
 	bool				enabled;
 	bool				suspended;
 };
@@ -153,7 +144,7 @@ static struct devtype imx8mq_dev = {
 		{ .id = CLK_CORE,   .present = true },
 		{ .id = CLK_PIXEL,  .present = false },
 		{ .id = CLK_BYPASS, .present = false },
-		{ .id = CLK_PHYREF, .present = true },
+		{ .id = CLK_PHYREF, .present = false },
 	},
 	.ext_regs = IMX_REG_SRC | IMX_REG_GPR,
 	.max_instances = 1,
@@ -448,28 +439,11 @@ static void imx8qxp_dsi_poweroff(struct imx_mipi_dsi *dsi)
 
 static int imx8mq_dsi_poweron(struct imx_mipi_dsi *dsi)
 {
-	regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
-			   PCLK_RESET_N, PCLK_RESET_N);
-	regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
-			   ESC_RESET_N, ESC_RESET_N);
-	regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
-			   RESET_BYTE_N, RESET_BYTE_N);
-	regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
-			   DPI_RESET_N, DPI_RESET_N);
-
 	return 0;
 }
 
 static void imx8mq_dsi_poweroff(struct imx_mipi_dsi *dsi)
 {
-	regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
-			   PCLK_RESET_N, 0);
-	regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
-			   ESC_RESET_N, 0);
-	regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
-			   RESET_BYTE_N, 0);
-	regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
-			   DPI_RESET_N, 0);
 }
 
 static void imx_nwl_dsi_enable(struct imx_mipi_dsi *dsi)
@@ -485,6 +459,9 @@ static void imx_nwl_dsi_enable(struct imx_mipi_dsi *dsi)
 		return;
 
 	DRM_DEV_DEBUG_DRIVER(dev, "id = %s\n", (dsi->instance)?"DSI1":"DSI0");
+
+	if (dsi->clk_lcdif)
+		clk_prepare_enable(dsi->clk_lcdif);
 
 	/*
 	 * On some systems we need to wait some time before enabling the
@@ -525,10 +502,12 @@ static void imx_nwl_dsi_disable(struct imx_mipi_dsi *dsi)
 
 	DRM_DEV_DEBUG_DRIVER(dev, "id = %s\n", (dsi->instance)?"DSI1":"DSI0");
 
-	if (!dsi->no_clk_reset)
-		devtype->poweroff(dsi);
+	devtype->poweroff(dsi);
 
 	imx_nwl_dsi_set_clocks(dsi, false);
+
+	if (dsi->clk_lcdif)
+		clk_disable_unprepare(dsi->clk_lcdif);
 
 	release_bus_freq(BUS_FREQ_HIGH);
 
@@ -769,6 +748,15 @@ static int imx_nwl_dsi_parse_of(struct device *dev, bool as_bridge)
 		dsi->clk_config[i].clk = clk;
 	}
 
+	/*
+	 * Usually, we don't need this clock here, but due to a design issue,
+	 * the MIPI Reset Synchronizer block depends on this clock. So, we will
+	 * use this clock when we need to reset (or take out of reset) MIPI PHY
+	 */
+	dsi->clk_lcdif = devm_clk_get(dev, "lcdif");
+	if (IS_ERR(dsi->clk_lcdif))
+		dsi->clk_lcdif = NULL;
+
 	dsi->tx_ulps_reg = devtype->tx_ulps_reg;
 	dsi->pxl2dpi_reg = devtype->pxl2dpi_reg;
 
@@ -780,12 +768,6 @@ static int imx_nwl_dsi_parse_of(struct device *dev, bool as_bridge)
 	if (IS_ERR(dsi->csr) && (devtype->ext_regs & IMX_REG_CSR)) {
 		ret = PTR_ERR(dsi->csr);
 		dev_err(dev, "Failed to get CSR regmap (%d)\n", ret);
-		return ret;
-	}
-	dsi->reset = syscon_regmap_lookup_by_phandle(np, "src");
-	if (IS_ERR(dsi->reset) && (devtype->ext_regs & IMX_REG_SRC)) {
-		ret = PTR_ERR(dsi->reset);
-		dev_err(dev, "Failed to get SRC regmap (%d)\n", ret);
 		return ret;
 	}
 	dsi->mux_sel = syscon_regmap_lookup_by_phandle(np, "mux-sel");
@@ -806,8 +788,6 @@ static int imx_nwl_dsi_parse_of(struct device *dev, bool as_bridge)
 		   IOMUXC_GPR13,
 		   IMX8MQ_GPR13_MIPI_MUX_SEL,
 		   mux_val);
-
-	dsi->no_clk_reset = of_property_read_bool(np, "no_clk_reset");
 
 	return 0;
 }
