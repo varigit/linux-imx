@@ -34,6 +34,17 @@
 #include <video/mipi_display.h>
 #include <video/videomode.h>
 
+#include <linux/mfd/syscon.h>
+#include <linux/regmap.h>
+
+/* 8MQ SRC specific registers */
+#define SRC_MIPIPHY_RCR				0x28
+#define RESET_BYTE_N				BIT(1)
+#define RESET_N					BIT(2)
+#define DPI_RESET_N				BIT(3)
+#define ESC_RESET_N				BIT(4)
+#define PCLK_RESET_N				BIT(5)
+
 #define MIPI_FIFO_TIMEOUT msecs_to_jiffies(500)
 
 /* DSI HOST registers */
@@ -207,6 +218,7 @@ struct nwl_mipi_dsi {
 	struct mipi_dsi_device		*dsi_device;
 
 	struct phy			*phy;
+	struct regmap			*reset;
 
 	/* Mandatory clocks */
 	struct clk_config		phy_ref;
@@ -221,7 +233,6 @@ struct nwl_mipi_dsi {
 	struct drm_display_mode		*curr_mode;
 	struct list_head		valid_modes;
 	u32				lanes;
-	bool				no_clk_reset;
 	bool				enabled;
 };
 
@@ -1185,6 +1196,9 @@ static void nwl_dsi_bridge_enable(struct drm_bridge *bridge)
 	}
 
 	nwl_dsi_enable_clocks(dsi, CLK_PHY_REF | CLK_TX_ESC);
+	if (dsi->reset)
+		regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
+				   PCLK_RESET_N, PCLK_RESET_N);
 
 	phy_init(dsi->phy);
 
@@ -1196,6 +1210,13 @@ static void nwl_dsi_bridge_enable(struct drm_bridge *bridge)
 
 	nwl_dsi_init_interrupts(dsi);
 	nwl_dsi_config_dpi(dsi);
+
+	if (dsi->reset) {
+		regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
+				   ESC_RESET_N, ESC_RESET_N);
+		regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
+				   RESET_BYTE_N, RESET_BYTE_N);
+	}
 
 	if (dsi->panel && drm_panel_prepare(dsi->panel)) {
 		DRM_DEV_ERROR(dev, "Failed to setup panel\n");
@@ -1210,8 +1231,9 @@ static void nwl_dsi_bridge_enable(struct drm_bridge *bridge)
 		goto enable_err;
 	}
 
-	if (dsi_device->mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS)
-		nwl_dsi_write(dsi, CFG_NONCONTINUOUS_CLK, 0x00);
+	if (dsi->reset)
+		regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
+				   DPI_RESET_N, DPI_RESET_N);
 
 	dsi->enabled = true;
 
@@ -1248,8 +1270,18 @@ static void nwl_dsi_bridge_disable(struct drm_bridge *bridge)
 	phy_power_off(dsi->phy);
 	phy_exit(dsi->phy);
 
-	if (!dsi->no_clk_reset)
-		nwl_dsi_disable_clocks(dsi, CLK_PHY_REF | CLK_TX_ESC);
+	if (dsi->reset) {
+		regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
+				   ESC_RESET_N, 0);
+		regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
+				   RESET_BYTE_N, 0);
+		regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
+				   DPI_RESET_N, 0);
+		regmap_update_bits(dsi->reset, SRC_MIPIPHY_RCR,
+				   PCLK_RESET_N, 0);
+	}
+
+	nwl_dsi_disable_clocks(dsi, CLK_PHY_REF | CLK_TX_ESC);
 
 	devm_free_irq(dev, dsi->irq, dsi);
 
@@ -1338,7 +1370,9 @@ static int nwl_dsi_probe(struct platform_device *pdev)
 
 	pm_runtime_enable(dev);
 
-	dsi->no_clk_reset = of_property_read_bool(dev->of_node, "no_clk_reset");
+	dsi->reset = syscon_regmap_lookup_by_phandle(dev->of_node, "src");
+	if (IS_ERR(dsi->reset))
+		dsi->reset = NULL;
 
 	dsi->dev = dev;
 	platform_set_drvdata(pdev, dsi);
