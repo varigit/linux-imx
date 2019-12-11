@@ -101,6 +101,15 @@
 			regulator-max-microvolt = <3300000>;
 			regulator-always-on;
 		};
+
+                reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
+			compatible = "regulator-fixed";
+			regulator-name = "usb_otg2_vbus";
+			regulator-min-microvolt = <5000000>;
+			regulator-max-microvolt = <5000000>;
+			gpio = <&gpio5 1 GPIO_ACTIVE_HIGH>;
+			enable-active-high;
+		};
 	};
 
 	can0_osc: can0_osc {
@@ -519,7 +528,7 @@
 			>;
 		};
 
-		pinctrl_usbhost: usbhostgrp {
+		pinctrl_usbotg2: usbotg2grp {
 			fsl,pins = <
 				MX8MM_IOMUXC_SAI3_TXD_GPIO5_IO1			0x16
 			>;
@@ -974,8 +983,15 @@
 
 &usbotg2 {
 	dr_mode = "host";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usbotg2>;
+	vbus-supply = <&reg_usb_otg2_vbus>;
 	picophy,pre-emp-curr-control = <3>;
 	picophy,dc-vol-level-adjust = <7>;
+	srp-disable;
+	hnp-disable;
+	adp-disable;
+	disable-over-current;
 	status = "okay";
 };
 
@@ -1118,18 +1134,6 @@
 		gpios = <5 0>;
 		output-low;
 		line-name = "cam_buf_en";
-	};
-};
-
-&gpio5 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_usbhost>;
-
-	usb_hostpwr_hog {
-		gpio-hog;
-		gpios = <1 0>;
-		output-high;
-		line-name = "usb_host_pwr";
 	};
 };
 
