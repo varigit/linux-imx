@@ -12,6 +12,12 @@
  * GNU General Public License for more details.
  */
 
+/ {
+	chosen {
+		bootargs-append = "androidboot.backlight.dev=backlight_lvds@0";
+	};
+};
+
 &ldb1_phy {
 	status = "okay";
 };
