@@ -36,6 +36,7 @@
 	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi>;
 	bus-width = <4>;
 	vmmc-supply = <&reg_wifi_en>;
+	keep-power-in-suspend;
 	status = "okay";
 };
 
