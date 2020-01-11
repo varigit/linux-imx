@@ -1,0 +1,65 @@
+/*
+ * Copyright 2018 NXP
+ * Copyright 2019 Variscite Ltd.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+#include "fsl-imx8mm-var-dart.dts"
+
+/ {
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		m4_reserved: m4@0x7e000000 {
+			no-map;
+			reg = <0 0x7e000000 0 0x1000000>;
+		};
+
+	};
+};
+
+/*
+ * ATTENTION: M4 may use IPs like below
+ * ECSPI0/ECSPI1/ECSPI2, GPIO4/GPIO5, GPT1, I2C4, WDOG1, UART2, PWM2, SDMA1/3
+ */
+
+&i2c4 {
+	status = "disabled";
+};
+
+&rpmsg{
+	/*
+	 * 64K for one rpmsg instance:
+	 * --0x40000000~0x4000ffff: pingpong
+	 */
+	vdev-nums = <1>;
+	reg = <0x0 0x40000000 0x0 0x10000>;
+	status = "okay";
+};
+
+&sdma1{
+	status = "disabled";
+};
+
+&uart2 {
+	status = "disabled";
+};
+
+&sdma3 {
+	status = "disabled";
+};
+
+&flexspi {
+	status = "disabled";
+};
