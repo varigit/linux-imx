@@ -291,6 +291,7 @@ sc_err_t sc_misc_otp_fuse_read(sc_ipc_t ipc, uint32_t word, uint32_t *val)
 
 	return err;
 }
+EXPORT_SYMBOL(sc_misc_otp_fuse_read);
 
 sc_err_t sc_misc_otp_fuse_write(sc_ipc_t ipc, uint32_t word, uint32_t val)
 {
