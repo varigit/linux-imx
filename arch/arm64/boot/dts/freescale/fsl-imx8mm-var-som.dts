@@ -440,12 +440,6 @@
 			>;
 		};
 
-		pinctrl_rtc: rtcgrp {
-			fsl,pins = <
-				MX8MM_IOMUXC_GPIO1_IO15_GPIO1_IO15		0x1c1
-			>;
-		};
-
 		pinctrl_lvds: lvdsgrp {
 			fsl,pins = <
 				MX8MM_IOMUXC_SD1_STROBE_GPIO2_IO11		0x16
@@ -791,10 +785,6 @@
 		status = "okay";
 		compatible = "dallas,ds1337";
 		reg = <0x68>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_rtc>;
-		interrupt-parent = <&gpio1>;
-		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
 	};
 };
 
