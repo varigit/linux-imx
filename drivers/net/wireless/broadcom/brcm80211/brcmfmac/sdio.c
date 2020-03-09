@@ -956,7 +956,7 @@ brcmf_sdio_bus_sleep(struct brcmf_sdio *bus, bool sleep, bool pendok)
 			err = brcmf_sdio_kso_control(bus, true);
 		}
 		if (err) {
-			brcmf_err("error while changing bus sleep state %d\n",
+			brcmf_dbg(SDIO, "error while changing bus sleep state %d\n",
 				  err);
 			goto done;
 		}
