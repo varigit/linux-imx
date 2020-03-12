@@ -31,7 +31,7 @@
 
 /*
  * ATTENTION: M4 may use IPs like below
- * ECSPI0/ECSPI1/ECSPI2, GPIO4/GPIO5, GPT1, I2C4, WDOG1, UART2, PWM2, SDMA1/3
+ * ECSPI1, GPIO4, GPT1, I2C4, WDOG1, PWM3, SDMA1/3, UART3
  */
 
 &i2c4 {
@@ -48,11 +48,15 @@
 	status = "okay";
 };
 
-&sdma1{
+&ecspi1 {
 	status = "disabled";
 };
 
-&uart2 {
+&pwm3 {
+	status = "disabled";
+};
+
+&sdma1{
 	status = "disabled";
 };
 
@@ -60,6 +64,6 @@
 	status = "disabled";
 };
 
-&flexspi {
+&uart3 {
 	status = "disabled";
 };
