@@ -1,6 +1,6 @@
 /*
  * Copyright 2018-2019 NXP
- * Copyright 2019 Variscite Ltd.
+ * Copyright 2019-2020 Variscite Ltd.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -364,7 +364,7 @@
 		pinctrl_usdhc2_gpio: usdhc2grpgpio {
 			fsl,pins = <
 				MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19		0xc1
-				MX8MN_IOMUXC_SD2_CD_B_GPIO2_IO12		0xc1
+				MX8MN_IOMUXC_GPIO1_IO10_GPIO1_IO10		0xc1
 			>;
 		};
 
@@ -464,12 +464,6 @@
 				MX8MN_IOMUXC_SD2_WP_GPIO2_IO20			0x140	/* WIFI_1V8_PWR_EN */
 				MX8MN_IOMUXC_SD1_RESET_B_GPIO2_IO10		0xc1	/* WIFI_REG_ON     */
 				MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6		0xc1	/* BT_REG_ON       */
-			>;
-		};
-
-		pinctrl_typec: typecgrp {
-			fsl,pins = <
-				MX8MN_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x16
 			>;
 		};
 
@@ -772,16 +766,6 @@
 			};
 		};
 	};
-
-	/* USB-C controller */
-	typec_ptn5150: typec@3d {
-		status = "okay";
-		compatible = "nxp,ptn5150";
-		reg = <0x3d>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_typec>;
-		connect-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
-	};
 };
 
 &i2c3 {
@@ -966,7 +950,7 @@
 	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
 	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
 	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
+	cd-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
 	bus-width = <4>;
 	vmmc-supply = <&reg_usdhc2_vmmc>;
 	status = "okay";
@@ -1002,7 +986,6 @@
 
 &usbotg1 {
 	dr_mode = "otg";
-	extcon = <0>, <&typec_ptn5150>;
 	picophy,pre-emp-curr-control = <3>;
 	picophy,dc-vol-level-adjust = <7>;
 	status = "okay";
