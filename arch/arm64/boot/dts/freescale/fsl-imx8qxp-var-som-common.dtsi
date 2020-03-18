@@ -70,6 +70,7 @@
 
 	chosen {
 		bootargs = "console=ttyLP3,115200 earlycon=lpuart32,0x5a090000,115200";
+		bootargs-append = "androidboot.backlight.dev=backlight";
 		stdout-path = &lpuart3;
 	};
 
