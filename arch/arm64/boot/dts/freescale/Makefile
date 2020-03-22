@@ -117,7 +117,39 @@ dtb-$(CONFIG_ARCH_FSL_IMX8MQ) += fsl-imx8mq-ddr3l-arm2.dtb \
 				 fsl-imx8mq-evk-root.dtb \
 				 fsl-imx8mq-evk-inmate.dtb \
 				 fsl-imx8mq-evk-dp.dtb \
-				 fsl-imx8mq-evk-edp.dtb
+				 fsl-imx8mq-evk-edp.dtb \
+				 fsl-imx8mq-var-dart-wifi-dp.dtb \
+				 fsl-imx8mq-var-dart-wifi-hdmi.dtb \
+				 fsl-imx8mq-var-dart-wifi-lvds.dtb \
+				 fsl-imx8mq-var-dart-wifi-lvds-dp.dtb \
+				 fsl-imx8mq-var-dart-wifi-lvds-hdmi.dtb \
+				 fsl-imx8mq-var-dart-wifi-hdmi-cb12.dtb \
+				 fsl-imx8mq-var-dart-wifi-lvds-cb12.dtb \
+				 fsl-imx8mq-var-dart-wifi-lvds-hdmi-cb12.dtb \
+				 fsl-imx8mq-var-dart-sd-dp.dtb \
+				 fsl-imx8mq-var-dart-sd-hdmi.dtb \
+				 fsl-imx8mq-var-dart-sd-lvds.dtb \
+				 fsl-imx8mq-var-dart-sd-lvds-dp.dtb \
+				 fsl-imx8mq-var-dart-sd-lvds-hdmi.dtb \
+				 fsl-imx8mq-var-dart-sd-hdmi-cb12.dtb \
+				 fsl-imx8mq-var-dart-sd-lvds-cb12.dtb \
+				 fsl-imx8mq-var-dart-sd-lvds-hdmi-cb12.dtb \
+				 fsl-imx8mq-var-dart-m4-wifi-dp.dtb \
+				 fsl-imx8mq-var-dart-m4-wifi-hdmi.dtb \
+				 fsl-imx8mq-var-dart-m4-wifi-lvds.dtb \
+				 fsl-imx8mq-var-dart-m4-wifi-lvds-dp.dtb \
+				 fsl-imx8mq-var-dart-m4-wifi-lvds-hdmi.dtb \
+				 fsl-imx8mq-var-dart-m4-wifi-hdmi-cb12.dtb \
+				 fsl-imx8mq-var-dart-m4-wifi-lvds-cb12.dtb \
+				 fsl-imx8mq-var-dart-m4-wifi-lvds-hdmi-cb12.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-dp.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-hdmi.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-lvds.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-lvds-dp.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-lvds-hdmi.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-hdmi-cb12.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-lvds-cb12.dtb \
+				 fsl-imx8mq-var-dart-m4-sd-lvds-hdmi-cb12.dtb
 dtb-$(CONFIG_ARCH_FSL_IMX8MM) += fsl-imx8mm-evk.dtb \
 				 fsl-imx8mm-evk-drm.dtb \
 				 fsl-imx8mm-evk-ak4497.dtb \
