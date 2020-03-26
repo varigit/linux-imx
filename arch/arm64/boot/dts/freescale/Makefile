@@ -153,7 +153,8 @@ dtb-$(CONFIG_ARCH_FSL_IMX8MM) += fsl-imx8mm-evk.dtb \
 				 fsl-imx8mm-var-dart-m4.dtb \
 				 fsl-imx8mm-var-som.dtb \
 				 fsl-imx8mm-evk-no-product.dtb \
-				 fsl-imx8mm-ddr4-evk-no-product.dtb
+				 fsl-imx8mm-ddr4-evk-no-product.dtb \
+				 fsl-imx8mm-var-som-rev10.dtb
 dtb-$(CONFIG_ARCH_FSL_IMX8MN) += fsl-imx8mn-ddr4-evk.dtb \
 				 fsl-imx8mn-ddr4-evk-rpmsg.dtb \
 				 fsl-imx8mn-ddr4-evk-rm67191.dtb \

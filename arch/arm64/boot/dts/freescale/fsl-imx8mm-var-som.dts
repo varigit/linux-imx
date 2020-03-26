@@ -1,6 +1,6 @@
 /*
  * Copyright 2018 NXP
- * Copyright 2019 Variscite Ltd.
+ * Copyright 2019-2020 Variscite Ltd.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -368,7 +368,7 @@
 		pinctrl_usdhc2_gpio: usdhc2grpgpio {
 			fsl,pins = <
 				MX8MM_IOMUXC_SD2_RESET_B_GPIO2_IO19		0xc1
-				MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0xc1
+				MX8MM_IOMUXC_GPIO1_IO10_GPIO1_IO10		0xc1
 			>;
 		};
 
@@ -473,12 +473,6 @@
 		pinctrl_bt: btgrp {
 			fsl,pins = <
 				MX8MM_IOMUXC_SD1_DATA4_GPIO2_IO6		0xc1	/* BT_REG_ON       */
-			>;
-		};
-
-		pinctrl_typec: typecgrp {
-			fsl,pins = <
-				MX8MM_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x16
 			>;
 		};
 
@@ -761,16 +755,6 @@
 				remote-endpoint = <&mipi1_sensor_ep>;
 			};
 		};
-	};
-
-	/* USB-C controller */
-	typec_ptn5150: typec@3d {
-		status = "okay";
-		compatible = "nxp,ptn5150";
-		reg = <0x3d>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_typec>;
-		connect-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
 	};
 };
 
