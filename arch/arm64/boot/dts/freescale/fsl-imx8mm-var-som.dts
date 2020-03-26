@@ -943,7 +943,6 @@
 
 &usbotg1 {
 	dr_mode = "otg";
-	extcon = <0>, <&typec_ptn5150>;
 	picophy,pre-emp-curr-control = <3>;
 	picophy,dc-vol-level-adjust = <7>;
 	status = "okay";
@@ -989,7 +988,7 @@
 	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
 	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
 	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
+	cd-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
 	bus-width = <4>;
 	vmmc-supply = <&reg_usdhc2_vmmc>;
 	status = "okay";
