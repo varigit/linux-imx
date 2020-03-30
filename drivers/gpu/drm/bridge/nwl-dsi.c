@@ -234,6 +234,7 @@ struct nwl_mipi_dsi {
 	u32				lanes;
 	u32				clk_drop_lvl;
 	bool				no_clk_reset;
+	bool				legacy_pll_config;
 	bool				enabled;
 };
 
@@ -587,6 +588,8 @@ static struct mode_config *nwl_dsi_mode_probe(struct nwl_mipi_dsi *dsi,
 
 		/* Pick the non-failing rate, and search for more */
 		if (!ret) {
+			if (dsi->legacy_pll_config)
+				config->phy_rate_idx = match_rates;
 			phy_rates[match_rates++] = phyref_rates[i++];
 			continue;
 		}
@@ -635,6 +638,9 @@ static enum drm_mode_status nwl_dsi_bridge_mode_valid(struct drm_bridge *bridge,
 	if (!config)
 		return MODE_NOCLOCK;
 
+	if (dsi->legacy_pll_config)
+		return MODE_OK;
+
 	pll_rate = config->pll_rates[config->phy_rate_idx];
 	if (dsi->pll_clk && !pll_rate) {
 		nwl_dsi_setup_pll_config(config, false, 0);
@@ -670,6 +676,9 @@ static bool nwl_dsi_bridge_mode_fixup(struct drm_bridge *bridge,
 	/* Max data rate for this controller is 1.5Gbps */
 	if (config->bitclock > 1500000000)
 		return false;
+
+	if (dsi->legacy_pll_config)
+		return true;
 
 	pll_rate = config->pll_rates[config->phy_rate_idx];
 	if (dsi->pll_clk && pll_rate) {
@@ -1172,9 +1181,16 @@ static int nwl_dsi_connector_get_modes(struct drm_connector *connector)
 		config = nwl_dsi_mode_probe(dsi, mode);
 		if (!config)
 			continue;
-		nwl_dsi_setup_pll_config(config, true, dsi->clk_drop_lvl);
-		if (config->crtc_clock)
-			mode->crtc_clock = config->crtc_clock / 1000;
+		if (dsi->legacy_pll_config) {
+			u32 phy_rate;
+			/* Actual pixel clock that should be used by CRTC */
+			phy_rate = config->phy_rates[config->phy_rate_idx] / 1000;
+			mode->crtc_clock = phy_rate * (mode->clock / phy_rate);
+		} else {
+			nwl_dsi_setup_pll_config(config, true, dsi->clk_drop_lvl);
+			if (config->crtc_clock)
+				mode->crtc_clock = config->crtc_clock / 1000;
+		}
 	}
 
 	return num_modes;
@@ -1476,6 +1492,7 @@ static int nwl_dsi_probe(struct platform_device *pdev)
 
 	pm_runtime_enable(dev);
 
+	dsi->legacy_pll_config = of_property_read_bool(dev->of_node, "legacy-pll-config");
 	dsi->no_clk_reset = of_property_read_bool(dev->of_node, "no_clk_reset");
 	of_property_read_u32(dev->of_node, "clock-drop-level",
 		&dsi->clk_drop_lvl);

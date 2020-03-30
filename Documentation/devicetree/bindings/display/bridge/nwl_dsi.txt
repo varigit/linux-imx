@@ -41,6 +41,8 @@ Optional properties:
 			enough blanking time to be sent. There is no upper limit,
 			but the user can play with this value until stable image
 			is obtained (usually: 0-4).
+- legacy-pll-config	(boolean) allow enabling the legacy clock calculation
+			method (before MLK-21958-6)
 
 * The clock assignments must follow the rules defined in:
 Documentation/devicetree/bindings/clock/clock-bindings.txt
