@@ -116,6 +116,7 @@ struct ov5640 {
 	int blue;
 	int ae_mode;
 
+	bool uyvy_fmt;
 	u32 mclk;
 	u8 mclk_source;
 	struct clk *sensor_clk;
@@ -133,7 +134,41 @@ struct ov5640_res {
 /*!
  * Maintains the information on the current state of the sesor.
  */
+static s32 ov5640_read_reg(struct ov5640 *sensor, u16 reg, u8 *val);
+static s32 ov5640_write_reg(struct ov5640 *sensor, u16 reg, u8 val);
 
+#ifdef CONFIG_VIDEO_ADV_DEBUG
+static int ov5640_get_register(struct v4l2_subdev *sd,
+					struct v4l2_dbg_register *reg)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(sd);
+	struct ov5640 *sensor = to_ov5640(client);
+	int ret;
+	u8 val;
+
+	if (reg->reg & ~0xffff)
+		return -EINVAL;
+
+	reg->size = 1;
+
+	ret = ov5640_read_reg(sensor,reg->reg, &val);
+	if (!ret)
+		reg->val = (__u64)val;
+
+	return ret;
+}
+
+static int ov5640_set_register(struct v4l2_subdev *sd,
+					const struct v4l2_dbg_register *reg)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(sd);
+	struct ov5640 *sensor = to_ov5640(client);
+	if (reg->reg & ~0xffff || reg->val & ~0xff)
+		return -EINVAL;
+
+	return ov5640_write_reg(sensor,reg->reg, reg->val);
+}
+#endif
 
 struct ov5640_res ov5640_valid_res[] = {
 	[0] = {640, 480},
@@ -143,6 +178,8 @@ struct ov5640_res ov5640_valid_res[] = {
 	[4] = {1920, 1080},
 	[5] = {2592, 1944},
 };
+
+#define OV5640_FMT_OFFSET_VGA (95)
 
 static struct reg_value ov5640_init_setting_30fps_VGA[] = {
 
@@ -392,9 +429,7 @@ static struct ov5640_mode_info ov5640_mode_info_data[2][ov5640_mode_MAX + 1] = {
 		{ov5640_mode_NTSC_720_480, -1, 0, 0, NULL, 0},
 		{ov5640_mode_720P_1280_720, -1, 0, 0, NULL, 0},
 		{ov5640_mode_1080P_1920_1080, -1, 0, 0, NULL, 0},
-		{ov5640_mode_QSXGA_2592_1944, SCALING, 2592, 1944,
-		ov5640_setting_15fps_QSXGA_2592_1944,
-		ARRAY_SIZE(ov5640_setting_15fps_QSXGA_2592_1944)},
+		{ov5640_mode_QSXGA_2592_1944, -1, 0, 0, NULL, 0},
 	},
 	{
 		{ov5640_mode_VGA_640_480, SUBSAMPLING, 640,  480,
@@ -412,7 +447,9 @@ static struct ov5640_mode_info ov5640_mode_info_data[2][ov5640_mode_MAX + 1] = {
 		{ov5640_mode_1080P_1920_1080, SCALING, 1920, 1080,
 		ov5640_setting_30fps_1080P_1920_1080,
 		ARRAY_SIZE(ov5640_setting_30fps_1080P_1920_1080)},
-		{ov5640_mode_QSXGA_2592_1944, -1, 0, 0, NULL, 0},
+		{ov5640_mode_QSXGA_2592_1944, SCALING, 2592, 1944,
+		ov5640_setting_15fps_QSXGA_2592_1944,
+		ARRAY_SIZE(ov5640_setting_15fps_QSXGA_2592_1944)},
 	},
 };
 
@@ -426,8 +463,6 @@ static int ov5640_probe(struct i2c_client *adapter,
 				const struct i2c_device_id *device_id);
 static int ov5640_remove(struct i2c_client *client);
 
-static s32 ov5640_read_reg(struct ov5640 *sensor, u16 reg, u8 *val);
-static s32 ov5640_write_reg(struct ov5640 *sensor, u16 reg, u8 val);
 #ifdef CONFIG_OF
 static const struct of_device_id ov5640_mipi_v2_of_match[] = {
 	{ .compatible = "ovti,ov5640_mipi",
@@ -1021,8 +1056,10 @@ static int ov5640_download_firmware(struct ov5640 *sensor,
 
 		if (Mask) {
 			retval = ov5640_read_reg(sensor, RegAddr, &RegVal);
-			if (retval < 0)
+			if (retval < 0) {
+				pr_err("Error reading OV5640 register\n");
 				goto err;
+			}
 
 			RegVal &= ~(u8)Mask;
 			Val &= Mask;
@@ -1228,6 +1265,10 @@ static int ov5640_init_mode(struct ov5640 *sensor,
 		dev_err(dev, "Wrong ov5640 mode detected!\n");
 		return -1;
 	}
+
+	if (sensor->uyvy_fmt == true)
+		ov5640_init_setting_30fps_VGA[OV5640_FMT_OFFSET_VGA].u8Val =  \
+								0x32;
 
 	dn_mode = ov5640_mode_info_data[frame_rate][mode].dn_mode;
 	orig_dn_mode = ov5640_mode_info_data[frame_rate][orig_mode].dn_mode;
@@ -1770,6 +1811,8 @@ static int ov5640_probe(struct i2c_client *client,
 		dev_err(dev, "csi id missing or invalid\n");
 		return retval;
 	}
+
+	sensor->uyvy_fmt = of_property_read_bool(dev->of_node, "uyvy-fmt");
 
 	clk_prepare_enable(sensor->sensor_clk);
 
