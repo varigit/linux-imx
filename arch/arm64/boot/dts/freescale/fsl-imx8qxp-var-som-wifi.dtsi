@@ -1,0 +1,52 @@
+/*
+ * Copyright 2019 Variscite Ltd.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&iomuxc {
+	imx8qxp-var-som {
+		pinctrl_usdhc2_vsel: usdhc2vselgrp {
+			fsl,pins = <
+				SC_P_USDHC1_VSELECT_LSIO_GPIO4_IO20		0x00000021
+			>;
+		};
+	};
+};
+
+/* WIFI 1.8V voltage select */
+&gpio4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2_vsel>;
+
+	wifi_vsel_hog {
+		gpio-hog;
+		gpios = <20 0>;
+		output-high;
+		line-name = "wifi_vsel";
+	};
+};
+
+/* WIFI */
+&usdhc2 {
+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_wifi>;
+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wifi>;
+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi>;
+	bus-width = <4>;
+	status = "okay";
+};
+
+/* Bluetooth */
+&lpuart0 {
+	status = "okay";
+};
+
