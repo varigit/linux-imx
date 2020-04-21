@@ -13,6 +13,12 @@
  * GNU General Public License for more details.
  */
 
+/ {
+	sound-hdmi {
+		status = "okay";
+	};
+};
+
 &dcss {
 	status = "okay";
 	disp-dev = "hdmi_disp";
@@ -32,4 +38,13 @@
 		output-low;
 		line-name = "hdmi_on";
 	};
+};
+
+&sai4 {
+	clocks = <&clk IMX8MQ_CLK_SAI4_IPG>, <&clk IMX8MQ_CLK_DUMMY>,
+		<&clk IMX8MQ_CLK_SAI4_ROOT>, <&clk IMX8MQ_CLK_DUMMY>,
+		<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_AUDIO_PLL1_OUT>,
+		<&clk IMX8MQ_AUDIO_PLL2_OUT>;
+	clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3", "pll8k", "pll11k";
+	status = "okay";
 };
