@@ -17,6 +17,10 @@
 	chosen {
 		bootargs-append = "androidboot.primary_display=imx-drm androidboot.gui_resolution=1080p androidboot.fbTileSupport=enable";
 	};
+
+	sound-hdmi {
+		status = "okay";
+	};
 };
 
 &dcss {
@@ -38,4 +42,13 @@
 		output-low;
 		line-name = "hdmi_on";
 	};
+};
+
+&sai4 {
+	clocks = <&clk IMX8MQ_CLK_SAI4_IPG>, <&clk IMX8MQ_CLK_DUMMY>,
+		<&clk IMX8MQ_CLK_SAI4_ROOT>, <&clk IMX8MQ_CLK_DUMMY>,
+		<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_AUDIO_PLL1_OUT>,
+		<&clk IMX8MQ_AUDIO_PLL2_OUT>;
+	clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3", "pll8k", "pll11k";
+	status = "okay";
 };
