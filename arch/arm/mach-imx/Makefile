@@ -92,7 +92,7 @@ obj-$(CONFIG_SOC_IMX6Q) += mach-imx6q.o ddr3_freq_imx6.o smp_wfe_imx6.o \
 obj-$(CONFIG_SOC_IMX6SL) += mach-imx6sl.o lpddr2_freq_imx6.o
 obj-$(CONFIG_SOC_IMX6SLL) += mach-imx6sl.o lpddr2_freq_imx6sll.o
 obj-$(CONFIG_SOC_IMX6SX) += mach-imx6sx.o ddr3_freq_imx6sx.o lpddr2_freq_imx6sx.o
-obj-$(CONFIG_SOC_IMX6UL) += mach-imx6ul.o
+obj-$(CONFIG_SOC_IMX6UL) += mach-imx6ul.o ddr3_freq_imx6sx.o lpddr2_freq_imx6sx.o
 obj-$(CONFIG_SOC_IMX7D_CA7) += mach-imx7d.o pm-imx7.o ddr3_freq_imx7d.o smp_wfe.o \
 			   lpddr3_freq_imx.o suspend-imx7.o
 obj-$(CONFIG_SOC_IMX7D_CM4) += mach-imx7d-cm4.o
