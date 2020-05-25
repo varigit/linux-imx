@@ -125,23 +125,28 @@ static void ptn5150_irq_work(struct work_struct *work)
 
 			switch (port_status) {
 			case PTN5150_DFP_ATTACHED:
-				extcon_set_state_sync(info->edev,
-						EXTCON_USB_HOST, false);
-				gpiod_set_value(info->vbus_gpiod, 0);
-				extcon_set_state_sync(info->edev, EXTCON_USB,
-						true);
+				if (!IS_ERR(info->vbus_gpiod)) {
+
+					extcon_set_state_sync(info->edev,
+							EXTCON_USB_HOST, false);
+					gpiod_set_value(info->vbus_gpiod, 0);
+					extcon_set_state_sync(info->edev, EXTCON_USB,
+							true);
+				}
 				break;
 			case PTN5150_UFP_ATTACHED:
 				extcon_set_state_sync(info->edev, EXTCON_USB,
 						false);
-				vbus = ((reg_data &
-					PTN5150_REG_CC_VBUS_DETECTION_MASK) >>
-					PTN5150_REG_CC_VBUS_DETECTION_SHIFT);
-				if (vbus)
-					gpiod_set_value(info->vbus_gpiod, 0);
-				else
-					gpiod_set_value(info->vbus_gpiod, 1);
+				if (!IS_ERR(info->vbus_gpiod)) {
 
+					vbus = ((reg_data &
+						PTN5150_REG_CC_VBUS_DETECTION_MASK) >>
+						PTN5150_REG_CC_VBUS_DETECTION_SHIFT);
+					if (vbus)
+						gpiod_set_value(info->vbus_gpiod, 0);
+					else
+						gpiod_set_value(info->vbus_gpiod, 1);
+				}
 				extcon_set_state_sync(info->edev,
 						EXTCON_USB_HOST, true);
 				break;
@@ -156,7 +161,8 @@ static void ptn5150_irq_work(struct work_struct *work)
 					EXTCON_USB_HOST, false);
 			extcon_set_state_sync(info->edev,
 					EXTCON_USB, false);
-			gpiod_set_value(info->vbus_gpiod, 0);
+			if (!IS_ERR(info->vbus_gpiod))
+				gpiod_set_value(info->vbus_gpiod, 0);
 		}
 	}
 
@@ -247,12 +253,13 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
 	info->vbus_gpiod = devm_gpiod_get(&i2c->dev, "vbus", GPIOD_IN);
 	if (IS_ERR(info->vbus_gpiod)) {
 		dev_err(dev, "failed to get VBUS GPIO\n");
-		return PTR_ERR(info->vbus_gpiod);
 	}
-	ret = gpiod_direction_output(info->vbus_gpiod, 0);
-	if (ret) {
-		dev_err(dev, "failed to set VBUS GPIO direction\n");
-		return -EINVAL;
+	else {
+		ret = gpiod_direction_output(info->vbus_gpiod, 0);
+		if (ret) {
+			dev_err(dev, "failed to set VBUS GPIO direction\n");
+			return -EINVAL;
+		}
 	}
 
 	mutex_init(&info->mutex);
