@@ -32,7 +32,6 @@
 	as_bridge;
 	sync-pol = <1>;
 	pwr-delay = <10>;
-	/delete-property/ no_clk_reset;
 
 	port@1 {
 		mipi_dsi_in: endpoint {
@@ -43,7 +42,6 @@
 
 &mipi_dsi_bridge {
 	status = "okay";
-	/delete-property/ no_clk_reset;
 };
 
 &pwm1 {
