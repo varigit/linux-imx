@@ -3,6 +3,7 @@ menu "IMX8 Camera ISI/MIPI Features support"
 
 config IMX8_MIPI_CSI2_YAV
 	tristate "IMX8 MIPI CSI2 Controller Yet Another Version"
+	select V4L2_FWNODE
 	default y
 
 config IMX8_JPEG
