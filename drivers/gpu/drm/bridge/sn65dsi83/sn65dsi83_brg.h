@@ -29,6 +29,7 @@ struct sn65dsi83_brg {
     u8 num_dsi_lanes;
     u8 burst_mode;
     u8 de_neg_polarity;
+    u8 num_channels;
     struct sn65dsi83_brg_funcs *funcs;
 };
 struct sn65dsi83_brg *sn65dsi83_brg_get(void);
