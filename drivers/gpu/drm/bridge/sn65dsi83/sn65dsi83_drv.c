@@ -67,7 +67,6 @@ static int sn65dsi83_connector_get_modes(struct drm_connector *connector)
     mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
 
     drm_mode_probed_add(connector, mode);
-    drm_mode_connector_list_update(connector);
 
     connector->display_info.width_mm = mode->width_mm;
     connector->display_info.height_mm = mode->height_mm;
@@ -125,7 +124,6 @@ int drm_helper_probe_single_connector_modes(struct drm_connector *connector,
                         uint32_t maxX, uint32_t maxY);
 
 static struct drm_connector_funcs sn65dsi83_connector_funcs = {
-    .dpms = drm_helper_connector_dpms,
     .fill_modes = drm_helper_probe_single_connector_modes,
     .detect = sn65dsi83_connector_detect,
     .destroy = drm_connector_cleanup,
@@ -157,8 +155,8 @@ static void sn65dsi83_bridge_disable(struct drm_bridge *bridge)
 }
 
 static void sn65dsi83_bridge_mode_set(struct drm_bridge *bridge,
-                    struct drm_display_mode *mode,
-                    struct drm_display_mode *adj_mode)
+                    const struct drm_display_mode *mode,
+                    const struct drm_display_mode *adj_mode)
 {
     struct sn65dsi83 *sn65dsi83 = bridge_to_sn65dsi83(bridge);
     dev_info(DRM_DEVICE(bridge), "%s: mode: %d*%d@%d\n",__func__,
@@ -188,7 +186,7 @@ static int sn65dsi83_bridge_attach(struct drm_bridge *bridge)
     }
     drm_connector_helper_add(&sn65dsi83->connector,
                  &sn65dsi83_connector_helper_funcs);
-    drm_mode_connector_attach_encoder(&sn65dsi83->connector, bridge->encoder);
+    drm_connector_attach_encoder(&sn65dsi83->connector, bridge->encoder);
 
     ret = sn65dsi83_attach_dsi(sn65dsi83);
 
@@ -294,12 +292,9 @@ static int sn65dsi83_probe(struct i2c_client *i2c,
     sn65dsi83->bridge.funcs = &sn65dsi83_bridge_funcs;
     sn65dsi83->bridge.of_node = dev->of_node;
 
-    ret = drm_bridge_add(&sn65dsi83->bridge);
-    if (ret) {
-        dev_err(dev, "failed to add sn65dsi83 bridge\n");
-    }
+    drm_bridge_add(&sn65dsi83->bridge);
 
-    return ret;
+    return 0;
 }
 
 static int sn65dsi83_attach_dsi(struct sn65dsi83 *sn65dsi83)
