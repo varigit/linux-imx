@@ -205,6 +205,7 @@ static int sn65dsi83_parse_dt(struct device_node *np,
 {
     struct device *dev = &sn65dsi83->brg->client->dev;
     u32 num_lanes = 2, bpp = 24, format = 2, width = 149, height = 93;
+    u32 num_channels;
     u8 burst_mode = 0;
     u8 de_neg_polarity = 0;
     struct device_node *endpoint;
@@ -231,9 +232,21 @@ static int sn65dsi83_parse_dt(struct device_node *np,
         dev_err(dev, "Invalid dsi-lanes: %d\n", num_lanes);
         return -EINVAL;
     }
+
+    if (of_property_read_u32(np, "ti,lvds-channels", &num_channels) < 0) {
+        dev_info(dev, "lvds-channels property not found, using default\n");
+        num_channels = 1;
+    } else {
+        if (num_channels < 1 || num_channels > 2 ) {
+            dev_err(dev, "lvds-channels must be 1 or 2, not %u", num_channels);
+            return -EINVAL;
+        }
+    }
+
     sn65dsi83->brg->num_dsi_lanes = num_lanes;
     sn65dsi83->brg->burst_mode = burst_mode;
     sn65dsi83->brg->de_neg_polarity = de_neg_polarity;
+    sn65dsi83->brg->num_channels = num_channels;
 
     sn65dsi83->brg->gpio_enable = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
     if (IS_ERR(sn65dsi83->brg->gpio_enable)) {
