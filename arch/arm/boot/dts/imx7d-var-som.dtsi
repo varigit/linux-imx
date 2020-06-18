@@ -239,7 +239,6 @@
 		ti,debounce-rep = /bits/ 16 <1>;
 		ti,settle-delay-usec = /bits/ 16 <150>;
 		ti,keep-vref-on;
-		wakeup-source;
 	};
 };
 
@@ -258,8 +257,9 @@
 };
 
 &fec1 {
-	pinctrl-names = "default";
+	pinctrl-names = "default","sleep";
 	pinctrl-0 = <&pinctrl_enet1>;
+	pinctrl-1 = <&pinctrl_enet1_sleep>;
 	phy-supply=<&vgen3_reg>;
 	assigned-clocks = <&clks IMX7D_ENET_PHY_REF_ROOT_SRC>,
 			  <&clks IMX7D_ENET_AXI_ROOT_SRC>,
@@ -273,7 +273,6 @@
 	phy-mode = "rgmii-id";
 	phy-handle = <&ethphy0>;
 	phy-reset-gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
-	fsl,magic-packet;
 	status = "okay";
 
 	mdio {
@@ -293,8 +292,9 @@
 };
 
 &fec2 {
-	pinctrl-names = "default";
+	pinctrl-names = "default","sleep";
 	pinctrl-0 = <&pinctrl_enet2>;
+	pinctrl-1 = <&pinctrl_enet2_sleep>;
 	phy-supply=<&vgen3_reg>;
 	assigned-clocks = <&clks IMX7D_ENET_PHY_REF_ROOT_SRC>,
 			  <&clks IMX7D_ENET_AXI_ROOT_SRC>,
@@ -308,7 +308,6 @@
 	phy-mode = "rgmii-id";
 	phy-handle = <&ethphy1>;
 	phy-reset-gpios = <&gpio4 3 GPIO_ACTIVE_LOW>;
-	fsl,magic-packet;
 	status = "okay";
 };
 
@@ -450,6 +449,7 @@
 
 	wm8731: wm8731@1a {
 		#sound-dai-cells = <0>;
+		AVDD-supply = <&vgen6_reg>;
 		compatible = "wlf,wm8731";
 		reg = <0x1a>;
 		clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_CLK>;
@@ -507,8 +507,9 @@
 };
 
 &iomuxc {
-	pinctrl-names = "default";
+	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&pinctrl_hog_1>;
+	pinctrl-1 = <&pinctrl_hog_1_sleep>;
 
 	imx7d-sdb {
 		pinctrl_hog_1: hoggrp-1 {
@@ -521,6 +522,19 @@
 				MX7D_PAD_GPIO1_IO12__GPIO1_IO12		0x59  /* hsic hub connect */
 				MX7D_PAD_GPIO1_IO13__GPIO1_IO13		0x59  /* LED */
 				MX7D_PAD_SD1_WP__CCM_CLKO2		0xb0  /* camera clock */
+			>;
+		};
+
+		pinctrl_hog_1_sleep: hoggrp-1sleep {
+			fsl,pins = <
+				MX7D_PAD_GPIO1_IO14__GPIO1_IO14		0x10  /* bt reg on */
+				MX7D_PAD_EPDC_PWR_COM__GPIO2_IO30	0x10  /* capacitive touch irq */
+				MX7D_PAD_SD2_RESET_B__ECSPI3_RDY	0x10  /* ethphy0 reset */
+				MX7D_PAD_UART2_TX_DATA__I2C2_SDA	0x10  /* ethphy1 reset */
+				MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x10  /* hsic hub reset */
+				MX7D_PAD_GPIO1_IO12__GPIO1_IO12		0x10  /* hsic hub connect */
+				MX7D_PAD_GPIO1_IO13__GPIO1_IO13		0x10  /* LED */
+				MX7D_PAD_SD1_WP__GPIO5_IO1		0x10  /* camera clock */
 			>;
 		};
 
@@ -549,10 +563,10 @@
 
 		pinctrl_ecspi1_sleep: ecspi1grp_sleep {
 			fsl,pins = <
-				MX7D_PAD_ECSPI1_MISO__GPIO4_IO18	0x14
-				MX7D_PAD_ECSPI1_MOSI__GPIO4_IO17	0x14
-				MX7D_PAD_ECSPI1_SCLK__GPIO4_IO16	0x14
-				MX7D_PAD_ECSPI1_SS0__DISABLED		0x14
+				MX7D_PAD_ECSPI1_MISO__GPIO4_IO18	0x10
+				MX7D_PAD_ECSPI1_MOSI__GPIO4_IO17	0x10
+				MX7D_PAD_ECSPI1_SCLK__GPIO4_IO16	0x10
+				MX7D_PAD_ECSPI1_SS0__DISABLED		0x10
 			>;
 		};
 
@@ -584,6 +598,25 @@
 			>;
 		};
 
+		pinctrl_enet1_sleep: enet1_sleep_grp {
+			fsl,pins = <
+				MX7D_PAD_SD2_CD_B__GPIO5_IO9			0x10
+				MX7D_PAD_SD2_WP__GPIO5_IO10			0x10
+				MX7D_PAD_ENET1_RGMII_TXC__GPIO7_IO11		0x10
+				MX7D_PAD_ENET1_RGMII_TD0__GPIO7_IO6		0x10
+				MX7D_PAD_ENET1_RGMII_TD1__GPIO7_IO7		0x10
+				MX7D_PAD_ENET1_RGMII_TD2__GPIO7_IO8		0x10
+				MX7D_PAD_ENET1_RGMII_TD3__GPIO7_IO9		0x10
+				MX7D_PAD_ENET1_RGMII_TX_CTL__GPIO7_IO10		0x10
+				MX7D_PAD_ENET1_RGMII_RXC__GPIO7_IO5		0x10
+				MX7D_PAD_ENET1_RGMII_RD0__GPIO7_IO0		0x10
+				MX7D_PAD_ENET1_RGMII_RD1__GPIO7_IO1		0x10
+				MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2		0x10
+				MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3		0x10
+				MX7D_PAD_ENET1_RGMII_RX_CTL__GPIO7_IO4		0x10
+			>;
+		};
+
 		pinctrl_enet2: enet2grp {
 			fsl,pins = <
 				MX7D_PAD_EPDC_GDSP__ENET2_RGMII_TXC		0x1
@@ -598,6 +631,23 @@
 				MX7D_PAD_EPDC_SDOE__ENET2_RGMII_RD2		0x1
 				MX7D_PAD_EPDC_SDSHR__ENET2_RGMII_RD3		0x1
 				MX7D_PAD_EPDC_SDCE0__ENET2_RGMII_RX_CTL		0x1
+			>;
+		};
+
+		pinctrl_enet2_sleep: enet2_sleep_grp {
+			fsl,pins = <
+				MX7D_PAD_EPDC_GDSP__GPIO2_IO27			0x10
+				MX7D_PAD_EPDC_SDCE2__GPIO2_IO22			0x10
+				MX7D_PAD_EPDC_SDCE3__GPIO2_IO23			0x10
+				MX7D_PAD_EPDC_GDCLK__GPIO2_IO24			0x10
+				MX7D_PAD_EPDC_GDOE__GPIO2_IO25			0x10
+				MX7D_PAD_EPDC_GDRL__GPIO2_IO26			0x10
+				MX7D_PAD_EPDC_SDCE1__GPIO2_IO21			0x10
+				MX7D_PAD_EPDC_SDCLK__GPIO2_IO16			0x10
+				MX7D_PAD_EPDC_SDLE__GPIO2_IO17			0x10
+				MX7D_PAD_EPDC_SDOE__GPIO2_IO18			0x10
+				MX7D_PAD_EPDC_SDSHR__GPIO2_IO19			0x10
+				MX7D_PAD_EPDC_SDCE0__GPIO2_IO20			0x10
 			>;
 		};
 
@@ -692,6 +742,15 @@
 			>;
 		};
 
+		pinctrl_sai1_sleep: sai1grp_sleep {
+			fsl,pins = <
+				MX7D_PAD_ENET1_RX_CLK__GPIO7_IO13	0x10
+				MX7D_PAD_ENET1_CRS__GPIO7_IO14		0x10
+				MX7D_PAD_ENET1_COL__GPIO7_IO15		0x10
+				MX7D_PAD_ENET1_TX_CLK__GPIO7_IO12	0x10
+			>;
+		};
+
 		pinctrl_sai2: sai2grp {
 			fsl,pins = <
 				MX7D_PAD_SAI2_TX_BCLK__SAI2_TX_BCLK	0x1f
@@ -711,6 +770,13 @@
 			fsl,pins = <
 				MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
 				MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX	0x79
+			>;
+		};
+
+		pinctrl_uart1_sleep: uart1sleep_grp {
+			fsl,pins = <
+				MX7D_PAD_UART1_TX_DATA__GPIO4_IO1	0x10
+				MX7D_PAD_UART1_RX_DATA__GPIO4_IO0	0x10
 			>;
 		};
 
@@ -775,12 +841,12 @@
 
 		pinctrl_usdhc2_sleep: usdhc2grp_sleep {
 			fsl,pins = <
-				MX7D_PAD_SD2_CMD__GPIO5_IO13		0x14
-				MX7D_PAD_SD2_CLK__GPIO5_IO12		0x14
-				MX7D_PAD_SD2_DATA0__GPIO5_IO14		0x14
-				MX7D_PAD_SD2_DATA1__GPIO5_IO15		0x14
-				MX7D_PAD_SD2_DATA2__GPIO5_IO16		0x14
-				MX7D_PAD_SD2_DATA3__GPIO5_IO17		0x14
+				MX7D_PAD_SD2_CMD__GPIO5_IO13		0x10
+				MX7D_PAD_SD2_CLK__GPIO5_IO12		0x10
+				MX7D_PAD_SD2_DATA0__GPIO5_IO14		0x10
+				MX7D_PAD_SD2_DATA1__GPIO5_IO15		0x10
+				MX7D_PAD_SD2_DATA2__GPIO5_IO16		0x10
+				MX7D_PAD_SD2_DATA3__GPIO5_IO17		0x10
 			>;
 		};
 
@@ -861,8 +927,9 @@
 
 &sai1 {
 	#sound-dai-cells = <1>;
-	pinctrl-names = "default";
+	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&pinctrl_sai1 &pinctrl_sai1_mclk>;
+	pinctrl-1 = <&pinctrl_sai1_sleep &pinctrl_sai1_mclk_sleep>;
 	assigned-clocks = <&clks IMX7D_SAI1_ROOT_SRC>,
 			  <&clks IMX7D_SAI1_ROOT_CLK>;
 	assigned-clock-parents = <&clks IMX7D_PLL_AUDIO_POST_DIV>;
@@ -925,6 +992,12 @@
 			>;
 		};
 
+		pinctrl_sai1_mclk_sleep: sai1grp_mclk_sleep {
+			fsl,pins = <
+				MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1		0x10
+			>;
+		};
+
 		pinctrl_wlan: wlangrp {
 			fsl,pins = <
 				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4		0x09 /* WL_REG_ON */
@@ -934,16 +1007,17 @@
 
 		pinctrl_wlan_sleep: wlangrp_sleep {
 			fsl,pins = <
-				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4		0x14 /* WL_REG_ON */
-				MX7D_PAD_LPSR_GPIO1_IO03__OSC32K_32K_OUT	0x14 /* WIFI Slow clock */
+				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4		0x10 /* WL_REG_ON */
+				MX7D_PAD_LPSR_GPIO1_IO03__OSC32K_32K_OUT	0x10 /* WIFI Slow clock */
 			>;
 		};
 	};
 };
 
 &uart1 {
-	pinctrl-names = "default";
+	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&pinctrl_uart1>;
+	pinctrl-1 = <&pinctrl_uart1_sleep>;
 	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
 	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
 	status = "okay";
@@ -991,7 +1065,6 @@
 	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_usdhc1_gpio>;
 	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
 	no-1-8-v;
-	enable-sdio-wakeup;
 	keep-power-in-suspend;
 	status = "okay";
 };
