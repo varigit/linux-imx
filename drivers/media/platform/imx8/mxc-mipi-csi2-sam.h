@@ -216,6 +216,9 @@
 #define DISP_MIX_GASKET_0_HSIZE			0x04
 #define DISP_MIX_GASKET_0_VSIZE			0x08
 
+#define V4L2_SUBDEV_PRIV_IOCTL_GET_CTRL 1
+#define V4L2_SUBDEV_PRIV_IOCTL_SET_CTRL 2
+
 struct mipi_csis_event {
 	u32 mask;
 	const char * const name;
