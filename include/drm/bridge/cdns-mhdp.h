@@ -22,6 +22,7 @@
 #include <drm/drm_dp_mst_helper.h>
 #include <media/cec.h>
 #include <linux/bitops.h>
+#include <linux/platform_device.h>
 
 #define ADDR_IMEM		0x10000
 #define ADDR_DMEM		0x20000
