@@ -125,16 +125,16 @@ static void ptn5150_irq_work(struct work_struct *work)
 
 			switch (port_status) {
 			case PTN5150_DFP_ATTACHED:
-				if (!IS_ERR(info->vbus_gpiod)) {
 
-					extcon_set_state_sync(info->edev,
-							EXTCON_USB_HOST, false);
+				extcon_set_state_sync(info->edev,
+						EXTCON_USB_HOST, false);
+				if (!IS_ERR(info->vbus_gpiod))
 					gpiod_set_value(info->vbus_gpiod, 0);
-					extcon_set_state_sync(info->edev, EXTCON_USB,
-							true);
-				}
+				extcon_set_state_sync(info->edev, EXTCON_USB,
+						true);
 				break;
 			case PTN5150_UFP_ATTACHED:
+
 				extcon_set_state_sync(info->edev, EXTCON_USB,
 						false);
 				if (!IS_ERR(info->vbus_gpiod)) {
@@ -157,6 +157,7 @@ static void ptn5150_irq_work(struct work_struct *work)
 				break;
 			}
 		} else {
+
 			extcon_set_state_sync(info->edev,
 					EXTCON_USB_HOST, false);
 			extcon_set_state_sync(info->edev,
@@ -310,6 +311,11 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
 	ret = ptn5150_init_dev_type(info);
 	if (ret)
 		return -EINVAL;
+
+	extcon_set_state_sync(info->edev, EXTCON_USB,
+			false);
+	extcon_set_state_sync(info->edev,
+			EXTCON_USB_HOST, true);
 
 	return 0;
 }
