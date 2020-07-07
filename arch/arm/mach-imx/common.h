@@ -193,6 +193,8 @@ int imx_ddrc_get_ddr_type(void);
 static inline int imx_ddrc_get_ddr_type(void) { return 0; }
 #endif
 
+void v7_cpu_resume(void);
+
 void imx6_pm_ccm_init(const char *ccm_compat);
 void imx6q_pm_init(void);
 void imx6dl_pm_init(void);
