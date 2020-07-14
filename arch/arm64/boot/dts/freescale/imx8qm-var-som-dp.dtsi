@@ -1,0 +1,88 @@
+/*
+ * Copyright 2019 Variscite Ltd.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&lsio_gpio1 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_hdmi_i2c>;
+
+        hdmi_i2c_signal_route {
+                gpio-hog;
+                gpios = <22 GPIO_ACTIVE_HIGH>;
+                output-low;
+                line-name = "hdmi_i2c_signal_route";
+        };
+};
+
+&ldb1_phy {
+	status = "disabled";
+};
+
+&ldb1 {
+	status = "disabled";
+};
+
+&irqsteer_hdmi {
+	status = "okay";
+};
+
+&hdmi_lpcg_i2c0 {
+	status = "okay";
+};
+
+&hdmi_lpcg_lis_ipg {
+	status = "okay";
+};
+
+&hdmi_lpcg_pwm_ipg {
+	status = "okay";
+};
+
+&hdmi_lpcg_i2s {
+	status = "okay";
+};
+
+&hdmi_lpcg_gpio_ipg {
+	status = "okay";
+};
+
+&hdmi_lpcg_msi_hclk {
+	status = "okay";
+};
+
+&hdmi_lpcg_pxl {
+	status = "okay";
+};
+
+&hdmi_lpcg_phy {
+	status = "okay";
+};
+
+&hdmi_lpcg_apb_mux_csr {
+	status = "okay";
+};
+
+&hdmi_lpcg_apb_mux_ctrl {
+	status = "okay";
+};
+
+&hdmi_lpcg_apb {
+	status = "okay";
+};
+
+&hdmi {
+	compatible = "cdn,imx8qm-dp";
+	firmware-name = "dpfw.bin";
+	lane-mapping = <0x1b>;
+	status = "okay";
+};
