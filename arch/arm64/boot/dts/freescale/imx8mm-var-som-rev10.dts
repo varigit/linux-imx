@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2019-2020 Variscite Ltd.
+ */
+
+/dts-v1/;
+
+#include "imx8mm-var-som.dts"
+
+/ {
+	model = "Variscite VAR-SOM-MX8MM Rev1.0";
+
+	/* OTG ID */
+	extcon_usb1: extcon_usb1 {
+		compatible = "linux,extcon-usb-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_extcon>;
+		id-gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+};
+
+&iomuxc {
+	imx8mm-var-som {
+		pinctrl_usdhc2_gpio: usdhc2grpgpio {
+			fsl,pins = <
+				MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12	0xc1
+			>;
+		};
+
+		pinctrl_extcon: extcongrp {
+			fsl,pins = <
+				MX8MM_IOMUXC_GPIO1_IO10_GPIO1_IO10	0x16
+			>;
+		};
+	};
+};
+
+&usbotg1 {
+	extcon = <0>, <&extcon_usb1>;
+};
+
+&usdhc2 {
+	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
+};
