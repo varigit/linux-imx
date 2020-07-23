@@ -3903,11 +3903,11 @@ fec_probe(struct platform_device *pdev)
 	if (ret)
 		goto failed_reset;
 
-	irq_cnt = fec_enet_get_irq_cnt(pdev);
 	fec_ready_for_phy_reset = gpio_is_valid(fep->phy_reset_gpios);
 	if (fec_ready_for_phy_reset)
 		fec_reset_phy(fep);
 
+	irq_cnt = fec_enet_get_irq_cnt(pdev);
 	if (fep->bufdesc_ex)
 		fec_ptp_init(pdev, irq_cnt);
 

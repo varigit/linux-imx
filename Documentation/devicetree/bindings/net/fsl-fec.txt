@@ -20,20 +20,6 @@ Required properties:
 - clocks: Phandles to input clocks.
 
 Optional properties:
-- phy-reset-gpios : Should specify the gpio for phy reset
-- phy-reset-duration : Reset duration in milliseconds.  Should present
-  only if property "phy-reset-gpios" is available.  Missing the property
-  will have the duration be 1 millisecond.  Numbers greater than 1000 are
-  invalid and 1 millisecond will be used instead.
-- phy-reset-active-high : If present then the reset sequence using the GPIO
-  specified in the "phy-reset-gpios" property is reversed (H=reset state,
-  L=operation state).
-- phy-reset-post-delay : Post reset delay in milliseconds. If present then
-  a delay of phy-reset-post-delay milliseconds will be observed after the
-  phy-reset-gpios has been toggled. Can be omitted thus no delay is
-  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
-- phy-reset-on-resume : If present, the phy will be reset upon resume from
-  sleep.
 - phy-supply : regulator that powers the Ethernet PHY.
 - phy-handle : phandle to the PHY device connected to this device.
 - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
@@ -87,6 +73,8 @@ Deprecated optional properties:
   a delay of phy-reset-post-delay milliseconds will be observed after the
   phy-reset-gpios has been toggled. Can be omitted thus no delay is
   observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
+- phy-reset-on-resume : If present, the phy will be reset upon resume from
+  sleep.
 
 Example:
 
