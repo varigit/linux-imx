@@ -137,6 +137,8 @@ struct ov5640 {
 	int pwn_gpio, rst_gpio;
 };
 
+static bool max_res_720p = 0;
+
 static struct reg_value ov5640_init_setting_30fps_VGA[] = {
 	{0x3103, 0x11, 0, 0}, {0x3008, 0x82, 0, 5}, {0x3008, 0x42, 0, 0},
 	{0x3103, 0x03, 0, 0}, {0x3017, 0x00, 0, 0}, {0x3018, 0x00, 0, 0},
@@ -375,6 +377,34 @@ static struct reg_value ov5640_setting_15fps_QSXGA_2592_1944[] = {
 	{0x4001, 0x02, 0, 0}, {0x4004, 0x06, 0, 0}, {0x4713, 0x03, 0, 0},
 	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
 	{0x3824, 0x02, 0, 0}, {0x5001, 0x83, 0, 70}, {0x3008, 0x02, 0, 267},
+};
+
+
+static struct ov5640_mode_info ov5640_mode_info_data_720p[2][ov5640_mode_MAX + 1] = {
+	{
+		{ov5640_mode_720P_1280_720, -1, 0, 0, NULL, 0},
+		{ov5640_mode_NTSC_720_480, -1, 0, 0, NULL, 0},
+		{ov5640_mode_VGA_640_480, -1, 0, 0, NULL, 0},
+		{ov5640_mode_QVGA_320_240, -1, 0, 0, NULL, 0},
+		{ov5640_mode_QSXGA_2592_1944, SCALING, 2592, 1944,
+		ov5640_setting_15fps_QSXGA_2592_1944,
+		ARRAY_SIZE(ov5640_setting_15fps_QSXGA_2592_1944)},
+	},
+	{
+		{ov5640_mode_720P_1280_720, SUBSAMPLING, 1280, 720,
+		ov5640_setting_30fps_720P_1280_720,
+		ARRAY_SIZE(ov5640_setting_30fps_720P_1280_720)},
+		{ov5640_mode_NTSC_720_480, SUBSAMPLING, 720, 480,
+		ov5640_setting_30fps_NTSC_720_480,
+		ARRAY_SIZE(ov5640_setting_30fps_NTSC_720_480)},
+		{ov5640_mode_VGA_640_480, SUBSAMPLING, 640,  480,
+		ov5640_setting_30fps_VGA_640_480,
+		ARRAY_SIZE(ov5640_setting_30fps_VGA_640_480)},
+		{ov5640_mode_QVGA_320_240, SUBSAMPLING, 320,  240,
+		ov5640_setting_30fps_QVGA_320_240,
+		ARRAY_SIZE(ov5640_setting_30fps_QVGA_320_240)},
+		{ov5640_mode_QSXGA_2592_1944, -1, 0, 0, NULL, 0},
+	},
 };
 
 static struct ov5640_mode_info ov5640_mode_info_data[2][ov5640_mode_MAX + 1] = {
@@ -735,11 +765,21 @@ static int ov5640_change_mode(struct ov5640 *sensor)
 		return -1;
 	}
 
-	pModeSetting = ov5640_mode_info_data[frame_rate][mode].init_data_ptr;
-	ArySize = ov5640_mode_info_data[frame_rate][mode].init_data_size;
+	if(max_res_720p) {
+		mode == 0 ? mode = 0 : mode--;
+		pModeSetting = ov5640_mode_info_data_720p[frame_rate][mode].init_data_ptr;
+		ArySize = ov5640_mode_info_data_720p[frame_rate][mode].init_data_size;
+		sensor->pix.width = ov5640_mode_info_data_720p[frame_rate][mode].width;
+		sensor->pix.height = ov5640_mode_info_data_720p[frame_rate][mode].height;
+	}
+	else
+	{
+		pModeSetting = ov5640_mode_info_data[frame_rate][mode].init_data_ptr;
+		ArySize = ov5640_mode_info_data[frame_rate][mode].init_data_size;
+		sensor->pix.width = ov5640_mode_info_data[frame_rate][mode].width;
+		sensor->pix.height = ov5640_mode_info_data[frame_rate][mode].height;
+	}
 
-	sensor->pix.width = ov5640_mode_info_data[frame_rate][mode].width;
-	sensor->pix.height = ov5640_mode_info_data[frame_rate][mode].height;
 
 	if (sensor->pix.width == 0 || sensor->pix.height == 0 ||
 	    pModeSetting == NULL || ArySize == 0) {
@@ -930,15 +970,30 @@ static struct ov5640_mode_info *get_max_resolution(enum ov5640_frame_rate rate)
 	int i;
 
 	mode = 0;
-	max_width  = ov5640_mode_info_data[rate][0].width;
+	if(max_res_720p)
+		max_width  = ov5640_mode_info_data_720p[rate][0].width;
+
+	else
+		max_width  = ov5640_mode_info_data[rate][0].width;
 
 	for (i = 0; i < (ov5640_mode_MAX + 1); i++) {
-		if (ov5640_mode_info_data[rate][i].width > max_width) {
-			max_width = ov5640_mode_info_data[rate][i].width;
-			mode = i;
+	        if(max_res_720p) {
+			if (ov5640_mode_info_data_720p[rate][i].width > max_width) {
+				max_width = ov5640_mode_info_data_720p[rate][i].width;
+				mode = i;
+			}
+		}
+		else {
+			if (ov5640_mode_info_data[rate][i].width > max_width) {
+				max_width = ov5640_mode_info_data[rate][i].width;
+				mode = i;
+			}
 		}
 	}
-	return &ov5640_mode_info_data[rate][mode];
+        if(max_res_720p)
+		return &ov5640_mode_info_data_720p[rate][mode];
+	else
+		return &ov5640_mode_info_data[rate][mode];
 }
 
 static struct ov5640_mode_info *match(struct v4l2_mbus_framefmt *fmt,
@@ -948,10 +1003,19 @@ static struct ov5640_mode_info *match(struct v4l2_mbus_framefmt *fmt,
 	int i;
 
 	for (i = 0; i < (ov5640_mode_MAX + 1); i++) {
-		if (fmt->width == ov5640_mode_info_data[rate][i].width &&
-			fmt->height == ov5640_mode_info_data[rate][i].height) {
-			info = &ov5640_mode_info_data[rate][i];
-			break;
+	        if(max_res_720p) {
+			if (fmt->width == ov5640_mode_info_data_720p[rate][i].width &&
+				fmt->height == ov5640_mode_info_data_720p[rate][i].height) {
+				info = &ov5640_mode_info_data_720p[rate][i];
+				break;
+			}
+		}
+		else {
+			if (fmt->width == ov5640_mode_info_data[rate][i].width &&
+				fmt->height == ov5640_mode_info_data[rate][i].height) {
+				info = &ov5640_mode_info_data[rate][i];
+				break;
+			}
 		}
 	}
 	if (i == ov5640_mode_MAX + 1)
@@ -969,10 +1033,26 @@ static void try_to_find_resolution(struct ov5640 *sensor,
 	struct device *dev = &sensor->i2c_client->dev;
 	struct ov5640_mode_info *info;
 	bool found = false;
+	u32 width;
+	u32 height;
 
-	if ((mf->width == ov5640_mode_info_data[frame_rate][mode].width) &&
-		(mf->height == ov5640_mode_info_data[frame_rate][mode].height)) {
-			info = &ov5640_mode_info_data[frame_rate][mode];
+        if(max_res_720p) {
+		mode == 0 ? mode = 0: mode--;
+	
+		width = ov5640_mode_info_data_720p[frame_rate][mode].width;
+		height = ov5640_mode_info_data_720p[frame_rate][mode].height;
+	}
+	else {
+		width = ov5640_mode_info_data[frame_rate][mode].width;
+		height = ov5640_mode_info_data[frame_rate][mode].height;
+	}
+
+	if ((mf->width == width) &&
+		(mf->height == height)) {
+			if(max_res_720p)
+				info = &ov5640_mode_info_data_720p[frame_rate][mode];
+			else
+				info = &ov5640_mode_info_data[frame_rate][mode];
 			found = true;
 	} else {
 		/* get mode info according to frame user's width and height */
@@ -1093,14 +1173,26 @@ static int ov5640_enum_framesizes(struct v4l2_subdev *sd,
 	if (fse->index > ov5640_mode_MAX)
 		return -EINVAL;
 
-	fse->max_width =
-			max(ov5640_mode_info_data[0][fse->index].width,
-			    ov5640_mode_info_data[1][fse->index].width);
+	if(max_res_720p)
+		fse->max_width =
+				max(ov5640_mode_info_data_720p[0][fse->index].width,
+				    ov5640_mode_info_data_720p[1][fse->index].width);
+
+	else
+		fse->max_width =
+				max(ov5640_mode_info_data[0][fse->index].width,
+				    ov5640_mode_info_data[1][fse->index].width);
 	fse->min_width = fse->max_width;
 
-	fse->max_height =
-			max(ov5640_mode_info_data[0][fse->index].height,
-			    ov5640_mode_info_data[1][fse->index].height);
+	if(max_res_720p)
+		fse->max_height =
+				max(ov5640_mode_info_data_720p[0][fse->index].height,
+				    ov5640_mode_info_data_720p[1][fse->index].height);
+
+	else
+		fse->max_height =
+				max(ov5640_mode_info_data[0][fse->index].height,
+				    ov5640_mode_info_data[1][fse->index].height);
 	fse->min_height = fse->max_height;
 
 	return 0;
@@ -1119,6 +1211,8 @@ static int ov5640_enum_frameintervals(struct v4l2_subdev *sd,
 		struct v4l2_subdev_frame_interval_enum *fie)
 {
 	int i, j, count;
+	struct reg_value *init_data_ptr = NULL;
+	u32 width, height;
 
 	if (fie->index < 0 || fie->index > ov5640_mode_MAX)
 		return -EINVAL;
@@ -1134,9 +1228,19 @@ static int ov5640_enum_frameintervals(struct v4l2_subdev *sd,
 	count = 0;
 	for (i = 0; i < ARRAY_SIZE(ov5640_framerates); i++) {
 		for (j = 0; j < (ov5640_mode_MAX + 1); j++) {
-			if (fie->width == ov5640_mode_info_data[i][j].width
-			 && fie->height == ov5640_mode_info_data[i][j].height
-			 && ov5640_mode_info_data[i][j].init_data_ptr != NULL) {
+			if(max_res_720p) {
+				width = ov5640_mode_info_data_720p[i][j].width;
+				height = ov5640_mode_info_data_720p[i][j].height;
+				init_data_ptr = ov5640_mode_info_data_720p[i][j].init_data_ptr;
+			}
+			else {
+				width = ov5640_mode_info_data[i][j].width;
+				height = ov5640_mode_info_data[i][j].height;
+				init_data_ptr = ov5640_mode_info_data[i][j].init_data_ptr;
+			}
+			if (fie->width == width
+			 && fie->height == height
+			 && init_data_ptr != NULL) {
 				count++;
 			}
 			if (fie->index == (count - 1)) {
@@ -1270,6 +1374,8 @@ static int ov5640_probe(struct i2c_client *client,
 		return retval;
 	}
 
+	max_res_720p = of_property_read_bool(dev->of_node, "max-res-720p");
+
 	/* Set mclk rate before clk on */
 	ov5640_set_clk_rate(sensor);
 
@@ -1283,8 +1389,14 @@ static int ov5640_probe(struct i2c_client *client,
 	sensor->i2c_client = client;
 
 	sensor->pix.pixelformat = V4L2_PIX_FMT_UYVY;
-	sensor->pix.width = ov5640_mode_info_data[1][0].width;
-	sensor->pix.height =  ov5640_mode_info_data[1][0].height;
+	if(max_res_720p) {
+		sensor->pix.width = ov5640_mode_info_data_720p[1][0].width;
+		sensor->pix.height =  ov5640_mode_info_data_720p[1][0].height;
+	}
+	else {
+		sensor->pix.width = ov5640_mode_info_data[1][0].width;
+		sensor->pix.height =  ov5640_mode_info_data[1][0].height;
+	}
 	sensor->streamcap.capability = V4L2_MODE_HIGHQUALITY |
 					   V4L2_CAP_TIMEPERFRAME;
 	sensor->streamcap.capturemode = 0;

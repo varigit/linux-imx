@@ -782,6 +782,7 @@
 		mclk = <24000000>;
 		mclk_source = <0>;
 		mipi_csi;
+		max-res-720p;
 		port {
 			ov5640_mipi1_ep: endpoint {
 				remote-endpoint = <&mipi1_sensor_ep>;
