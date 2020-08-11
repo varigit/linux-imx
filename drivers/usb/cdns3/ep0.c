@@ -39,9 +39,9 @@ static void cdns3_ep0_run_transfer(struct cdns3_device *priv_dev,
 	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
 	struct cdns3_endpoint *priv_ep = priv_dev->eps[0];
 
-	priv_ep->trb_pool->buffer = TRB_BUFFER(dma_addr);
-	priv_ep->trb_pool->length = TRB_LEN(length);
-	priv_ep->trb_pool->control = TRB_CYCLE | TRB_IOC | TRB_TYPE(TRB_NORMAL);
+	priv_ep->trb_pool->buffer = cpu_to_le32(TRB_BUFFER(dma_addr));
+	priv_ep->trb_pool->length = cpu_to_le32(TRB_LEN(length));
+	priv_ep->trb_pool->control = cpu_to_le32(TRB_CYCLE | TRB_IOC | TRB_TYPE(TRB_NORMAL));
 
 	trace_cdns3_prepare_trb(priv_ep, priv_ep->trb_pool);
 
@@ -255,7 +255,7 @@ static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
 		return cdns3_ep0_delegate_req(priv_dev, ctrl);
 	case USB_RECIP_ENDPOINT:
 		/* check if endpoint is stalled */
-		cdns3_select_ep(priv_dev, ctrl->wIndex);
+		cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
 		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)))
 			usb_status =  BIT(USB_ENDPOINT_HALT);
 		break;
@@ -287,7 +287,7 @@ static int cdns3_ep0_feature_handle_device(struct cdns3_device *priv_dev,
 	state = priv_dev->gadget.state;
 	speed = priv_dev->gadget.speed;
 
-	switch (ctrl->wValue) {
+	switch (wValue) {
 	case USB_DEVICE_REMOTE_WAKEUP:
 		priv_dev->wake_up_flag = !!set;
 		break;
@@ -376,10 +376,10 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
 	if (!(ctrl->wIndex & ~USB_DIR_IN))
 		return 0;
 
-	index = cdns3_ep_addr_to_index(ctrl->wIndex);
+	index = cdns3_ep_addr_to_index(le16_to_cpu(ctrl->wIndex));
 	priv_ep = priv_dev->eps[index];
 
-	cdns3_select_ep(priv_dev, ctrl->wIndex);
+	cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
 
 	if (set) {
 		cdns3_dbg(priv_ep->cdns3_dev, "Stall endpoint %s\n",
@@ -388,8 +388,6 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
 		priv_ep->flags |= EP_STALL;
 	} else {
 		struct usb_request *request;
-		struct cdns3_request *priv_req;
-		struct cdns3_trb *trb;
 
 		if (priv_dev->eps[index]->flags & EP_WEDGE) {
 			cdns3_select_ep(priv_dev, 0x00);
@@ -398,13 +396,6 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
 
 		cdns3_dbg(priv_ep->cdns3_dev, "Clear Stalled endpoint %s\n",
 			  priv_ep->name);
-
-		request = cdns3_next_request(&priv_ep->pending_req_list);
-		if (request) {
-			priv_req = to_cdns3_request(request);
-			trb = priv_req->trb;
-			trb->control = trb->control ^ TRB_CYCLE;
-		}
 
 		writel(EP_CMD_CSTALL | EP_CMD_EPRST, &priv_dev->regs->ep_cmd);
 
@@ -416,10 +407,11 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
 
 		priv_ep->flags &= ~EP_STALL;
 
+		request = cdns3_next_request(&priv_ep->pending_req_list);
 		if (request) {
 			cdns3_dbg(priv_ep->cdns3_dev, "Resume transfer for %s\n",
 				  priv_ep->name);
-			trb->control = trb->control ^ TRB_CYCLE;
+
 			cdns3_rearm_transfer(priv_ep, 1);
 		}
 	}
@@ -476,7 +468,7 @@ static int cdns3_req_ep0_set_sel(struct cdns3_device *priv_dev,
 	if (priv_dev->gadget.state < USB_STATE_ADDRESS)
 		return -EINVAL;
 
-	if (ctrl_req->wLength != 6) {
+	if (le16_to_cpu(ctrl_req->wLength) != 6) {
 		dev_err(priv_dev->dev, "Set SEL should be 6 bytes, got %d\n",
 			ctrl_req->wLength);
 		return -EINVAL;
@@ -500,7 +492,7 @@ static int cdns3_req_ep0_set_isoch_delay(struct cdns3_device *priv_dev,
 	if (ctrl_req->wIndex || ctrl_req->wLength)
 		return -EINVAL;
 
-	priv_dev->isoch_delay = ctrl_req->wValue;
+	priv_dev->isoch_delay = le16_to_cpu(ctrl_req->wValue);
 
 	return 0;
 }
@@ -863,7 +855,13 @@ void cdns3_ep0_config(struct cdns3_device *priv_dev)
 		max_packet_size = 512;
 
 	priv_ep = priv_dev->eps[0];
-	INIT_LIST_HEAD(&priv_ep->pending_req_list);
+
+	if (!list_empty(&priv_ep->pending_req_list)) {
+		struct usb_request *request;
+
+		request = cdns3_next_request(&priv_ep->pending_req_list);
+		list_del_init(&request->list);
+	}
 
 	priv_dev->u1_allowed = 0;
 	priv_dev->u2_allowed = 0;
