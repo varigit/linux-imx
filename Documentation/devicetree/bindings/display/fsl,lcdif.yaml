@@ -61,6 +61,10 @@ properties:
 	controller can handle; if not present, the memory
 	interface is fast enough to handle all possible video modes
 
+  video-mem-size:
+    - description: |
+	video memory size in bytes, 32 MB if omitted
+
 required:
   - compatible
   - reg
