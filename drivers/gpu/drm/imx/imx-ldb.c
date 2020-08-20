@@ -560,16 +560,15 @@ static const struct component_ops imx_ldb_ops = {
 
 static int imx_ldb_probe(struct platform_device *pdev)
 {
-	struct device *dev = &pdev->dev;
 	struct imx_ldb *imx_ldb;
 
-	imx_ldb = devm_kzalloc(dev, sizeof(*imx_ldb), GFP_KERNEL);
+	imx_ldb = devm_kzalloc(&pdev->dev, sizeof(*imx_ldb), GFP_KERNEL);
 	if (!imx_ldb)
 		return -ENOMEM;
 
-	dev_set_drvdata(dev, imx_ldb);
+	platform_set_drvdata(pdev, imx_ldb);
 
-	return component_add(dev, &imx_ldb_ops);
+	return component_add(&pdev->dev, &imx_ldb_ops);
 }
 
 static int imx_ldb_remove(struct platform_device *pdev)
