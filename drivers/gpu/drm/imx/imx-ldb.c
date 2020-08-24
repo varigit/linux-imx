@@ -241,6 +241,13 @@ static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
 	struct ldb *ldb = &imx_ldb->base;
 	int mux, ret;
 
+	if (imx_ldb_ch == &imx_ldb->channel[0] || ldb->dual)
+		ldb->ldb_ctrl &= ~LDB_CH0_MODE_EN_MASK;
+	if (imx_ldb_ch == &imx_ldb->channel[1] || ldb->dual)
+		ldb->ldb_ctrl &= ~LDB_CH1_MODE_EN_MASK;
+
+	regmap_write(ldb->regmap, IOMUXC_GPR2, ldb->ldb_ctrl);
+
 	if (ldb->dual) {
 		clk_disable_unprepare(imx_ldb->clk[0]);
 		clk_disable_unprepare(imx_ldb->clk[1]);
@@ -560,16 +567,15 @@ static const struct component_ops imx_ldb_ops = {
 
 static int imx_ldb_probe(struct platform_device *pdev)
 {
-	struct device *dev = &pdev->dev;
 	struct imx_ldb *imx_ldb;
 
-	imx_ldb = devm_kzalloc(dev, sizeof(*imx_ldb), GFP_KERNEL);
+	imx_ldb = devm_kzalloc(&pdev->dev, sizeof(*imx_ldb), GFP_KERNEL);
 	if (!imx_ldb)
 		return -ENOMEM;
 
-	dev_set_drvdata(dev, imx_ldb);
+	platform_set_drvdata(pdev, imx_ldb);
 
-	return component_add(dev, &imx_ldb_ops);
+	return component_add(&pdev->dev, &imx_ldb_ops);
 }
 
 static int imx_ldb_remove(struct platform_device *pdev)
