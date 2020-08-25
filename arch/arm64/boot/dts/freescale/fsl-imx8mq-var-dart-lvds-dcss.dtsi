@@ -70,6 +70,7 @@
 
 &mipi_dsi_bridge {
 	status = "okay";
+	legacy-pll-config;
 };
 
 &pwm1 {
