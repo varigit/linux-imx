@@ -495,6 +495,7 @@ config SOC_IMX6
 	select ARM_ERRATA_775420
 	select ARM_GIC
 	select HAVE_IMX_ANATOP
+	select HAVE_IMX_BUSFREQ
 	select HAVE_IMX_GPC
 	select HAVE_IMX_MMDC
 	select HAVE_IMX_SRC
