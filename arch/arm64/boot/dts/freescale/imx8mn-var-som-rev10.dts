@@ -9,6 +9,46 @@
 #include "imx8mn-var-som.dts"
 
 / {
+	firmware {
+        android {
+            compatible = "android,firmware";
+            boot_devices = "soc@0/30800000.bus/30b60000.mmc";
+            boot_devices_mmcblk1 = "soc@0/30800000.bus/30b50000.mmc";
+            boot_devices_mmcblk2 = "soc@0/30800000.bus/30b60000.mmc";
+            fstab {
+                compatible = "android,fstab";
+                system {
+                    compatible = "android,system";
+                    dev = "system";
+                    type = "ext4";
+                    mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+                    fsmgr_flags = "wait,slotselect,avb,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey,logical,first_stage_mount";
+                };
+                vendor {
+                    compatible = "android,vendor";
+                    dev = "vendor";
+                    type = "ext4";
+                    mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+                    fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+                };
+                product {
+                    compatible = "android,product";
+                    dev = "product";
+                    type = "ext4";
+                    mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+                    fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+                };
+            };
+            vbmeta {
+                compatible = "android,vbmeta";
+                parts = "vbmeta,dtbo,boot,system,vendor,product";
+            };
+        };
+    };
+};
+
+
+/ {
 	model = "Variscite VAR-SOM-MX8MN Rev1.0";
 
 	/* OTG ID */

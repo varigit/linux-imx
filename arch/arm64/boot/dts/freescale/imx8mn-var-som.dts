@@ -10,11 +10,68 @@
 #include "imx8mn.dtsi"
 
 / {
+    firmware {
+        android {
+            compatible = "android,firmware";
+            boot_devices = "soc@0/30800000.bus/30b60000.mmc";
+            boot_devices_mmcblk1 = "soc@0/30800000.bus/30b50000.mmc";
+            boot_devices_mmcblk2 = "soc@0/30800000.bus/30b60000.mmc";
+            fstab {
+                compatible = "android,fstab";
+                system {
+                    compatible = "android,system";
+                    dev = "system";
+                    type = "ext4";
+                    mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+                    fsmgr_flags = "wait,slotselect,avb,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey,logical,first_stage_mount";
+                };
+                vendor {
+                    compatible = "android,vendor";
+                    dev = "vendor";
+                    type = "ext4";
+                    mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+                    fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+                };
+                product {
+                    compatible = "android,product";
+                    dev = "product";
+                    type = "ext4";
+                    mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+                    fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+                };
+            };
+            vbmeta {
+                compatible = "android,vbmeta";
+                parts = "vbmeta,dtbo,boot,system,vendor,product";
+            };
+        };
+    };	
+};
+
+/ {
+	 bt_rfkill {
+               compatible = "net,rfkill-gpio";
+               pinctrl-names = "default";
+               pinctrl-0 = <&pinctrl_bt>;
+               reset-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+               name = "bt_rfkill";
+               type = "bluetooth";
+               status = "okay";
+       };
+};
+
+/ {
 	model = "Variscite VAR-SOM-MX8MN";
 	compatible = "variscite,var-som-mx8mn", "fsl,imx8mn";
 
 	chosen {
+		bootargs = "console=ttymxc3,115200 earlycon=ec_imx6q,0x30a60000,115200 loglevel=8";
 		stdout-path = &uart4;
+	};
+
+	reserved-memory {
+		/* cma region is provided by kernel command line as cma=<size>M */
+		/delete-node/ linux,cma;
 	};
 
 	reg_usdhc2_vmmc: regulator-usdhc2 {
@@ -468,9 +525,14 @@
 				MX8MN_IOMUXC_SD1_DATA5_GPIO2_IO7		0xc1	/* WIFI_3V3_PWR_EN */
 				MX8MN_IOMUXC_SD2_WP_GPIO2_IO20			0x140	/* WIFI_1V8_PWR_EN */
 				MX8MN_IOMUXC_SD1_RESET_B_GPIO2_IO10		0xc1	/* WIFI_REG_ON     */
-				MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6		0xc1	/* BT_REG_ON       */
 			>;
 		};
+		
+		pinctrl_bt: btgrp {
+                        fsl,pins = <
+                                MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6               0xc1 /* BT_REG_ON    */
+                        >;
+                };
 
 		pinctrl_lvds: lvdsgrp {
 			fsl,pins = <

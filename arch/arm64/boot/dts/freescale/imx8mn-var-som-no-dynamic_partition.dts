@@ -1,0 +1,47 @@
+#include "imx8mn-var-som.dts"
+
+/ {
+	firmware {
+        	android {
+		compatible = "android,firmware";
+            boot_devices = "soc@0/30800000.bus/30b60000.mmc";
+            boot_devices_mmcblk1 = "soc@0/30800000.bus/30b50000.mmc";
+            boot_devices_mmcblk2 = "soc@0/30800000.bus/30b60000.mmc";
+            fstab {
+                compatible = "android,fstab";
+                system {
+                    compatible = "android,system";
+                    dev = "/dev/block/platform/soc@0/30800000.bus/30b60000.mmc/by-name/system";
+                    type = "ext4";
+                    mnt_flags = "ro,barrier=1,inode_readahead_blks=8";
+                    fsmgr_flags = "wait,slotselect,avb,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey";
+                    dev_mmcblk1 = "/dev/block/platform/soc@0/30800000.bus/30b50000.mmc/by-name/system";
+                    dev_mmcblk2 = "/dev/block/platform/soc@0/30800000.bus/30b60000.mmc/by-name/system";
+                };
+                vendor {
+                    compatible = "android,vendor";
+                    dev = "/dev/block/platform/soc@0/30800000.bus/30b60000.mmc/by-name/vendor";
+                    type = "ext4";
+                    mnt_flags = "ro,barrier=1,inode_readahead_blks=8";
+                    fsmgr_flags = "wait,slotselect,avb";
+                    dev_mmcblk1 = "/dev/block/platform/soc@0/30800000.bus/30b50000.mmc/by-name/vendor";
+                    dev_mmcblk2 = "/dev/block/platform/soc@0/30800000.bus/30b60000.mmc/by-name/vendor";
+                };
+                product {
+                    compatible = "android,product";
+                    dev = "/dev/block/platform/soc@0/30800000.bus/30b60000.mmc/by-name/product";
+                    type = "ext4";
+                    mnt_flags = "ro,barrier=1,inode_readahead_blks=8";
+                    fsmgr_flags = "wait,slotselect,avb";
+                    dev_mmcblk1 = "/dev/block/platform/soc@0/30800000.bus/30b50000.mmc/by-name/product";
+                    dev_mmcblk2 = "/dev/block/platform/soc@0/30800000.bus/30b60000.mmc/by-name/product";
+                };
+            };
+            vbmeta {
+                compatible = "android,vbmeta";
+                parts = "vbmeta,dtbo,boot,system,vendor,product";
+            };
+     };
+};
+
+};
