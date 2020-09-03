@@ -1,0 +1,71 @@
+/*
+ * Copyright 2018 NXP
+ * Copyright 2019 Variscite Ltd.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+#include "imx8mm-var-som-rev10.dts"
+
+/ {
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		m4_reserved: m4@0x7e000000 {
+			no-map;
+			reg = <0 0x7e000000 0 0x1000000>;
+		};
+
+		rpmsg_dma_reserved:rpmsg_dma@0x40400000 {
+			compatible = "shared-dma-pool";
+			no-map;
+			reg = <0 0x40400000 0 0x100000>;
+		};
+	};
+};
+
+/*
+ * ATTENTION: M4 may use IPs like below
+ * ECSPI1, GPIO4, GPT1, I2C4, WDOG1, PWM3, SDMA1/3, UART3
+ */
+
+&i2c4 {
+	status = "disabled";
+};
+
+&rpmsg{
+	/*
+	 * 64K for one rpmsg instance:
+	 * --0x40000000~0x4000ffff: pingpong
+	 */
+	vdev-nums = <1>;
+	reg = <0x0 0x40000000 0x0 0x10000>;
+	memory-region = <&rpmsg_dma_reserved>;
+	status = "okay";
+};
+
+&ecspi1 {
+	status = "disabled";
+};
+
+&pwm3 {
+	status = "disabled";
+};
+
+&sdma1{
+	status = "disabled";
+};
+
+&uart3 {
+	status = "disabled";
+};
