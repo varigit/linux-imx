@@ -269,7 +269,6 @@ static void sii902x_cable_connected(void)
 			console_lock();
 			if (!fb_set_var(sii902x.fbi, &sii902x.fbi->var))
 				fbcon_update_vcs(sii902x.fbi, sii902x.fbi->var.activate & FB_ACTIVATE_ALL);
-
 			console_unlock();
 		}
 		/* Power on sii902x */

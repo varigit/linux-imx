@@ -20,6 +20,7 @@
 #include <linux/ipu-v3.h>
 #include <linux/module.h>
 #include <linux/mxcfb.h>
+#include <linux/fbcon.h>
 #include <linux/mxc_v4l2.h>
 #include <linux/platform_device.h>
 #include <linux/sched.h>
