@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright 2017 NXP
+ * Copyright 2018-2020 Variscite Ltd.
+ */
+
+#include "imx8mq-var-dart-common.dtsi"
+#include "imx8mq-var-dart-wifi.dtsi"
+#include "imx8mq-var-dart-lvds-lcdif.dtsi"
+#include "imx8mq-var-dart-hdmi.dtsi"
+#include "imx8mq-var-dart-cb12.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M CB-1.2 WIFI+LVDS+HDMI";
+};
