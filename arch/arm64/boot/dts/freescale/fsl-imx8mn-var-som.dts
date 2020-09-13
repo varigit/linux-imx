@@ -619,8 +619,8 @@
 			ldo1_reg: regulator@8 {
 				reg = <8>;
 				regulator-compatible = "ldo1";
-				regulator-min-microvolt = <3000000>;
-				regulator-max-microvolt = <3300000>;
+				regulator-min-microvolt = <1600000>;
+				regulator-max-microvolt = <1900000>;
 				regulator-boot-on;
 				regulator-always-on;
 			};
@@ -628,7 +628,7 @@
 			ldo2_reg: regulator@9 {
 				reg = <9>;
 				regulator-compatible = "ldo2";
-				regulator-min-microvolt = <900000>;
+				regulator-min-microvolt = <800000>;
 				regulator-max-microvolt = <900000>;
 				regulator-boot-on;
 				regulator-always-on;
@@ -1051,7 +1051,7 @@
 		ti,settle-delay-usec = /bits/ 16 <150>;
 		ti,keep-vref-on;
 		wakeup-source;
-		status = "disabled";
+		status = "okay";
 	};
 
 	/* CAN controller */
