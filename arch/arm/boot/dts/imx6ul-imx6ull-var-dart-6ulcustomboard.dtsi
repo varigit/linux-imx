@@ -275,6 +275,10 @@
 	status = "okay";
 };
 
+&snvs_rtc {
+	status = "disabled";
+};
+
 /* Console UART */
 &uart1 {
 	pinctrl-names = "default";
