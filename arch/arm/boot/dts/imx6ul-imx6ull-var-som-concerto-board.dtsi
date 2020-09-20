@@ -288,6 +288,10 @@
 	status = "disabled";
 };
 
+&snvs_rtc {
+	status = "disabled";
+};
+
 &tsc {
 	/*
 	 * Conflics with wdog1 ext-reset-output & SD CD pins,
