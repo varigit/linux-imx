@@ -30,6 +30,7 @@ enum ptn5150_reg {
 	PTN5150_REG_END,
 };
 
+#define PTN5150_DISCONNECTED			0x0
 #define PTN5150_DFP_ATTACHED			0x1
 #define PTN5150_UFP_ATTACHED			0x2
 
@@ -83,25 +84,95 @@ static const struct regmap_config ptn5150_regmap_config = {
 	.max_register	= PTN5150_REG_END,
 };
 
+static void ptn5150_event_dfp_attached(struct ptn5150_info *info) {
+	dev_dbg(info->dev, "PTN5150_DFP_ATTACHED\n");
+
+	extcon_set_state_sync(info->edev,
+			EXTCON_USB_HOST, false);
+	if (!IS_ERR(info->vbus_gpiod))
+		gpiod_set_value(info->vbus_gpiod, 0);
+	extcon_set_state_sync(info->edev, EXTCON_USB,
+			true);
+}
+
+static void ptn5150_event_ufp_attached(struct ptn5150_info *info, unsigned int cc_status_reg_data) {
+	unsigned int vbus;
+
+	dev_dbg(info->dev, "PTN5150_UFP_ATTACHED\n");
+
+	extcon_set_state_sync(info->edev, EXTCON_USB,
+			false);
+	if (!IS_ERR(info->vbus_gpiod)) {
+		vbus = ((cc_status_reg_data &
+			PTN5150_REG_CC_VBUS_DETECTION_MASK) >>
+			PTN5150_REG_CC_VBUS_DETECTION_SHIFT);
+		if (vbus)
+			gpiod_set_value(info->vbus_gpiod, 0);
+		else
+			gpiod_set_value(info->vbus_gpiod, 1);
+	}
+	extcon_set_state_sync(info->edev,
+			EXTCON_USB_HOST, true);
+}
+
+static void ptn5150_event_disconnected(struct ptn5150_info *info) {
+	dev_dbg(info->dev, "PTN5150_DISCONNECTED\n");
+
+	extcon_set_state_sync(info->edev,
+			EXTCON_USB_HOST, false);
+	extcon_set_state_sync(info->edev,
+			EXTCON_USB, false);
+	if (!IS_ERR(info->vbus_gpiod))
+		gpiod_set_value(info->vbus_gpiod, 0);
+}
+
+static int ptn5150_poll_cable_status(struct ptn5150_info *info) {
+	unsigned int reg_data;
+	unsigned int port_status;
+	int ret;
+
+	ret = regmap_read(info->regmap, PTN5150_REG_CC_STATUS, &reg_data);
+	if (ret) {
+		dev_err(info->dev, "failed to read CC STATUS %d\n", ret);
+		return ret;
+	}
+
+	port_status = ((reg_data &
+			PTN5150_REG_CC_PORT_ATTACHMENT_MASK) >>
+			PTN5150_REG_CC_PORT_ATTACHMENT_SHIFT);
+
+	/* Update extcon_set_state_sync and vbus according to port_status */
+	switch (port_status) {
+	case PTN5150_DFP_ATTACHED:
+		ptn5150_event_dfp_attached(info);
+		break;
+	case PTN5150_UFP_ATTACHED:
+		ptn5150_event_ufp_attached(info, reg_data);
+		break;
+	case PTN5150_DISCONNECTED:
+		ptn5150_event_disconnected(info);
+		break;
+	default:
+		dev_err(info->dev,
+			"Unknown Port status : %x\n",
+			port_status);
+		break;
+	}
+
+	return 0;
+}
+
 static void ptn5150_irq_work(struct work_struct *work)
 {
 	struct ptn5150_info *info = container_of(work,
 			struct ptn5150_info, irq_work);
 	int ret = 0;
-	unsigned int reg_data;
 	unsigned int int_status;
 
 	if (!info->edev)
 		return;
 
 	mutex_lock(&info->mutex);
-
-	ret = regmap_read(info->regmap, PTN5150_REG_CC_STATUS, &reg_data);
-	if (ret) {
-		dev_err(info->dev, "failed to read CC STATUS %d\n", ret);
-		mutex_unlock(&info->mutex);
-		return;
-	}
 
 	/* Clear interrupt. Read would clear the register */
 	ret = regmap_read(info->regmap, PTN5150_REG_INT_STATUS, &int_status);
@@ -116,54 +187,13 @@ static void ptn5150_irq_work(struct work_struct *work)
 
 		cable_attach = int_status & PTN5150_REG_INT_CABLE_ATTACH_MASK;
 		if (cable_attach) {
-			unsigned int port_status;
-			unsigned int vbus;
-
-			port_status = ((reg_data &
-					PTN5150_REG_CC_PORT_ATTACHMENT_MASK) >>
-					PTN5150_REG_CC_PORT_ATTACHMENT_SHIFT);
-
-			switch (port_status) {
-			case PTN5150_DFP_ATTACHED:
-
-				extcon_set_state_sync(info->edev,
-						EXTCON_USB_HOST, false);
-				if (!IS_ERR(info->vbus_gpiod))
-					gpiod_set_value(info->vbus_gpiod, 0);
-				extcon_set_state_sync(info->edev, EXTCON_USB,
-						true);
-				break;
-			case PTN5150_UFP_ATTACHED:
-
-				extcon_set_state_sync(info->edev, EXTCON_USB,
-						false);
-				if (!IS_ERR(info->vbus_gpiod)) {
-
-					vbus = ((reg_data &
-						PTN5150_REG_CC_VBUS_DETECTION_MASK) >>
-						PTN5150_REG_CC_VBUS_DETECTION_SHIFT);
-					if (vbus)
-						gpiod_set_value(info->vbus_gpiod, 0);
-					else
-						gpiod_set_value(info->vbus_gpiod, 1);
-				}
-				extcon_set_state_sync(info->edev,
-						EXTCON_USB_HOST, true);
-				break;
-			default:
-				dev_err(info->dev,
-					"Unknown Port status : %x\n",
-					port_status);
-				break;
+			ret = ptn5150_poll_cable_status(info);
+			if (ret) {
+				mutex_unlock(&info->mutex);
+				return;
 			}
 		} else {
-
-			extcon_set_state_sync(info->edev,
-					EXTCON_USB_HOST, false);
-			extcon_set_state_sync(info->edev,
-					EXTCON_USB, false);
-			if (!IS_ERR(info->vbus_gpiod))
-				gpiod_set_value(info->vbus_gpiod, 0);
+			ptn5150_event_disconnected(info);
 		}
 	}
 
@@ -312,10 +342,12 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
 	if (ret)
 		return -EINVAL;
 
-	extcon_set_state_sync(info->edev, EXTCON_USB,
-			false);
-	extcon_set_state_sync(info->edev,
-			EXTCON_USB_HOST, true);
+	/* Initialize cable status by polling cc register */
+	disable_irq(info->irq);
+	mutex_lock(&info->mutex);
+	ptn5150_poll_cable_status(info);
+	mutex_unlock(&info->mutex);
+	enable_irq(info->irq);
 
 	return 0;
 }
