@@ -119,10 +119,12 @@
 		/*
 		 * To actually use this interrupt
 		 * connect pins J14.8 & J14.10 on the Concerto-Board
+		 * and uncomment the following 3 lines
+		 *
+		 * pinctrl-0 = <&pinctrl_rtc>;
+		 * interrupt-parent = <&gpio1>;
+		 * interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
 		 */
-		pinctrl-0 = <&pinctrl_rtc>;
-		interrupt-parent = <&gpio1>;
-		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
 	};
 };
 
