@@ -1104,7 +1104,7 @@
 	/* CAN controller */
 	can0: can@1 {
 		reg = <1>;
-		compatible = "microchip,mcp25xxfd";
+		compatible = "microchip,mcp251xfd";
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_can>;
 		clocks = <&can0_osc>;
