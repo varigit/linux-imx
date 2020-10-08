@@ -548,7 +548,7 @@
 
 		pinctrl_captouch: captouchgrp {
 			fsl,pins = <
-				MX8MN_IOMUXC_SPDIF_RX_GPIO5_IO4			0x16
+				MX8MN_IOMUXC_SPDIF_RX_GPIO5_IO4			0xc0
 			>;
 		};
 
@@ -565,13 +565,13 @@
 
 		pinctrl_can: cangrp {
 			fsl,pins = <
-				MX8MN_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x16
+				MX8MN_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x1c0
 			>;
 		};
 
 		pinctrl_restouch: restouchgrp {
 			fsl,pins = <
-				MX8MN_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x1c0
+				MX8MN_IOMUXC_GPIO1_IO03_GPIO1_IO3		0xc0
 			>;
 		};
 
@@ -843,11 +843,12 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_captouch>;
 		interrupt-parent = <&gpio5>;
-		interrupts = <4 0>;
+		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
 		touchscreen-size-x = <800>;
 		touchscreen-size-y = <480>;
 		touchscreen-inverted-x;
 		touchscreen-inverted-y;
+		wakeup-source;
 	};
 
 	/* DS1337 RTC module */
@@ -1083,7 +1084,7 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_restouch>;
 		interrupt-parent = <&gpio1>;
-		interrupts = <3 GPIO_ACTIVE_LOW>;
+		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
 		spi-max-frequency = <1500000>;
 		pendown-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
 		ti,x-min = /bits/ 16 <125>;
