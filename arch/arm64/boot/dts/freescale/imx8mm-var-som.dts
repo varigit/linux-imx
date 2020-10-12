@@ -165,6 +165,8 @@
 };
 
 &iomuxc {
+	pinctrl-names = "default";
+
 	imx8mm-var-som {
 
 		pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
@@ -289,9 +291,9 @@
 			>;
 		};
 
-		pinctrl_pmic: pmicirq {
+		pinctrl_pmic: pmicgrp {
 			fsl,pins = <
-				MX8MM_IOMUXC_SD1_DATA6_GPIO2_IO8		0x41
+				MX8MM_IOMUXC_SD1_DATA6_GPIO2_IO8		0x140
 			>;
 		};
 
@@ -556,9 +558,10 @@
 		status = "okay";
 		compatible = "rohm,bd71847";
 		reg = <0x4b>;
+		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_pmic>;
 		interrupt-parent = <&gpio2>;
-		interrupts = <8 GPIO_ACTIVE_LOW>;
+		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
 		rohm,reset-snvs-powered;
 
 		regulators {
