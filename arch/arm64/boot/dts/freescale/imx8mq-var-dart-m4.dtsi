@@ -1,0 +1,85 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright 2017 NXP
+ * Copyright 2019-2020 Variscite Ltd.
+ */
+
+/ {
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		m4_reserved: m4@0x7e000000 {
+			no-map;
+			reg = <0 0x7e000000 0 0x1000000>;
+		};
+
+		rpmsg_reserved: rpmsg@0x40000000 {
+			no-map;
+			reg = <0 0x40200000 0 0x200000>;
+		};
+
+		vdev0vring0: vdev0vring0@40000000 {
+			compatible = "shared-dma-pool";
+			reg = <0 0x40000000 0 0x8000>;
+			no-map;
+		};
+
+		vdev0vring1: vdev0vring1@40008000 {
+			compatible = "shared-dma-pool";
+			reg = <0 0x40008000 0 0x8000>;
+			no-map;
+		};
+
+		vdevbuffer: vdevbuffer@40400000 {
+			compatible = "shared-dma-pool";
+			reg = <0 0x40400000 0 0x100000>;
+			no-map;
+		};
+
+	};
+
+	imx8mq-cm4 {
+		compatible = "fsl,imx8mq-cm4";
+		rsc-da = <0x40000000>;
+		clocks = <&clk IMX8MQ_CLK_M4_DIV>;
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&mu 0 1
+					&mu 1 1
+					&mu 3 1>;
+		memory-region = <&vdev0vring0>, <&vdev0vring1>, <&vdevbuffer>;
+		syscon = <&src>;
+	};
+};
+
+&i2c3 {
+	status = "disabled";
+};
+
+&pwm2 {
+	status = "disabled";
+};
+
+&rpmsg{
+	/*
+	 * 64K for one rpmsg instance:
+	 * --0x40000000~0x4000ffff: pingpong
+	 */
+	vdev-nums = <1>;
+	reg = <0x0 0x40000000 0x0 0x10000>;
+	memory-region = <&vdevbuffer>;
+	status = "okay";
+};
+
+&tmu {
+	status = "disabled";
+};
+
+&uart2 {
+	status = "disabled";
+};
+
+&wdog3{
+	status = "disabled";
+};

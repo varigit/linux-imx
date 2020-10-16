@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright 2017 NXP
+ * Copyright 2018-2020 Variscite Ltd.
+ */
+
+#include "imx8mq-var-dart-wifi-hdmi.dts"
+#include "imx8mq-var-dart-m4.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M M4+WIFI+HDMI";
+};
