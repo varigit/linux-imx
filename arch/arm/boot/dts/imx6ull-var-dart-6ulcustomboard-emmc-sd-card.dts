@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 2016-2019 Variscite Ltd. - https://www.variscite.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include "imx6ull.dtsi"
+
+#include "imx6ull-var-dart.dtsi"
+#include "imx6ul-imx6ull-var-dart-emmc.dtsi"
+
+#include "imx6ull-var-dart-6ulcustomboard.dtsi"
+#include "imx6ul-imx6ull-var-dart-6ulcustomboard-sd-card.dtsi"
+
+/ {
+	model = "Variscite DART-6UL with i.MX6ULL, eMMC & SD card support on VAR-6ULCustomBoard";
+	compatible = "variscite,imx6ul-var-dart", "fsl,imx6ull";
+};
