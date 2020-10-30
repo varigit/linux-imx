@@ -1351,7 +1351,7 @@ static int mxsfb_init_fbinfo_dt(struct mxsfb_info *host)
 		goto put_display_node;
 	}
 
-	ret = of_property_read_u32(display_np, "video-mem-size",
+	ret = of_property_read_u32(np, "video-mem-size",
 				   &host->video_mem_size);
 	if (ret < 0)
 		host->video_mem_size = 0;
