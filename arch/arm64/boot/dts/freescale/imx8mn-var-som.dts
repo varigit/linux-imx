@@ -722,6 +722,34 @@
 		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
 		#gpio-cells = <2>;
 		wakeup-source;
+
+		usb3_sel_hog {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "usb3_sel";
+		};
+
+		enet_rst_hog {
+			gpio-hog;
+			gpios = <5 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "enet_rst";
+		};
+
+		som_vsel_hog {
+			gpio-hog;
+			gpios = <6 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "som_vsel";
+		};
+
+		enet_sel_hog {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "enet_sel";
+		};
 	};
 
 	ov5640_mipi1: ov5640_mipi1@3c {
@@ -1077,34 +1105,4 @@
 
 &snvs_rtc {
 	status = "disabled";
-};
-
-&pca9534 {
-	usb3_sel_hog {
-		gpio-hog;
-		gpios = <4 0>;
-		output-high;
-		line-name = "usb3_sel";
-	};
-
-	enet_rst_hog {
-		gpio-hog;
-		gpios = <5 0>;
-		output-low;
-		line-name = "enet_rst";
-	};
-
-	som_vsel_hog {
-		gpio-hog;
-		gpios = <6 0>;
-		output-low;
-		line-name = "som_vsel";
-	};
-
-	enet_sel_hog {
-		gpio-hog;
-		gpios = <7 0>;
-		output-low;
-		line-name = "enet_sel";
-	};
 };
