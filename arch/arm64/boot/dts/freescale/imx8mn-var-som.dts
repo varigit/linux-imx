@@ -473,6 +473,11 @@
 				MX8MN_IOMUXC_SD1_DATA5_GPIO2_IO7		0xc1	/* WIFI_3V3_PWR_EN */
 				MX8MN_IOMUXC_SD2_WP_GPIO2_IO20			0x140	/* WIFI_1V8_PWR_EN */
 				MX8MN_IOMUXC_SD1_RESET_B_GPIO2_IO10		0xc1	/* WIFI_REG_ON     */
+			>;
+		};
+
+		pinctrl_bt: btgrp {
+			fsl,pins = <
 				MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6		0xc1	/* BT_REG_ON       */
 			>;
 		};
@@ -896,7 +901,7 @@
 /* Bluetooth */
 &uart2 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart2>;
+	pinctrl-0 = <&pinctrl_uart2>, <&pinctrl_bt>;
 	assigned-clocks = <&clk IMX8MN_CLK_UART2>;
 	assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_80M>;
 	uart-has-rtscts;
