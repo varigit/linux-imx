@@ -10,7 +10,7 @@
 #include "imx8mn.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8MN";
+	model = "Variscite VAR-SOM-MX8M-NANO";
 	compatible = "variscite,var-som-mx8mn", "fsl,imx8mn";
 
 	chosen {
@@ -760,7 +760,7 @@
 		pinctrl-0 = <&pinctrl_csi1>;
 		clocks = <&clk IMX8MN_CLK_CLKO1>;
 		clock-names = "xclk";
-/* Disabled CLKO1, since VAR-SOM-MX8MN camera expansion board uses
+/* Disabled CLKO1, since VAR-SOM-MX8M-NANO camera expansion board uses
  * its own oscillator. Enable CLK01 if your desing requres it
  */
 #if 0

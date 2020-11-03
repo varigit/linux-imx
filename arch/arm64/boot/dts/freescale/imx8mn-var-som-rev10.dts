@@ -9,7 +9,7 @@
 #include "imx8mn-var-som.dts"
 
 / {
-	model = "Variscite VAR-SOM-MX8MN Rev1.0";
+	model = "Variscite VAR-SOM-MX8M-NANO Rev1.0";
 
 	/* OTG ID */
 	extcon_usb1: extcon_usb1 {

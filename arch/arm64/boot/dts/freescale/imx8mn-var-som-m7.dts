@@ -16,6 +16,8 @@
 #include "imx8mn-var-som.dts"
 
 / {
+	model = "Variscite VAR-SOM-MX8M-NANO M7";
+
 	reserved-memory {
 
 		m_core_reserved: m_core@0x7e000000 {
