@@ -20,17 +20,6 @@
 	};
 };
 
-&hdmi {
-	compatible = "cdn,imx8mq-hdmi";
-	lane-mapping = <0xe4>;
-	status = "okay";
-	port@1 {
-		hdmi_in: endpoint {
-			remote-endpoint = <&dcss_out>;
-		};
-	};
-};
-
 &gpio1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_hdmi>;
@@ -40,6 +29,17 @@
 		gpios = <5 0>;
 		output-low;
 		line-name = "hdmi_on";
+	};
+};
+
+&hdmi {
+	compatible = "cdn,imx8mq-hdmi";
+	lane-mapping = <0xe4>;
+	status = "okay";
+	port@1 {
+		hdmi_in: endpoint {
+			remote-endpoint = <&dcss_out>;
+		};
 	};
 };
 

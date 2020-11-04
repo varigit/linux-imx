@@ -4,15 +4,10 @@
  * Copyright 2018-2020 Variscite Ltd.
  */
 
-
-&irqsteer {
-	status = "okay";
-};
-
 /delete-node/&hdmi;
 
-&lcdif {
-	status = "disabled";
+&backlight {
+	status = "okay";
 };
 
 &dcss {
@@ -45,8 +40,24 @@
 	};
 };
 
+&dphy {
+	status = "okay";
+};
+
 &dsi_lvds_bridge {
 	status = "okay";
+};
+
+&ft5x06_ts {
+	status = "okay";
+};
+
+&irqsteer {
+	status = "okay";
+};
+
+&lcdif {
+	status = "disabled";
 };
 
 &mipi_dsi {
@@ -61,18 +72,6 @@
 	};
 };
 
-&dphy {
-	status = "okay";
-};
-
 &pwm1 {
-	status = "okay";
-};
-
-&backlight {
-	status = "okay";
-};
-
-&ft5x06_ts {
 	status = "okay";
 };
