@@ -13,10 +13,10 @@
  * GNU General Public License for more details.
  */
 
-#include "imx8mn-var-som.dts"
+#include "imx8mn-var-som-rev10-symphony.dts"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-NANO M7";
+	model = "Variscite VAR-SOM-MX8M-NANO Rev1.0 M7";
 
 	reserved-memory {
 
@@ -37,7 +37,15 @@
  * ECSPI1, GPIO4, GPT1, I2C4, WDOG1, PWM3, SDMA1/3, UART3
  */
 
+&ecspi1 {
+	status = "disabled";
+};
+
 &i2c4 {
+	status = "disabled";
+};
+
+&pwm3 {
 	status = "disabled";
 };
 
@@ -51,14 +59,6 @@
 	status = "okay";
 };
 
-&ecspi1 {
-	status = "disabled";
-};
-
-&pwm3 {
-	status = "disabled";
-};
-
 &sdma1{
 	status = "disabled";
 };
@@ -66,4 +66,3 @@
 &uart3 {
 	status = "disabled";
 };
-
