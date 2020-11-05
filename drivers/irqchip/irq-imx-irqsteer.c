@@ -199,7 +199,7 @@ static int imx_irqsteer_chans_enable(struct irqsteer_data *data)
 {
 	int ret;
 
-	ret = clk_prepare_enable(irqsteer_data->ipg_clk);
+	ret = clk_prepare_enable(data->ipg_clk);
 	if (ret) {
 		dev_err(data->dev, "failed to enable ipg clk: %d\n", ret);
 		return ret;
@@ -329,8 +329,7 @@ static int imx_irqsteer_remove(struct platform_device *pdev)
 	return pm_runtime_force_suspend(&pdev->dev);
 }
 
-#ifdef CONFIG_PM_SLEEP
-static void imx_irqsteer_init(struct irqsteer_data *data)
+static void __maybe_unused imx_irqsteer_init(struct irqsteer_data *data)
 {
 	/* steer all IRQs into configured channel */
 	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
@@ -341,7 +340,7 @@ static void imx_irqsteer_init(struct irqsteer_data *data)
 	data->inited = true;
 }
 
-static void imx_irqsteer_save_regs(struct irqsteer_data *data)
+static void __maybe_unused imx_irqsteer_save_regs(struct irqsteer_data *data)
 {
 	int i;
 
@@ -350,7 +349,7 @@ static void imx_irqsteer_save_regs(struct irqsteer_data *data)
 						CHANMASK(i, data->reg_num));
 }
 
-static void imx_irqsteer_restore_regs(struct irqsteer_data *data)
+static void __maybe_unused imx_irqsteer_restore_regs(struct irqsteer_data *data)
 {
 	int i;
 
@@ -360,7 +359,7 @@ static void imx_irqsteer_restore_regs(struct irqsteer_data *data)
 			       data->regs + CHANMASK(i, data->reg_num));
 }
 
-static int imx_irqsteer_runtime_suspend(struct device *dev)
+static int __maybe_unused imx_irqsteer_runtime_suspend(struct device *dev)
 {
 	struct irqsteer_data *irqsteer_data = dev_get_drvdata(dev);
 
@@ -370,7 +369,7 @@ static int imx_irqsteer_runtime_suspend(struct device *dev)
 	return 0;
 }
 
-static int imx_irqsteer_runtime_resume(struct device *dev)
+static int __maybe_unused imx_irqsteer_runtime_resume(struct device *dev)
 {
 	struct irqsteer_data *irqsteer_data = dev_get_drvdata(dev);
 	int ret;
@@ -389,7 +388,6 @@ static int imx_irqsteer_runtime_resume(struct device *dev)
 
 	return 0;
 }
-#endif
 
 static const struct dev_pm_ops imx_irqsteer_pm_ops = {
 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
