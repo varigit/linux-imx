@@ -26,6 +26,7 @@ Optional properties:
 					  as amplifiers, to be added to the sound card.
 - simple-audio-card,pin-switches	: List of strings containing the widget names for
 					  which pin switches must be created.
+- pa-gpios				: GPIO used to control external amplifier.
 
 Optional subnodes:
 
