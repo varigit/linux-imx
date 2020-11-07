@@ -651,28 +651,37 @@ static const struct ov5640_datafmt
 
 static inline void ov5640_power_down(int enable)
 {
-	gpio_set_value_cansleep(pwn_gpio, enable);
-
-	msleep(2);
+	if (gpio_is_valid(pwn_gpio)) {
+		gpio_set_value_cansleep(pwn_gpio, enable);
+		msleep(2);
+	}
 }
 
 static inline void ov5640_reset(void)
 {
-	/* camera reset */
-	gpio_set_value_cansleep(rst_gpio, 1);
+	if (gpio_is_valid(rst_gpio)) {
+		/* camera reset */
+		gpio_set_value_cansleep(rst_gpio, 1);
+	}
 
-	/* camera power down */
-	gpio_set_value_cansleep(pwn_gpio, 1);
-	msleep(5);
-	gpio_set_value_cansleep(pwn_gpio, 0);
-	msleep(5);
-	gpio_set_value_cansleep(rst_gpio, 0);
-	msleep(1);
-	gpio_set_value_cansleep(rst_gpio, 1);
-	msleep(5);
-	gpio_set_value_cansleep(pwn_gpio, 1);
-	msleep(10);
-	gpio_set_value_cansleep(pwn_gpio, 0);
+	if (gpio_is_valid(pwn_gpio)) {
+		/* camera power down */
+		gpio_set_value_cansleep(pwn_gpio, 1);
+		msleep(5);
+		gpio_set_value_cansleep(pwn_gpio, 0);
+		msleep(5);
+	}
+	if (gpio_is_valid(rst_gpio)) {
+		gpio_set_value_cansleep(rst_gpio, 0);
+		msleep(1);
+		gpio_set_value_cansleep(rst_gpio, 1);
+		msleep(5);
+	}
+	if (gpio_is_valid(pwn_gpio)) {
+		gpio_set_value_cansleep(pwn_gpio, 1);
+		msleep(10);
+		gpio_set_value_cansleep(pwn_gpio, 0);
+	}
 }
 
 static int ov5640_regulator_enable(struct device *dev)
@@ -1783,23 +1792,23 @@ static int ov5640_probe(struct i2c_client *client,
 	pwn_gpio = of_get_named_gpio(dev->of_node, "pwn-gpios", 0);
 	if (!gpio_is_valid(pwn_gpio)) {
 		dev_err(dev, "no sensor pwdn pin available\n");
-		return -ENODEV;
+	} else {
+		retval = devm_gpio_request_one(dev, pwn_gpio, GPIOF_OUT_INIT_HIGH,
+						"ov5640_pwdn");
+		if (retval < 0)
+			return retval;
 	}
-	retval = devm_gpio_request_one(dev, pwn_gpio, GPIOF_OUT_INIT_HIGH,
-					"ov5640_pwdn");
-	if (retval < 0)
-		return retval;
 
 	/* request reset pin */
 	rst_gpio = of_get_named_gpio(dev->of_node, "rst-gpios", 0);
 	if (!gpio_is_valid(rst_gpio)) {
 		dev_err(dev, "no sensor reset pin available\n");
-		return -EINVAL;
+	} else {
+		retval = devm_gpio_request_one(dev, rst_gpio, GPIOF_OUT_INIT_HIGH,
+						"ov5640_reset");
+		if (retval < 0)
+			return retval;
 	}
-	retval = devm_gpio_request_one(dev, rst_gpio, GPIOF_OUT_INIT_HIGH,
-					"ov5640_reset");
-	if (retval < 0)
-		return retval;
 
 	/* Set initial values for the sensor struct. */
 	memset(&ov5640_data, 0, sizeof(ov5640_data));
