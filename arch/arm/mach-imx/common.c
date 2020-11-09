@@ -13,6 +13,8 @@
 #include <linux/of_address.h>
 #include <linux/of_net.h>
 #include <linux/slab.h>
+#include <linux/mfd/syscon.h>
+#include <linux/regmap.h>
 
 #include "hardware.h"
 
@@ -43,8 +45,8 @@ void restore_ttbr1(unsigned long ttbr1)
 #define OCOTP_MACn(n)	(OCOTP_MAC_OFF + (n) * 0x10)
 void __init imx6_enet_mac_init(const char *enet_compat, const char *ocotp_compat)
 {
-	struct device_node *ocotp_np, *enet_np, *from = NULL;
-	void __iomem *base;
+	struct device_node *enet_np, *from = NULL;
+	void __iomem *ocotp_base;
 	struct property *newmac;
 	u32 macaddr_low;
 	u32 macaddr_high = 0;
@@ -66,34 +68,26 @@ void __init imx6_enet_mac_init(const char *enet_compat, const char *ocotp_compat
 		if (id < 0)
 			id = i;
 
-		ocotp_np = of_find_compatible_node(NULL, NULL, ocotp_compat);
-		if (!ocotp_np) {
-			pr_warn("failed to find ocotp node\n");
-			goto put_enet_node;
-		}
+		ocotp_base = syscon_regmap_lookup_by_compatible(ocotp_compat);
+		if (IS_ERR(ocotp_base))
+			pr_err("%s: failed to find %s regmap!\n", __func__, ocotp_compat);
 
-		base = of_iomap(ocotp_np, 0);
-		if (!base) {
-			pr_warn("failed to map ocotp\n");
-			goto put_ocotp_node;
-		}
-
-		macaddr_low = readl_relaxed(base + OCOTP_MACn(1));
+		regmap_read(ocotp_base, OCOTP_MACn(1), &macaddr_low);
 		if (id)
-			macaddr1_high = readl_relaxed(base + OCOTP_MACn(2));
+			regmap_read(ocotp_base, OCOTP_MACn(2), &macaddr1_high);
 		else
-			macaddr_high = readl_relaxed(base + OCOTP_MACn(0));
+			regmap_read(ocotp_base, OCOTP_MACn(0), &macaddr_high);
 
 		newmac = kzalloc(sizeof(*newmac) + 6, GFP_KERNEL);
 		if (!newmac)
-			goto put_ocotp_node;
+			goto put_enet_node;
 
 		newmac->value = newmac + 1;
 		newmac->length = 6;
 		newmac->name = kstrdup("local-mac-address", GFP_KERNEL);
 		if (!newmac->name) {
 			kfree(newmac);
-			goto put_ocotp_node;
+			goto put_enet_node;
 		}
 
 		macaddr = newmac->value;
@@ -115,8 +109,6 @@ void __init imx6_enet_mac_init(const char *enet_compat, const char *ocotp_compat
 
 		of_update_property(enet_np, newmac);
 
-put_ocotp_node:
-	of_node_put(ocotp_np);
 put_enet_node:
 	of_node_put(enet_np);
 	}
