@@ -16,7 +16,10 @@ static void __init imx6ul_init_machine(void)
 		imx_get_soc_revision());
 
 	of_platform_default_populate(NULL, NULL, NULL);
-	imx6_enet_mac_init("fsl,imx6ul-fec", "fsl,imx6ul-ocotp");
+	if (cpu_is_imx6ul())
+		imx6_enet_mac_init("fsl,imx6ul-fec", "fsl,imx6ul-ocotp");
+	else
+		imx6_enet_mac_init("fsl,imx6ul-fec", "fsl,imx6ull-ocotp");
 	imx_anatop_init();
 	imx6ul_pm_init();
 }
