@@ -362,6 +362,12 @@ static inline bool is_imx7ulp_lpuart(struct lpuart_port *sport)
 	return sport->devtype == IMX7ULP_LPUART;
 }
 
+static inline bool is_layerscape_lpuart(struct lpuart_port *sport)
+{
+	return (sport->devtype == LS1021A_LPUART ||
+		sport->devtype == LS1028A_LPUART);
+}
+
 static inline bool is_imx8qxp_lpuart(struct lpuart_port *sport)
 {
 	return sport->devtype == IMX8QXP_LPUART;
@@ -1814,6 +1820,17 @@ static int lpuart32_startup(struct uart_port *port)
 
 	sport->rxfifo_size = UARTFIFO_DEPTH((temp >> UARTFIFO_RXSIZE_OFF) &
 					    UARTFIFO_FIFOSIZE_MASK);
+
+	/*
+	 * The LS1021A and LS1028A have a fixed FIFO depth of 16 words.
+	 * Although they support the RX/TXSIZE fields, their encoding is
+	 * different. Eg the reference manual states 0b101 is 16 words.
+	 */
+	if (is_layerscape_lpuart(sport)) {
+		sport->rxfifo_size = 16;
+		sport->txfifo_size = 16;
+		sport->port.fifosize = sport->txfifo_size;
+	}
 
 	lpuart32_hw_setup(sport);
 
