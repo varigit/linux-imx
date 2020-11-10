@@ -795,6 +795,7 @@
 				assigned-clocks = <&clks IMX7D_LCDIF_PIXEL_ROOT_SRC>;
 				assigned-clock-parents = <&clks IMX7D_PLL_VIDEO_POST_DIV>;
 				clock-names = "pix", "axi", "disp_axi";
+				video-mem-size = <0x00800000>; /* SZ_8M */
 				status = "disabled";
 			};
 
