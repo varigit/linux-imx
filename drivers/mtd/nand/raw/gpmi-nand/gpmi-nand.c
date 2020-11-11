@@ -684,6 +684,11 @@ static int common_nfc_set_geometry(struct gpmi_nand_data *this)
 	struct nand_chip *chip = &this->nand;
 	struct mtd_info *mtd = nand_to_mtd(&this->nand);
 
+	if (this->legacy_bch_geometry) {
+		dev_warn(this->dev, "use legacy bch geometry\n");
+		return legacy_set_geometry(this);
+	}
+
 	if (chip->base.eccreq.strength > 0 && chip->base.eccreq.step_size > 0) {
 		if (mtd->oobsize > 1024
 		    || chip->base.eccreq.step_size < mtd->oobsize)
@@ -2485,6 +2490,10 @@ static int gpmi_nand_attach_chip(struct nand_chip *chip)
 	}
 	dev_dbg(this->dev, "Blockmark swapping %sabled\n",
 		this->swap_block_mark ? "en" : "dis");
+
+	if (of_property_read_bool(this->dev->of_node,
+			"fsl,legacy-bch-geometry"))
+		this->legacy_bch_geometry = true;
 
 	ret = gpmi_init_last(this);
 	if (ret)
