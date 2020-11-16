@@ -64,12 +64,12 @@
 	/* an 8 MiB partition */
 	partition@3 {
 		label = "kernel";
-		reg = <0x00600000 0x00800000>;
+		reg = <0x00600000 0x00c00000>;
 	};
 
 	/* a 1010 MiB partition */
 	partition@4 {
 		label = "rootfs";
-		reg = <0x00e00000 0x3f200000>;
+		reg = <0x01200000 0x3ee00000>;
 	};
 };
