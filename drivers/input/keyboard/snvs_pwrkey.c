@@ -90,8 +90,12 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
 
 	pm_wakeup_event(pdata->input->dev.parent, 0);
 
-	if (pdata->clk)
-		clk_enable(pdata->clk);
+	if (pdata->clk) {
+		if (pdata->suspended)
+			clk_prepare_enable(pdata->clk);
+		else
+			clk_enable(pdata->clk);
+	}
 
 	if (pdata->suspended) {
 		pdata->keystate = 1;
