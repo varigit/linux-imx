@@ -58,6 +58,17 @@
 			};
 		};
 	};
+
+        bt_rfkill {
+                compatible = "net,rfkill-gpio";
+                pinctrl-names = "default";
+                pinctrl-0 = <&pinctrl_bt>;
+                reset-gpios = <&gpio2 9 GPIO_ACTIVE_HIGH>;
+                name = "bt_rfkill";
+                type = "bluetooth";
+                status = "okay";
+        };
+
 };
 
 / {
@@ -66,6 +77,7 @@
 
 	chosen {
 		stdout-path = &uart2;
+		bootargs-append = "console=ttymxc1,115200 earlycon=imxuart,0x30890000,115200 androidboot.console=ttymxc1  androidboot.primary_display=imx-drm androidboot.board=varsommx8mp androidboot.bt_sdio=/sys/bus/mmc/devices/mmc0:0001/mmc0:0001:1/device androidboot.bt_sdio_id=0x4339 androidboot.bt_uart=/dev/ttymxc2 androidboot.bt_firmware=BCM4335C0.hcd";
 	};
 
 	/delete-node/ memory@40000000;
@@ -705,7 +717,7 @@
 /* BT */
 &uart3 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart3>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart3>;
 	assigned-clocks = <&clk IMX8MP_CLK_UART3>;
 	assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_80M>;
 	fsl,uart-has-rtscts;

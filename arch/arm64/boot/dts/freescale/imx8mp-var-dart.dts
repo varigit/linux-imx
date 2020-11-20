@@ -58,6 +58,16 @@
 			};
 		};
 	};
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
 };
 
 / {
@@ -711,7 +721,7 @@
 /* BT */
 &uart4 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart4>;
 	assigned-clocks = <&clk IMX8MP_CLK_UART4>;
 	assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_80M>;
 	fsl,uart-has-rtscts;
