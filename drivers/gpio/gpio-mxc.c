@@ -364,12 +364,13 @@ static int mxc_gpio_get_pad_wakeup(struct mxc_gpio_port *port)
 	int ret;
 	int i;
 
-	hdr->ver = IMX_SC_RPC_VERSION;
-	hdr->svc = IMX_SC_RPC_SVC_PAD;
-	hdr->func = IMX_SC_PAD_FUNC_GET_WAKEUP;
-	hdr->size = 2;
-
 	for (i = 0; i < port->pad_wakeup_num; i++) {
+
+		hdr->ver = IMX_SC_RPC_VERSION;
+		hdr->svc = IMX_SC_RPC_SVC_PAD;
+		hdr->func = IMX_SC_PAD_FUNC_GET_WAKEUP;
+		hdr->size = 2;
+
 		/* get original pad type */
 		wakeup_type = port->pad_wakeup[i].type;
 		msg.data.req.pad = port->pad_wakeup[i].pin_id;
@@ -394,12 +395,13 @@ static void mxc_gpio_set_pad_wakeup(struct mxc_gpio_port *port, bool enable)
 	int ret;
 	int i;
 
-	hdr->ver = IMX_SC_RPC_VERSION;
-	hdr->svc = IMX_SC_RPC_SVC_PAD;
-	hdr->func = IMX_SC_PAD_FUNC_SET_WAKEUP;
-	hdr->size = 2;
-
 	for (i = 0; i < port->pad_wakeup_num; i++) {
+
+		hdr->ver = IMX_SC_RPC_VERSION;
+		hdr->svc = IMX_SC_RPC_SVC_PAD;
+		hdr->func = IMX_SC_PAD_FUNC_SET_WAKEUP;
+		hdr->size = 2;
+
 		msg.pad = port->pad_wakeup[i].pin_id;
 		msg.wakeup = enable ? port->pad_wakeup[i].type : IMX_SC_PAD_WAKEUP_OFF;
 		ret = imx_scu_call_rpc(gpio_ipc_handle, &msg, true);
