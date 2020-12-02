@@ -500,7 +500,7 @@
 
 		regulators {
 			sw1a_reg: sw1ab {
-				regulator-min-microvolt = <300000>;
+				regulator-min-microvolt = <950000>;
 				regulator-max-microvolt = <1875000>;
 			};
 
