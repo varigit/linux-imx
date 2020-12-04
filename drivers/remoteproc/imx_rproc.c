@@ -1223,6 +1223,14 @@ static int imx_rproc_remove(struct platform_device *pdev)
 {
 	struct rproc *rproc = platform_get_drvdata(pdev);
 	struct imx_rproc *priv = rproc->priv;
+	if (!IS_ERR(priv->txdb_ch))
+		mbox_free_channel(priv->txdb_ch);
+	if (!IS_ERR(priv->rxdb_ch))
+		mbox_free_channel(priv->rxdb_ch);
+	if (!IS_ERR(priv->tx_ch))
+		mbox_free_channel(priv->tx_ch);
+	if (!IS_ERR(priv->rx_ch))
+		mbox_free_channel(priv->rx_ch);
 
 	if (!priv->early_boot)
 		clk_disable_unprepare(priv->clk);
