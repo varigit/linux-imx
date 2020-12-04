@@ -88,5 +88,6 @@ cm40_subsys: bus@34000000 {
 		clock-output-names = "cm40_lpcg_uart_clk",
 				     "cm40_lpcg_uart_ipg_clk";
 		power-domains = <&pd IMX_SC_R_M4_0_UART>;
+		status = "disabled";
 	};
 };
