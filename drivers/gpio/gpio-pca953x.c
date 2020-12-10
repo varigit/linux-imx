@@ -240,6 +240,7 @@ struct pca953x_chip {
 	struct regulator *regulator;
 
 	const struct pca953x_reg_config *regs;
+	int is_in_suspend;
 };
 
 static int pca953x_bank_shift(struct pca953x_chip *chip)
@@ -436,7 +437,8 @@ static int pca953x_read_regs(struct pca953x_chip *chip, int reg, u8 *val)
 
 	ret = regmap_bulk_read(chip->regmap, regaddr, val, NBANK(chip));
 	if (ret < 0) {
-		dev_err(&chip->client->dev, "failed reading register\n");
+		if (!chip->is_in_suspend)
+			dev_err(&chip->client->dev, "failed reading register\n");
 		return ret;
 	}
 
@@ -993,6 +995,7 @@ static int pca953x_probe(struct i2c_client *client,
 		return -ENOMEM;
 
 	pdata = dev_get_platdata(&client->dev);
+	chip->is_in_suspend = 0;
 	if (pdata) {
 		irq_base = pdata->irq_base;
 		chip->gpio_start = pdata->gpio_base;
@@ -1212,6 +1215,8 @@ static int pca953x_suspend(struct device *dev)
 		if (chip->regulator)
 			regulator_disable(chip->regulator);
 
+	chip->is_in_suspend = 1;
+
 	return 0;
 }
 
@@ -1244,6 +1249,8 @@ static int pca953x_resume(struct device *dev)
 		dev_err(dev, "Failed to restore register map: %d\n", ret);
 		return ret;
 	}
+
+	chip->is_in_suspend = 0;
 
 	return 0;
 }
