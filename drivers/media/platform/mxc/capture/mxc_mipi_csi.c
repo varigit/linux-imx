@@ -853,8 +853,18 @@ static int mipi_csis_log_status(struct v4l2_subdev *mipi_sd)
 	return 0;
 }
 
+static long mipi_csis_ioctl(struct v4l2_subdev *sd,
+                       unsigned int cmd, void *arg)
+{
+       struct csi_state *state = mipi_sd_to_csi_state(sd);
+       struct device *dev = &state->pdev->dev;
+
+       return v4l2_subdev_call(state->sensor_sd, core, ioctl, cmd, arg);
+}
+
 static struct v4l2_subdev_core_ops mipi_csis_core_ops = {
 	.s_power = mipi_csis_s_power,
+	.ioctl = mipi_csis_ioctl,
 	.log_status = mipi_csis_log_status,
 };
 
