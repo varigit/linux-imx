@@ -106,12 +106,67 @@
 	};
 };
 
+&ecspi1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi1>;
+	cs-gpios = <&gpio5  9 GPIO_ACTIVE_LOW>,
+		   <&gpio1 12 GPIO_ACTIVE_LOW>,
+		   <&gpio4 22 GPIO_ACTIVE_LOW>;
+	status = "okay";
+
+	/* Resistive touch controller */
+	ads7846@0 {
+		reg = <0>;
+		compatible = "ti,ads7846";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_restouch>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
+		spi-max-frequency = <1500000>;
+		pendown-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
+		ti,x-min = /bits/ 16 <125>;
+		ti,x-max = /bits/ 16 <4008>;
+		ti,y-min = /bits/ 16 <282>;
+		ti,y-max = /bits/ 16 <3864>;
+		ti,x-plate-ohms = /bits/ 16 <180>;
+		ti,pressure-max = /bits/ 16 <255>;
+		ti,debounce-max = /bits/ 16 <10>;
+		ti,debounce-tol = /bits/ 16 <3>;
+		ti,debounce-rep = /bits/ 16 <1>;
+		ti,settle-delay-usec = /bits/ 16 <150>;
+		ti,keep-vref-on;
+		wakeup-source;
+		status = "okay";
+	};
+
+	/* CAN controller */
+	can0: can@1 {
+		compatible = "microchip,mcp251xfd";
+		reg = <1>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_can>;
+		clocks = <&can0_osc>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
+		spi-max-frequency = <10000000>;
+		status = "okay";
+	};
+
+	/* Test SPI device */
+	spidev@2 {
+		reg = <2>;
+		compatible = "var,spidev";
+		spi-max-frequency = <12000000>;
+		status = "okay";
+	};
+};
+
 &iomuxc {
 	pinctrl-names = "default";
 
-	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
+	pinctrl_can: cangrp {
 		fsl,pins = <
-			MX8MM_IOMUXC_SD2_RESET_B_GPIO2_IO19		0xc1
+			MX8MM_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x16
 		>;
 	};
 
@@ -129,30 +184,14 @@
 		>;
 	};
 
-	pinctrl_uart1: uart1grp {
+	pinctrl_ecspi1: ecspi1grp {
 		fsl,pins = <
-			MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX		0x140
-			MX8MM_IOMUXC_UART1_TXD_UART1_DCE_TX		0x140
-		>;
-	};
-
-	pinctrl_uart2: uart2grp {
-		fsl,pins = <
-			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX		0x140
-			MX8MM_IOMUXC_UART2_TXD_UART2_DCE_TX		0x140
-		>;
-	};
-
-	pinctrl_uart3: uart3grp {
-		fsl,pins = <
-			MX8MM_IOMUXC_UART3_RXD_UART3_DCE_RX		0x140
-			MX8MM_IOMUXC_UART3_TXD_UART3_DCE_TX		0x140
-		>;
-	};
-
-	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-		fsl,pins = <
-			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0xc1
+			MX8MM_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK		0x13
+			MX8MM_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI		0x13
+			MX8MM_IOMUXC_ECSPI1_MISO_ECSPI1_MISO		0x13
+			MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x13
+			MX8MM_IOMUXC_GPIO1_IO12_GPIO1_IO12		0x13
+			MX8MM_IOMUXC_SAI2_RXC_GPIO4_IO22		0x13
 		>;
 	};
 
@@ -162,15 +201,6 @@
 			MX8MM_IOMUXC_SAI1_TXD6_GPIO4_IO18		0x1c6
 			MX8MM_IOMUXC_SAI1_TXD1_GPIO4_IO13		0x1c6
 			MX8MM_IOMUXC_SAI1_RXD4_GPIO4_IO6		0x1c6
-		>;
-	};
-
-	pinctrl_leds: ledgrp {
-		fsl,pins = <
-			MX8MM_IOMUXC_SAI1_RXD1_GPIO4_IO3		0x1c6
-			MX8MM_IOMUXC_SAI1_TXD2_GPIO4_IO14		0x1c6
-			MX8MM_IOMUXC_SAI1_RXD2_GPIO4_IO4		0x1c6
-			MX8MM_IOMUXC_SAI1_TXD5_GPIO4_IO17		0x1c6
 		>;
 	};
 
@@ -199,6 +229,48 @@
 		fsl,pins = <
 			MX8MM_IOMUXC_I2C4_SCL_GPIO5_IO20		0x1c3
 			MX8MM_IOMUXC_I2C4_SDA_GPIO5_IO21		0x1c3
+		>;
+	};
+
+	pinctrl_leds: ledgrp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_RXD1_GPIO4_IO3		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD2_GPIO4_IO14		0x1c6
+			MX8MM_IOMUXC_SAI1_RXD2_GPIO4_IO4		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD5_GPIO4_IO17		0x1c6
+		>;
+	};
+
+	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD2_RESET_B_GPIO2_IO19		0xc1
+		>;
+	};
+
+	pinctrl_restouch: restouchgrp {
+		fsl,pins = <
+			MX8MM_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x1c0
+		>;
+	};
+
+	pinctrl_uart1: uart1grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX		0x140
+			MX8MM_IOMUXC_UART1_TXD_UART1_DCE_TX		0x140
+		>;
+	};
+
+	pinctrl_uart2: uart2grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX		0x140
+			MX8MM_IOMUXC_UART2_TXD_UART2_DCE_TX		0x140
+		>;
+	};
+
+	pinctrl_uart3: uart3grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_UART3_RXD_UART3_DCE_RX		0x140
+			MX8MM_IOMUXC_UART3_TXD_UART3_DCE_TX		0x140
 		>;
 	};
 
@@ -235,6 +307,12 @@
 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d6
 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d6
 			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
+		>;
+	};
+
+	pinctrl_usdhc2_gpio: usdhc2grpgpio {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0xc1
 		>;
 	};
 };
