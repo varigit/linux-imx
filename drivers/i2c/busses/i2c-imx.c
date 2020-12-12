@@ -505,12 +505,17 @@ static void i2c_imx_dma_free(struct imx_i2c_struct *i2c_imx)
 	dma->chan_using = NULL;
 }
 
-/* Clear arbitration lost bit */
-static void i2c_imx_clr_al_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
+static void i2c_imx_clear_irq(struct imx_i2c_struct *i2c_imx, unsigned int bits)
 {
-	status &= ~I2SR_IAL;
-	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IAL);
-	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
+	unsigned int temp;
+
+	/*
+	 * i2sr_clr_opcode is the value to clear all interrupts. Here we want to
+	 * clear only <bits>, so we write ~i2sr_clr_opcode with just <bits>
+	 * toggled. This is required because i.MX needs W0C and Vybrid uses W1C.
+	 */
+	temp = ~i2c_imx->hwdata->i2sr_clr_opcode ^ bits;
+	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2SR);
 }
 
 static int i2c_imx_bus_busy(struct imx_i2c_struct *i2c_imx, int for_busy)
@@ -525,7 +530,7 @@ static int i2c_imx_bus_busy(struct imx_i2c_struct *i2c_imx, int for_busy)
 
 		/* check for arbitration lost */
 		if (temp & I2SR_IAL) {
-			i2c_imx_clr_al_bit(temp, i2c_imx);
+			i2c_imx_clear_irq(i2c_imx, I2SR_IAL);
 			return -EAGAIN;
 		}
 
@@ -556,6 +561,16 @@ static int i2c_imx_trx_complete(struct imx_i2c_struct *i2c_imx)
 		dev_dbg(&i2c_imx->adapter.dev, "<%s> Timeout\n", __func__);
 		return -ETIMEDOUT;
 	}
+
+	/* check for arbitration lost */
+	if (i2c_imx->i2csr & I2SR_IAL) {
+		dev_dbg(&i2c_imx->adapter.dev, "<%s> Arbitration lost\n", __func__);
+		i2c_imx_clear_irq(i2c_imx, I2SR_IAL);
+
+		i2c_imx->i2csr = 0;
+		return -EAGAIN;
+	}
+
 	dev_dbg(&i2c_imx->adapter.dev, "<%s> TRX complete\n", __func__);
 	i2c_imx->i2csr = 0;
 	return 0;
@@ -680,6 +695,8 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c_imx)
 		/* Stop I2C transaction */
 		dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
 		temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+		if (!(temp & I2CR_MSTA))
+			i2c_imx->stopped = 1;
 		temp &= ~(I2CR_MSTA | I2CR_MTX);
 		if (i2c_imx->dma)
 			temp &= ~I2CR_DMAEN;
@@ -699,14 +716,6 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c_imx)
 	/* Disable I2C controller */
 	temp = i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
 	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-}
-
-/* Clear interrupt flag bit */
-static void i2c_imx_clr_if_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
-{
-	status &= ~I2SR_IIF;
-	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
-	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
 }
 
 static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx)
@@ -847,9 +856,12 @@ static int i2c_imx_dma_read(struct imx_i2c_struct *i2c_imx,
 		 */
 		dev_dbg(dev, "<%s> clear MSTA\n", __func__);
 		temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+		if (!(temp & I2CR_MSTA))
+			i2c_imx->stopped = 1;
 		temp &= ~(I2CR_MSTA | I2CR_MTX);
 		imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-		i2c_imx_bus_busy(i2c_imx, 0);
+		if (!i2c_imx->stopped)
+			i2c_imx_bus_busy(i2c_imx, 0);
 	} else {
 		/*
 		 * For i2c master receiver repeat restart operation like:
@@ -972,9 +984,12 @@ static int i2c_imx_read(struct imx_i2c_struct *i2c_imx, struct i2c_msg *msgs, bo
 				dev_dbg(&i2c_imx->adapter.dev,
 					"<%s> clear MSTA\n", __func__);
 				temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+				if (!(temp & I2CR_MSTA))
+					i2c_imx->stopped =  1;
 				temp &= ~(I2CR_MSTA | I2CR_MTX);
 				imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-				i2c_imx_bus_busy(i2c_imx, 0);
+				if (!i2c_imx->stopped)
+					i2c_imx_bus_busy(i2c_imx, 0);
 			} else {
 				/*
 				 * For i2c master receiver repeat restart operation like:
@@ -1073,7 +1088,7 @@ static int i2c_imx_recovery_for_layerscape(struct imx_i2c_struct *i2c_imx)
 	 */
 	temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
 	if (temp & I2SR_IAL)
-		i2c_imx_clr_al_bit(temp, i2c_imx);
+		i2c_imx_clear_irq(i2c_imx, I2SR_IIF);
 
 	return 0;
 }
@@ -1352,7 +1367,7 @@ static irqreturn_t i2c_imx_slave_isr(struct imx_i2c_struct *i2c_imx)
 	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
 	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
 	if (status & I2SR_IAL) { /* Arbitration lost */
-		i2c_imx_clr_al_bit(status, i2c_imx);
+		i2c_imx_clear_irq(i2c_imx, I2SR_IIF);
 	} else if (status & I2SR_IAAS) { /* Addressed as a slave */
 		if (status & I2SR_SRW) { /* Master wants to read from us*/
 			dev_dbg(&i2c_imx->adapter.dev, "read requested");
@@ -1458,7 +1473,7 @@ static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
 	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
 
 	if (status & I2SR_IIF) {
-		i2c_imx_clr_if_bit(status, i2c_imx);
+		i2c_imx_clear_irq(i2c_imx, I2SR_IIF);
 #if IS_ENABLED(CONFIG_I2C_SLAVE)
 		if (i2c_imx->slave)
 			return i2c_imx_slave_isr(i2c_imx);
