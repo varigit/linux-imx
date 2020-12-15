@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2020 NXP
+ * Copyright 2020 Variscite
+ */
+
+&{/} {
+	reserved-memory {
+
+		/* 128MB, align to beginning of inmate_reserved */
+		linux,cma {
+			compatible = "shared-dma-pool";
+			reusable;
+			size = <0 0x8000000>;
+			alloc-ranges = <0 0x40000000 0 0x6fc00000>;
+			linux,cma-default;
+		};
+
+		ivshmem_reserved: ivshmem@0x7bb00000 {
+			no-map;
+			reg = <0 0x7bb00000 0x0 0x00100000>;
+		};
+
+		ivshmem2_reserved: ivshmem2@0x7ba00000 {
+			no-map;
+			reg = <0 0x7ba00000 0x0 0x00100000>;
+		};
+
+		pci_reserved: pci@0x7b800000 {
+			no-map;
+			reg = <0 0x7b800000 0x0 0x00200000>;
+		};
+
+		loader_reserved: loader@0x7b700000 {
+			no-map;
+			reg = <0 0x7b700000 0x0 0x00100000>;
+		};
+
+		jh_reserved: jh@0x77c00000 {
+			no-map;
+			reg = <0 0x77c00000 0x0 0x00400000>;
+		};
+
+		/* 128MB, align to end of cma */
+		inmate_reserved: inmate@0x6fc00000 {
+			no-map;
+			reg = <0 0x6fc00000 0x0 0x08000000>;
+		};
+	};
+};
+
+&clk {
+	init-on-array = <IMX8MN_CLK_NAND_USDHC_BUS
+			 IMX8MN_CLK_USDHC2_ROOT
+			 IMX8MN_CLK_UART3_ROOT>;
+};
+
+/* Disable uart3 from host */
+&uart3 {
+	status = "disabled";
+};
+
+/* Use uart4 device to initialize uart3 pinctrl */
+&uart4 {
+	pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_uart3>;
+};
+
+/* Disable SD Card from host */
+&usdhc2 {
+	status = "disabled";
+};
+
+/* Use EMMC device to initialize SD Card pinctrl and power */
+&usdhc3 {
+	pinctrl-0 = <&pinctrl_usdhc3>, <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>, <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>, <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
+	vmmc-supply = <&reg_usdhc2_vmmc>;
+};
