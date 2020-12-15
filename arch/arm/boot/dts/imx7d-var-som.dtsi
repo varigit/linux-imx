@@ -1100,3 +1100,11 @@
 &snvs_rtc {
 	status = "disabled";
 };
+
+&snvs_pwrkey {
+	status = "okay";
+};
+
+&snvs_poweroff {
+	status = "okay";
+};
