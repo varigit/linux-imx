@@ -122,14 +122,6 @@
 		status = "okay";
 	};
 
-	sound-amix-sai {
-		compatible = "fsl,imx-audio-amix";
-		model = "amix-audio-sai";
-		dais = <&sai4>, <&sai5>;
-		amix-controller = <&amix>;
-		status = "okay";
-	};
-
 	backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&pwm_mipi_lvds0 0 100000 0>;
