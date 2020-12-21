@@ -28,6 +28,7 @@
 		serial1 = &lpuart1;
 		serial2 = &lpuart2;
 		serial3 = &lpuart3;
+		serial4 = &lpuart4;
 		isi0 = &isi_0;
 		isi1 = &isi_1;
 		isi2 = &isi_2;
@@ -529,6 +530,7 @@
 
 	/* sorted in register address */
 	#include "imx8-ss-security.dtsi"
+	#include "imx8-ss-cm40.dtsi"
 	#include "imx8-ss-cm41.dtsi"
 	#include "imx8-ss-adma.dtsi"
 	#include "imx8-ss-conn.dtsi"

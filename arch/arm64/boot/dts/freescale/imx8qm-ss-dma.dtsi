@@ -17,6 +17,22 @@
 		power-domains = <&pd IMX_SC_R_UART_4>;
 	};
 
+	lpuart4: serial@5a0a0000 {
+		reg = <0x5a0a0000 0x1000>;
+		interrupts = <GIC_SPI 349 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-parent = <&gic>;
+		clocks = <&uart4_lpcg 1>, <&uart4_lpcg 0>;
+		clock-names = "ipg", "baud";
+		assigned-clocks = <&clk IMX_SC_R_UART_4 IMX_SC_PM_CLK_PER>;
+		assigned-clock-rates = <80000000>;
+		power-domains = <&pd IMX_SC_R_UART_4>;
+		power-domain-names = "uart";
+		dma-names = "tx","rx";
+		dmas = <&edma2 21 0 0>,
+			<&edma2 20 0 1>;
+		status = "disabled";
+	};
+
 	can1_lpcg: clock-controller@5ace0000 {
 		compatible = "fsl,imx8qxp-lpcg";
 		reg = <0x5ace0000 0x10000>;
@@ -62,7 +78,21 @@
 	fsl,clk-source = <1>;
 };
 
+&lpspi0 {
+	compatible = "fsl,imx8qm-lpspi", "fsl,imx7ulp-spi";
+	assigned-clock-rates = <24000000>;
+};
+
+&lpspi1 {
+	compatible = "fsl,imx8qm-lpspi", "fsl,imx7ulp-spi";
+	assigned-clock-rates = <24000000>;
+};
+
 &lpspi2 {
+	compatible = "fsl,imx8qm-lpspi", "fsl,imx7ulp-spi";
+};
+
+&lpspi3 {
 	compatible = "fsl,imx8qm-lpspi", "fsl,imx7ulp-spi";
 };
 
@@ -142,9 +172,18 @@
 
 &lpuart2 {
 	compatible = "fsl,imx8qm-lpuart", "fsl,imx8qxp-lpuart";
+	power-domains = <&pd IMX_SC_R_UART_2>;
+	dmas = <&edma2 17 0 0>,
+	       <&edma2 16 0 1>;
 };
 
 &lpuart3 {
+	compatible = "fsl,imx8qm-lpuart", "fsl,imx8qxp-lpuart";
+	dmas = <&edma2 19 0 0>,
+	       <&edma2 18 0 1>;
+};
+
+&lpuart4 {
 	compatible = "fsl,imx8qm-lpuart", "fsl,imx8qxp-lpuart";
 };
 
@@ -161,5 +200,9 @@
 };
 
 &i2c3 {
+	compatible = "fsl,imx8qm-lpi2c", "fsl,imx7ulp-lpi2c";
+};
+
+&i2c4 {
 	compatible = "fsl,imx8qm-lpi2c", "fsl,imx7ulp-lpi2c";
 };
