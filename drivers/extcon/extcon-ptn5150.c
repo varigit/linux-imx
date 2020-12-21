@@ -90,7 +90,7 @@ static void ptn5150_event_dfp_attached(struct ptn5150_info *info) {
 	extcon_set_state_sync(info->edev,
 			EXTCON_USB_HOST, false);
 	if (!IS_ERR(info->vbus_gpiod))
-		gpiod_set_value(info->vbus_gpiod, 0);
+		gpiod_set_value_cansleep(info->vbus_gpiod, 0);
 	extcon_set_state_sync(info->edev, EXTCON_USB,
 			true);
 }
@@ -107,9 +107,9 @@ static void ptn5150_event_ufp_attached(struct ptn5150_info *info, unsigned int c
 			PTN5150_REG_CC_VBUS_DETECTION_MASK) >>
 			PTN5150_REG_CC_VBUS_DETECTION_SHIFT);
 		if (vbus)
-			gpiod_set_value(info->vbus_gpiod, 0);
+			gpiod_set_value_cansleep(info->vbus_gpiod, 0);
 		else
-			gpiod_set_value(info->vbus_gpiod, 1);
+			gpiod_set_value_cansleep(info->vbus_gpiod, 1);
 	}
 	extcon_set_state_sync(info->edev,
 			EXTCON_USB_HOST, true);
@@ -123,7 +123,7 @@ static void ptn5150_event_disconnected(struct ptn5150_info *info) {
 	extcon_set_state_sync(info->edev,
 			EXTCON_USB, false);
 	if (!IS_ERR(info->vbus_gpiod))
-		gpiod_set_value(info->vbus_gpiod, 0);
+		gpiod_set_value_cansleep(info->vbus_gpiod, 0);
 }
 
 static int ptn5150_poll_cable_status(struct ptn5150_info *info) {
