@@ -17,24 +17,22 @@
 		clock-frequency = <20000000>;
 	};
 
-	pcie0_refclk: pcie0-refclk {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <100000000>;
-	};
-
-	pcie1_refclk: pcie1-refclk {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <100000000>;
-	};
-
 	reg_audio: audio_vdd {
 		compatible = "regulator-fixed";
 		regulator-name = "wm8904_supply";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		regulator-always-on;
+	};
+
+	reg_eth_phy: eth_phy {
+		compatible = "regulator-fixed";
+		regulator-name = "eth_phy_pwr";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		status = "disabled";
 	};
 
 	sound-wm8904 {
@@ -105,6 +103,8 @@
 };
 
 &fec1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_fec1>;
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy0>;
 	fsl,magic-packet;
@@ -165,12 +165,6 @@
 		>;
 	};
 
-	pinctrl_hdmi: hdmigrp {
-		fsl,pins = <
-			MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5		0xc1
-		>;
-	};
-
 	pinctrl_i2c1: i2c1grp {
 		fsl,pins = <
 			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
@@ -188,18 +182,6 @@
 	pinctrl_lvds: lvdsgrp {
 		fsl,pins = <
 			MX8MQ_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x16
-		>;
-	};
-
-	pinctrl_pcie0: pcie0grp {
-		fsl,pins = <
-			MX8MQ_IOMUXC_SAI1_RXD5_GPIO4_IO7		0x16
-		>;
-	};
-
-	pinctrl_pcie1: pcie1grp {
-		fsl,pins = <
-			MX8MQ_IOMUXC_SAI1_TXD7_GPIO4_IO19		0x16
 		>;
 	};
 
@@ -279,6 +261,12 @@
 			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xdf
 			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x9f
 			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
+		>;
+	};
+
+	pinctrl_usdhc2_vsel: usdhc2grpvsel {
+		fsl,pins = <
+			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0xc1
 		>;
 	};
 
@@ -488,31 +476,6 @@
 
 &mu {
 	status = "okay";
-};
-
-&pcie0 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_pcie0>;
-	reset-gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
-	clocks = <&clk IMX8MQ_CLK_PCIE1_ROOT>,
-		 <&clk IMX8MQ_CLK_PCIE1_AUX>,
-		 <&clk IMX8MQ_CLK_PCIE1_PHY>,
-		 <&pcie0_refclk>;
-	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
-	hard-wired = <1>;
-	status = "okay";
-};
-
-&pcie1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_pcie1>;
-	reset-gpio = <&gpio4 19 GPIO_ACTIVE_LOW>;
-	clocks = <&clk IMX8MQ_CLK_PCIE2_ROOT>,
-		 <&clk IMX8MQ_CLK_PCIE2_AUX>,
-		 <&clk IMX8MQ_CLK_PCIE2_PHY>,
-		 <&pcie1_refclk>;
-	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
-	status = "disabled";
 };
 
 &pgc_gpu {

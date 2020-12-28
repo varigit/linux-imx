@@ -4,11 +4,6 @@
  * Copyright 2018-2020 Variscite Ltd.
  */
 
-&fec1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_fec1>;
-};
-
 /* Set WIFI SDIO voltage at 1.8V */
 &gpio1 {
 	wifi_vsel_hog {
