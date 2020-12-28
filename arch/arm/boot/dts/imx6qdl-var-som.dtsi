@@ -693,6 +693,7 @@
 &gpmi {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_gpmi_nand_v1>;
+	fsl,legacy-bch-geometry;
 	status = "okay";
 
 	/* a 2 MiB partition */
