@@ -6,7 +6,7 @@
 
 /dts-v1/;
 
-#include "imx8mn-var-som-symphony.dts"
+#include "imx8mn-var-som-symphony-legacy.dts"
 #include "imx8mn-var-som-root.dtsi"
 
 / {

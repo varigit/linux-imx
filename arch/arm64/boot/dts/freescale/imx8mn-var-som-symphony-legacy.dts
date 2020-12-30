@@ -5,8 +5,12 @@
  */
 
 #include "imx8mn-var-som-symphony.dts"
-#include "imx8mn-var-som-symphony-m7.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-NANO M7 on Symphony-Board 1.4a and above";
+	model = "Variscite VAR-SOM-MX8M-NANO on Symphony-Board 1.4 and below";
 };
+
+&usbotg1 {
+	/delete-property/ extcon;
+};
+
