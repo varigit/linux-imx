@@ -83,6 +83,12 @@
 		};
 	};
 
+	pcie0_refclk: pcie0-refclk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <100000000>;
+	};
+
 	reg_usdhc2_vmmc: regulator-usdhc2 {
 		compatible = "regulator-fixed";
 		pinctrl-names = "default";
@@ -238,6 +244,12 @@
 			MX8MM_IOMUXC_SAI1_TXD2_GPIO4_IO14		0x1c6
 			MX8MM_IOMUXC_SAI1_RXD2_GPIO4_IO4		0x1c6
 			MX8MM_IOMUXC_SAI1_TXD5_GPIO4_IO17		0x1c6
+		>;
+	};
+
+	pinctrl_pcie0: pcie0grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_RXD5_GPIO4_IO7		0x41
 		>;
 	};
 
@@ -410,6 +422,19 @@
 			remote-endpoint = <&csi1_ep>;
 		};
 	};
+};
+
+&pcie0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pcie0>;
+	reset-gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
+	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>,
+		 <&clk IMX8MM_CLK_PCIE1_AUX>,
+		 <&clk IMX8MM_CLK_PCIE1_PHY>,
+		 <&pcie0_refclk>;
+	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
+	ext_osc = <1>;
+	status = "okay";
 };
 
 &pwm1 {
