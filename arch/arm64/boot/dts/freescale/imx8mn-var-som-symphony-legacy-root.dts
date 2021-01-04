@@ -10,5 +10,5 @@
 #include "imx8mn-var-som-root.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-NANO Jailhouse Root on Symphony-Board 1.4a and above";
+	model = "Variscite VAR-SOM-MX8M-NANO Jailhouse Root on Symphony-Board 1.4 and below";
 };
