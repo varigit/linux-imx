@@ -82,7 +82,7 @@
 };
 
 / {
-	model = "Variscite VAR-SOM-MX8MM board";
+	model = "Variscite VAR-SOM-MX8MM on Symphony-Board 1.4a and above";
 	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
 
 	chosen {
@@ -232,6 +232,14 @@
 			gpios = <&pca9534 0 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
 		};
+	};
+
+	extcon_usb1: extcon_usb1 {
+		compatible = "linux,extcon-usb-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_extcon>;
+		id-gpio = <&gpio1 11 GPIO_ACTIVE_HIGH>;
+		status = "okay";
 	};
 };
 
@@ -563,6 +571,13 @@
 				MX8MM_IOMUXC_GPIO1_IO07_GPIO1_IO7		0x16
 			>;
 		};
+
+		pinctrl_extcon: extcongrp {
+			fsl,pins = <
+				MX8MM_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x16
+			>;
+		};
+		
 	};
 };
 
@@ -975,6 +990,7 @@
 	dr_mode = "otg";
 	picophy,pre-emp-curr-control = <3>;
 	picophy,dc-vol-level-adjust = <7>;
+	extcon = <0>, <&extcon_usb1>;
 	status = "okay";
 };
 

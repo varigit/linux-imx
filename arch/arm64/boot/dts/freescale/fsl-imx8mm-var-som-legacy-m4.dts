@@ -4,9 +4,9 @@
  * Copyright 2019-2020 Variscite Ltd.
  */
 
-#include "fsl-imx8mm-var-som.dts"
+#include "fsl-imx8mm-var-som-legacy.dts"
 #include "fsl-imx8mm-var-som-m4.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-MINI M4 on Symphony-Board 1.4a and above";
-  };
+	model = "Variscite VAR-SOM-MX8M-MINI M4 on Symphony-Board 1.4 and below";
+};
