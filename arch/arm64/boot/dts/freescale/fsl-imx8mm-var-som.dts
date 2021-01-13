@@ -82,7 +82,7 @@
 };
 
 / {
-	model = "Variscite VAR-SOM-MX8MM on Symphony-Board 1.4a and above";
+	model = "Variscite VAR-SOM-MX8M-MINI on Symphony-Board 1.4a and above";
 	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
 
 	chosen {
