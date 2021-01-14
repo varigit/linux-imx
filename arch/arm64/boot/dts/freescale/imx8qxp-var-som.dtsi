@@ -188,15 +188,6 @@
 	status = "okay";
 };
 
-&rpmsg {
-	/*
-	 * 64K for one rpmsg instance:
-	 */
-	vdev-nums = <2>;
-	reg = <0x0 0x90000000 0x0 0x20000>;
-	status = "okay";
-};
-
 &vpu_decoder {
 	boot-region = <&decoder_boot>;
 	rpc-region = <&decoder_rpc>;

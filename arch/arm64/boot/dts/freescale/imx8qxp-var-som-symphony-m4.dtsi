@@ -1,0 +1,87 @@
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * Copyright 2017-2020 NXP
+ * Copyright 2019-2020 Variscite Ltd.
+ */
+
+/ {
+	/* Enable imx8x_cm4 and disable rpmsg if loading m4 firmware via remoteproc framework */
+	imx8x_cm4: imx8x_cm4@0 {
+		compatible = "fsl,imx8qxp-cm4";
+		rsc-da = <0x90000000>;
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&lsio_mu5 0 1
+			  &lsio_mu5 1 1
+			  &lsio_mu5 3 1>;
+		mub-partition = <3>;
+		memory-region = <&vdev0vring0>, <&vdev0vring1>, <&vdevbuffer>,
+				<&vdev1vring0>, <&vdev1vring1>, <&m4_reserved>;
+		core-index = <0>;
+		core-id = <IMX_SC_R_M4_0_PID0>;
+		status = "okay";
+		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
+				<&pd IMX_SC_R_M4_0_MU_1A>;
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		m4_reserved: m4@0x88000000 {
+			no-map;
+			reg = <0 0x88000000 0 0x8000000>;
+		};
+
+		vdev0vring0: vdev0vring0@90000000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90000000 0 0x8000>;
+			no-map;
+		};
+
+		vdev0vring1: vdev0vring1@90008000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90008000 0 0x8000>;
+			no-map;
+		};
+
+		vdev1vring0: vdev1vring0@90010000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90010000 0 0x8000>;
+			no-map;
+		};
+
+		vdev1vring1: vdev1vring1@90018000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90018000 0 0x8000>;
+			no-map;
+		};
+
+		vdevbuffer: vdevbuffer {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90400000 0 0x100000>;
+			no-map;
+		};
+	};
+};
+
+/* Enable rpmsg and disable imx8x_cm4 if loading m4 firmware via u-boot */
+&rpmsg {
+	/*
+	 * 64K for one rpmsg instance:
+	 */
+	vdev-nums = <2>;
+	reg = <0x0 0x90000000 0x0 0x20000>;
+	memory-region = <&vdevbuffer>;
+	status = "disabled";
+};
+
+/* Note: Other interfaces may need to be disabled if accessed from M4 firmware */
+
+&lpuart1 {
+	status = "disabled";
+};
+
+&i2c3 {
+	status = "disabled";
+};
