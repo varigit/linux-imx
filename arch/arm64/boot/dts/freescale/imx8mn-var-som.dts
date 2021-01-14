@@ -61,7 +61,7 @@
 };
 
 / {
-	model = "Variscite VAR-SOM-MX8MN";
+	model = "Variscite VAR-SOM-MX8M-NANO on Symphony-Board 1.4a and above";
 	compatible = "variscite,var-som-mx8mn", "fsl,imx8mn";
 
 	chosen {
@@ -187,6 +187,14 @@
 			gpios = <&pca9534 0 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
 		};
+	};
+
+	extcon_usb1: extcon_usb1 {
+		compatible = "linux,extcon-usb-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_extcon>;
+		id-gpio = <&gpio1 11 GPIO_ACTIVE_HIGH>;
+		status = "okay";
 	};
 };
 
@@ -427,6 +435,12 @@
 		pinctrl_usdhc2_gpio: usdhc2grpgpio {
 			fsl,pins = <
 				MX8MN_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x41
+			>;
+		};
+
+		pinctrl_extcon: extcongrp {
+			fsl,pins = <
+				MX8MN_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x16
 			>;
 		};
 
@@ -1032,6 +1046,7 @@
 	hnp-disable;
 	srp-disable;
 	adp-disable;
+	extcon = <0>, <&extcon_usb1>;
 	status = "okay";
 };
 
