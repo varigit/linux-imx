@@ -29,7 +29,9 @@
 
 #include "remoteproc_internal.h"
 
-#define IMX8M_TCML_ADDR 0x7e0000
+#define TCML_ADDR_IMX8M 0x7e0000
+#define TCML_ADDR_IMX8_CM4_1 0x34fe0000
+#define TCML_ADDR_IMX8_CM4_2 0x38fe0000
 
 #define IMX7D_SRC_SCR			0x0C
 #define IMX7D_ENABLE_M4			BIT(3)
@@ -153,6 +155,7 @@ struct imx_rproc {
 	struct device_link		**pm_devices_link;
 	u32				m_core_ddr_addr;
 	u32 				last_load_addr;
+	u32				m4_start_addr;
 };
 
 #ifdef CONFIG_IMX_SCU
@@ -370,6 +373,30 @@ bool imx_rproc_ready(struct rproc *rproc)
 }
 
 /*
+ Per linkerfile: https://github.com/varigit/freertos-variscite/blob/mcuxpresso_sdk_2.8.x-var01/boards/som_mx8qm/demo_apps/hello_world/cm4_core0/armgcc/MIMX8QM6xxxFF_cm4_core0_ddr_ram.ld#L31
+
+ "M4 always start up from TCM. The SCU will copy the first 32 bytes of the binary to TCM
+ if the start address is not TCM. The TCM region [0x1FFE0000-0x1FFE001F] is reserved for this purpose."
+
+ Therefore:
+ For imx8q and imx8x, it is not necessary to copy the stack pointer and reset vector from ddr to tcm.
+ Instead, determine if firmware was loaded into TCM or DDR and provide correct start address to SCU.
+
+ Like 8M family, DDR4 address is defined in device tree node m4_reserved, m7_reserved, or mcore_reserved
+*/
+static void imx8_set_start_addr(struct rproc *rproc, u32 addr_tcm) {
+	struct imx_rproc *priv = rproc->priv;
+
+	if(priv->m_core_ddr_addr && priv->last_load_addr >= priv->m_core_ddr_addr) {
+		priv->m4_start_addr = priv->m_core_ddr_addr;
+		dev_info(priv->dev, "Setting Cortex M4 start address to DDR 0x%08x\n", priv->m4_start_addr);
+	} else {
+		priv->m4_start_addr = addr_tcm;
+		dev_info(priv->dev, "Setting Cortex M4 start address to TCM 0x%08x\n", priv->m4_start_addr);
+	}
+}
+
+/*
  Stack pointer and reset vector must be initialized
 
  See: https://www.nxp.com/docs/en/application-note/AN5317.pdf
@@ -379,7 +406,7 @@ bool imx_rproc_ready(struct rproc *rproc)
 static void imx_8m_setup_stack(struct rproc *rproc)
 {
 	struct imx_rproc *priv = rproc->priv;
-	void __iomem *io_tcml = ioremap(IMX8M_TCML_ADDR, 8);
+	void __iomem *io_tcml = ioremap(TCML_ADDR_IMX8M, 8);
 
 	//initialize tcml stack pointer and reset vector
 	if(priv->m_core_ddr_addr && priv->last_load_addr >= priv->m_core_ddr_addr) {
@@ -422,12 +449,15 @@ static int imx_rproc_start(struct rproc *rproc)
 
 #ifdef CONFIG_IMX_SCU
 	if (priv->dcfg->variant == IMX8QXP || priv->dcfg->variant == IMX8QM) {
-		if (priv->id == 1)
-			ret = imx_sc_pm_cpu_start(ipc_handle, priv->rsrc, true, 0x38fe0000);
-		else if (!priv->id)
-			ret = imx_sc_pm_cpu_start(ipc_handle, priv->rsrc, true, 0x34fe0000);
-		else
+		if (priv->id == 1) {
+			imx8_set_start_addr(rproc, TCML_ADDR_IMX8_CM4_2);
+			ret = imx_sc_pm_cpu_start(ipc_handle, priv->rsrc, true, priv->m4_start_addr);
+		} else if (!priv->id) {
+			imx8_set_start_addr(rproc, TCML_ADDR_IMX8_CM4_1);
+			ret = imx_sc_pm_cpu_start(ipc_handle, priv->rsrc, true, priv->m4_start_addr);
+		} else {
 			ret = -EINVAL;
+		}
 		if (ret) {
 			dev_err(dev, "Failed to enable M4!\n");
 			return ret;
@@ -514,9 +544,9 @@ static int imx_rproc_stop(struct rproc *rproc)
 #ifdef CONFIG_IMX_SCU
 	if (priv->dcfg->variant == IMX8QXP || priv->dcfg->variant == IMX8QM) {
 		if (priv->id == 1)
-			ret = imx_sc_pm_cpu_start(ipc_handle, priv->rsrc, false, 0x38fe0000);
+			ret = imx_sc_pm_cpu_start(ipc_handle, priv->rsrc, false, priv->m4_start_addr);
 		else if (!priv->id)
-			ret = imx_sc_pm_cpu_start(ipc_handle, priv->rsrc, false, 0x34fe0000);
+			ret = imx_sc_pm_cpu_start(ipc_handle, priv->rsrc, false, priv->m4_start_addr);
 		else
 			ret = -EINVAL;
 		if (ret) {
