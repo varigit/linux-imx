@@ -724,6 +724,10 @@ dtb-$(CONFIG_SOC_IMX7D) += \
 	imx7d-12x12-lpddr3-val-sai.dtb \
 	imx7d-zii-rmu2.dtb \
 	imx7d-zii-rpu2.dtb \
+	imx7d-var-som-emmc.dtb \
+	imx7d-var-som-nand.dtb \
+	imx7d-var-som-emmc-m4.dtb \
+	imx7d-var-som-nand-m4.dtb \
 	imx7s-colibri-eval-v3.dtb \
 	imx7s-mba7.dtb \
 	imx7s-warp.dtb
@@ -739,11 +743,7 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
 	imx7ulp-evkb-lpuart.dtb \
 	imx7ulp-evkb-mipi.dtb \
 	imx7ulp-evkb-rm68200-wxga.dtb \
-	imx7ulp-evkb-rm68191-qhd.dtb \
-	imx7d-var-som-emmc.dtb \
-	imx7d-var-som-nand.dtb \
-	imx7d-var-som-emmc-m4.dtb \
-	imx7d-var-som-nand-m4.dtb
+	imx7ulp-evkb-rm68191-qhd.dtb
 dtb-$(CONFIG_SOC_LS1021A) += \
 	ls1021a-moxa-uc-8410a.dtb \
 	ls1021a-qds.dtb \
