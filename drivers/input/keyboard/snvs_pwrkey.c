@@ -314,7 +314,7 @@ static int __maybe_unused imx_snvs_pwrkey_suspend(struct device *dev)
 	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
 
 	if (pdata->clk)
-		clk_disable_unprepare(pdata->clk);
+		clk_disable(pdata->clk);
 
 	pdata->suspended = true;
 
@@ -327,7 +327,7 @@ static int __maybe_unused imx_snvs_pwrkey_resume(struct device *dev)
 	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
 
 	if (pdata->clk)
-		clk_prepare_enable(pdata->clk);
+		clk_enable(pdata->clk);
 
 	pdata->suspended = false;
 
