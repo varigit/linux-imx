@@ -1,0 +1,191 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2020-2021 Variscite Ltd.
+ */
+
+#include "imx8mp-var-dart.dtsi"
+#include "imx8mp-var-dart-dt8mcustomboard-common.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M-PLUS on DT8MCustomBoard 2.x";
+
+	gpio-keys {
+
+		up {
+			gpios = <&pca6408_1 5 GPIO_ACTIVE_LOW>;
+		};
+
+		down {
+			gpios = <&pca6408_1 6 GPIO_ACTIVE_LOW>;
+		};
+
+		home {
+			gpios = <&pca6408_1 4 GPIO_ACTIVE_LOW>;
+		};
+
+		back {
+			gpios = <&pca6408_1 7 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	leds {
+		emmc {
+			gpios = <&gpio4 18 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	extcon_usb1: extcon_usb1 {
+		compatible = "linux,extcon-usb-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_extcon>;
+		id-gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
+	can0_osc: can0_osc {
+		clock-frequency = <40000000>;
+	};
+};
+
+&i2c2 {
+	ov5640_mipi0: ov5640_mipi@3c {
+		powerdown-gpios = <&pca6408_1 3 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&pca6408_1 1 GPIO_ACTIVE_LOW>;
+	};
+
+	ft5x06_ts: ft5x06_ts@38 {
+		reset-gpios = <&pca6408_2 4 GPIO_ACTIVE_LOW>;
+	};
+
+};
+
+&i2c4 {
+	ov5640_mipi1: ov5640_mipi@3c {
+		powerdown-gpios = <&pca6408_1 2 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&pca6408_1 0 GPIO_ACTIVE_LOW>;
+	};
+
+	pca6408_1: gpio@20 {
+		compatible = "ti,tca6408";
+		reg = <0x20>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pca6408>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+	};
+
+	pca6408_2: gpio@21 {
+		compatible = "ti,tca6408";
+		reg = <0x21>;
+		gpio-controller;
+		#gpio-cells = <2>;
+	};
+};
+
+&pcie {
+	reset-gpio = <&pca6408_2 7 GPIO_ACTIVE_LOW>;
+};
+
+&usb_dwc3_0 {
+	extcon = <&extcon_usb1>;
+};
+
+&can0 {
+	spi-max-frequency = <20000000>;
+	microchip,rx-int-gpios = <&gpio5 4 GPIO_ACTIVE_LOW>;
+};
+
+&eqos {
+	mdio {
+		ethphy1: ethernet-phy@1 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <1>;
+			at803x,eee-disabled;
+			at803x,vddio-1p8v;
+			eee-broken-1000t;
+		};
+	};
+};
+
+&fec {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_fec>;
+	phy-mode = "rgmii";
+	phy-handle = <&ethphy1>;
+	phy-reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
+	phy-reset-duration = <10>;
+	phy-reset-post-delay = <100>;
+	status = "okay";
+};
+
+&ldo4_reg {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+};
+
+&iomuxc {
+	pinctrl_flexcan1: flexcan1grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_SAI2_RXC__CAN1_TX					0x154
+			MX8MP_IOMUXC_SAI2_TXC__CAN1_RX					0x154
+		>;
+	};
+
+	pinctrl_flexcan2: flexcan2grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_SAI2_MCLK__CAN2_RX					0x154
+			MX8MP_IOMUXC_SAI2_TXD0__CAN2_TX					0x154
+		>;
+	};
+
+	pinctrl_captouch: captouchgrp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO14__GPIO1_IO14				0x16
+		>;
+	};
+
+	pinctrl_extcon: extcongrp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10				0x19
+		>;
+	};
+
+	pinctrl_can: cangrp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO06__GPIO1_IO06				0x1c6
+			MX8MP_IOMUXC_SPDIF_RX__GPIO5_IO04				0x16
+		>;
+	};
+
+	pinctrl_pca6408: pca6408grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO05__GPIO1_IO05				0x1c6
+		>;
+	};
+
+	pinctrl_gpio_leds: ledgrp {
+		fsl,pins = <
+			MX8MP_IOMUXC_SAI1_TXD6__GPIO4_IO18				0xc6
+		>;
+	};
+
+	pinctrl_fec: fecgrp {
+		fsl,pins = <
+			MX8MP_IOMUXC_SAI1_RXD4__ENET1_RGMII_RD0				0x91
+			MX8MP_IOMUXC_SAI1_RXD5__ENET1_RGMII_RD1				0x91
+			MX8MP_IOMUXC_SAI1_RXD6__ENET1_RGMII_RD2				0x91
+			MX8MP_IOMUXC_SAI1_RXD7__ENET1_RGMII_RD3				0x91
+			MX8MP_IOMUXC_SAI1_TXC__ENET1_RGMII_RXC				0x91
+			MX8MP_IOMUXC_SAI1_TXFS__ENET1_RGMII_RX_CTL			0x91
+			MX8MP_IOMUXC_SAI1_TXD0__ENET1_RGMII_TD0				0x00
+			MX8MP_IOMUXC_SAI1_TXD1__ENET1_RGMII_TD1				0x00
+			MX8MP_IOMUXC_SAI1_TXD2__ENET1_RGMII_TD2				0x00
+			MX8MP_IOMUXC_SAI1_TXD3__ENET1_RGMII_TD3				0x00
+			MX8MP_IOMUXC_SAI1_TXD4__ENET1_RGMII_TX_CTL			0x00
+			MX8MP_IOMUXC_SAI1_TXD5__ENET1_RGMII_TXC				0x00
+		>;
+	};
+};
