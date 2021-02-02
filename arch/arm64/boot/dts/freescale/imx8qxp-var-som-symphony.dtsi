@@ -787,5 +787,3 @@
 /delete-node/ &adc1_lpcg;
 /delete-node/ &emvsim0;
 /delete-node/ &emvsim0_lpcg;
-/delete-node/ &i2c4;
-/delete-node/ &i2c4_lpcg;
