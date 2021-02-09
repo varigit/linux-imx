@@ -46,7 +46,7 @@
 
 		emmc {
 			label = "eMMC";
-			linux,default-trigger = "mmc0";
+			linux,default-trigger = "mmc2";
 		};
 	};
 
