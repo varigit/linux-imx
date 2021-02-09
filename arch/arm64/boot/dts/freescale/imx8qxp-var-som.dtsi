@@ -132,10 +132,6 @@
 	status = "okay";
 };
 
-&amix {
-	status = "okay";
-};
-
 &asrc0 {
 	fsl,asrc-rate  = <48000>;
 	status = "okay";
