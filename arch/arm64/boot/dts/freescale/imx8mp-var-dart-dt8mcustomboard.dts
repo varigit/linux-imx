@@ -86,7 +86,7 @@
 };
 
 &pcie {
-	reset-gpio = <&pca6408_2 7 GPIO_ACTIVE_LOW>;
+	reset-gpio = <&pca6408_2 3 GPIO_ACTIVE_LOW>;
 };
 
 &usb_dwc3_0 {
