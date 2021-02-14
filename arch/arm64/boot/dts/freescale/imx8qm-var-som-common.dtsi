@@ -273,14 +273,6 @@
 		};
 	};
 
-	sound-amix-sai {
-		compatible = "fsl,imx-audio-amix";
-		model = "amix-audio-sai";
-		dais = <&sai6>, <&sai7>;
-		amix-controller = <&amix>;
-		status = "okay";
-	};
-
 	sound-wm8904 {
 		compatible = "fsl,imx-audio-wm8904";
 		model = "imx-wm8904";
@@ -299,10 +291,6 @@
 };
 
 &acm {
-	status = "okay";
-};
-
-&amix {
 	status = "okay";
 };
 
