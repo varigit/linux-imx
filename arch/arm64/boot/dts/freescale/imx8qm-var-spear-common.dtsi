@@ -72,40 +72,6 @@
 		};
 	};
 
-	imx8qm_cm40: imx8qm_cm4@0 {
-		compatible = "fsl,imx8qm-cm4";
-		rsc-da = <0x90000000>;
-		mbox-names = "tx", "rx", "rxdb";
-		mboxes = <&lsio_mu5 0 1
-			  &lsio_mu5 1 1
-			  &lsio_mu5 3 1>;
-		mub-partition = <3>;
-		memory-region = <&vdev0vring0>, <&vdev0vring1>, <&vdevbuffer>,
-				<&vdev1vring0>, <&vdev1vring1>;
-		core-index = <0>;
-		core-id = <IMX_SC_R_M4_0_PID0>;
-		status = "okay";
-		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
-				<&pd IMX_SC_R_M4_0_MU_1A>;
-	};
-
-	imx8qm_cm41: imx8x_cm4@1 {
-		compatible = "fsl,imx8qm-cm4";
-		rsc-da = <0x90100000>;
-		mbox-names = "tx", "rx", "rxdb";
-		mboxes = <&lsio_mu6 0 1
-			  &lsio_mu6 1 1
-			  &lsio_mu6 3 1>;
-		mub-partition = <4>;
-		memory-region = <&vdev2vring0>, <&vdev2vring1>, <&vdevbuffer>,
-				<&vdev3vring0>, <&vdev3vring1>;
-		core-index = <1>;
-		core-id = <IMX_SC_R_M4_1_PID0>;
-		status = "okay";
-		power-domains = <&pd IMX_SC_R_M4_1_PID0>,
-				<&pd IMX_SC_R_M4_1_MU_1A>;
-	};
-
 	leds {
 		compatible = "gpio-leds";
 		pinctrl-names = "default";
@@ -194,26 +160,32 @@
 			no-map;
 			reg = <0 0x84000000 0 0x2000000>;
 		};
+
 		decoder_rpc: decoder_rpc@0x92000000 {
 			no-map;
 			reg = <0 0x92000000 0 0x200000>;
 		};
+
 		dsp_reserved: dsp@0x92400000 {
 			no-map;
 			reg = <0 0x92400000 0 0x2000000>;
 		};
+
 		encoder_boot: encoder_boot@0x86000000 {
 			no-map;
 			reg = <0 0x86000000 0 0x400000>;
 		};
+
 		encoder_reserved: encoder_reserved@0x94400000 {
 			no-map;
 			reg = <0 0x94400000 0 0x800000>;
 		};
+
 		encoder_rpc: encoder_rpc@0x92200000 {
 			no-map;
 			reg = <0 0x92200000 0 0x200000>;
 		};
+
 		/* global autoconfigured region for contiguous allocations */
 		linux,cma {
 			compatible = "shared-dma-pool";
@@ -222,76 +194,10 @@
 			alloc-ranges = <0 0x96000000 0 0x3c000000>;
 			linux,cma-default;
 		};
-		/*
-		 * reserved-memory layout
-		 * 0x8800_0000 ~ 0x8FFF_FFFF is reserved for M4
-		 * Shouldn't be used at A core and Linux side.
-		 *
-		 */
-		m4_reserved: m4@0x88000000 {
-			no-map;
-			reg = <0 0x88000000 0 0x8000000>;
-		};
-		rpmsg_reserved: rpmsg@0x90000000 {
-			no-map;
-			reg = <0 0x90200000 0 0x200000>;
-		};
+
 		ts_boot: ts_boot@0x95000000 {
 			no-map;
 			reg = <0 0x95000000 0 0x400000>;
-		};
-		vdev0vring0: vdev0vring0@90000000 {
-                        compatible = "shared-dma-pool";
-			reg = <0 0x90000000 0 0x8000>;
-			no-map;
-		};
-
-		vdev0vring1: vdev0vring1@90008000 {
-                        compatible = "shared-dma-pool";
-			reg = <0 0x90008000 0 0x8000>;
-			no-map;
-		};
-
-		vdev1vring0: vdev1vring0@90010000 {
-                        compatible = "shared-dma-pool";
-			reg = <0 0x90010000 0 0x8000>;
-			no-map;
-		};
-
-		vdev1vring1: vdev1vring1@90018000 {
-                        compatible = "shared-dma-pool";
-			reg = <0 0x90018000 0 0x8000>;
-			no-map;
-		};
-
-		vdevbuffer: vdevbuffer {
-                        compatible = "shared-dma-pool";
-			reg = <0 0x90400000 0 0x100000>;
-			no-map;
-		};
-
-		vdev2vring0: vdev0vring0@90100000 {
-                        compatible = "shared-dma-pool";
-			reg = <0 0x90100000 0 0x8000>;
-			no-map;
-		};
-
-		vdev2vring1: vdev0vring1@90108000 {
-                        compatible = "shared-dma-pool";
-			reg = <0 0x90108000 0 0x8000>;
-			no-map;
-		};
-
-		vdev3vring0: vdev1vring0@90110000 {
-                        compatible = "shared-dma-pool";
-			reg = <0 0x90110000 0 0x8000>;
-			no-map;
-		};
-
-		vdev3vring1: vdev1vring1@90118000 {
-                        compatible = "shared-dma-pool";
-			reg = <0 0x90118000 0 0x8000>;
-			no-map;
 		};
 	};
 
@@ -1427,27 +1333,6 @@
         pinctrl-names = "default";
         pinctrl-0 = <&pinctrl_pwm_lvds1>;
         status = "disabled";
-};
-
-&rpmsg0{
-	/*
-	 * 64K for one rpmsg instance:
-	 */
-	vdev-nums = <2>;
-	reg = <0x0 0x90000000 0x0 0x20000>;
-	memory-region = <&vdevbuffer>;
-	status = "disabled";
-};
-
-
-&rpmsg1{
-	/*
-	 * 64K for one rpmsg instance:
-	 */
-	vdev-nums = <2>;
-	reg = <0x0 0x90100000 0x0 0x20000>;
-	memory-region = <&vdevbuffer>;
-	status = "disabled";
 };
 
 &rtc {
