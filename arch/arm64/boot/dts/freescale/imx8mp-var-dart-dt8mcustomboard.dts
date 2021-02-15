@@ -30,6 +30,8 @@
 	};
 
 	leds {
+		status = "disabled";
+
 		emmc {
 			gpios = <&gpio4 18 GPIO_ACTIVE_HIGH>;
 		};
