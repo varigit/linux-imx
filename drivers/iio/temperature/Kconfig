@@ -20,6 +20,17 @@ config MAXIM_THERMOCOUPLE
 	  This driver can also be built as a module. If so, the module will
 	  be called maxim_thermocouple.
 
+config AS6200
+	tristate "ams AG AS6200 temperature sensor"
+	depends on I2C
+	select REGMAP_I2C
+	help
+	  If you say yes here you get support for the AS6200 temperature
+	  sensor from ams AG.
+
+	  This driver can also be built as a module. If so, the module will
+	  be called as6200.
+
 config HID_SENSOR_TEMP
 	tristate "HID Environmental temperature sensor"
 	depends on HID_SENSOR_HUB

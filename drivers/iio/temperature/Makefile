@@ -3,6 +3,7 @@
 # Makefile for industrial I/O temperature drivers
 #
 
+obj-$(CONFIG_AS6200) += as6200.o
 obj-$(CONFIG_HID_SENSOR_TEMP) += hid-sensor-temperature.o
 obj-$(CONFIG_MAXIM_THERMOCOUPLE) += maxim_thermocouple.o
 obj-$(CONFIG_MAX31856) += max31856.o
