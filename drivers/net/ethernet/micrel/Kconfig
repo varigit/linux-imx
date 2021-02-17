@@ -113,9 +113,6 @@ config KSZ8795_EMBEDDED
 	---help---
 	  Supports the Microchip KSZ8795 switch used within a network controller .
 
-endif
-
-
 config KSZ_PTP
 	bool "1588 PTP support"
 	depends on KSZ8462_HLI || HAVE_KSZ8463 || HAVE_KSZ9897
@@ -189,4 +186,3 @@ config KSZ_HSR
 	  Enable HSR support.
 
 endif
-
