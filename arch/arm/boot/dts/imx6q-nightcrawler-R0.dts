@@ -1,0 +1,255 @@
+/*
+ * Copyright (C) 2015-2017 Variscite Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include "imx6q.dtsi"
+#include "imx6qdl-nightcrawler.dtsi"
+
+/ {
+	model = "Variscite i.MX6 QUAD VAR-DART Smart Device Board";
+	compatible = "fsl,imx6q-var-dart", "fsl,imx6q";
+
+	sound-hdmi {
+		compatible = "fsl,imx6q-audio-hdmi",
+		             "fsl,imx-audio-hdmi";
+		model = "imx-audio-hdmi";
+		hdmi-controller = <&hdmi_audio>;
+	};
+
+	pps {
+		compatible = "pps-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pps>;
+		gpios = <&gpio4 18 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
+	mxcfb2 { /* hdmi - available on R0 */
+		status = "okay";
+	};
+
+        gpio-keys {
+                compatible = "gpio-keys";
+
+                /* GPIO_4 */
+                user {
+                        label = "User";
+                        gpios = <&gpio5 10 1>;  /* NB: required for ECSPI1 to function (see issue #3) */
+                        linux,code = <BTN_MISC>;
+                        gpio-key,wakeup;
+                };
+        };
+
+};
+
+&iomuxc {
+	imx6qdl-var-som-mx6 {
+		pinctrl_pps: ppsgrp {
+			fsl,pins = <
+				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18	0x1b0b1	/* 100K PU, HYS, KEEPER, FAST */
+			>;
+		};
+	};
+};
+
+&cpu0 {
+	operating-points = <
+		/* kHz    uV */
+		1200000	1350000
+		996000	1250000
+		852000	1250000
+		792000	1175000
+		396000	1175000
+	>;
+	fsl,soc-operating-points = <
+		/* ARM kHz  SOC-PU uV */
+		1200000	1275000
+		996000	1250000
+		852000	1250000
+		792000	1250000
+		396000	1250000
+	>;
+};
+
+&dcic1 {
+	dcic_id = <0>;
+	dcic_mux = "dcic-hdmi";
+	status = "okay";
+};
+
+&ecspi1 {
+	fsl,spi-num-chipselects = <1>;
+	cs-gpios = <&gpio5 17 0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi1>;
+	status = "okay";
+
+	ksz8794: ksz8794@0 {
+		compatible = "microchip,ksz8794";
+		reg = <0>;
+		spi-max-frequency = <24000000>;
+		spi-cpha;
+		spi-cpol;
+		interrupt-parent = <&gpio4>;
+		interrupts = <14 IRQ_TYPE_LEVEL_LOW>;
+		status = "okay";
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			port@0 {
+				reg = <0>;
+				label = "lan1";
+			};
+			port@1 {
+				reg = <1>;
+				label = "lan2";
+			};
+			port@2 {
+				reg = <2>;
+				label = "lan3";
+			};
+			port@3 {
+				reg = <3>;
+				label = "cpu";
+				fixed-link {
+					speed = <1000>;
+					full-duplex;
+				};
+			};
+		};
+	};
+};
+
+&fec {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_enet>;
+	phy-mode = "rgmii";
+	phy-reset-gpios = <&gpio1 25 0>;
+	phy-reset-duration = <10>;
+	phy-reset-post-delay = <100>;
+	phy-supply = <&reg_usb_otg_vbus>;
+	fsl,magic-packet;
+	status = "okay";
+
+	fixed-link {
+		speed = <1000>;
+		full-duplex;
+	};
+};
+
+&hdmi_audio {
+	status = "okay";
+};
+
+&hdmi_cec {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hdmi_cec>;
+	status = "okay";
+};
+
+&hdmi_core {
+	ipu_id = <0>;
+	disp_id = <0>;
+	status = "okay";
+};
+
+&hdmi_video {
+	fsl,phy_reg_vlev = <0x0294>;
+	fsl,phy_reg_cksymtx = <0x800d>;
+	status = "okay";
+};
+
+&i2c1 {
+	ab_abb5zes3: ab-abb5zes3@68 {
+		compatible = "abracon,abb5zes3";
+		interrupt-parent = <&gpio5>;
+		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
+		pinctrl-0 = <&pmx_rtc_alarm_int>;
+		pinctrl-names = "default";
+		reg = <0x68>;
+	};
+
+	tmp121@0x49 {
+		compatible = "ti,tmp121";
+		reg = <0x49>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <12 IRQ_TYPE_EDGE_RISING>;
+		pinctrl-0 = <&pmx_temp_alarm_int>;
+	};
+
+	hdmi_edid: edid@50 {
+		compatible = "fsl,imx6-hdmi-i2c";
+		reg = <0x50>;
+	};
+};
+
+&i2c3 {
+	tc358743_mipi: tc358743_mipi@0f {
+		compatible = "tc358743_mipi";
+		reg = <0x0f>;
+		clocks = <&clks IMX6QDL_CLK_CKO2>;
+		clock-names = "csi_mclk";
+		pwn-gpios = <&gpio3 13 1>;
+		rst-gpios = <&gpio4 22 0>;
+		csi_id = <0>;
+		mclk = <27000000>;
+		mclk_source = <0>;
+	};
+};
+
+&ldb {
+	lvds-channel@0 {
+		crtc = "ipu2-di0";
+	};
+
+	lvds-channel@1 {
+		crtc = "ipu2-di1";
+	};
+};
+
+&sata {
+	status = "disabled";
+};
+
+/* ttymxc0 UART (Console) */
+&uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart1_1>;
+	fsl,uart-has-rtscts;
+	status = "okay";
+};
+
+/* ttymxc1 UART (Bluetooth) */
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2_3>;
+	status = "okay";
+};
+
+/* ttymxc2 UART (Micro) */
+&uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart3_1>;
+	status = "okay";
+};
+
+/* ttymxc3 UART (Pixhawk) */
+&uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart4_1>;
+	status = "okay";
+};
+
+/* ttymxc4 UART (Iridium) */
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart5_1>;
+	status = "okay";
+};
