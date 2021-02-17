@@ -172,8 +172,8 @@
 		reg = <0x68>;
 	};
 
-	as6200@0x49 {
-		compatible = "ams,as6200";
+	as62xx@0x49 {
+		compatible = "ams,as62xx";
 		reg = <0x49>;
 		interrupt-parent = <&gpio5>;
 		interrupts = <12 IRQ_TYPE_EDGE_RISING>;
