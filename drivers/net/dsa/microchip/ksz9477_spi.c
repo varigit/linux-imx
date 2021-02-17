@@ -5,44 +5,67 @@
  * Copyright (C) 2017-2019 Microchip Technology Inc.
  */
 
-#include <asm/unaligned.h>
-
-#include <linux/delay.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
-#include <linux/regmap.h>
 #include <linux/spi/spi.h>
 
-#include "ksz_common.h"
+#include "ksz_priv.h"
+
+/* SPI frame opcodes */
+#define KS_SPIOP_RD			3
+#define KS_SPIOP_WR			2
 
 #define SPI_ADDR_SHIFT			24
-#define SPI_ADDR_ALIGN			3
+#define SPI_ADDR_MASK			(BIT(SPI_ADDR_SHIFT) - 1)
 #define SPI_TURNAROUND_SHIFT		5
 
-KSZ_REGMAP_TABLE(ksz9477, 32, SPI_ADDR_SHIFT,
-		 SPI_TURNAROUND_SHIFT, SPI_ADDR_ALIGN);
+#define SPI_CMD_LEN			4
+#define REG_SIZE			0x8000
+
+
+#define SPI_REGMAP_PAD			SPI_TURNAROUND_SHIFT
+#define SPI_REGMAP_VAL			8
+#define SPI_REGMAP_REG			\
+	(SPI_CMD_LEN * SPI_REGMAP_VAL - SPI_TURNAROUND_SHIFT)
+#define SPI_REGMAP_MASK_S		\
+	(SPI_ADDR_SHIFT + SPI_TURNAROUND_SHIFT - \
+	(SPI_CMD_LEN * SPI_REGMAP_VAL - 8))
+
+#define KSZ_REGMAP_COMMON(n, width)					\
+{									\
+	.name			= n,					\
+	.max_register		= REG_SIZE - (width),			\
+	.reg_bits 		= SPI_REGMAP_REG,			\
+	.val_bits		= SPI_REGMAP_VAL * (width),		\
+	.pad_bits		= SPI_REGMAP_PAD,			\
+	.reg_stride		= (width),				\
+	.read_flag_mask		= KS_SPIOP_RD << SPI_REGMAP_MASK_S,	\
+	.write_flag_mask	= KS_SPIOP_WR << SPI_REGMAP_MASK_S,	\
+	.reg_format_endian	= REGMAP_ENDIAN_BIG,			\
+	.val_format_endian	= REGMAP_ENDIAN_BIG,			\
+}
+
+static const struct regmap_config ksz9477_regmap_cfg[] = {
+	KSZ_REGMAP_COMMON("8", 1),
+	KSZ_REGMAP_COMMON("16", 2),
+	KSZ_REGMAP_COMMON("32", 4),
+};
 
 static int ksz9477_spi_probe(struct spi_device *spi)
 {
-	struct regmap_config rc;
 	struct ksz_device *dev;
-	int i, ret;
+	int i;
+	int ret;
 
-	dev = ksz_switch_alloc(&spi->dev, spi);
+	dev = ksz_switch_alloc(&spi->dev);
 	if (!dev)
 		return -ENOMEM;
 
-	for (i = 0; i < ARRAY_SIZE(ksz9477_regmap_config); i++) {
-		rc = ksz9477_regmap_config[i];
-		rc.lock_arg = &dev->regmap_mutex;
-		dev->regmap[i] = devm_regmap_init_spi(spi, &rc);
-		if (IS_ERR(dev->regmap[i])) {
-			ret = PTR_ERR(dev->regmap[i]);
-			dev_err(&spi->dev,
-				"Failed to initialize regmap%i: %d\n",
-				ksz9477_regmap_config[i].val_bits, ret);
-			return ret;
-		}
+	for (i = 0; i < ARRAY_SIZE(ksz9477_regmap_cfg); i++) {
+		dev->regmap[i] = devm_regmap_init_spi(spi,
+						      &ksz9477_regmap_cfg[i]);
+		if (IS_ERR(dev->regmap[i]))
+			return PTR_ERR(dev->regmap[i]);
 	}
 
 	if (spi->dev.platform_data)
@@ -80,10 +103,11 @@ static void ksz9477_spi_shutdown(struct spi_device *spi)
 static const struct of_device_id ksz9477_dt_ids[] = {
 	{ .compatible = "microchip,ksz9477" },
 	{ .compatible = "microchip,ksz9897" },
+	{ .compatible = "microchip,ksz9896" },
+	{ .compatible = "microchip,ksz9567" },
+	{ .compatible = "microchip,ksz8565" },
 	{ .compatible = "microchip,ksz9893" },
 	{ .compatible = "microchip,ksz9563" },
-	{ .compatible = "microchip,ksz8563" },
-	{ .compatible = "microchip,ksz9567" },
 	{},
 };
 MODULE_DEVICE_TABLE(of, ksz9477_dt_ids);
@@ -101,12 +125,6 @@ static struct spi_driver ksz9477_spi_driver = {
 
 module_spi_driver(ksz9477_spi_driver);
 
-MODULE_ALIAS("spi:ksz9477");
-MODULE_ALIAS("spi:ksz9897");
-MODULE_ALIAS("spi:ksz9893");
-MODULE_ALIAS("spi:ksz9563");
-MODULE_ALIAS("spi:ksz8563");
-MODULE_ALIAS("spi:ksz9567");
 MODULE_AUTHOR("Woojung Huh <Woojung.Huh@microchip.com>");
-MODULE_DESCRIPTION("Microchip KSZ9477 Series Switch SPI access Driver");
-MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("Microchip KSZ9477 Series Switch SPI Driver");
+MODULE_LICENSE("GPL v2");
