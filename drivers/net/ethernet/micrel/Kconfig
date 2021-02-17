@@ -53,8 +53,6 @@ config KSZ884X_PCI
 	  To compile this driver as a module, choose M here. The module
 	  will be called ksz884x.
 
-endif # NET_VENDOR_MICREL
-
 config KSZ_STP
 	bool "STP support"
 	depends on KSZ_SWITCH
@@ -185,4 +183,6 @@ config KSZ_HSR
 	help
 	  Enable HSR support.
 
-endif
+endif # KSZ_SWITCHS
+
+endif # NET_VENDOR_MICREL
