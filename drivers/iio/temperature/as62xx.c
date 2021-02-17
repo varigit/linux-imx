@@ -1,17 +1,4 @@
-/*
- * Driver for ams AS6200 temperature sensor.
- *
- * Sensor supports following 7-bit I2C addresses: 0x48, 0x49, 0x4A, 0x4B
- *
- * Copyright (c) 2016 ams AG. All rights reserved.
- *
- * Author: Florian Lobmaier <florian.lobmaier@ams.com>
- * Author: Elitsa Polizoeva <elitsa.polizoeva@ams.com>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+* (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -67,9 +54,12 @@ static const int as6200_conv_rates[4][2] = { {4, 0}, {1, 0},
 #define AS6200_CONFIG_INIT_POL	0x0
 #define AS6200_CONFIG_INIT_CF		0x2
 
+#define AS62XX_16BIT_DEFAULT_TLOW	0x2580
+
 struct as6200_data {
 	struct i2c_client *client;
 	struct regmap *regmap;
+	bool is_16bit_sensor;
 };
 
 static const struct regmap_range as6200_readable_ranges[] = {
@@ -128,15 +118,23 @@ static int as6200_read_raw(struct iio_dev *indio_dev,
 					&reg_val);
 		if (err < 0)
 			return err;
-		ret = sign_extend32(reg_val, 15) >> 4;
+		ret = data->is_16bit_sensor ? sign_extend32(reg_val, 15) :
+			                sign_extend32(reg_val, 15) >> 4;
 		if (mask == IIO_CHAN_INFO_PROCESSED)
-			*val = (ret * 625) / 10000;
+			*val = data->is_16bit_sensor ? (ret * 78125) / 10000000 :
+				                 (ret * 625) / 10000;
 		else
 			*val = ret;
 		return IIO_VAL_INT;
 	case IIO_CHAN_INFO_SCALE:
-		*val = 62;
-		*val2 = 500000;
+		if (data->is_16bit_sensor) {
+			*val = 7;
+			*val2 = 812500;
+		} else {
+			*val = 62;
+			*val2 = 500000;
+		}
+
 		return IIO_VAL_INT_PLUS_MICRO;
 	case IIO_CHAN_INFO_SAMP_FREQ:
 		err = regmap_read(data->regmap, AS6200_REG_CONFIG,
@@ -201,7 +199,8 @@ static int as6200_read_thresh(struct iio_dev *indio_dev,
 	else
 		ret = regmap_read(data->regmap, AS6200_REG_TLOW, &reg_val);
 
-	*val = sign_extend32(reg_val, 15) >> 4;
+	*val = data->is_16bit_sensor ? sign_extend32(reg_val, 15) :
+			         sign_extend32(reg_val, 15) >> 4;
 
 	if (ret)
 		return ret;
@@ -217,7 +216,7 @@ static int as6200_write_thresh(struct iio_dev *indio_dev,
 {
 	struct as6200_data *data = iio_priv(indio_dev);
 	int ret;
-	s16 value = val << 4;
+	s16 value = data->is_16bit_sensor ? (val & 0xFFF0) : val << 4;
 
 	dev_info(&data->client->dev, "write thresh called %d\n", value);
 	if (dir == IIO_EV_DIR_RISING)
@@ -284,13 +283,14 @@ static int as6200_setup_irq(struct iio_dev *indio_dev)
 		irq_trig = IRQF_TRIGGER_FALLING;
 
 	err = request_irq(data->client->irq, as6200_alert_isr, irq_trig,
-			"as6200", dev);
+			"as62xx", dev);
 	if (err)
 		dev_err(dev, "error requesting irq %d\n", err);
 
 	return err;
 }
 
+#ifdef CONFIG_PM_SLEEP
 static int as6200_sleep(struct as6200_data *data)
 {
 	return regmap_update_bits(data->regmap, AS6200_REG_CONFIG,
@@ -304,6 +304,7 @@ static int as6200_wakeup(struct as6200_data *data)
 			AS6200_CONFIG_SM_MASK,
 			0 << AS6200_CONFIG_SM_SHIFT);
 }
+#endif
 
 static ssize_t as6200_show_al(struct device *dev,
 	struct device_attribute *attr, char *buf)
@@ -376,7 +377,6 @@ static const struct iio_info as6200_info = {
 	.read_event_value = as6200_read_thresh,
 	.write_event_value = as6200_write_thresh,
 	.attrs = &as6200_attr_group,
-	.driver_module = THIS_MODULE,
 };
 
 static int as6200_i2c_probe(struct i2c_client *client,
@@ -385,6 +385,7 @@ static int as6200_i2c_probe(struct i2c_client *client,
 	struct iio_dev *indio_dev;
 	struct as6200_data *data;
 	int ret;
+	u32 reg_val;
 
 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
 	if (!indio_dev)
@@ -420,6 +421,17 @@ static int as6200_i2c_probe(struct i2c_client *client,
 	if (ret < 0)
 		goto cleanup_irq;
 
+	ret = regmap_read(data->regmap, AS6200_REG_TLOW, &reg_val);
+	if (ret < 0) {
+		iio_device_unregister(indio_dev);
+		goto cleanup_irq;
+	}
+
+	if (reg_val == AS62XX_16BIT_DEFAULT_TLOW)
+		data->is_16bit_sensor = true;
+	else
+		data->is_16bit_sensor = false;
+
 	return 0;
 
 cleanup_irq:
@@ -435,17 +447,18 @@ static int as6200_i2c_remove(struct i2c_client *client)
 	iio_device_unregister(indio_dev);
 	if (client->irq > 0)
 		free_irq(client->irq, &client->dev);
+
 	return 0;
 }
 
 static const struct of_device_id as6200_of_match[] = {
-	{ .compatible = "ams,as6200", },
+	{ .compatible = "ams,as62xx", },
 	{},
 };
 MODULE_DEVICE_TABLE(of, as6200_of_match);
 
 static const struct i2c_device_id as6200_i2c_id[] = {
-	{ "as6200", 0 },
+	{ "as62xx", 0 },
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, as6200_i2c_id);
@@ -474,7 +487,7 @@ static const struct dev_pm_ops as6200_pm_ops = {
 
 static struct i2c_driver as6200_i2c_driver = {
 	.driver = {
-		.name = "as6200",
+		.name = "as62xx",
 		.owner = THIS_MODULE,
 		.of_match_table = as6200_of_match,
 		.pm = &as6200_pm_ops,
@@ -486,7 +499,8 @@ static struct i2c_driver as6200_i2c_driver = {
 
 module_i2c_driver(as6200_i2c_driver);
 
-MODULE_DESCRIPTION("ams AS6200 temperature sensor");
+MODULE_DESCRIPTION("ams AS62XX temperature sensor");
+MODULE_AUTHOR("Vijeshkumar Valiyavennayat <vijeshkumar.valiyavennayat@ams.com>");
 MODULE_AUTHOR("Florian Lobmaier <florian.lobmaier@ams.com>");
 MODULE_AUTHOR("Elitsa Polizoeva <elitsa.polizoeva@ams.com>");
 MODULE_LICENSE("GPL");
