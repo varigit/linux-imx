@@ -883,6 +883,34 @@ struct macb_stats {
 	u32	tx_pause_frames;
 };
 
+#define MACB_STATS_LEN	(sizeof(struct macb_stats) / 4)
+
+static const struct {
+	char string[ETH_GSTRING_LEN];
+} ethtool_macb_stats_keys[MACB_STATS_LEN] = {
+	{ "rx_pause_packets" },
+	{ "tx_packets" },
+	{ "tx_single_collisions" },
+	{ "tx_mult_collisions" },
+	{ "rx_packets" },
+	{ "rx_crc_errors" },
+	{ "rx_align_errors" },
+	{ "tx_deferred" },
+	{ "tx_late_collisions" },
+	{ "tx_excessive_collisions" },
+	{ "tx_underruns" },
+	{ "tx_carrier_err" },
+	{ "rx_resources_err" },
+	{ "rx_overruns" },
+	{ "rx_symbol_errors" },
+	{ "rx_oversize_packets" },
+	{ "rx_jabbers" },
+	{ "rx_fragments" },
+	{ "sqe_test_err" },
+	{ "rx_len_errors" },
+	{ "tx_pause_packets" },
+};
+
 struct gem_stats {
 	u32	tx_octets_31_0;
 	u32	tx_octets_47_32;
@@ -1232,6 +1260,27 @@ struct macb {
 	u32	rx_intr_mask;
 
 	struct macb_pm_data pm_data;
+
+#ifdef HAVE_KSZ_SWITCH
+	struct platform_device	*sw_pdev;
+	struct macb		*hw_priv;
+	struct phy_device	dummy_phy;
+	struct ksz_port		port;
+	int			phy_addr;
+	u8			state;
+	u32			ready:1;
+	u32			multi:1;
+	u32			promisc:1;
+	u8			opened;
+	u8			hw_multi;
+	u8			hw_promisc;
+	void			*parent;
+	struct delayed_work	promisc_reset;
+	struct ksz_sw_sysfs	sysfs;
+#ifdef CONFIG_1588_PTP
+	struct ksz_ptp_sysfs	ptp_sysfs;
+#endif
+#endif
 };
 
 #ifdef CONFIG_MACB_USE_HWSTAMP
