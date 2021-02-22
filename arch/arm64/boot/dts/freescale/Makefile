@@ -108,33 +108,22 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-var-dart-dt8mcustomboard-wifi-dp.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds-dp.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds-hdmi.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-wifi-hdmi.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-wifi-lvds.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds-hdmi.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-sd-dp.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-sd-hdmi.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-sd-lvds.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-sd-lvds-dp.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-sd-lvds-hdmi.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-sd-hdmi.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-sd-lvds.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-sd-lvds-hdmi.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-dp.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-hdmi.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-lvds.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-lvds-dp.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-lvds-hdmi.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-m4-wifi-hdmi.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-m4-wifi-lvds.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-m4-wifi-lvds-hdmi.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-sd-dp.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-sd-hdmi.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds-dp.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds-hdmi.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-m4-sd-hdmi.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-m4-sd-lvds.dtb \
-			  imx8mq-var-dart-dt8mcustomboard12-m4-sd-lvds-hdmi.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek-dom0.dtb imx8qm-mek-domu.dtb \
 			  imx8qm-mek-root.dtb imx8qm-mek-inmate.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
