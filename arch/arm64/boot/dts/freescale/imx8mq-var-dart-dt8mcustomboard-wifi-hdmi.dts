@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
  * Copyright 2017 NXP
- * Copyright 2018-2020 Variscite Ltd.
+ * Copyright 2018-2021 Variscite Ltd.
  */
 
 #include "imx8mq-var-dart-dt8mcustomboard.dtsi"
@@ -9,5 +9,5 @@
 #include "imx8mq-var-dart-dt8mcustomboard-hdmi.dtsi"
 
 / {
-	model = "Variscite DART-MX8M on DT8MCustomBoard WIFI+HDMI";
+	model = "Variscite DART-MX8M on DT8MCustomBoard 2.x WIFI+HDMI";
 };

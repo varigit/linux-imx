@@ -4,10 +4,16 @@
  * Copyright 2018-2021 Variscite Ltd.
  */
 
-#include "imx8mq-var-dart-dt8mcustomboard.dtsi"
-#include "imx8mq-var-dart-dt8mcustomboard-sd.dtsi"
 #include "imx8mq-var-dart-dt8mcustomboard-hdmi.dtsi"
 
-/ {
-	model = "Variscite DART-MX8M on DT8MCustomBoard 2.x SD+HDMI";
+&gpio1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hdmi>;
+
+	hdmi_on_hog {
+		gpio-hog;
+		gpios = <5 0>;
+		output-low;
+		line-name = "hdmi_on";
+	};
 };

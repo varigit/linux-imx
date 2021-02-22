@@ -4,9 +4,9 @@
  * Copyright 2018-2021 Variscite Ltd.
  */
 
-#include "imx8mq-var-dart-dt8mcustomboard-sd-lvds.dts"
+#include "imx8mq-var-dart-dt8mcustomboard-legacy-wifi-dp.dts"
 #include "imx8mq-var-dart-dt8mcustomboard-m4.dtsi"
 
 / {
-	model = "Variscite DART-MX8M on DT8MCustomBoard 2.x M4+SD+LVDS";
+	model = "Variscite DART-MX8M on DT8MCustomBoard 1.x M4+WIFI+DP";
 };

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
  * Copyright 2017 NXP
- * Copyright 2018-2020 Variscite Ltd.
+ * Copyright 2018-2021 Variscite Ltd.
  */
 
 / {
@@ -17,18 +17,6 @@
 		dcss_out: endpoint {
 			  remote-endpoint = <&hdmi_in>;
 		};
-	};
-};
-
-&gpio1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_hdmi>;
-
-	hdmi_on_hog {
-		gpio-hog;
-		gpios = <5 0>;
-		output-low;
-		line-name = "hdmi_on";
 	};
 };
 

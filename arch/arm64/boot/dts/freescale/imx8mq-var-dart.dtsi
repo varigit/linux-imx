@@ -2,7 +2,7 @@
 /*
  * Copyright 2017 NXP
  * Copyright (C) 2017-2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
- * Copyright 2018-2020 Variscite Ltd.
+ * Copyright 2018-2021 Variscite Ltd.
  */
 
 /dts-v1/;
@@ -11,11 +11,7 @@
 #include "imx8mq.dtsi"
 
 / {
-	can0_osc: can0_osc {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <20000000>;
-	};
+	compatible = "variscite,imx8m-dart", "fsl,imx8mq";
 
 	reg_audio: audio_vdd {
 		compatible = "regulator-fixed";
@@ -174,8 +170,8 @@
 
 	pinctrl_i2c1_gpio: i2c1grp-gpio {
 		fsl,pins = <
-			MX8MQ_IOMUXC_I2C1_SCL_GPIO5_IO14        		0x7f
-			MX8MQ_IOMUXC_I2C1_SDA_GPIO5_IO15        		0x7f
+			MX8MQ_IOMUXC_I2C1_SCL_GPIO5_IO14        	0x7f
+			MX8MQ_IOMUXC_I2C1_SDA_GPIO5_IO15        	0x7f
 		>;
 	};
 
@@ -266,7 +262,7 @@
 
 	pinctrl_usdhc2_vsel: usdhc2grpvsel {
 		fsl,pins = <
-			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0xc1
+			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
 		>;
 	};
 
