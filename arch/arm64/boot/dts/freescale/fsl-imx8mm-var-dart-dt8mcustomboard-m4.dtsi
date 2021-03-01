@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2019-2021 Variscite Ltd.
+ */
+
+/ {
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		m4_reserved: m4@0x7e000000 {
+			no-map;
+		reg = <0 0x7e000000 0 0x1000000>;
+		};
+
+	};
+};
+
+/*
+ * ATTENTION: M4 may use IPs like below
+ * ECSPI1, GPIO4, GPT1, I2C4, WDOG1, PWM3, SDMA1/3, UART3
+ */
+
+&i2c4 {
+	status = "disabled";
+};
+
+&rpmsg{
+	/*
+	 * 64K for one rpmsg instance:
+	 * --0x40000000~0x4000ffff: pingpong
+	 */
+	vdev-nums = <1>;
+	reg = <0x0 0x40000000 0x0 0x10000>;
+	status = "disabled";
+};
+
+&ecspi1 {
+	status = "disabled";
+};
+
+&pwm3 {
+	status = "disabled";
+};
+
+&sdma1{
+	status = "disabled";
+};
+
+&uart3 {
+	status = "disabled";
+};
+
+&pwm3 {
+	status = "disabled";
+};

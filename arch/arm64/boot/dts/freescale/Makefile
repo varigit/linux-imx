@@ -181,8 +181,10 @@ dtb-$(CONFIG_ARCH_FSL_IMX8MM) += fsl-imx8mm-evk.dtb \
 				 fsl-imx8mm-evk-revb-rm67191.dtb \
 				 fsl-imx8mm-ddr4-evk-rm67191.dtb \
 				 fsl-imx8mm-ddr4-qca9377-evk.dtb \
-				 fsl-imx8mm-var-dart.dtb \
-				 fsl-imx8mm-var-dart-m4.dtb \
+				 fsl-imx8mm-var-dart-dt8mcustomboard.dtb \
+				 fsl-imx8mm-var-dart-dt8mcustomboard-legacy.dtb \
+				 fsl-imx8mm-var-dart-dt8mcustomboard-m4.dtb \
+				 fsl-imx8mm-var-dart-dt8mcustomboard-legacy-m4.dtb \
 				 fsl-imx8mm-var-som.dtb \
 				 fsl-imx8mm-var-som-legacy.dtb \
 				 fsl-imx8mm-evk-no-product.dtb \
