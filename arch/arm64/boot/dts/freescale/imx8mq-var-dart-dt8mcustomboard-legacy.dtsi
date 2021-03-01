@@ -77,6 +77,10 @@
 		pwn-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
 		rst-gpios = <&gpio5 28 GPIO_ACTIVE_HIGH>;
 	};
+
+	ft5x06_ts: ft5x06_ts@38 {
+		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>;
+	};
 };
 
 &i2c4 {
