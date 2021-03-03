@@ -4,11 +4,6 @@
  * Copyright 2018-2020 Variscite Ltd.
  */
 
-/* Bluetooth */
-&uart4 {
-	status = "okay";
-};
-
 /* Set WIFI SDIO voltage at 1.8V */
 &gpio1 {
 	wifi_vsel_hog {
@@ -17,6 +12,11 @@
 		output-high;
 		line-name = "wifi_vsel";
 	};
+};
+
+/* Bluetooth */
+&uart4 {
+	status = "okay";
 };
 
 /* WIFI */
@@ -36,9 +36,4 @@
 		reg = <1>;
 		compatible = "brcm,bcm4329-fmac";
 	};
-};
-
-&fec1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_fec1>;
 };
