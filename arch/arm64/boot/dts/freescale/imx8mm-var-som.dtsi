@@ -13,7 +13,8 @@
 	can0_osc: can0_osc {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
-		clock-frequency = <20000000>;
+		/* On SOM revions 1.2 and below the frequency should be 20000000 */
+		clock-frequency = <40000000>;
 		clock-output-names = "can_osc";
 	};
 
@@ -113,7 +114,10 @@
 		clocks = <&can0_osc>;
 		interrupt-parent = <&gpio1>;
 		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-		spi-max-frequency = <10000000>;
+		/* On SOM revions 1.2 and below RX-INT GPIO is not available */
+		microchip,rx-int-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
+		/* On SOM revions 1.2 and below the spi-max-frequency should be 10000000 */
+		spi-max-frequency = <20000000>;
 		status = "okay";
 	};
 
@@ -167,7 +171,9 @@
 
 	pinctrl_can: cangrp {
 		fsl,pins = <
-			MX8MM_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x16
+			MX8MM_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x16 	/* CAN INT */
+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x16	/* CAN RX-INT - SOM rev1.3+ only */
+			MX8MM_IOMUXC_GPIO1_IO15_GPIO1_IO15		0x16	/* CAN TX-INT - SOM rev1.3+ only */
 		>;
 	};
 
