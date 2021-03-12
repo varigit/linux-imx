@@ -2,9 +2,9 @@
 /*
  * Copyright 2021 Variscite Ltd.
  */
-
 #include "imx8mp-var-dart-dt8mcustomboard.dtsi"
+#include "imx8mp-var-dart-hdmi.dtsi"
 
 /{
-	model = "Variscite DART-MX8M-PLUS LVDS on DT8MCustomBoard 2.x";
+	model = "Variscite DART-MX8M-PLUS HDMI on DT8MCustomBoard 2.x";
 };
