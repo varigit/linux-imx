@@ -38,6 +38,8 @@
 	can0_osc: can0_osc {
 		clock-frequency = <20000000>;
 	};
+
+	/delete-node/ extcon_usb1;
 };
 
 &can0 {
