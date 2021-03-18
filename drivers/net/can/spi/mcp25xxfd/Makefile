@@ -16,3 +16,5 @@ mcp25xxfd-objs			+= mcp25xxfd_debugfs.o
 mcp25xxfd-objs			+= mcp25xxfd_ecc.o
 mcp25xxfd-objs			+= mcp25xxfd_gpio.o
 mcp25xxfd-objs			+= mcp25xxfd_int.o
+mcp25xxfd-objs += mcp25xxfd-crc16.o
+mcp25xxfd-objs += mcp25xxfd-regmap.o
