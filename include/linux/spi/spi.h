@@ -714,6 +714,9 @@ extern void spi_res_release(struct spi_controller *ctlr,
  * @delay_usecs: microseconds to delay after this transfer before
  *	(optionally) changing the chipselect status, then starting
  *	the next transfer or completing this @spi_message.
+ * @effective_speed_hz: the effective SCK-speed that was used to
+ *      transfer this transfer. Set to 0 if the spi bus driver does
+ *      not support it.
  * @transfer_list: transfers are sequenced through @spi_message.transfers
  * @tx_sg: Scatterlist for transmit, currently not for client use
  * @rx_sg: Scatterlist for receive, currently not for client use
@@ -801,7 +804,7 @@ struct spi_transfer {
 #define SPI_DELAY_UNIT_NSECS	1
 #define SPI_DELAY_UNIT_SCK	2
 	u32		speed_hz;
-
+	u32		effective_speed_hz;
 	struct list_head transfer_list;
 };
 
