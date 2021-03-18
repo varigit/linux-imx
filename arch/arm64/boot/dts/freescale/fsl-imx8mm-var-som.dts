@@ -1137,13 +1137,13 @@
 	};
 
 	can0: can@1 {
-		compatible = "microchip,mcp2517fd";
+		compatible = "microchip,mcp251xfd";
 		reg = <1>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_can>;
 		clocks = <&can0_osc>;
 		interrupt-parent = <&gpio1>;
-		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
 		/* On SOM revions 1.2 and below RX-INT GPIO is not available */
 		microchip,rx-int-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
 		/* On SOM revions 1.2 and below the spi-max-frequency should be 10000000 */

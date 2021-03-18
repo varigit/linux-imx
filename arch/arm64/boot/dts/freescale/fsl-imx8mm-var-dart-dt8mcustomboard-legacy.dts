@@ -47,6 +47,7 @@
 		
         can0_osc: can0_osc {
                 clock-frequency = <20000000>;
+		/delete-property/ microchip,rx-int-gpios;
         };
 };
 

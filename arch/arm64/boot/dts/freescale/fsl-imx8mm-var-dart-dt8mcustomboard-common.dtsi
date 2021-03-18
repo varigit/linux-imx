@@ -142,13 +142,14 @@
 	};
 
 	can0: can@1 {
-		compatible = "microchip,mcp2517fd";
+		compatible = "microchip,mcp251xfd";
 		reg = <1>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_can>;
 		clocks = <&can0_osc>;
 		interrupt-parent = <&gpio1>;
 		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
+		microchip,rx-int-gpios = <&gpio5 4 GPIO_ACTIVE_LOW>;
 		spi-max-frequency = <20000000>;
 		status = "okay";
 	};
