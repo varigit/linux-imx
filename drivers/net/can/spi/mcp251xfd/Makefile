@@ -16,6 +16,10 @@ mcp25xxfd-objs			+= mcp25xxfd_debugfs.o
 mcp25xxfd-objs			+= mcp25xxfd_ecc.o
 mcp25xxfd-objs			+= mcp25xxfd_gpio.o
 mcp25xxfd-objs			+= mcp25xxfd_int.o
-mcp25xxfd-objs += mcp251xfd-core.o
-mcp25xxfd-objs += mcp251xfd-crc16.o
-mcp25xxfd-objs += mcp251xfd-regmap.o
+
+obj-$(CONFIG_CAN_MCP251XFD) += mcp251xfd.o
+
+mcp251xfd-objs :=
+mcp251xfd-objs += mcp251xfd-core.o
+mcp251xfd-objs += mcp251xfd-crc16.o
+mcp251xfd-objs += mcp251xfd-regmap.o
