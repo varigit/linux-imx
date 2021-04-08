@@ -1,0 +1,121 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2019-2021 Variscite Ltd.
+ */
+
+#include "imx8mm-var-dart-dt8mcustomboard.dts"
+
+/ {
+	model = "Variscite DART-MX8M-MINI on DT8MCustomBoard 1.x";
+
+	gpio-keys {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_keys>;
+
+		up {
+			gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
+		};
+
+		down {
+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+		};
+
+		home {
+			gpios = <&gpio4 13 GPIO_ACTIVE_LOW>;
+		};
+
+		back {
+			gpios = <&gpio4 6 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	leds {
+		emmc {
+			gpios = <&gpio4 17 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	can0_osc: can0_osc {
+		clock-frequency = <20000000>;
+	};
+
+	/delete-node/ extcon_usb1;
+};
+
+&can0 {
+	spi-max-frequency = <10000000>;
+	/delete-property/ microchip,rx-int-gpios;
+};
+
+&ft5x06_ts {
+	reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>;
+};
+
+&ov5640_mipi1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_csi1>;
+	pwn-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
+	rst-gpios = <&gpio5 28 GPIO_ACTIVE_HIGH>;
+};
+
+&pcie0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pcie0>;
+	reset-gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
+};
+
+&i2c4 {
+	/delete-node/ pca6408_1;
+	/delete-node/ pca6408_2;
+};
+
+&usbotg1 {
+	/delete-property/ extcon;
+};
+
+&iomuxc {
+	pinctrl_can: cangrp {
+		fsl,pins = <
+			MX8MM_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x16
+		>;
+	};
+
+	pinctrl_captouch: captouchgrp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_RXD3_GPIO4_IO5		0x16
+			MX8MM_IOMUXC_GPIO1_IO14_GPIO1_IO14		0x16
+		>;
+	};
+
+	pinctrl_gpio_keys: keygrp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_TXD3_GPIO4_IO15		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD6_GPIO4_IO18		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD1_GPIO4_IO13		0x1c6
+			MX8MM_IOMUXC_SAI1_RXD4_GPIO4_IO6		0x1c6
+		>;
+	};
+
+	pinctrl_leds: ledgrp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_RXD1_GPIO4_IO3		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD2_GPIO4_IO14		0x1c6
+			MX8MM_IOMUXC_SAI1_RXD2_GPIO4_IO4		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD5_GPIO4_IO17		0x1c6
+		>;
+	};
+
+	pinctrl_pcie0: pcie0grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_RXD5_GPIO4_IO7		0x41
+		>;
+	};
+
+	pinctrl_csi1: csi1grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_RXD6_GPIO4_IO8		0x19
+			MX8MM_IOMUXC_UART4_RXD_GPIO5_IO28		0x19
+		>;
+	};
+};
