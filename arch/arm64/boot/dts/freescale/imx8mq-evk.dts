@@ -622,6 +622,7 @@
 		 <&pcie0_refclk>;
 	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
 	hard-wired = <1>;
+	vph-supply = <&vgen5_reg>;
 	status = "okay";
 };
 
@@ -636,6 +637,7 @@
 		 <&pcie1_refclk>;
 	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
 	reserved-region = <&rpmsg_reserved>;
+	vph-supply = <&vgen5_reg>;
 	status = "okay";
 };
 
