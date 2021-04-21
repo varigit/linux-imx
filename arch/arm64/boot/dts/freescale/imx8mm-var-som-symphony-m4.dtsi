@@ -71,7 +71,7 @@
 	status = "disabled";
 };
 
-&sdma1{
+&sdma3{
 	status = "disabled";
 };
 
