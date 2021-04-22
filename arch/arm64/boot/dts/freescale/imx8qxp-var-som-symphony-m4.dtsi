@@ -85,3 +85,7 @@
 &i2c3 {
 	status = "disabled";
 };
+
+&parallel_csi {
+	status = "disabled";
+};
