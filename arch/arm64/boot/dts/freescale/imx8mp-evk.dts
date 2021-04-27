@@ -681,13 +681,15 @@
 	ext_osc = <1>;
 	clocks = <&clk IMX8MP_CLK_HSIO_AXI_DIV>,
 		 <&clk IMX8MP_CLK_PCIE_AUX>,
-		 <&clk IMX8MP_CLK_PCIE_PHY>,
+		 <&clk IMX8MP_CLK_DUMMY>,
 		 <&clk IMX8MP_CLK_PCIE_ROOT>;
 	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
 	assigned-clocks = <&clk IMX8MP_CLK_HSIO_AXI_SRC>,
 			  <&clk IMX8MP_CLK_PCIE_AUX>;
+	assigned-clock-rates = <500000000>, <10000000>;
 	assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_500M>,
 				 <&clk IMX8MP_SYS_PLL2_50M>;
+	l1ss-disabled;
 	status = "okay";
 };
 
@@ -697,11 +699,12 @@
 	ext_osc = <1>;
 	clocks = <&clk IMX8MP_CLK_HSIO_AXI_DIV>,
 		 <&clk IMX8MP_CLK_PCIE_AUX>,
-		 <&clk IMX8MP_CLK_PCIE_PHY>,
+		 <&clk IMX8MP_CLK_DUMMY>,
 		 <&clk IMX8MP_CLK_PCIE_ROOT>;
 	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
 	assigned-clocks = <&clk IMX8MP_CLK_HSIO_AXI_SRC>,
 			  <&clk IMX8MP_CLK_PCIE_AUX>;
+	assigned-clock-rates = <500000000>, <10000000>;
 	assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_500M>,
 				 <&clk IMX8MP_SYS_PLL2_50M>;
 	status = "disabled";
