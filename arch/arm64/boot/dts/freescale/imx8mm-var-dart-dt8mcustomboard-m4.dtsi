@@ -56,6 +56,14 @@
 	status = "disabled";
 };
 
+/* For dt8mcustomboard 2.0, reset-gpios is connected to pca6408_2 on i2c4,
+which is disabled above for the m4 example */
+#ifndef DT8MCUSTOMBOARD_LEGACY
+&ft5x06_ts {
+	/delete-property/reset-gpios;
+};
+#endif
+
 &pwm3 {
 	status = "disabled";
 };
