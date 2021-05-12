@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2021 Variscite Ltd.
+ */
+#include "imx8mp-var-som-symphony.dtsi"
+#include "imx8mp-var-som-symphony-hdmi.dtsi"
+
+/{
+	model = "Variscite VAR-SOM-MX8M-PLUS HDMI on Symphony-Board";
+};
