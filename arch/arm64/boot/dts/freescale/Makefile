@@ -87,7 +87,9 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb imx8mp-evk-rm67191.dtb imx8mp-evk-it626
 			  imx8mp-evk-dsp-lpa.dtb imx8mp-evk-sof-wm8960.dtb \
 			  imx8mp-evk-iqaudio-dacplus.dtb imx8mp-evk-iqaudio-dacpro.dtb imx8mp-evk-hifiberry-dacplus.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-dt8mcustomboard-legacy.dtb \
-			  imx8mp-var-som-symphony.dtb imx8mp-var-som-symphony-2nd-ov5640.dtb
+			  imx8mp-var-som-symphony.dtb imx8mp-var-som-symphony-2nd-ov5640.dtb \
+			  imx8mp-var-dart-dt8mcustomboard-m7.dtb imx8mp-var-dart-dt8mcustomboard-legacy-m7.dtb \
+			  imx8mp-var-som-symphony-m7.dtb imx8mp-var-som-symphony-2nd-ov5640-m7.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb imx8mq-evk-rpmsg.dtb imx8mp-ab2.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-ddr4-evk.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb imx8mq-evk-rpmsg.dtb imx8mq-evk-pcie1-m2.dtb imx8mq-evk-usd-wifi.dtb \
