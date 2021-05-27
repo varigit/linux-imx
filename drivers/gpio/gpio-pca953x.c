@@ -1270,7 +1270,9 @@ static SIMPLE_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x_resume);
 static struct i2c_driver pca953x_driver = {
 	.driver = {
 		.name	= "pca953x",
+#if 0
 		.pm	= &pca953x_pm_ops,
+#endif
 		.of_match_table = pca953x_dt_ids,
 		.acpi_match_table = pca953x_acpi_ids,
 	},
