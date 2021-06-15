@@ -9,6 +9,40 @@ Required properties:
   - clocks: reference to
     <Documentation/devicetree/bindings/clock/clock-bindings.txt>
 
+Optional properties:
+
+  - gpio-cfg: Default registers value for R121/122/123/124 (GPIO Control).
+    The list must be 4 entries long. If absent, the registers are set to 0.
+    If any entry has the value 0xffff, the related register won't be set.
+
+  - mic-cfg: Default registers value for R6/R7 (Mic Bias Control).
+    The list must be 2 entries long. If absent, the registers are set to 0.
+
+  - num-drc-cfgs: Number of available DRC modes from drc-cfg-regs property
+
+  - drc-cfg-regs: Default registers value for R40/41/42/43 (DRC)
+    The list must be (4 x num-drc-cfgs) entries long.
+    If absent or incomplete, DRC is disabled.
+
+  - drc-cfg-names: List of strings for the available DRC modes.
+    The list must be (num-drc-cfgs) entries long.
+    If absent or incomplete, DRC is disabled.
+
+  - num-retune-mobile-cfgs: Number of retune modes available from
+    retune-mobile-cfg-regs property
+
+  - retune-mobile-cfg-regs: Default registers value for R134/.../157 (EQ)
+    The list must be (24 x num-retune-mobile-cfgs) entries long.
+    If absent or incomplete, retune is disabled.
+
+  - retune-mobile-cfg-names: List of strings for the available retune modes.
+    The list must be (num-retune-mobile-cfgs) entries long.
+    If absent or incomplete, retune is disabled.
+
+  - retune-mobile-cfg-rates: List of rates for the available retune modes.
+    The list must be (num-retune-mobile-cfgs) entries long.
+    If absent or incomplete, retune is disabled.
+
 Pins on the device (for linking into audio routes):
 
   * IN1L
@@ -30,4 +64,23 @@ codec: wm8904@1a {
 	reg = <0x1a>;
 	clocks = <&pck0>;
 	clock-names = "mclk";
+	num-drc-cfgs = <5>;
+	drc-cfg-names = "default", "peaklimiter", "tradition", "soft", "music";
+	drc-cfg-regs =
+			/* coded default: KNEE_IP = KNEE_OP = 0, HI_COMP = LO_COMP = 1  */
+			<0x01af 0x3248 0x0000 0x0000>,
+			/* coded default: KNEE_IP = -24, KNEE_OP = -6, HI_COMP = 1/4, LO_COMP = 1 */
+			<0x04af 0x324b 0x0010 0x0408>,
+			/* coded default: KNEE_IP = -42, KNEE_OP = -3, HI_COMP = 0, LO_COMP = 1 */
+			<0x04af 0x324b 0x0028 0x0704>,
+			/* coded default: KNEE_IP = -45, KNEE_OP = -9, HI_COMP = 1/8, LO_COMP = 1 */
+			<0x04af 0x324b 0x0018 0x078c>,
+			/* coded default: KNEE_IP = -30, KNEE_OP = -10.5, HI_COMP = 1/4, LO_COMP = 1 */
+			<0x04af 0x324b 0x0010 0x050e>;
+	gpio-cfg = <
+		0x0018 /* GPIO1 => DMIC_CLK */
+		0xffff /* GPIO2 => don't touch */
+		0xffff /* GPIO3 => don't touch */
+		0xffff /* GPIO4 => don't touch */
+	>;
 };
