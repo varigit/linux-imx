@@ -619,6 +619,19 @@
 		AVDD-supply = <&ldo5_reg>;
 		CPVDD-supply = <&ldo5_reg>;
 		MICVDD-supply = <&ldo5_reg>;
+		num-drc-cfgs = <5>;
+		drc-cfg-names = "default", "peaklimiter", "tradition", "soft", "music";
+		drc-cfg-regs =
+				/* coded default: KNEE_IP = KNEE_OP = 0, HI_COMP = LO_COMP = 1  */
+				<0x01af 0x3248 0x0000 0x0000>,
+				/* coded default: KNEE_IP = -24, KNEE_OP = -6, HI_COMP = 1/4, LO_COMP = 1 */
+				<0x04af 0x324b 0x0010 0x0408>,
+				/* coded default: KNEE_IP = -42, KNEE_OP = -3, HI_COMP = 0, LO_COMP = 1 */
+				<0x04af 0x324b 0x0028 0x0704>,
+				/* coded default: KNEE_IP = -45, KNEE_OP = -9, HI_COMP = 1/8, LO_COMP = 1 */
+				<0x04af 0x324b 0x0018 0x078c>,
+				/* coded default: KNEE_IP = -30, KNEE_OP = -10.5, HI_COMP = 1/4, LO_COMP = 1 */
+				<0x04af 0x324b 0x0010 0x050e>;
 		gpio-cfg = <
 			0x0018 /* GPIO1 => DMIC_CLK */
 			0xffff /* GPIO2 => don't touch */
