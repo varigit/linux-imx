@@ -329,6 +329,20 @@ static int mipi_csi2_s_stream(struct v4l2_subdev *sd, int enable)
 	return ret;
 }
 
+long yav_mipi_csis_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
+{
+      struct mxc_mipi_csi2_dev *csi2dev = sd_to_mxc_mipi_csi2_dev(sd);
+      struct v4l2_subdev *sen_sd;
+
+       /* Get remote source pad subdev */
+       sen_sd = csi2dev->sensor_sd;
+       if (!sen_sd) {
+		dev_err(&csi2dev->pdev->dev,"%s: No remote subdev found!\n",__func__);
+               return -EINVAL;
+       }
+       return v4l2_subdev_call(sen_sd, core, ioctl, cmd, arg);
+}
+
 static int mipi_csis_enum_framesizes(struct v4l2_subdev *sd,
 				     struct v4l2_subdev_pad_config *cfg,
 				     struct v4l2_subdev_frame_size_enum *fse)
@@ -423,6 +437,7 @@ static struct v4l2_subdev_pad_ops mipi_csi2_pad_ops = {
 
 static struct v4l2_subdev_core_ops mipi_csi2_core_ops = {
 	.s_power = mipi_csi2_s_power,
+	.ioctl = yav_mipi_csis_ioctl,
 };
 
 static struct v4l2_subdev_video_ops mipi_csi2_video_ops = {
