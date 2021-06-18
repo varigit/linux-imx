@@ -7,6 +7,8 @@
 #ifndef _IMX8QM_PADS_H
 #define _IMX8QM_PADS_H
 
+#include "imx8-sc-pad-api.h"
+
 /* pin id */
 #define IMX8QM_SIM0_CLK					0
 #define IMX8QM_SIM0_RST					1
