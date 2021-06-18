@@ -7,6 +7,8 @@
 #ifndef _IMX8QXP_PADS_H
 #define _IMX8QXP_PADS_H
 
+#include "imx8-sc-pad-api.h"
+
 /* pin id */
 #define IMX8QXP_PCIE_CTRL0_PERST_B                  0
 #define IMX8QXP_PCIE_CTRL0_CLKREQ_B                 1
