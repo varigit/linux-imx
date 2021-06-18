@@ -296,7 +296,6 @@
 		ti,debounce-rep = /bits/ 16 <1>;
 		ti,settle-delay-usec = /bits/ 16 <150>;
 		ti,keep-vref-on;
-		wakeup-source;
 		status = "okay";
 	};
 };
