@@ -217,7 +217,6 @@
 		interrupt-parent = <&lsio_gpio3>;
 		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
 		#gpio-cells = <2>;
-		wakeup-source;
 
 		usb3_sel_hog {
 			gpio-hog;
