@@ -199,6 +199,32 @@
 	status = "okay";
 };
 
+&lsio_gpio0 {
+	/* Enable wakeup-source from Capacitive touch */
+
+	pad-wakeup-num = <1>;	/* Total number of wakeup pads in gpio0 bank */
+
+	/*
+	 IMX8QXP_UART1_CTS_B:   Touch IRQ pin id
+	 SC_PAD_WAKEUP_LOW_LVL: trigger type
+	 24:                    Touch IRQ gpio pin
+	*/
+	pad-wakeup = <IMX8QXP_UART1_CTS_B SC_PAD_WAKEUP_LOW_LVL 24>;
+};
+
+&lsio_gpio3 {
+	/* Enable wakeup-source from all pca9534 gpio-keys*/
+
+	pad-wakeup-num = <1>;	/* Total number of wakeup pads in gpio1 bank */
+
+	/*
+	 IMX8QXP_MIPI_CSI0_MCLK_OUT: PCA9534 IRQ pin id
+	 SC_PAD_WAKEUP_LOW_LVL:      trigger type
+	 4:                          PCA9534 IRQ gpio pin
+	*/
+	pad-wakeup = <IMX8QXP_MIPI_CSI0_MCLK_OUT SC_PAD_WAKEUP_LOW_LVL 4>;
+};
+
 &i2c1 {
 	#address-cells = <1>;
 	#size-cells = <0>;
