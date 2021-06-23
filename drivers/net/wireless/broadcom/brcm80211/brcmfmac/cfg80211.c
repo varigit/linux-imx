@@ -31,6 +31,7 @@
 #include "vendor.h"
 #include "bus.h"
 #include "common.h"
+#include "brcm_hw_ids.h"
 
 #define BRCMF_SCAN_IE_LEN_MAX		2048
 
@@ -7503,6 +7504,33 @@ struct brcmf_cfg80211_info *brcmf_cfg80211_attach(struct brcmf_pub *drvr,
 	vif->wdev.netdev = ndev;
 	ndev->ieee80211_ptr = &vif->wdev;
 	SET_NETDEV_DEV(ndev, wiphy_dev(cfg->wiphy));
+
+	/* Laird - Configure regdomain if provided in settings
+	 * Required for 4373, optional for 4343/4339
+	 */
+	if (strlen(drvr->settings->regdomain) != 0) {
+		struct brcmf_fil_country_le ccreq;
+
+		memset(&ccreq, 0, sizeof(ccreq));
+		ccreq.rev = -1;
+		if (!strcmp("ETSI", drvr->settings->regdomain)) {
+			if (drvr->bus_if->chip == BRCM_CC_43430_CHIP_ID)
+				strcpy(ccreq.country_abbrev, "EU");
+			else
+				strcpy(ccreq.country_abbrev, "DE");
+		} else
+			memcpy(ccreq.country_abbrev, drvr->settings->regdomain, BRCMF_COUNTRY_BUF_SZ);
+
+		err = brcmf_fil_iovar_data_set(ifp, "country", &ccreq, sizeof(ccreq));
+		if (err) {
+			brcmf_err("Regulatory domain %s not supported, aborting!\n", drvr->settings->regdomain);
+			goto wiphy_out;
+		}
+		brcmf_info("Using regulatory domain %s\n", drvr->settings->regdomain);
+	} else if (drvr->bus_if->chip == CY_CC_4373_CHIP_ID) {
+		brcmf_err("Regulatory domain not configured, aborting!\n");
+		goto wiphy_out;
+	}
 
 	err = wl_init_priv(cfg);
 	if (err) {
