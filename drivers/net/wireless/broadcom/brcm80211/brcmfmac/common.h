@@ -10,6 +10,7 @@
 #include "fwil_types.h"
 
 #define BRCMF_FW_ALTPATH_LEN			256
+#define BRCMF_REGDOMAIN_LEN			10
 
 /* Definitions for the module global and device specific settings are defined
  * here. Two structs are used for them. brcmf_mp_global_t and brcmf_mp_device.
@@ -50,6 +51,7 @@ struct brcmf_mp_device {
 	bool		ignore_probe_fail;
 	struct brcmfmac_pd_cc *country_codes;
 	const char	*board_type;
+	char		regdomain[BRCMF_REGDOMAIN_LEN];
 	union {
 		struct brcmfmac_sdio_pd sdio;
 	} bus;
