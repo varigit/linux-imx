@@ -67,6 +67,7 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
 	int err;
 	u32 irqf;
 	u32 val;
+	const char * domain;
 
 	/* Set board-type to the first string of the machine compatible prop */
 	root = of_find_node_by_path("/");
@@ -99,6 +100,10 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
 
 	if (bus_type != BRCMF_BUSTYPE_SDIO)
 		return;
+
+	/* Laird - Get regdomain/country code string if it exists */
+	if (of_property_read_string(np, "laird,regdomain", &domain) == 0)
+		strlcpy(settings->regdomain, domain, BRCMF_REGDOMAIN_LEN);
 
 	if (of_property_read_u32(np, "brcm,drive-strength", &val) == 0)
 		sdio->drive_strength = val;
