@@ -76,6 +76,11 @@ static int brcmf_sdio_wq_highpri;
 module_param_named(sdio_wq_highpri, brcmf_sdio_wq_highpri, int, 0);
 MODULE_PARM_DESC(sdio_wq_highpri, "SDIO workqueue is set to high priority");
 
+static char brcmf_regdomain[BRCMF_REGDOMAIN_LEN];
+module_param_string(regdomain, brcmf_regdomain,
+		    BRCMF_REGDOMAIN_LEN, 0400);
+MODULE_PARM_DESC(regdomain, "Regulatory domain/country code");
+
 #ifdef DEBUG
 /* always succeed brcmf_bus_started() */
 static int brcmf_ignore_probe_fail;
@@ -436,6 +441,10 @@ struct brcmf_mp_device *brcmf_get_module_param(struct device *dev,
 #ifdef DEBUG
 	settings->ignore_probe_fail = !!brcmf_ignore_probe_fail;
 #endif
+
+	// Laird - Copy regulory domain module parameter, subject to
+	// override by DT
+	strlcpy(settings->regdomain, brcmf_regdomain, BRCMF_REGDOMAIN_LEN);
 
 	if (bus_type == BRCMF_BUSTYPE_SDIO)
 		settings->bus.sdio.txglomsz = brcmf_sdiod_txglomsz;
