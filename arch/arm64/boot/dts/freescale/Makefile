@@ -82,6 +82,10 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-ddr4-evk.dtb imx8mm-ddr4-evk-rm67191.dtb imx8mm
 dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb imx8mn-evk-rm67191.dtb imx8mn-evk-rpmsg.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-ab2.dtb imx8mm-ab2-m4.dtb imx8mm-ddr4-ab2.dtb imx8mm-ddr4-ab2-m4.dtb \
 			  imx8mm-ddr4-ab2-revb.dtb imx8mm-ddr4-ab2-m4-revb.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-dt8mcustomboard.dtb imx8mm-var-dart-dt8mcustomboard-legacy.dtb \
+                          imx8mm-var-dart-dt8mcustomboard-m4.dtb imx8mm-var-dart-dt8mcustomboard-legacy-m4.dtb \
+                          imx8mm-var-som-symphony.dtb imx8mm-var-som-symphony-legacy.dtb \
+                          imx8mm-var-som-symphony-m4.dtb imx8mm-var-som-symphony-legacy-m4.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb imx8mn-evk-rm67191.dtb imx8mn-evk-rpmsg.dtb imx8mn-evk-ak5558.dtb \
 			  imx8mn-evk-8mic-revE.dtb imx8mn-ddr3l-evk.dtb \
 			  imx8mn-evk-iqaudio-dacplus.dtb imx8mn-evk-iqaudio-dacpro.dtb imx8mn-evk-hifiberry-dacplus.dtb \
@@ -209,13 +213,11 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb imx8qxp-mek-ov5640.dtb \
 			  imx8qxp-17x17-val.dtb imx8dx-lpddr4-val.dtb imx8dx-17x17-val.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek-dom0.dtb imx8qxp-mek-root.dtb \
 			  imx8qxp-mek-inmate.dtb
-
 dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek-sof-cs42888.dtb imx8qm-mek-sof-wm8960.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8dxl-evk-root.dtb imx8dxl-evk-inmate.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb imx8ulp-evk-rk055hdmipi4m.dtb \
 			  imx8ulp-evk-lpspi-slave.dtb imx8ulp-evk-sof-btsco.dtb \
 			  imx8ulp-evk-i3c.dtb imx8ulp-evk-epdc.dtb \
 			  imx8ulp-evk-flexio-i2c.dtb imx8ulp-evk-nd.dtb
-
 dtb-$(CONFIG_ARCH_S32) += s32v234-evb.dtb \
 			  s32v234-sbc.dtb
