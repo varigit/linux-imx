@@ -13,6 +13,12 @@
  */
 
 / {
+	chosen {
+		bootargs-append = "androidboot.backlight.dev=backlight";
+	};
+};
+
+/ {
        backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&pwm_lvds0 0 100000 0>;
