@@ -1,0 +1,176 @@
+
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * Copyright 2017-2020 NXP
+ * Copyright 2019-2020 Variscite Ltd.
+ */
+
+/ {
+	/* Enable imx8qm_cm40 and disable rpmsg0 if loading m4 firmware for CM40 via remoteproc framework */
+	imx8qm_cm40: imx8qm_cm4@0 {
+		compatible = "fsl,imx8qm-cm4";
+		rsc-da = <0x90000000>;
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&lsio_mu5 0 1
+			  &lsio_mu5 1 1
+			  &lsio_mu5 3 1>;
+		mub-partition = <3>;
+		memory-region = <&vdev0vring0>, <&vdev0vring1>, <&vdevbuffer>,
+				<&vdev1vring0>, <&vdev1vring1>, <&m40_reserved>;
+		core-index = <0>;
+		core-id = <IMX_SC_R_M4_0_PID0>;
+		status = "okay";
+		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
+				<&pd IMX_SC_R_M4_0_MU_1A>;
+	};
+
+	/* Enable imx8qm_cm41 and disable rpmsg1 if loading m4 firmware for CM41 via remoteproc framework */
+	imx8qm_cm41: imx8x_cm4@1 {
+		compatible = "fsl,imx8qm-cm4";
+		rsc-da = <0x90100000>;
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&lsio_mu6 0 1
+			  &lsio_mu6 1 1
+			  &lsio_mu6 3 1>;
+		mub-partition = <4>;
+		memory-region = <&vdev2vring0>, <&vdev2vring1>, <&vdevbuffer>,
+				<&vdev3vring0>, <&vdev3vring1>, <&m41_reserved>;
+		core-index = <1>;
+		core-id = <IMX_SC_R_M4_1_PID0>;
+		status = "okay";
+		power-domains = <&pd IMX_SC_R_M4_1_PID0>,
+				<&pd IMX_SC_R_M4_1_MU_1A>;
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		/*
+		 * reserved-memory layout
+		 * 0x8800_0000 ~ 0x8FFF_FFFF is reserved for M4
+		 * Shouldn't be used at A core and Linux side.
+		 */
+		m40_reserved: m4@0x88000000 {
+			no-map;
+			reg = <0 0x88000000 0 0x800000>;
+		};
+
+		m41_reserved: m4@0x88800000 {
+			no-map;
+			reg = <0 0x88800000 0 0x7800000>;
+		};
+
+		rpmsg_reserved: rpmsg@0x90000000 {
+			no-map;
+			reg = <0 0x90200000 0 0x200000>;
+		};
+
+		vdev0vring0: vdev0vring0@90000000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90000000 0 0x8000>;
+			no-map;
+		};
+
+		vdev0vring1: vdev0vring1@90008000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90008000 0 0x8000>;
+			no-map;
+		};
+
+		vdev1vring0: vdev1vring0@90010000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90010000 0 0x8000>;
+			no-map;
+		};
+
+		vdev1vring1: vdev1vring1@90018000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90018000 0 0x8000>;
+			no-map;
+		};
+
+		vdevbuffer: vdevbuffer {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90400000 0 0x100000>;
+			no-map;
+		};
+
+		vdev2vring0: vdev0vring0@90100000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90100000 0 0x8000>;
+			no-map;
+		};
+
+		vdev2vring1: vdev0vring1@90108000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90108000 0 0x8000>;
+			no-map;
+		};
+
+		vdev3vring0: vdev1vring0@90110000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90110000 0 0x8000>;
+			no-map;
+		};
+
+		vdev3vring1: vdev1vring1@90118000 {
+                        compatible = "shared-dma-pool";
+			reg = <0 0x90118000 0 0x8000>;
+			no-map;
+		};
+	};
+};
+
+/* Enable rpmsg0 and disable imx8qm_cm40 if loading m4 firmware for CM40 via u-boot */
+&rpmsg0{
+	/*
+	 * 64K for one rpmsg instance:
+	 */
+	vdev-nums = <2>;
+	reg = <0x0 0x90000000 0x0 0x20000>;
+	memory-region = <&vdevbuffer>;
+	status = "disabled";
+};
+
+/* Enable rpmsg1 and disable imx8qm_cm41 if loading m4 firmware for CM41 via u-boot */
+&rpmsg1{
+	/*
+	 * 64K for one rpmsg instance:
+	 */
+	vdev-nums = <2>;
+	reg = <0x0 0x90100000 0x0 0x20000>;
+	memory-region = <&vdevbuffer>;
+	status = "disabled";
+};
+
+&cm40_intmux {
+	status = "disabled";
+};
+
+&cm41_intmux {
+	status = "disabled";
+};
+
+&lpuart2 {
+	status = "disabled";
+};
+
+&lpuart4 {
+	status = "disabled";
+};
+
+&lpspi0 {
+	status = "disabled";
+};
+
+/* disabling i2c0 the codec wm8904 will be disabled on SOM */
+/* disabling i2c0 the capacitive touch will be disabled on SPEAR */
+&i2c0 {
+	status = "disabled";
+};
+
+&flexcan1 {
+	status = "disabled";
+};
