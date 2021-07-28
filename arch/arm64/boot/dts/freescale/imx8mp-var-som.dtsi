@@ -124,9 +124,10 @@
 	pmic: pca9450@25 {
 		reg = <0x25>;
 		compatible = "nxp,pca9450c";
+		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_pmic>;
-		interrupt-parent = <&gpio1>;
-		interrupts = <3 GPIO_ACTIVE_LOW>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <4 GPIO_ACTIVE_LOW>;
 		status = "okay";
 
 		regulators {
