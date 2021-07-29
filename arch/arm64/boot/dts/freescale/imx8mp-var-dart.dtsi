@@ -104,6 +104,7 @@
 	pmic: pca9450@25 {
 		reg = <0x25>;
 		compatible = "nxp,pca9450";
+		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_pmic>;
 		gpio_intr = <&gpio1 3 IRQ_TYPE_LEVEL_LOW>;
 		status = "okay";
