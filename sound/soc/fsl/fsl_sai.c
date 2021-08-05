@@ -1512,6 +1512,9 @@ static int fsl_sai_probe(struct platform_device *pdev)
 	return ret;
 
 err_pm_disable:
+	if (sai->verid.feature & FSL_SAI_VERID_TSTMP_EN)
+		sysfs_remove_group(&pdev->dev.kobj,  fsl_sai_get_dev_attribute_group(sai->monitor_spdif));
+
 	pm_runtime_disable(&pdev->dev);
 
 	return ret;
