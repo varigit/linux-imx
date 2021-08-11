@@ -281,8 +281,15 @@ static int fsl_aud2htx_probe(struct platform_device *pdev)
 	}
 
 	ret = imx_pcm_dma_init(pdev, IMX_DEFAULT_DMABUF_SIZE);
-	if (ret)
+	if (ret) {
 		dev_err(&pdev->dev, "failed to init imx pcm dma: %d\n", ret);
+		goto err_snd_soc_unregister;
+	}
+
+	return ret;
+
+err_snd_soc_unregister:
+	snd_soc_unregister_component(&pdev->dev);
 
 err_pm_disable:
 	pm_runtime_disable(&pdev->dev);
@@ -292,6 +299,7 @@ err_pm_disable:
 
 static int fsl_aud2htx_remove(struct platform_device *pdev)
 {
+	snd_soc_unregister_component(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
 
 	return 0;
