@@ -39,6 +39,12 @@ Optional properties:
   This property allows user to change the tuning step to more than one delay
   cells which is useful for some special boards or cards when the default
   tuning step can't find the proper delay window within limited tuning retries.
+- fsl,sdio-async-interrupt-enabled: Boolean, recommend for SDIO cards that enables
+  SDIO async interrupt for SDR104 and SDR50 operating modes. SDIO async interrupt
+  uses DAT[1] to signal the card's interrupt. uSDHC tuning mechanism must use DAT[0]
+  and CMD signals to avoid a possible conflict and incorrect delay line calculated
+  by the uSDHC auto tuning mechanism. Enabling this device tree property is only
+  recommended for layouts that are matching the SD interface length.
 - fsl,strobe-dll-delay-target: Specify the strobe dll control slave delay target.
   This delay target programming host controller loopback read clock, and this
   property allows user to change the delay target for the strobe input read clock.
