@@ -303,6 +303,9 @@
 	picophy,pre-emp-curr-control = <3>;
 	picophy,dc-vol-level-adjust = <7>;
 	extcon = <0>,<&extcon_usb1>;
+	hnp-disable;
+	srp-disable;
+	adp-disable;
 	status = "okay";
 };
 
