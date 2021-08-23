@@ -789,6 +789,7 @@
 	pinctrl-0 = <&pinctrl_pcie0>;
 	reset-gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
 	ext_osc = <1>;
+	vph-supply = <&vgen5_reg>;
 	status = "okay";
 };
 
@@ -797,6 +798,7 @@
 	pinctrl-0 = <&pinctrl_pcie1>;
 	reset-gpio = <&gpio4 19 GPIO_ACTIVE_LOW>;
 	ext_osc = <1>;
+	vph-supply = <&vgen5_reg>;
 	status = "disabled";
 };
 
