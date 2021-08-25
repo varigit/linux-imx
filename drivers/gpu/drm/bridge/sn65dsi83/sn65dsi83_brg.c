@@ -323,7 +323,11 @@ static int sn65dsi83_brg_configure(struct sn65dsi83_brg *brg)
 
     /* Voltage and pins */
     SN65DSI83_WRITE(SN65DSI83_LVDS_SIGN,0x00);
-    SN65DSI83_WRITE(SN65DSI83_LVDS_TERM,0x03);
+
+    /* Allow swapping from channel a to channel b */
+    regval = 0x03;
+    regval |= ((brg->even_odd_swap ? 1 : 0) << 6);
+    SN65DSI83_WRITE(SN65DSI83_LVDS_TERM,regval);
     SN65DSI83_WRITE(SN65DSI83_LVDS_CM_ADJ,0x00);
 
     /* Configure sync delay to minimal allowed value */
