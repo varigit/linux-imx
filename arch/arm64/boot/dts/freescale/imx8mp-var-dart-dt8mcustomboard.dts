@@ -11,6 +11,7 @@
 
 	chosen {
 		stdout-path = &uart1;
+		bootargs-append = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200 androidboot.console=ttymxc0 androidboot.primary_display=imx-drm";
 	};
 
 	gpio-keys {
@@ -442,6 +443,8 @@
 &uart1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart1>;
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 	status = "okay";
 };
 
