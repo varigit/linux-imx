@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2021 Variscite Ltd.
+ */
+#include "imx8mp-var-dart-dt8mcustomboard-legacy.dts"
+
+/{
+	model = "Variscite DART-MX8M-PLUS HDMI on DT8MCustomBoard 1.x";
+};
+
+&gpio1 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_hdmi>;
+
+        hdmi_on_hog {
+                gpio-hog;
+                gpios = <5 0>;
+                output-low;
+                line-name = "hdmi_on";
+        };
+};

@@ -1,0 +1,66 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2021 Variscite Ltd.
+ */
+#include "imx8mp-var-som-symphony.dts"
+/{
+	model = "Variscite VAR-SOM-MX8M-PLUS HDMI on Symphony-Board";
+};
+
+/{
+	sound_hdmi: sound_hdmi {
+		compatible = "fsl,imx-audio-cdnhdmi";
+		model = "audio-hdmi";
+		audio-cpu = <&aud2htx>;
+		hdmi-out;
+		constraint-rate = <44100>,
+				<88200>,
+				<176400>,
+				<32000>,
+				<48000>,
+				<96000>,
+				<192000>;
+		status = "okay";
+	};
+};
+
+&irqsteer_hdmi {
+	status = "okay";
+};
+
+&hdmi_blk_ctrl {
+	status = "okay";
+};
+
+&hdmi_pavi {
+	status = "okay";
+};
+
+&hdmi {
+	status = "okay";
+};
+
+&hdmiphy {
+	status = "okay";
+};
+
+
+
+/* HDMI */
+&lcdif3 {
+	status = "okay";
+	thres-low  = <1 2>;	/* (FIFO * 1 / 2) */
+	thres-high = <3 4>;	/* (FIFO * 3 / 4) */
+};
+
+&ldb {
+	status = "disabled";
+};
+
+&ldb_phy {
+	status = "disabled";
+};
+
+&aud2htx {
+        status = "okay";
+};
