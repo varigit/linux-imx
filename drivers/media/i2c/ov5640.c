@@ -3633,12 +3633,20 @@ static int ov5640_af_set_mode(struct ov5640 *sensor, int mode)
 
 	switch (mode) {
 	case V4L2_CID_AUTO_FOCUS_START:
+		/* release focus to infinity */
+		err = ov5640_write_reg(sensor, OV5640_AF_MODE,
+				OV5640_AF_MODE_RELEASE);
+
 		/* start single focus */
 		err = ov5640_write_reg(sensor, OV5640_AF_MODE,
 				OV5640_AF_MODE_SINGLE);
 		focus_range = V4L2_AUTO_FOCUS_RANGE_NORMAL;
 		break;
 	case V4L2_CID_FOCUS_AUTO:
+		/* release focus to infinity */
+		err = ov5640_write_reg(sensor, OV5640_AF_MODE,
+				OV5640_AF_MODE_RELEASE);
+
 		/* start continuous focus */
 		err = ov5640_write_reg(sensor, OV5640_AF_MODE,
 				OV5640_AF_MODE_CONT);
