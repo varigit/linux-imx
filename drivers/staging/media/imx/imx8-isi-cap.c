@@ -1284,6 +1284,39 @@ static int mxc_isi_cap_s_selection(struct file *file, void *fh,
 	return 0;
 }
 
+static int mxc_vidioc_g_ctrl(struct file *file, void *fh,
+                            struct v4l2_control *a)
+{
+	struct mxc_isi_cap_dev *isi_cap = video_drvdata(file);
+	struct v4l2_subdev *sd;
+
+	sd = mxc_get_remote_subdev(isi_cap, __func__);
+	if (!sd) {
+		v4l2_err(&isi_cap->sd, "Can't find subdev\n");
+		return -ENODEV;
+	}
+
+	return v4l2_subdev_call(sd, core, ioctl,
+               V4L2_SUBDEV_PRIV_IOCTL_GET_CTRL, (void *)a);
+}
+
+static int mxc_vidioc_s_ctrl(struct file *file, void *fh,
+                            struct v4l2_control *a)
+{
+	struct mxc_isi_cap_dev *isi_cap = video_drvdata(file);
+	struct v4l2_subdev *sd;
+
+	sd = mxc_get_remote_subdev(isi_cap, __func__);
+	if (!sd) {
+		v4l2_err(&isi_cap->sd, "Can't find subdev\n");
+		return -ENODEV;
+	}
+
+	return v4l2_subdev_call(sd, core, ioctl,
+               V4L2_SUBDEV_PRIV_IOCTL_SET_CTRL, (void *)a);
+}
+
+
 static int mxc_isi_cap_enum_framesizes(struct file *file, void *priv,
 				       struct v4l2_frmsizeenum *fsize)
 {
@@ -1394,6 +1427,9 @@ static const struct v4l2_ioctl_ops mxc_isi_capture_ioctl_ops = {
 
 	.vidioc_g_parm			= mxc_isi_cap_g_parm,
 	.vidioc_s_parm			= mxc_isi_cap_s_parm,
+
+	.vidioc_g_ctrl        		= mxc_vidioc_g_ctrl,
+	.vidioc_s_ctrl        		= mxc_vidioc_s_ctrl,
 
 	.vidioc_streamon		= mxc_isi_cap_streamon,
 	.vidioc_streamoff		= mxc_isi_cap_streamoff,

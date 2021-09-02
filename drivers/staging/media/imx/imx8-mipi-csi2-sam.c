@@ -1089,6 +1089,27 @@ static int mipi_csis_s_power(struct v4l2_subdev *mipi_sd, int on)
 	return v4l2_subdev_call(sen_sd, core, s_power, on);
 }
 
+long mipi_csis_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
+{
+       struct csi_state *state = mipi_sd_to_csi_state(sd);
+       struct media_pad *source_pad;
+       struct v4l2_subdev *sen_sd;
+       /* Get remote source pad */
+       source_pad = csis_get_remote_sensor_pad(state);
+       if (!source_pad) {
+               v4l2_err(&state->sd, "%s, No remote pad found!\n", __func__);
+               return -EINVAL;
+       }
+
+      /* Get remote source pad subdev */
+       sen_sd = media_entity_to_v4l2_subdev(source_pad->entity);
+       if (!sen_sd) {
+               v4l2_err(&state->sd, "%s, No remote subdev found!\n", __func__);
+               return -EINVAL;
+       }
+       return v4l2_subdev_call(sen_sd, core, ioctl, cmd, arg);
+}
+
 static int mipi_csis_s_stream(struct v4l2_subdev *mipi_sd, int enable)
 {
 	struct csi_state *state = mipi_sd_to_csi_state(mipi_sd);
@@ -1414,8 +1435,9 @@ static long csis_priv_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg_
 
 static struct v4l2_subdev_core_ops mipi_csis_core_ops = {
 	.s_power = mipi_csis_s_power,
+	.ioctl = mipi_csis_ioctl,
 	.log_status = mipi_csis_log_status,
-	.ioctl = csis_priv_ioctl,
+	//.ioctl = csis_priv_ioctl,
 };
 
 static struct v4l2_subdev_video_ops mipi_csis_video_ops = {

@@ -956,6 +956,17 @@ static int mipi_csi2_set_fmt(struct v4l2_subdev *sd,
 	return 0;
 }
 
+long mipi_csis_ioctl_new(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
+{
+	struct mxc_mipi_csi2_dev *csi2dev = sd_to_mxc_mipi_csi2_dev(sd);
+        struct v4l2_subdev *sen_sd;
+        sen_sd = mxc_get_remote_subdev(csi2dev, __func__);
+        if (!sen_sd)
+                return -EINVAL;
+
+        return v4l2_subdev_call(sen_sd, core, ioctl, cmd, arg);
+}
+
 static const struct v4l2_subdev_internal_ops mipi_csi2_sd_internal_ops = {
 	.open = mipi_csi2_open,
 };
@@ -969,6 +980,7 @@ static struct v4l2_subdev_pad_ops mipi_csi2_pad_ops = {
 
 static struct v4l2_subdev_core_ops mipi_csi2_core_ops = {
 	.s_power = mipi_csi2_s_power,
+	.ioctl = mipi_csis_ioctl_new,
 };
 
 static struct v4l2_subdev_video_ops mipi_csi2_video_ops = {
