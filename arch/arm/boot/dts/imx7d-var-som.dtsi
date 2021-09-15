@@ -317,7 +317,7 @@
 	clock-frequency = <240000000>;
 	status = "okay";
 	port {
-		mipi_sensor_ep: endpoint1 {
+		mipi_sensor_ep: endpoint@1 {
 			remote-endpoint = <&ov5640_mipi_ep>;
 			data-lanes = <2>;
 			csis-hs-settle = <13>;
@@ -325,7 +325,7 @@
 			csis-wclk;
 		};
 
-		csi_mipi_ep: endpoint2 {
+		csi_mipi_ep: endpoint@2 {
 			remote-endpoint = <&csi_ep>;
 		};
 	};
@@ -346,7 +346,7 @@
 	sda-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 
-	pmic: pfuze3000@08 {
+	pmic: pfuze3000@8 {
 		compatible = "fsl,pfuze3000";
 		reg = <0x08>;
 
@@ -460,7 +460,7 @@
 	};
 
 	/* DS1337 RTC module */
-	rtc@0x68 {
+	rtc@68 {
 		compatible = "dallas,ds1337";
 		reg = <0x68>;
 	};
@@ -1072,6 +1072,8 @@
 };
 
 &usdhc2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz","sleep";
 	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_wlan>;
 	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wlan>;
