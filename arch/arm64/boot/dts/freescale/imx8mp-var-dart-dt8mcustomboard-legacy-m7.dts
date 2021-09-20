@@ -13,7 +13,7 @@
 
 /*
  * ATTENTION: M7 may use IPs like below
- * ECSPI1, I2C3, UART3, PWM3, SDMA1
+ * ECSPI1, I2C3, UART3, PWM3, SDMA1, FLEXCAN1
  */
 
 &uart3 {
@@ -29,5 +29,9 @@
 };
 
 &sdma1 {
+	status = "disabled";
+};
+
+&flexcan1 {
 	status = "disabled";
 };
