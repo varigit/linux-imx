@@ -1686,6 +1686,9 @@ bool brcmf_p2p_send_action_frame(struct brcmf_cfg80211_info *cfg,
 	s32 extra_listen_time;
 	uint delta_ms;
 
+	if (p2p->bss_idx[P2PAPI_BSSCFG_DEVICE].vif == NULL)
+		return false;
+
 	action_frame = &af_params->action_frame;
 	action_frame_len = le16_to_cpu(action_frame->len);
 
