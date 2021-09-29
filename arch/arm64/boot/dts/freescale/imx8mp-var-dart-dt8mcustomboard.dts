@@ -129,20 +129,6 @@
 };
 
 &iomuxc {
-	pinctrl_flexcan1: flexcan1grp {
-		fsl,pins = <
-			MX8MP_IOMUXC_SAI2_RXC__CAN1_TX					0x154
-			MX8MP_IOMUXC_SAI2_TXC__CAN1_RX					0x154
-		>;
-	};
-
-	pinctrl_flexcan2: flexcan2grp {
-		fsl,pins = <
-			MX8MP_IOMUXC_SAI2_MCLK__CAN2_RX					0x154
-			MX8MP_IOMUXC_SAI2_TXD0__CAN2_TX					0x154
-		>;
-	};
-
 	pinctrl_captouch: captouchgrp {
 		fsl,pins = <
 			MX8MP_IOMUXC_GPIO1_IO14__GPIO1_IO14				0x16
