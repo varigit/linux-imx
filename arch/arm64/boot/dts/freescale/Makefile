@@ -97,7 +97,8 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-som-sym
 			  imx8mp-var-dart-dt8mcustomboard-legacy-m7.dtb \
 			  imx8mp-var-som-symphony-m7.dtb imx8mp-var-som-symphony-2nd-ov5640-m7.dtb \
 			  imx8mp-var-dart-dt8mcustomboard-hdmi.dtb \
-			  imx8mp-var-som-symphony-basler-isp0.dtb imx8mp-var-som-symphony-basler-isi0.dtb
+			  imx8mp-var-som-symphony-basler-isp0.dtb \
+			  imx8mp-var-dart-dt8mcustomboard-basler-isp0.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb imx8mq-evk-rpmsg.dtb imx8mq-evk-pcie1-m2.dtb imx8mq-evk-usd-wifi.dtb \
 			  imx8mq-evk-usdhc2-m2.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk-ak4497.dtb imx8mq-evk-audio-tdm.dtb imx8mq-evk-pdm.dtb
