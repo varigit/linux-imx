@@ -12,6 +12,12 @@ config IMX8_JPEG
 	select VIDEOBUF2_DMA_CONTIG
 	default m
 
+config MXC_CAMERA_BASLER
+	tristate "BASLER Camera driver support"
+	depends on I2C
+	default y
+	help
+	Enable support for video4linux camera sensor driver for BASLER
 endmenu
 endif #VIDEO_MX8_CAPTURE
 
