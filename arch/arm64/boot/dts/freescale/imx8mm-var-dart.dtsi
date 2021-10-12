@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
  * Copyright 2019 NXP
- * Copyright 2019-2020 Variscite Ltd.
+ * Copyright 2019-2021 Variscite Ltd.
  */
 
 /dts-v1/;
@@ -10,11 +10,7 @@
 #include "imx8mm.dtsi"
 
 / {
-	can0_osc: can0_osc {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <20000000>;
-	};
+	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
 
 	reg_audio: audio_vdd {
 		compatible = "regulator-fixed";

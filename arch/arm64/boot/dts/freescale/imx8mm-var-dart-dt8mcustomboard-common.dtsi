@@ -1,18 +1,10 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
  * Copyright 2019 NXP
- * Copyright 2019-2020 Variscite Ltd.
+ * Copyright 2019-2021 Variscite Ltd.
  */
 
-/dts-v1/;
-
-#include <dt-bindings/usb/pd.h>
-#include "imx8mm-var-dart.dtsi"
-
 / {
-	model = "Variscite DART-MX8M-MINI";
-	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
-
 	chosen {
 		stdout-path = &uart1;
 	};
@@ -37,34 +29,28 @@
 
 	gpio-keys {
 		compatible = "gpio-keys";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_gpio_keys>;
 		status = "okay";
 
 		up {
 			label = "Up";
-			gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_UP>;
 			wakeup-source;
 		};
 
 		down {
 			label = "Down";
-			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_DOWN>;
 			wakeup-source;
 		};
 
 		home {
 			label = "Home";
-			gpios = <&gpio4 13 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_HOME>;
 			wakeup-source;
 		};
 
 		back {
 			label = "Back";
-			gpios = <&gpio4 6 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_BACK>;
 			wakeup-source;
 		};
@@ -78,7 +64,6 @@
 
 		emmc {
 			label = "eMMC";
-			gpios = <&gpio4 17 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "mmc2";
 		};
 	};
@@ -99,6 +84,11 @@
 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
 		off-on-delay = <20000>;
 		enable-active-high;
+	};
+
+	can0_osc: can0_osc {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
 	};
 };
 
@@ -154,7 +144,6 @@
 		clocks = <&can0_osc>;
 		interrupt-parent = <&gpio1>;
 		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
-		spi-max-frequency = <10000000>;
 		status = "okay";
 	};
 
@@ -168,28 +157,6 @@
 };
 
 &iomuxc {
-	pinctrl-names = "default";
-
-	pinctrl_can: cangrp {
-		fsl,pins = <
-			MX8MM_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x16
-		>;
-	};
-
-	pinctrl_captouch: captouchgrp {
-		fsl,pins = <
-			MX8MM_IOMUXC_SAI1_RXD3_GPIO4_IO5		0x16
-			MX8MM_IOMUXC_GPIO1_IO14_GPIO1_IO14		0x16
-		>;
-	};
-
-	pinctrl_csi1: csi1grp {
-		fsl,pins = <
-			MX8MM_IOMUXC_SAI1_RXD6_GPIO4_IO8		0x19
-			MX8MM_IOMUXC_UART4_RXD_GPIO5_IO28		0x19
-		>;
-	};
-
 	pinctrl_ecspi1: ecspi1grp {
 		fsl,pins = <
 			MX8MM_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK		0x13
@@ -198,15 +165,6 @@
 			MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x13
 			MX8MM_IOMUXC_GPIO1_IO12_GPIO1_IO12		0x13
 			MX8MM_IOMUXC_SAI2_RXC_GPIO4_IO22		0x13
-		>;
-	};
-
-	pinctrl_gpio_keys: keygrp {
-		fsl,pins = <
-			MX8MM_IOMUXC_SAI1_TXD3_GPIO4_IO15		0x1c6
-			MX8MM_IOMUXC_SAI1_TXD6_GPIO4_IO18		0x1c6
-			MX8MM_IOMUXC_SAI1_TXD1_GPIO4_IO13		0x1c6
-			MX8MM_IOMUXC_SAI1_RXD4_GPIO4_IO6		0x1c6
 		>;
 	};
 
@@ -235,21 +193,6 @@
 		fsl,pins = <
 			MX8MM_IOMUXC_I2C4_SCL_GPIO5_IO20		0x1c3
 			MX8MM_IOMUXC_I2C4_SDA_GPIO5_IO21		0x1c3
-		>;
-	};
-
-	pinctrl_leds: ledgrp {
-		fsl,pins = <
-			MX8MM_IOMUXC_SAI1_RXD1_GPIO4_IO3		0x1c6
-			MX8MM_IOMUXC_SAI1_TXD2_GPIO4_IO14		0x1c6
-			MX8MM_IOMUXC_SAI1_RXD2_GPIO4_IO4		0x1c6
-			MX8MM_IOMUXC_SAI1_TXD5_GPIO4_IO17		0x1c6
-		>;
-	};
-
-	pinctrl_pcie0: pcie0grp {
-		fsl,pins = <
-			MX8MM_IOMUXC_SAI1_RXD5_GPIO4_IO7		0x41
 		>;
 	};
 
@@ -343,7 +286,6 @@
 		status = "okay";
 		compatible = "edt,edt-ft5206";
 		reg = <0x38>;
-		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_captouch>;
 		interrupt-parent = <&gpio1>;
@@ -359,8 +301,6 @@
 		status = "okay";
 		compatible = "ovti,ov5640_mipi";
 		reg = <0x3c>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_csi1>;
 		clocks = <&clk IMX8MM_CLK_CLKO1>;
 		clock-names = "csi_mclk";
 /* Disabled CLKO2, since DART-MX8M-MINI camera expansion board uses
@@ -372,8 +312,6 @@
 		assigned-clock-rates = <24000000>;
 #endif
 		csi_id = <0>;
-		pwn-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
-		rst-gpios = <&gpio5 28 GPIO_ACTIVE_HIGH>;
 		mclk = <24000000>;
 		mclk_source = <0>;
 		port {
@@ -425,9 +363,6 @@
 };
 
 &pcie0 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_pcie0>;
-	reset-gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
 	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>,
 		 <&clk IMX8MM_CLK_PCIE1_AUX>,
 		 <&clk IMX8MM_CLK_PCIE1_PHY>,
