@@ -6,7 +6,7 @@
 
 /dts-v1/;
 
-#include "imx8mm-var-som.dts"
+#include "imx8mm-var-som-symphony.dts"
 
 / {
 	model = "Variscite VAR-SOM-MX8M-MINI Rev1.0";
@@ -22,15 +22,15 @@
 };
 
 &iomuxc {
-	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-		fsl,pins = <
-			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12	0xc1
-		>;
-	};
-
 	pinctrl_extcon: extcongrp {
 		fsl,pins = <
 			MX8MM_IOMUXC_GPIO1_IO10_GPIO1_IO10	0x16
+		>;
+	};
+
+	pinctrl_usdhc2_gpio: usdhc2grpgpio {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12	0xc1
 		>;
 	};
 };

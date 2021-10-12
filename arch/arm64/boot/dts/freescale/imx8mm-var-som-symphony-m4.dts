@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-#include "imx8mm-var-som.dts"
+#include "imx8mm-var-som-symphony.dts"
 
 / {
 	model = "Variscite VAR-SOM-MX8M-MINI M4";
@@ -41,7 +41,15 @@
  * ECSPI1, GPIO4, GPT1, I2C4, WDOG1, PWM3, SDMA1/3, UART3
  */
 
+&ecspi1 {
+	status = "disabled";
+};
+
 &i2c4 {
+	status = "disabled";
+};
+
+&pwm3 {
 	status = "disabled";
 };
 
@@ -54,14 +62,6 @@
 	reg = <0x0 0x40000000 0x0 0x10000>;
 	memory-region = <&rpmsg_dma_reserved>;
 	status = "okay";
-};
-
-&ecspi1 {
-	status = "disabled";
-};
-
-&pwm3 {
-	status = "disabled";
 };
 
 &sdma1{
