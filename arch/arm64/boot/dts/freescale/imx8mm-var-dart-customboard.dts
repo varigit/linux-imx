@@ -1,0 +1,396 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2019-2020 Variscite Ltd.
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/usb/pd.h>
+#include "imx8mm-var-dart.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M-MINI";
+	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
+
+	chosen {
+		stdout-path = &uart1;
+	};
+
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&pwm1 0 1000000 0>;
+		brightness-levels = < 0  1  2  3  4  5  6  7  8  9
+				     10 11 12 13 14 15 16 17 18 19
+				     20 21 22 23 24 25 26 27 28 29
+				     30 31 32 33 34 35 36 37 38 39
+				     40 41 42 43 44 45 46 47 48 49
+				     50 51 52 53 54 55 56 57 58 59
+				     60 61 62 63 64 65 66 67 68 69
+				     70 71 72 73 74 75 76 77 78 79
+				     80 81 82 83 84 85 86 87 88 89
+				     90 91 92 93 94 95 96 97 98 99
+				    100>;
+		default-brightness-level = <80>;
+		status = "okay";
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_keys>;
+		status = "okay";
+
+		up {
+			label = "Up";
+			gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_UP>;
+			wakeup-source;
+		};
+
+		down {
+			label = "Down";
+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_DOWN>;
+			wakeup-source;
+		};
+
+		home {
+			label = "Home";
+			gpios = <&gpio4 13 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_HOME>;
+			wakeup-source;
+		};
+
+		back {
+			label = "Back";
+			gpios = <&gpio4 6 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_BACK>;
+			wakeup-source;
+		};
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_leds>;
+		status = "okay";
+
+		emmc {
+			label = "eMMC";
+			gpios = <&gpio4 17 GPIO_ACTIVE_HIGH>;
+			linux,default-trigger = "mmc2";
+		};
+	};
+
+	reg_usdhc2_vmmc: regulator-usdhc2 {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
+		regulator-name = "VSD_3V3";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+		off-on-delay = <20000>;
+		enable-active-high;
+	};
+};
+
+&csi1_bridge {
+	fsl,mipi-mode;
+	status = "okay";
+	port {
+		csi1_ep: endpoint {
+			remote-endpoint = <&csi1_mipi_ep>;
+		};
+	};
+};
+
+&iomuxc {
+	pinctrl-names = "default";
+
+	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD2_RESET_B_GPIO2_IO19		0xc1
+		>;
+	};
+
+	pinctrl_captouch: captouchgrp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_RXD3_GPIO4_IO5		0x16
+			MX8MM_IOMUXC_GPIO1_IO14_GPIO1_IO14		0x16
+		>;
+	};
+
+	pinctrl_csi1: csi1grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_RXD6_GPIO4_IO8		0x19
+			MX8MM_IOMUXC_UART4_RXD_GPIO5_IO28		0x19
+		>;
+	};
+
+	pinctrl_uart1: uart1grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX		0x140
+			MX8MM_IOMUXC_UART1_TXD_UART1_DCE_TX		0x140
+		>;
+	};
+
+	pinctrl_uart2: uart2grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX		0x140
+			MX8MM_IOMUXC_UART2_TXD_UART2_DCE_TX		0x140
+		>;
+	};
+
+	pinctrl_uart3: uart3grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_UART3_RXD_UART3_DCE_RX		0x140
+			MX8MM_IOMUXC_UART3_TXD_UART3_DCE_TX		0x140
+		>;
+	};
+
+	pinctrl_usdhc2_gpio: usdhc2grpgpio {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0xc1
+		>;
+	};
+
+	pinctrl_gpio_keys: keygrp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_TXD3_GPIO4_IO15		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD6_GPIO4_IO18		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD1_GPIO4_IO13		0x1c6
+			MX8MM_IOMUXC_SAI1_RXD4_GPIO4_IO6		0x1c6
+		>;
+	};
+
+	pinctrl_leds: ledgrp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SAI1_RXD1_GPIO4_IO3		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD2_GPIO4_IO14		0x1c6
+			MX8MM_IOMUXC_SAI1_RXD2_GPIO4_IO4		0x1c6
+			MX8MM_IOMUXC_SAI1_TXD5_GPIO4_IO17		0x1c6
+		>;
+	};
+
+	pinctrl_i2c2: i2c2grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_I2C2_SCL_I2C2_SCL			0x400001c3
+			MX8MM_IOMUXC_I2C2_SDA_I2C2_SDA			0x400001c3
+		>;
+	};
+
+	pinctrl_i2c2_gpio: i2c2grp-gpio {
+		fsl,pins = <
+			MX8MM_IOMUXC_I2C2_SCL_GPIO5_IO16		0x1c3
+			MX8MM_IOMUXC_I2C2_SDA_GPIO5_IO17		0x1c3
+		>;
+	};
+
+	pinctrl_i2c4: i2c4grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x400001c3
+			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x400001c3
+		>;
+	};
+
+	pinctrl_i2c4_gpio: i2c4grp-gpio {
+		fsl,pins = <
+			MX8MM_IOMUXC_I2C4_SCL_GPIO5_IO20		0x1c3
+			MX8MM_IOMUXC_I2C4_SDA_GPIO5_IO21		0x1c3
+		>;
+	};
+
+	pinctrl_usdhc2: usdhc2grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x190
+			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d0
+			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d0
+			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d0
+			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d0
+			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d0
+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
+		>;
+	};
+
+	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x194
+			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d4
+			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d4
+			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d4
+			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d4
+			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d4
+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
+		>;
+	};
+
+	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x196
+			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d6
+			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d6
+			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d6
+			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d6
+			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d6
+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
+		>;
+	};
+};
+
+&i2c2 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_i2c2>;
+	pinctrl-1 = <&pinctrl_i2c2_gpio>;
+	scl-gpios = <&gpio5 16 GPIO_ACTIVE_HIGH>;
+	sda-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
+	status = "okay";
+
+	/* Capacitive touch controller */
+	ft5x06_ts: ft5x06_ts@38 {
+		status = "okay";
+		compatible = "edt,edt-ft5206";
+		reg = <0x38>;
+		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_captouch>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <14 IRQ_TYPE_EDGE_FALLING>;
+		touchscreen-size-x = <800>;
+		touchscreen-size-y = <480>;
+		touchscreen-inverted-x;
+		touchscreen-inverted-y;
+		wakeup-source;
+	};
+
+	ov5640_mipi1: ov5640_mipi1@3c {
+		status = "okay";
+		compatible = "ovti,ov5640_mipi";
+		reg = <0x3c>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_csi1>;
+		clocks = <&clk IMX8MM_CLK_CLKO1>;
+		clock-names = "csi_mclk";
+/* Disabled CLKO2, since DART-MX8M-MINI camera expansion board uses
+ * its own oscillator. Enable CLK02 if your design requires it
+ */
+#if 0
+		assigned-clocks = <&clk IMX8MM_CLK_CLKO1>;
+		assigned-clock-parents = <&clk IMX8MM_CLK_24M>;
+		assigned-clock-rates = <24000000>;
+#endif
+		csi_id = <0>;
+		pwn-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
+		rst-gpios = <&gpio5 28 GPIO_ACTIVE_HIGH>;
+		mclk = <24000000>;
+		mclk_source = <0>;
+		port {
+			ov5640_mipi1_ep: endpoint {
+				remote-endpoint = <&mipi1_sensor_ep>;
+			};
+		};
+	};
+
+	/* DS1337 RTC module */
+	rtc@68 {
+		status = "okay";
+		compatible = "dallas,ds1337";
+		reg = <0x68>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_rtc>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
+	};
+};
+
+&i2c4 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_i2c4>;
+	pinctrl-1 = <&pinctrl_i2c4_gpio>;
+	scl-gpios = <&gpio5 20 GPIO_ACTIVE_HIGH>;
+	sda-gpios = <&gpio5 21 GPIO_ACTIVE_HIGH>;
+	status = "okay";
+};
+
+&mipi_csi_1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	port {
+		mipi1_sensor_ep: endpoint@1 {
+			remote-endpoint = <&ov5640_mipi1_ep>;
+			data-lanes = <2>;
+			csis-hs-settle = <13>;
+			csis-clk-settle = <2>;
+			csis-wclk;
+		};
+
+		csi1_mipi_ep: endpoint@2 {
+			remote-endpoint = <&csi1_ep>;
+		};
+	};
+};
+
+&pwm1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm1>;
+};
+
+&snvs_pwrkey {
+	status = "okay";
+};
+
+&snvs_rtc {
+	status = "disabled";
+};
+
+/* Console */
+&uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart1>;
+	status = "okay";
+};
+
+/* Header */
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2>;
+	status = "okay";
+};
+
+/* Header */
+&uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart3>;
+	status = "okay";
+};
+
+&usbotg1 {
+	dr_mode = "otg";
+	picophy,pre-emp-curr-control = <3>;
+	picophy,dc-vol-level-adjust = <7>;
+	status = "okay";
+};
+
+&usbotg2 {
+	dr_mode = "host";
+	picophy,pre-emp-curr-control = <3>;
+	picophy,dc-vol-level-adjust = <7>;
+	status = "okay";
+};
+
+/* SD */
+&usdhc2 {
+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
+	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
+	bus-width = <4>;
+	vmmc-supply = <&reg_usdhc2_vmmc>;
+	status = "okay";
+};
