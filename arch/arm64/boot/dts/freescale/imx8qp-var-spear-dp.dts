@@ -12,9 +12,9 @@
  * GNU General Public License for more details.
  */
 
-#include "imx8qm-var-spear-common.dtsi"
-#include "imx8qm-var-spear-hdmi.dtsi"
+#include "imx8qp-var-spear-common.dtsi"
+#include "imx8qm-var-spear-dp.dtsi"
 
 / {
-	model = "Variscite SPEAR-MX8 i.MX8QM HDMI";
+	model = "Variscite SPEAR-MX8 i.MX8QP DP";
 };

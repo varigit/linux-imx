@@ -16,5 +16,5 @@
 #include "imx8qm-var-som-hdmi.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8 HDMI";
+	model = "Variscite VAR-SOM-MX8 i.MX8QM HDMI";
 };
