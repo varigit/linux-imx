@@ -1053,6 +1053,12 @@ static const int read_dt_cmdline = 1;
 static const int concat_cmdline;
 #endif
 
+#if defined(CONFIG_CMDLINE_EXTEND_BOOTLOADER)
+static const int append_cmdline = 1;
+#else
+static const int append_cmdline;
+#endif
+
 #ifdef CONFIG_CMDLINE
 static const char *config_cmdline = CONFIG_CMDLINE;
 #else
@@ -1095,6 +1101,21 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
 			cmdline[cmdline_len + copy_len] = '\0';
 		} else {
 			strlcpy(cmdline, p, min(l, COMMAND_LINE_SIZE));
+		}
+	}
+
+	/* Retrieve append command line */
+	if (append_cmdline) {
+		p = of_get_flat_dt_prop(node, "bootargs-append", &l);
+		if (p != NULL && l > 0) {
+			int cmdline_len;
+			int copy_len;
+			strlcat(cmdline, " ", COMMAND_LINE_SIZE);
+			cmdline_len = strlen(cmdline);
+			copy_len = COMMAND_LINE_SIZE - cmdline_len - 1;
+			copy_len = min((int)l, copy_len);
+			strncpy(cmdline + cmdline_len, p, copy_len);
+			cmdline[cmdline_len + copy_len] = '\0';
 		}
 	}
 
