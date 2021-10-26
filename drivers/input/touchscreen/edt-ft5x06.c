@@ -104,6 +104,7 @@ struct edt_ft5x06_ts_data {
 
 	struct gpio_desc *reset_gpio;
 	struct gpio_desc *wake_gpio;
+	bool wakeup;
 
 #if defined(CONFIG_DEBUG_FS)
 	struct dentry *debug_dir;
@@ -1160,6 +1161,9 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
 		msleep(300);
 	}
 
+	tsdata->wakeup = of_property_read_bool(client->dev.of_node, "wakeup-source") ||
+			of_property_read_bool(client->dev.of_node, "linux,wakeup");
+
 	input = devm_input_allocate_device(&client->dev);
 	if (!input) {
 		dev_err(&client->dev, "failed to allocate input device.\n");
@@ -1243,6 +1247,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
 		return error;
 
 	edt_ft5x06_ts_prepare_debugfs(tsdata, dev_driver_string(&client->dev));
+	device_init_wakeup(&client->dev, tsdata->wakeup);
 
 	dev_dbg(&client->dev,
 		"EDT FT5x06 initialized: IRQ %d, WAKE pin %d, Reset pin %d.\n",
