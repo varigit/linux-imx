@@ -48,6 +48,8 @@
 
 &isi_0 {
 	status = "okay";
+	dma-coherent;
+	bsl,dma-invalidate;
 	fsl,chain_buf;
 };
 
