@@ -266,6 +266,8 @@
 	phy-reset-gpios = <&gpio1 25 0>;
 	phy-reset-duration=<100>;
 	phy-reset-on-resume;
+	assigned-clocks = <&clks IMX6QDL_CLK_ENET_REF>;
+	assigned-clock-rates = <125000000>;
 	status = "okay";
 };
 
