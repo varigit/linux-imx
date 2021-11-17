@@ -1610,6 +1610,25 @@ static int mx6s_vidioc_s_parm(struct file *file, void *priv,
 	return v4l2_subdev_call(sd, video, s_parm, a);
 }
 
+static int mx6s_vidioc_g_ctrl(struct file *file, void *fh,
+			     struct v4l2_control *a)
+{
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+
+	return v4l2_subdev_call(sd, core, ioctl,
+		V4L2_SUBDEV_PRIV_IOCTL_GET_CTRL, (void *)a);
+}
+
+static int mx6s_vidioc_s_ctrl(struct file *file, void *fh,
+			     struct v4l2_control *a)
+{
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+	return v4l2_subdev_call(sd, core, ioctl,
+		V4L2_SUBDEV_PRIV_IOCTL_SET_CTRL, (void *)a);
+}
+
 static int mx6s_vidioc_enum_framesizes(struct file *file, void *priv,
 					 struct v4l2_frmsizeenum *fsize)
 {
@@ -1701,6 +1720,8 @@ static const struct v4l2_ioctl_ops mx6s_csi_ioctl_ops = {
 	.vidioc_streamoff     = mx6s_vidioc_streamoff,
 	.vidioc_g_parm        = mx6s_vidioc_g_parm,
 	.vidioc_s_parm        = mx6s_vidioc_s_parm,
+	.vidioc_g_ctrl        = mx6s_vidioc_g_ctrl,
+	.vidioc_s_ctrl        = mx6s_vidioc_s_ctrl,
 	.vidioc_enum_framesizes = mx6s_vidioc_enum_framesizes,
 	.vidioc_enum_frameintervals = mx6s_vidioc_enum_frameintervals,
 };
