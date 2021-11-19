@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2020-2021 Variscite Ltd.
+ */
+
+#include "imx8mp-var-som-symphony-2nd-ov5640.dts"
+#include "imx8mp-var-common-m7.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-MX8M-PLUS M7 with 2nd OV5640 on Symphony-Board";
+};
+
+/*
+ * ATTENTION: M7 may use IPs like below
+ * ECSPI2, I2C4, UART4, PWM2, SDMA1, FLEXCAN2
+ */
+
+&uart4 {
+	status = "disabled";
+};
+
+&ecspi2 {
+	status = "disabled";
+};
+
+&i2c4 {
+	status = "disabled";
+};
+
+&sdma1 {
+	status = "disabled";
+};
+
+&flexcan2 {
+	status = "disabled";
+};
