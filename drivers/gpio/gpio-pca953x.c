@@ -989,6 +989,7 @@ static int pca953x_probe(struct i2c_client *client,
 	u32 invert = 0;
 	struct regulator *reg;
 	const struct regmap_config *regmap_config;
+	u8 int_mask[MAX_BANK];
 
 	chip = devm_kzalloc(&client->dev,
 			sizeof(struct pca953x_chip), GFP_KERNEL);
@@ -1116,6 +1117,18 @@ static int pca953x_probe(struct i2c_client *client,
 	ret = devm_gpiochip_add_data(&client->dev, &chip->gpio_chip, chip);
 	if (ret)
 		goto err_exit;
+
+	/* If device tree property standard-regs-fallback exists, read register PCAL953X_INT_MASK
+	to detect if extended registers are supported. If not, clear PCA_PCAL bit. */
+	if (of_property_read_bool(client->dev.of_node, "standard-regs-fallback")) {
+		ret = pca953x_read_regs(chip, PCAL953X_INT_MASK, int_mask);
+		if (ret) {
+			dev_info(&client->dev, "Extended registers not supported, fallback to standard registers\n");
+			chip->driver_data &= ~(PCA_PCAL);
+		} else {
+			dev_info(&client->dev, "Extended registers supported\n");
+		}
+	}
 
 	ret = pca953x_irq_setup(chip, irq_base);
 	if (ret)
