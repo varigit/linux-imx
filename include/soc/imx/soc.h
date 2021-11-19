@@ -16,5 +16,6 @@
 #define __SOC_IMX8_SOC_H__
 
 int check_m4_enabled(void);
+void set_cm4_enable(bool state);
 
 #endif
