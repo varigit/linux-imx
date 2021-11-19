@@ -45,6 +45,10 @@ Optional properties:
  - reset-gpios: GPIO specification for the RESET input. This is an
 		active low signal to the PCA953x.
  - vcc-supply:	power supply regulator.
+ - standard-regs-fallback: Fallback to standard registers if reading extended registers fails.
+		This allows backwards compatibility with devices that don't support the extended registers.
+		For example, the nxp,pcal6408 will fallback to ti,tca6408 registers, enabling either
+		device to be populated.
 
 Example:
 
