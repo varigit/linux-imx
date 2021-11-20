@@ -277,6 +277,13 @@ bool imx_src_is_m4_enabled(void)
 }
 EXPORT_SYMBOL_GPL(imx_src_is_m4_enabled);
 
+
+void set_cm4_enable(bool state)
+{
+	m4_is_enabled = state;
+	printk("M4 is enabled\n");
+}
+
 int check_m4_enabled(void)
 {
 	struct arm_smccc_res res;
