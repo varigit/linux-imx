@@ -1121,6 +1121,32 @@ static int rproc_handle_resources(struct rproc *rproc,
 	if (!rproc->table_ptr)
 		return 0;
 
+	/*
+	 * Check for rproc->table_ptr->num valid value
+	 *
+	 * When M7 demo different from rpmsg demos is started from U-Boot the
+	 * rsc_table region memory is not populated and then the rproc->table_ptr
+	 * has invalid properties causing kernel hangs
+	 *
+	 * The rpmsg demos initialize the resource table:
+	 *   https://github.com/varigit/freertos-variscite/blob/mcuxpresso_sdk_2.10.x-var01/boards/dart_mx8mp/multicore_examples/rpmsg_lite_pingpong_rtos/
+	 *   linux_remote/main_remote.c#L172
+	 * The other demos don't initialize the resource table due to unused but
+	 * the rproc_handle_resources is always called.
+	 *
+	 * kernel table_ptr type:
+	 *   https://source.codeaurora.org/external/imx/linux-imx/tree/include/linux/remoteproc.h?h=lf-5.10.y#n73
+	 * freertos table_ptr type:
+	 *   https://github.com/varigit/freertos-variscite/blob/mcuxpresso_sdk_2.10.x-var01/boards/som_mx8mp/multicore_examples/rpmsg_lite_pingpong_rtos/
+	 *   linux_remote/rsc_table.h#L29
+	*/
+
+	if ((int)rproc->table_ptr->num < 0) {
+		WARN_ON(rproc->table_ptr->num);
+		rproc->table_ptr->num=0;
+		return 0;
+	}
+
 	for (i = 0; i < rproc->table_ptr->num; i++) {
 		int offset = rproc->table_ptr->offset[i];
 		struct fw_rsc_hdr *hdr = (void *)rproc->table_ptr + offset;
