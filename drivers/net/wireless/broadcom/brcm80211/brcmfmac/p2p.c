@@ -1735,6 +1735,10 @@ bool brcmf_p2p_send_action_frame(struct brcmf_cfg80211_info *cfg,
 	unsigned long dwell_jiffies = 0;
 	bool dwell_overflow = false;
 
+
+	if (p2p->bss_idx[P2PAPI_BSSCFG_DEVICE].vif == NULL)
+		return false;
+
 	u32 requested_dwell = le32_to_cpu(af_params->dwell_time);
 	action_frame = &af_params->action_frame;
 	action_frame_len = le16_to_cpu(action_frame->len);
