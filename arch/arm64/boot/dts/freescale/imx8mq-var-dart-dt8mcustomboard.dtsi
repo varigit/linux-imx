@@ -451,7 +451,8 @@
 	};
 
 	pca6408_1: gpio@20 {
-		compatible = "ti,tca6408";
+		compatible = "nxp,pcal6408";
+		standard-regs-fallback;
 		reg = <0x20>;
 		gpio-controller;
 		#gpio-cells = <2>;
@@ -462,7 +463,8 @@
 	};
 
 	pca6408_2: gpio@21 {
-		compatible = "ti,tca6408";
+		compatible = "nxp,pcal6408";
+		standard-regs-fallback;
 		reg = <0x21>;
 		gpio-controller;
 		#gpio-cells = <2>;
