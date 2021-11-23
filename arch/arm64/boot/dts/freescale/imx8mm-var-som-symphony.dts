@@ -14,6 +14,9 @@
 	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
 
 	chosen {
+		bootargs = "console=ttymxc3,115200 earlycon=ec_imx6q,0x30a60000,115200";
+
+		bootargs-append = "console=ttymxc3,115200 earlycon=ec_imx6q,0x30a60000,115200 androidboot.console=ttymxc3 androidboot.board=varsommx8mmini androidboot.bt_uart=/dev/ttymxc1 androidboot.bt_sdio=/sys/bus/mmc/devices/mmc0:0001/mmc0:0001:1/device androidboot.bt_firmware=BCM43430A1.hcd androidboot.bt_sdio_id=0xa9a6 androidboot.wificountrycode=CN";
 		stdout-path = &uart4;
 	};
 
@@ -465,6 +468,8 @@
 &uart4 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart4>;
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 	status = "okay";
 };
 

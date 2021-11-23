@@ -10,6 +10,8 @@
 	model = "Variscite DART-MX8M-MINI on DT8MCustomBoard 2.x";
 
 	chosen {
+		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
+		bootargs-append = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200 androidboot.console=ttymxc0 androidboot.primary_display=imx-drm";
 		stdout-path = &uart1;
 	};
 

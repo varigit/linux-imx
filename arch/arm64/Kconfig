@@ -1897,7 +1897,6 @@ config CMDLINE_FORCE
 endchoice
 
 config CMDLINE_EXTEND_BOOTLOADER
-	depends on CMDLINE = ""
 	bool "Extend bootloader kernel arguments"
 	help
 	  The bootargs-append arguments provided by the device-tree will be

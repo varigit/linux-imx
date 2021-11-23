@@ -10,6 +10,74 @@
 #include "imx8mm.dtsi"
 
 / {
+	firmware {
+		android {
+			compatible = "android,firmware";
+			/* default emmc node used for GSI */
+			boot_devices = "soc@0/30800000.bus/30b60000.mmc";
+			/* sd card node which used if androidboot.boot_device_root=mmcblk1 */
+			boot_devices_mmcblk1 = "soc@0/30800000.bus/30b50000.mmc";
+			/* emmc node which used if androidboot.boot_device_root=mmcblk2 */
+			boot_devices_mmcblk2 = "soc@0/30800000.bus/30b60000.mmc";
+			fstab {
+				compatible = "android,fstab";
+				system {
+					compatible = "android,system";
+					dev = "system";
+					type = "ext4";
+					mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb,avb_keys=/avb,logical,first_stage_mount";
+				};
+				system_ext {
+					compatible = "android,system_ext";
+					dev = "system_ext";
+					type = "ext4";
+					mnt_flags = "noatime,ro,errors=panic";
+					fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+				};
+				vendor {
+					compatible = "android,vendor";
+					dev = "vendor";
+					type = "ext4";
+					mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+				};
+				product {
+					compatible = "android,product";
+					dev = "product";
+					type = "ext4";
+					mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+				};
+				metadata {
+					compatible = "android,metadata";
+					dev = "/dev/block/by-name/metadata";
+					type = "ext4";
+					mnt_flags = "noatime,nosuid,nodev,discard,sync";
+					fsmgr_flags = "wait,formattable,first_stage_mount,check";
+				};
+			};
+			vbmeta {
+				/*we need use FirstStageMountVBootV2 if we enable avb*/
+				compatible = "android,vbmeta";
+				/*parts means the partition witch can be mount in first stage*/
+				parts = "vbmeta,dtbo,boot,system,vendor,product";
+			};
+		};
+	};
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
+};
+
+/ {
 	can0_osc: can0_osc {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -75,7 +143,7 @@
 		};
 
 		simple-audio-card,cpu {
-			sound-dai = <&sai3>;
+			sound-dai = <&sai5>;
 		};
 	};
 };
@@ -601,22 +669,36 @@
 	status = "okay";
 
 	wm8904: audio-codec@1a {
-		status = "okay";
 		compatible = "wlf,wm8904";
+		#sound-dai-cells = <0>;
 		reg = <0x1a>;
 		clocks = <&clk IMX8MM_CLK_SAI5_ROOT>;
 		clock-names = "mclk";
-		DBVDD-supply = <&reg_audio>;
 		DCVDD-supply = <&ldo5_reg>;
+		DBVDD-supply = <&reg_audio>;
 		AVDD-supply = <&ldo5_reg>;
 		CPVDD-supply = <&ldo5_reg>;
 		MICVDD-supply = <&ldo5_reg>;
+		num-drc-cfgs = <5>;
+		drc-cfg-names = "default", "peaklimiter", "tradition", "soft", "music";
+		drc-cfg-regs =
+				/* coded default: KNEE_IP = KNEE_OP = 0, HI_COMP = LO_COMP = 1  */
+				<0x01af 0x3248 0x0000 0x0000>,
+				/* coded default: KNEE_IP = -24, KNEE_OP = -6, HI_COMP = 1/4, LO_COMP = 1 */
+				<0x04af 0x324b 0x0010 0x0408>,
+				/* coded default: KNEE_IP = -42, KNEE_OP = -3, HI_COMP = 0, LO_COMP = 1 */
+				<0x04af 0x324b 0x0028 0x0704>,
+				/* coded default: KNEE_IP = -45, KNEE_OP = -9, HI_COMP = 1/8, LO_COMP = 1 */
+				<0x04af 0x324b 0x0018 0x078c>,
+				/* coded default: KNEE_IP = -30, KNEE_OP = -10.5, HI_COMP = 1/4, LO_COMP = 1 */
+				<0x04af 0x324b 0x0010 0x050e>;
 		gpio-cfg = <
 			0x0018 /* GPIO1 => DMIC_CLK */
 			0xffff /* GPIO2 => don't touch */
 			0xffff /* GPIO3 => don't touch */
 			0xffff /* GPIO4 => don't touch */
 		>;
+		status = "okay";
 	};
 };
 
@@ -625,6 +707,7 @@
 };
 
 &sai5 {
+	#sound-dai-cells = <0>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_sai5>;
 	assigned-clocks = <&clk IMX8MM_CLK_SAI5>;
@@ -653,10 +736,10 @@
 /* Bluetooth */
 &uart2 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart2>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart2>;
 	assigned-clocks = <&clk IMX8MM_CLK_UART2>;
 	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_80M>;
-	uart-has-rtscts;
+	fsl,uart-has-rtscts;
 	status = "okay";
 };
 
