@@ -156,7 +156,11 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb imx8qm-mek-ov5640.dtb imx8qm-mek-md.dtb
 			  imx8qm-var-som-dp.dtb imx8qm-var-som-hdmi.dtb imx8qm-var-som-lvds.dtb \
 			  imx8qm-var-spear-dp.dtb imx8qm-var-spear-hdmi.dtb imx8qm-var-spear-lvds.dtb \
 			  imx8qm-var-som-dp-m4.dtb imx8qm-var-som-hdmi-m4.dtb imx8qm-var-som-lvds-m4.dtb \
-			  imx8qm-var-spear-dp-m4.dtb imx8qm-var-spear-hdmi-m4.dtb imx8qm-var-spear-lvds-m4.dtb
+			  imx8qm-var-spear-dp-m4.dtb imx8qm-var-spear-hdmi-m4.dtb imx8qm-var-spear-lvds-m4.dtb \
+			  imx8qp-var-som-dp.dtb imx8qp-var-som-hdmi.dtb imx8qp-var-som-lvds.dtb \
+			  imx8qp-var-spear-dp.dtb imx8qp-var-spear-hdmi.dtb imx8qp-var-spear-lvds.dtb \
+			  imx8qp-var-som-dp-m4.dtb imx8qp-var-som-hdmi-m4.dtb imx8qp-var-som-lvds-m4.dtb \
+			  imx8qp-var-spear-dp-m4.dtb imx8qp-var-spear-hdmi-m4.dtb imx8qp-var-spear-lvds-m4.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek-dom0.dtb imx8qm-mek-domu.dtb imx8qm-mek-domu-car.dtb \
 			  imx8qm-mek-root.dtb imx8qm-mek-inmate.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
