@@ -37,21 +37,21 @@
 		up {
 			label = "Up";
 			gpios = <&pca6408_1 5 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_UP>;
+			linux,code = <KEY_VOLUMEUP>;
 			wakeup-source;
 		};
 
 		down {
 			label = "Down";
 			gpios = <&pca6408_1 6 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_DOWN>;
+			linux,code = <KEY_VOLUMEDOWN>;
 			wakeup-source;
 		};
 
 		home {
 			label = "Home";
 			gpios = <&pca6408_1 4 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_HOME>;
+			linux,code = <KEY_HOMEPAGE>;
 			wakeup-source;
 		};
 
