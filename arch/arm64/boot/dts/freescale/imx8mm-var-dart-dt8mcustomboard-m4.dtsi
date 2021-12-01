@@ -5,32 +5,22 @@
  */
 
 / {
-	imx8mm-cm4 {
-		compatible = "fsl,imx8mm-cm4";
-		rsc-da = <0x40000000>;
-		clocks = <&clk IMX8MM_CLK_M4_DIV>;
-		mbox-names = "tx", "rx", "rxdb";
-		mboxes = <&mu 0 1
-			  &mu 1 1
-			  &mu 3 1>;
-		memory-region = <&vdev0vring0>, <&vdev0vring1>, <&vdevbuffer>, <&m4_reserved>;
-		syscon = <&src>;
-	};
-
 	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
 		m4_reserved: m4@0x7e000000 {
 			no-map;
 			reg = <0 0x7e000000 0 0x1000000>;
 		};
 
 		vdev0vring0: vdev0vring0@40000000 {
-			compatible = "shared-dma-pool";
 			reg = <0 0x40000000 0 0x8000>;
 			no-map;
 		};
 
 		vdev0vring1: vdev0vring1@40008000 {
-			compatible = "shared-dma-pool";
 			reg = <0 0x40008000 0 0x8000>;
 			no-map;
 		};
@@ -40,6 +30,23 @@
 			reg = <0 0x40400000 0 0x100000>;
 			no-map;
 		};
+
+		rsc_table: rsc_table@400ff000 {
+			reg = <0 0x400ff000 0 0x1000>;
+			no-map;
+		};
+	};
+
+	imx8mm-cm4 {
+		compatible = "fsl,imx8mm-cm4";
+		rsc-da = <0x40000000>;
+		clocks = <&clk IMX8MM_CLK_M4_DIV>;
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&mu 0 1
+			  &mu 1 1
+			  &mu 3 1>;
+		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>, <&m4_reserved>, <&rsc_table>;
+		syscon = <&src>;
 	};
 };
 
@@ -56,18 +63,15 @@
 	status = "disabled";
 };
 
-&pwm3 {
-	status = "disabled";
+/* For dt8mcustomboard 2.0, reset-gpios is connected to pca6408_2 on i2c4,
+which is disabled above for the m4 example */
+#ifndef DT8MCUSTOMBOARD_LEGACY
+&ft5x06_ts {
+	/delete-property/reset-gpios;
 };
+#endif
 
-&rpmsg{
-	/*
-	 * 64K for one rpmsg instance:
-	 * --0x40000000~0x4000ffff: pingpong
-	 */
-	vdev-nums = <1>;
-	reg = <0x0 0x40000000 0x0 0x10000>;
-	memory-region = <&vdevbuffer>;
+&pwm3 {
 	status = "disabled";
 };
 
@@ -77,4 +81,12 @@
 
 &uart3 {
 	status = "disabled";
+};
+
+&clk {
+	init-on-array = <IMX8MM_CLK_UART3_ROOT
+	IMX8MM_CLK_AHB IMX8MM_CLK_DRAM_CORE
+	IMX8MM_CLK_NOC IMX8MM_CLK_NOC_APB
+	IMX8MM_CLK_DRAM_APB IMX8MM_CLK_A53_DIV
+	>;
 };

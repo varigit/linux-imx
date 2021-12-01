@@ -6,6 +6,8 @@
 
 #include "imx8mm-var-dart-dt8mcustomboard.dts"
 
+#define DT8MCUSTOMBOARD_LEGACY
+
 / {
 	model = "Variscite DART-MX8M-MINI on DT8MCustomBoard 1.x";
 
