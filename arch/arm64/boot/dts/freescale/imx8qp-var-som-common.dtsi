@@ -1,5 +1,7 @@
 /*
- * Copyright 2019 Variscite Ltd.
+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
+ * Copyright 2017 NXP
+ * Copyright 2021 Variscite Ltd.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,9 +14,5 @@
  * GNU General Public License for more details.
  */
 
-#include "imx8qm-var-spear-common.dtsi"
-#include "imx8qm-var-spear-hdmi.dtsi"
-
-/ {
-	model = "Variscite SPEAR-MX8 i.MX8QM HDMI";
-};
+#include "imx8qm-var-som-common.dtsi"
+#include "imx8qp-var-common.dtsi"

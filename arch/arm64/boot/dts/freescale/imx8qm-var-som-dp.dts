@@ -16,5 +16,5 @@
 #include "imx8qm-var-som-dp.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8 DP";
+	model = "Variscite VAR-SOM-MX8 i.MX8QM DP";
 };
