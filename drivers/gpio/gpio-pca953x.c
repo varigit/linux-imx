@@ -1083,6 +1083,9 @@ static int pca953x_probe(struct i2c_client *client,
 
 	ret = devm_gpiochip_add_data(&client->dev, &chip->gpio_chip, chip);
 
+	if (ret)
+		goto err_exit;
+
 	/* If device tree property standard-regs-fallback exists, read register PCAL953X_INT_MASK
 	to detect if extended registers are supported. If not, clear PCA_PCAL bit. */
 	if (of_property_read_bool(client->dev.of_node, "standard-regs-fallback")) {
@@ -1094,9 +1097,6 @@ static int pca953x_probe(struct i2c_client *client,
 			dev_info(&client->dev, "Extended registers supported\n");
 		}
 	}
-
-	if (ret)
-		goto err_exit;
 
 	if (pdata && pdata->setup) {
 		ret = pdata->setup(client, chip->gpio_chip.base,
