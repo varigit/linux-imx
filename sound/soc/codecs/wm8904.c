@@ -2425,6 +2425,9 @@ static int wm8904_i2c_probe(struct i2c_client *i2c,
 	regmap_update_bits(wm8904->regmap, WM8904_BIAS_CONTROL_0,
 			    WM8904_POBCTRL, 0);
 
+	/* Use default value for ADC Oversampling Ratio (OSR) */
+	regmap_update_bits(wm8904->regmap, WM8904_ADC_TEST_0, 0xffff, 0);
+
 	/* Can leave the device powered off until we need it */
 	regcache_cache_only(wm8904->regmap, true);
 	regulator_bulk_disable(ARRAY_SIZE(wm8904->supplies), wm8904->supplies);
