@@ -1,0 +1,83 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2018 NXP
+ * Copyright 2019-2020 Variscite Ltd.
+ */
+
+/ {
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		m_core_reserved: m_core@0x7e000000 {
+			no-map;
+			reg = <0 0x7e000000 0 0x1000000>;
+		};
+
+		vdev0vring0: vdev0vring0@40000000 {
+			reg = <0 0x40000000 0 0x8000>;
+			no-map;
+		};
+
+		vdev0vring1: vdev0vring1@40008000 {
+			reg = <0 0x40008000 0 0x8000>;
+			no-map;
+		};
+
+		vdevbuffer: vdevbuffer@40400000 {
+			compatible = "shared-dma-pool";
+			reg = <0 0x40400000 0 0x100000>;
+			no-map;
+		};
+
+		rsc_table: rsc_table@400ff000 {
+			reg = <0 0x400ff000 0 0x1000>;
+			no-map;
+		};
+	};
+
+	imx8mn-cm7 {
+		compatible = "fsl,imx8mn-cm7";
+		rsc-da = <0x40000000>;
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&mu 0 1
+			  &mu 1 1
+			  &mu 3 1>;
+		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>, <&rsc_table>, <&m_core_reserved>;
+
+		status = "okay";
+	};
+};
+
+/*&clk {
+	init-on-array = <
+	IMX8MN_CLK_UART4_ROOT
+	>;
+};*/
+
+/*
+ * ATTENTION: M7 may use IPs like below
+ * ECSPI1, GPIO4, GPT1, I2C4, WDOG1, PWM3, SDMA1/3, UART3
+ */
+
+&ecspi1 {
+	status = "disabled";
+};
+
+&i2c4 {
+	status = "disabled";
+};
+
+&pwm3 {
+	status = "disabled";
+};
+
+
+&sdma1{
+	status = "disabled";
+};
+
+&uart3 {
+	status = "disabled";
+};
