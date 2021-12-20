@@ -45,18 +45,6 @@
 	};
 };
 
-/* Enable rpmsg and disable imx8mm-cm4 to load M4 firmware via u-boot */
-&rpmsg {
-	/*
-	 * 64K for one rpmsg instance:
-	 * --0x40000000~0x4000ffff: pingpong
-	 */
-	vdev-nums = <1>;
-	reg = <0x0 0x40000000 0x0 0x10000>;
-	memory-region = <&vdevbuffer>;
-	status = "disabled";
-};
-
 /*
  * ATTENTION: M4 may use the followings IPs:
  * ECSPI1, GPIO4, GPT1, I2C4, WDOG1, PWM3, SDMA1/3, UART3
