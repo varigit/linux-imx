@@ -62,7 +62,13 @@ dtb-$(CONFIG_ARCH_FSL_IMX8QM) += fsl-imx8qm-lpddr4-arm2.dtb \
 				 fsl-imx8qm-var-som-lvds.dtb \
 				 fsl-imx8qm-var-spear-dp.dtb \
 				 fsl-imx8qm-var-spear-hdmi.dtb \
-				 fsl-imx8qm-var-spear-lvds.dtb
+				 fsl-imx8qm-var-spear-lvds.dtb \
+				 fsl-imx8qp-var-som-dp.dtb \
+				 fsl-imx8qp-var-som-hdmi.dtb \
+				 fsl-imx8qp-var-som-lvds.dtb \
+				 fsl-imx8qp-var-spear-dp.dtb \
+				 fsl-imx8qp-var-spear-hdmi.dtb \
+				 fsl-imx8qp-var-spear-lvds.dtb
 dtb-$(CONFIG_ARCH_FSL_IMX8QXP) += fsl-imx8qxp-lpddr4-arm2.dtb \
 				  fsl-imx8qxp-mek.dtb \
 				  fsl-imx8qxp-mek-rpmsg.dtb \
