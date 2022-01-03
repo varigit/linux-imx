@@ -14,10 +14,7 @@
  * GNU General Public License for more details.
  */
 
-/dts-v1/;
-
 #include <dt-bindings/usb/pd.h>
-#include "imx8qm.dtsi"
 
 / {
 	compatible = "fsl,imx8qm-var-spear", "fsl,imx8qm";

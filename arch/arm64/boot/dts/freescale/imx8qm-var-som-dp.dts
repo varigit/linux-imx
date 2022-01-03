@@ -12,6 +12,9 @@
  * GNU General Public License for more details.
  */
 
+/dts-v1/;
+
+#include "imx8qm.dtsi"
 #include "imx8qm-var-som-common.dtsi"
 #include "imx8qm-var-som-dp.dtsi"
 
