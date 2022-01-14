@@ -946,6 +946,7 @@
 					regmap = <&snvs>;
 					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
 					linux,keycode = <KEY_POWER>;
+					key-release-only;
 					wakeup-source;
 					status = "disabled";
 				};
