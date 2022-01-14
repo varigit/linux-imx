@@ -206,6 +206,7 @@ static int sn65dsi83_parse_dt(struct device_node *np,
     struct device *dev = &sn65dsi83->brg->client->dev;
     u32 num_lanes = 2, bpp = 24, format = 2, width = 149, height = 93;
     u32 num_channels;
+    u32 even_odd_swap;
     u8 burst_mode = 0;
     u8 de_neg_polarity = 0;
     struct device_node *endpoint;
@@ -232,6 +233,11 @@ static int sn65dsi83_parse_dt(struct device_node *np,
         dev_err(dev, "Invalid dsi-lanes: %d\n", num_lanes);
         return -EINVAL;
     }
+    if (of_property_read_u32(np, "ti,even-odd-swap", &even_odd_swap) < 0) {
+        dev_info(dev, "even_odd_swap property not found, using default\n");
+        even_odd_swap = 0;
+    }
+    sn65dsi83->brg->even_odd_swap = even_odd_swap;
 
     if (of_property_read_u32(np, "ti,lvds-channels", &num_channels) < 0) {
         dev_info(dev, "lvds-channels property not found, using default\n");
