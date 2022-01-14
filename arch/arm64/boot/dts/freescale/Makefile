@@ -80,7 +80,10 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-ddr4-evk.dtb imx8mm-ddr4-evk-rm67191.dtb imx8mm
 			  imx8mm-ddr4-evk-revb-rm67199.dtb \
 			  imx8mm-ddr4-evk-rm67199.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb imx8mn-evk-rm67191.dtb imx8mn-evk-rpmsg.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb imx8mn-evk-rm67191.dtb imx8mn-evk-rpmsg.dtb \
+			  imx8mn-var-som-symphony.dtb imx8mn-var-som-symphony-legacy.dtb \
+			  imx8mn-var-som-symphony-root.dtb imx8mn-var-som-symphony-legacy-root.dtb imx8mn-var-som-inmate.dtb \
+			  imx8mn-var-som-symphony-legacy-m7.dtb imx8mn-var-som-symphony-m7.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-ab2.dtb imx8mm-ab2-m4.dtb imx8mm-ddr4-ab2.dtb imx8mm-ddr4-ab2-m4.dtb \
 			  imx8mm-ddr4-ab2-revb.dtb imx8mm-ddr4-ab2-m4-revb.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb imx8mn-evk-rm67191.dtb imx8mn-evk-rpmsg.dtb imx8mn-evk-ak5558.dtb \
