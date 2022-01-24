@@ -10,6 +10,7 @@
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
+#include <linux/of_gpio.h>
 #include <linux/platform_device.h>
 #include <linux/string.h>
 #include <sound/simple_card.h>
@@ -21,6 +22,33 @@
 #define DAI	"sound-dai"
 #define CELL	"#sound-dai-cells"
 #define PREFIX	"simple-audio-card,"
+
+static int simple_outdrv_event(struct snd_soc_dapm_widget *w,
+			      struct snd_kcontrol *kcontrol,
+			      int event)
+{
+	struct snd_soc_dapm_context *dapm = w->dapm;
+	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(dapm->card);
+
+	switch (event) {
+	case SND_SOC_DAPM_POST_PMU:
+		gpiod_set_value_cansleep(priv->pa_gpio, 1);
+		break;
+	case SND_SOC_DAPM_PRE_PMD:
+		gpiod_set_value_cansleep(priv->pa_gpio, 0);
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	return 0;
+}
+
+static const struct snd_soc_dapm_widget simple_dapm_widgets[] = {
+	SND_SOC_DAPM_OUT_DRV_E("Amplifier", SND_SOC_NOPM,
+			       0, 0, NULL, 0, simple_outdrv_event,
+			       SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+};
 
 static const struct snd_soc_ops simple_ops = {
 	.startup	= asoc_simple_startup,
@@ -603,6 +631,8 @@ static int asoc_simple_probe(struct platform_device *pdev)
 	card = simple_priv_to_card(priv);
 	card->owner		= THIS_MODULE;
 	card->dev		= dev;
+	card->dapm_widgets	= simple_dapm_widgets;
+	card->num_dapm_widgets	= ARRAY_SIZE(simple_dapm_widgets);
 	card->probe		= simple_soc_probe;
 
 	memset(&li, 0, sizeof(li));
@@ -613,6 +643,13 @@ static int asoc_simple_probe(struct platform_device *pdev)
 	ret = asoc_simple_init_priv(priv, &li);
 	if (ret < 0)
 		return ret;
+
+	priv->pa_gpio = devm_gpiod_get_optional(dev, "pa", GPIOD_OUT_LOW);
+	if (IS_ERR(priv->pa_gpio)) {
+		ret = PTR_ERR(priv->pa_gpio);
+		dev_err(dev, "failed to get amplifier gpio: %d\n", ret);
+		return ret;
+	}
 
 	if (np && of_device_is_available(np)) {
 
