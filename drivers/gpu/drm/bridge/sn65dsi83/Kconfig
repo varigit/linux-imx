@@ -1,6 +1,9 @@
 config DRM_I2C_SN65DSI83
-	bool "TI SN65DSI83 MIPI DSI to LVDS bridge"
+	tristate "TI SN65DSI83 MIPI DSI to LVDS bridge"
 	depends on OF
 	select DRM_MIPI_DSI
+	select DRM_KMS_HELPER
+        select REGMAP_I2C
+        select DRM_PANEL
 	help
 	  TI SN65DSI83 MIPI DSI to LVDS bridge driver
