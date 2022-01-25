@@ -120,7 +120,7 @@
 		home {
 			label = "Home";
 			gpios = <&pca9534 2 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_HOME>;
+			linux,code = <KEY_HOMEPAGE>;
 			wakeup-source;
 		};
 
@@ -328,7 +328,7 @@
 		assigned-clock-rates = <24000000>;
 		csi_id = <0>;
 		powerdown-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
-		reset-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
 		mclk = <24000000>;
 		mclk_source = <0>;
 		mipi_csi;
