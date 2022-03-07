@@ -10,6 +10,8 @@
 	model = "Variscite DART-MX8M-MINI on DT8MCustomBoard 2.x";
 
 	chosen {
+		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
+		bootargs-append = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200 androidboot.console=ttymxc0 androidboot.primary_display=imx-drm";
 		stdout-path = &uart1;
 	};
 
@@ -38,21 +40,21 @@
 		up {
 			label = "Up";
 			gpios = <&pca6408_1 5 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_UP>;
+			linux,code = <KEY_VOLUMEUP>;
 			wakeup-source;
 		};
 
 		down {
 			label = "Down";
 			gpios = <&pca6408_1 6 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_DOWN>;
+			linux,code = <KEY_VOLUMEDOWN>;
 			wakeup-source;
 		};
 
 		home {
 			label = "Home";
 			gpios = <&pca6408_1 4 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_HOME>;
+			linux,code = <KEY_HOMEPAGE>;
 			wakeup-source;
 		};
 
@@ -283,6 +285,8 @@
 &uart1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart1>;
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 	status = "okay";
 };
 
