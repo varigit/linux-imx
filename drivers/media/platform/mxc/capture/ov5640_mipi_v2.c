@@ -2738,32 +2738,6 @@ static int ov5640_af_set_auto(struct ov5640 *sensor, int enable)
 	return ret;
 }
 
-static int ov5640_af_set_focus_range(struct ov5640 *sensor, int value)
-{
-	int ret = 0;
-
-	switch (value) {
-	case V4L2_AUTO_FOCUS_RANGE_INFINITY:
-		ret = ov5640_af_set_mode(sensor, V4L2_CID_AUTO_FOCUS_STOP);
-		focus_range = V4L2_AUTO_FOCUS_RANGE_INFINITY;
-		break;
-	case V4L2_AUTO_FOCUS_RANGE_NORMAL:
-	default:
-		focus_range = V4L2_AUTO_FOCUS_RANGE_NORMAL;
-	}
-	return ret;
-}
-
-static int ov5640_af_set_focus_lock(struct ov5640 *sensor, int value)
-{
-	if (value != V4L2_LOCK_FOCUS) {
-		pr_err("%s: Invalid focus cmd (%#x)\n", __func__, value);
-		return -EINVAL;
-	}
-
-	return ov5640_af_set_mode(sensor, V4L2_CID_3A_LOCK);
-}
-
 static int ov5640_af_get_status(struct ov5640 *sensor, int *status)
 {
 	int err;

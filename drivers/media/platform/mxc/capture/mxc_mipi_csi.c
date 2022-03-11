@@ -857,7 +857,6 @@ static long mipi_csis_ioctl(struct v4l2_subdev *sd,
                        unsigned int cmd, void *arg)
 {
        struct csi_state *state = mipi_sd_to_csi_state(sd);
-       struct device *dev = &state->pdev->dev;
 
        return v4l2_subdev_call(state->sensor_sd, core, ioctl, cmd, arg);
 }

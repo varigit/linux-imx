@@ -1386,60 +1386,11 @@ static int csis_ioc_qcap(struct v4l2_subdev *dev, void *args)
 #define USER_TO_KERNEL(TYPE)
 #define KERNEL_TO_USER(TYPE)
 #endif
-static long csis_priv_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg_user)
-{
-	int ret = 1;
-	struct csi_state *state = container_of(sd, struct csi_state, sd);
-	void *arg = arg_user;
-
-	pm_runtime_get_sync(state->dev);
-
-	switch (cmd) {
-	case VVCSIOC_RESET:
-		mipi_csis_sw_reset(state);
-		ret = 0;
-		break;
-	case VVCSIOC_POWERON:
-		ret = mipi_csis_s_power(sd, 1);
-		break;
-	case VVCSIOC_POWEROFF:
-		ret = mipi_csis_s_power(sd, 0);
-		break;
-	case VVCSIOC_STREAMON:
-		ret = mipi_csis_s_stream(sd, 1);
-		break;
-	case VVCSIOC_STREAMOFF:
-		ret = mipi_csis_s_stream(sd, 0);
-		break;
-	case VVCSIOC_S_FMT: {
-		USER_TO_KERNEL(struct csi_sam_format);
-		ret = csis_s_fmt(sd, (struct csi_sam_format *)arg);
-		break;
-	}
-	case VVCSIOC_S_HDR: {
-		USER_TO_KERNEL(bool);
-		ret = csis_s_hdr(sd, *(bool *) arg);
-		break;
-	}
-	case VIDIOC_QUERYCAP:
-		ret = csis_ioc_qcap(sd, arg);
-		break;
-	default:
-		v4l2_err(&state->sd, "unsupported csi-sam command %d.", cmd);
-		ret = -EINVAL;
-		break;
-	}
-	pm_runtime_put(state->dev);
-
-	return ret;
-}
-
 
 static struct v4l2_subdev_core_ops mipi_csis_core_ops = {
 	.s_power = mipi_csis_s_power,
 	.ioctl = mipi_csis_ioctl,
 	.log_status = mipi_csis_log_status,
-	//.ioctl = csis_priv_ioctl,
 };
 
 static struct v4l2_subdev_video_ops mipi_csis_video_ops = {
