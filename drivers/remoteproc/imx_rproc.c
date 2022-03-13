@@ -128,6 +128,7 @@ struct imx_rproc {
 	struct sys_off_data		data;
 	u32				m_core_ddr_addr;
 	u32				last_load_addr;
+	u32				m4_start_addr;
 };
 
 static const struct imx_rproc_att imx_rproc_att_imx95_m7[] = {
@@ -394,11 +395,32 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx95_m7 = {
 };
 
 /*
- * Stack pointer and reset vector must be initialized
- * See: https://www.nxp.com/docs/en/application-note/AN5317.pdf
- * https://github.com/varigit/uboot-imx/blob/imx_v2020.04_5.4.24_2.1.0_var02/arch/arm/mach-imx/imx_bootaux.c#L115
- * https://github.com/varigit/uboot-imx/blob/imx_v2020.04_5.4.24_2.1.0_var02/arch/arm/include/asm/arch-imx8m/imx-regs-imx8mm.h#L17
- */
+ Per linkerfile: https://github.com/varigit/freertos-variscite/blob/mcuxpresso_sdk_2.8.x-var01/boards/som_mx8qm/demo_apps/hello_world/cm4_core0/armgcc/MIMX8QM6xxxFF_cm4_core0_ddr_ram.ld#L31
+ "M4 always start up from TCM. The SCU will copy the first 32 bytes of the binary to TCM
+ if the start address is not TCM. The TCM region [0x1FFE0000-0x1FFE001F] is reserved for this purpose."
+ Therefore:
+ For imx8q and imx8x, it is not necessary to copy the stack pointer and reset vector from ddr to tcm.
+ Instead, determine if firmware was loaded into TCM or DDR and provide correct start address to SCU.
+ Like 8M family, DDR4 address is defined in device tree node m4_reserved, m7_reserved, or mcore_reserved
+*/
+static void imx8_set_start_addr(struct rproc *rproc, u32 addr_tcm) {
+	struct imx_rproc *priv = rproc->priv;
+
+	if(priv->m_core_ddr_addr && priv->last_load_addr >= priv->m_core_ddr_addr) {
+		priv->m4_start_addr = priv->m_core_ddr_addr;
+		dev_info(priv->dev, "Setting Cortex M4 start address to DDR 0x%08x\n", priv->m4_start_addr);
+	} else {
+		priv->m4_start_addr = addr_tcm;
+		dev_info(priv->dev, "Setting Cortex M4 start address to TCM 0x%08x\n", priv->m4_start_addr);
+	}
+}
+
+/*
+ Stack pointer and reset vector must be initialized
+ See: https://www.nxp.com/docs/en/application-note/AN5317.pdf
+ https://github.com/varigit/uboot-imx/blob/imx_v2020.04_5.4.24_2.1.0_var02/arch/arm/mach-imx/imx_bootaux.c#L115
+ https://github.com/varigit/uboot-imx/blob/imx_v2020.04_5.4.24_2.1.0_var02/arch/arm/include/asm/arch-imx8m/imx-regs-imx8mm.h#L17
+*/
 static void imx_8m_setup_stack(struct rproc *rproc)
 {
 	struct imx_rproc *priv = rproc->priv;
@@ -459,7 +481,8 @@ static int imx_rproc_start(struct rproc *rproc)
 		ret = res.a0;
 		break;
 	case IMX_RPROC_SCU_API:
-		ret = imx_sc_pm_cpu_start(priv->ipc_handle, priv->rsrc_id, true, priv->entry);
+		imx8_set_start_addr(rproc, priv->entry);
+		ret = imx_sc_pm_cpu_start(priv->ipc_handle, priv->rsrc_id, true, priv->m4_start_addr);
 		break;
 	default:
 		return -EOPNOTSUPP;
@@ -505,7 +528,7 @@ static int imx_rproc_stop(struct rproc *rproc)
 		clk_disable_unprepare(priv->clk_audio);
 		break;
 	case IMX_RPROC_SCU_API:
-		ret = imx_sc_pm_cpu_start(priv->ipc_handle, priv->rsrc_id, false, priv->entry);
+		ret = imx_sc_pm_cpu_start(priv->ipc_handle, priv->rsrc_id, false, priv->m4_start_addr);
 		break;
 	default:
 		return -EOPNOTSUPP;
