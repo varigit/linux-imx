@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * Copyright 2019-2022 Variscite Ltd.
+ */
+
+#include "imx8qxp-var-som-symphony.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-MX8X on Symphony-Board SD";
+};
+
+&iomuxc {
+	pinctrl_usdhc2_vsel: usdhc2vselgrp {
+		fsl,pins = <
+			IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
+		>;
+	};
+};
+
+/* Header */
+&lpuart0 {
+	pinctrl-0 = <&pinctrl_lpuart0>;
+	status = "okay";
+};
+
+/* SD */
+&usdhc2 {
+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>, <&pinctrl_usdhc2_vsel>;
+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>, <&pinctrl_usdhc2_vsel>;
+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>, <&pinctrl_usdhc2_vsel>;
+	bus-width = <4>;
+	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
+	vmmc-supply = <&reg_usdhc2_vmmc>;
+	status = "okay";
+};

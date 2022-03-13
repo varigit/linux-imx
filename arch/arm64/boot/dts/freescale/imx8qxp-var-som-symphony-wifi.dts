@@ -1,0 +1,55 @@
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * Copyright 2019-2022 Variscite Ltd.
+ */
+
+#include "imx8qxp-var-som-symphony.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-MX8X on Symphony-Board WIFI";
+};
+
+&iomuxc {
+	pinctrl_usdhc2_vsel: usdhc2vselgrp {
+		fsl,pins = <
+			IMX8QXP_USDHC1_VSELECT_LSIO_GPIO4_IO20	0x00000021
+		>;
+	};
+};
+
+/* WIFI 1.8V voltage select */
+&lsio_gpio4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2_vsel>;
+
+	wifi_vsel_hog {
+		gpio-hog;
+		gpios = <20 0>;
+		output-high;
+		line-name = "wifi_vsel";
+	};
+};
+
+/* Bluetooth */
+&lpuart0 {
+	status = "okay";
+};
+
+/* WIFI */
+&usdhc2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_wifi>;
+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wifi>;
+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi>;
+	bus-width = <4>;
+	non-removable;
+	keep-power-in-suspend;
+	status = "okay";
+
+	brcmf: bcrmf@1 {
+		reg = <1>;
+		compatible = "brcm,bcm4329-fmac";
+	};
+};
