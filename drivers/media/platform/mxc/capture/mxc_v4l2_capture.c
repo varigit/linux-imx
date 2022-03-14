@@ -2513,20 +2513,19 @@ static unsigned int mxc_poll(struct file *file, struct poll_table_struct *wait)
 {
 	struct video_device *dev = video_devdata(file);
 	cam_data *cam = video_get_drvdata(dev);
-	wait_queue_head_t *queue = NULL;
-	int res = POLLIN | POLLRDNORM;
+	int pending;
 
 	pr_debug("In MVC:mxc_poll\n");
 
 	if (down_interruptible(&cam->busy_lock))
 		return -EINTR;
 
-	queue = &cam->enc_queue;
-	poll_wait(file, queue, wait);
+	poll_wait(file, &cam->enc_queue, wait);
+	pending = !list_empty(&cam->done_q) && (cam->enc_counter > 0);
 
 	up(&cam->busy_lock);
 
-	return res;
+	return pending ? (POLLIN | POLLRDNORM) : 0;
 }
 
 /*!
