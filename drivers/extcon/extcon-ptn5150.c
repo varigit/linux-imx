@@ -17,6 +17,7 @@
 #include <linux/slab.h>
 #include <linux/extcon-provider.h>
 #include <linux/gpio/consumer.h>
+#include <linux/usb/role.h>
 
 /* PTN5150 registers */
 #define PTN5150_REG_DEVICE_ID			0x01
@@ -52,6 +53,7 @@ struct ptn5150_info {
 	int irq;
 	struct work_struct irq_work;
 	struct mutex mutex;
+	struct usb_role_switch *role_sw;
 };
 
 /* List of detectable cables */
@@ -85,6 +87,11 @@ static void ptn5150_check_state(struct ptn5150_info *info)
 		extcon_set_state_sync(info->edev, EXTCON_USB_HOST, false);
 		gpiod_set_value_cansleep(info->vbus_gpiod, 0);
 		extcon_set_state_sync(info->edev, EXTCON_USB, true);
+		if (info->role_sw) {
+			ret = usb_role_switch_set_role(info->role_sw, USB_ROLE_DEVICE);
+			if (ret)
+				dev_err(info->dev, "PTN5150_DFP_ATTACHED failed to set role: %d\n", ret);
+		}
 		break;
 	case PTN5150_UFP_ATTACHED:
 		extcon_set_state_sync(info->edev, EXTCON_USB, false);
@@ -95,6 +102,11 @@ static void ptn5150_check_state(struct ptn5150_info *info)
 			gpiod_set_value_cansleep(info->vbus_gpiod, 1);
 
 		extcon_set_state_sync(info->edev, EXTCON_USB_HOST, true);
+		if (info->role_sw) {
+			ret = usb_role_switch_set_role(info->role_sw, USB_ROLE_HOST);
+			if (ret)
+				dev_err(info->dev, "PTN5150_UFP_ATTACHED failed to set role: %d\n", ret);
+		}
 		break;
 	default:
 		break;
@@ -284,13 +296,23 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
 	if (ret)
 		return -EINVAL;
 
+	info->role_sw = usb_role_switch_get(info->dev);
+	if (IS_ERR(info->role_sw)) {
+		if (PTR_ERR(info->role_sw) != -EPROBE_DEFER)
+			dev_err(info->dev, "PTN5150 failed to get role switch\n");
+
+		return PTR_ERR(info->role_sw);
+	}
+
 	/*
 	 * Update current extcon state if for example OTG connection was there
 	 * before the probe
 	 */
+	disable_irq(info->irq);
 	mutex_lock(&info->mutex);
 	ptn5150_check_state(info);
 	mutex_unlock(&info->mutex);
+	enable_irq(info->irq);
 
 	return 0;
 }
