@@ -133,16 +133,16 @@ static void rproc_elf_memcpy(struct rproc *rproc, void *dest, const void *src, s
 {
 	if (!rproc->ops->elf_memcpy)
 		memcpy(dest, src, count);
-
-	rproc->ops->elf_memcpy(rproc, dest, src, count);
+	else
+		rproc->ops->elf_memcpy(rproc, dest, src, count);
 }
 
 static void rproc_elf_memset(struct rproc *rproc, void *s, int c, size_t count)
 {
 	if (!rproc->ops->elf_memset)
 		memset(s, c, count);
-
-	rproc->ops->elf_memset(rproc, s, c, count);
+	else
+		rproc->ops->elf_memset(rproc, s, c, count);
 }
 
 /**
