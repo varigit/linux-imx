@@ -329,12 +329,14 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx6sx = {
 static const struct imx_rproc_dcfg imx_rproc_cfg_imx8qxp = {
 	.att		= imx_rproc_att_imx8qxp,
 	.att_size	= ARRAY_SIZE(imx_rproc_att_imx8qxp),
+	.elf_mem_hook	= true,
 	.method		= IMX_SCU_API,
 };
 
 static const struct imx_rproc_dcfg imx_rproc_cfg_imx8qm = {
 	.att		= imx_rproc_att_imx8qm,
 	.att_size	= ARRAY_SIZE(imx_rproc_att_imx8qm),
+	.elf_mem_hook	= true,
 	.method		= IMX_SCU_API,
 };
 
