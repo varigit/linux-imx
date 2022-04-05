@@ -36,6 +36,12 @@ properties:
     enum: [ 4, 8, 12, 16, 20, 24 ]
     default: 8
 
+  adi,phy-mode-override:
+    description: |
+      Override phy-mode property for adin. This is useful when a single device tree
+      supports an adin PHY (e.g. ADIN1300) or another PHY (e.g. AR8033) at the same
+      address, but they require different phy-modes.
+
 examples:
   - |
     ethernet {
@@ -49,6 +55,7 @@ examples:
 
             adi,rx-internal-delay-ps = <1800>;
             adi,tx-internal-delay-ps = <2200>;
+            adi,phy-mode-override = "rgmii-id";
         };
     };
   - |
