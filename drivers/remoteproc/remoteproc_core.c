@@ -1395,7 +1395,7 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
 	 * that any subsequent changes will be applied to the loaded version.
 	 */
 	loaded_table = rproc_find_loaded_rsc_table(rproc, fw);
-	if (loaded_table) {
+	if (loaded_table && rproc->cached_table) {
 		memcpy(loaded_table, rproc->cached_table, rproc->table_sz);
 		rproc->table_ptr = loaded_table;
 	}
