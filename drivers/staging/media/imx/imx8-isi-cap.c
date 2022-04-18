@@ -705,7 +705,13 @@ static int mxc_isi_capture_open(struct file *file)
 	struct mxc_isi_cap_dev *isi_cap = video_drvdata(file);
 	struct mxc_isi_dev *mxc_isi = mxc_isi_get_hostdata(isi_cap->pdev);
 	struct device *dev = &isi_cap->pdev->dev;
+	struct device_node *parent;
+	struct v4l2_subdev *sd;
+	bool is_imx8_isi;
 	int ret = -EBUSY;
+
+	parent = of_get_parent(isi_cap->pdev->dev.of_node);
+	is_imx8_isi = of_device_is_compatible(parent, "fsl,imx8-isi");
 
 	mutex_lock(&isi_cap->lock);
 	isi_cap->is_link_setup = is_entity_link_setup(isi_cap);
@@ -720,6 +726,12 @@ static int mxc_isi_capture_open(struct file *file)
 		return ret;
 	}
 
+	if (is_imx8_isi) {
+		sd = mxc_get_remote_subdev(&isi_cap->sd, __func__);
+		if (!sd)
+			return -ENODEV;
+	}
+
 	mutex_lock(&isi_cap->lock);
 	ret = v4l2_fh_open(file);
 	if (ret) {
@@ -730,9 +742,19 @@ static int mxc_isi_capture_open(struct file *file)
 
 	pm_runtime_get_sync(dev);
 
-	mutex_lock(&isi_cap->lock);
-	ret = isi_cap_fmt_init(isi_cap);
-	mutex_unlock(&isi_cap->lock);
+	if (!is_imx8_isi) {
+		mutex_lock(&isi_cap->lock);
+		ret = isi_cap_fmt_init(isi_cap);
+		mutex_unlock(&isi_cap->lock);
+	}
+	else {
+		ret = v4l2_subdev_call(sd, core, s_power, 1);
+		if (ret) {
+			dev_err(dev, "Call subdev s_power fail!\n");
+			pm_runtime_put(dev);
+			return ret;
+		}
+	}
 
 	/* increase usage count for ISI channel */
 	mutex_lock(&mxc_isi->lock);
