@@ -323,7 +323,6 @@
 		reg = <0x38>;
 		interrupt-parent = <&lsio_gpio1>;
 		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-		reset-gpios = <&lsio_gpio1 11 GPIO_ACTIVE_LOW>;
 		touchscreen-size-x = <800>;
 		touchscreen-size-y = <480>;
 		touchscreen-inverted-x;
