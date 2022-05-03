@@ -611,6 +611,9 @@ struct fec_enet_private {
 	/* phy reset duration in ms */
 	int phy_reset_duration;
 
+	/* phy post reset delay in ms */
+	int phy_reset_post_delay;
+
 	u64 ethtool_stats[0];
 };
 

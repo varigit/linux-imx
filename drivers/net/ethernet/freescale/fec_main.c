@@ -3341,6 +3341,7 @@ static int fec_prepare_for_phy_reset(struct platform_device *pdev, struct fec_en
 
 	fep->phy_reset_active_high = false;
 	fep->phy_reset_duration = 1;
+	fep->phy_reset_post_delay = 0;
 
 	err = of_property_read_u32(np, "phy-reset-duration", &(fep->phy_reset_duration));
 	/* A sane reset duration should not be longer than 1s */
@@ -3352,6 +3353,11 @@ static int fec_prepare_for_phy_reset(struct platform_device *pdev, struct fec_en
 		return fep->phy_reset_gpios;
 	else if (!gpio_is_valid(fep->phy_reset_gpios))
 		return 0;
+
+	err = of_property_read_u32(np, "phy-reset-post-delay", &fep->phy_reset_post_delay);
+	/* valid reset duration should be less than 1s */
+	if (!err && fep->phy_reset_post_delay > 1000)
+		return -EINVAL;
 
 	fep->phy_reset_active_high = of_property_read_bool(np, "phy-reset-active-high");
 
@@ -3377,6 +3383,15 @@ static void fec_reset_phy(struct fec_enet_private *fep)
 		usleep_range(fep->phy_reset_duration * 1000, fep->phy_reset_duration * 1000 + 1000);
 
 	gpio_set_value_cansleep(fep->phy_reset_gpios, !(fep->phy_reset_active_high));
+
+	if (!fep->phy_reset_post_delay)
+		return;
+
+	if (fep->phy_reset_post_delay > 20)
+		msleep(fep->phy_reset_post_delay);
+	else
+		usleep_range(fep->phy_reset_post_delay * 1000,
+			     fep->phy_reset_post_delay * 1000 + 1000);
 }
 #else /* CONFIG_OF */
 static int fec_prepare_for_phy_reset(struct platform_device *pdev, struct fec_enet_private *fep)
