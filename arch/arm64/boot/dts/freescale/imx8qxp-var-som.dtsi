@@ -126,6 +126,8 @@
 	phy-supply = <&reg_phy0_pwr>;
 	phy-reset-gpios = <&lsio_gpio1 2 GPIO_ACTIVE_LOW>;
 	phy-reset-on-resume;
+	phy-reset-duration = <100>;
+	phy-reset-post-delay = <100>;
 
 	mdio {
 		#address-cells = <1>;
