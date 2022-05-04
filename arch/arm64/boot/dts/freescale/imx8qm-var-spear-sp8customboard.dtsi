@@ -267,17 +267,6 @@
 	status = "okay";
 };
 
-&fec2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_fec2>;
-	phy-mode = "rgmii";
-	phy-handle = <&ethphy1>;
-	phy-reset-gpios = <&lsio_gpio2 29 GPIO_ACTIVE_LOW>;
-	phy-reset-duration = <10>;
-	fsl,magic-packet;
-	status = "okay";
-};
-
 &flexcan1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_flexcan1>;
