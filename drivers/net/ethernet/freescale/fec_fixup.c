@@ -198,6 +198,7 @@ static int adin1300_phy_fixup(struct phy_device *phydev)
 void fec_enet_register_fixup(struct net_device *ndev)
 {
 	struct fec_enet_private *fep = netdev_priv(ndev);
+	static int adin1300_registered = 0;
 	int err;
 
 	if (!IS_BUILTIN(CONFIG_PHYLIB))
@@ -215,10 +216,14 @@ void fec_enet_register_fixup(struct net_device *ndev)
 		ar8031_registered = 1;
 	}
 
-	err = phy_register_fixup_for_uid(PHY_ID_ADIN1300, 0xffffffff,
-						 adin1300_phy_fixup);
-	if (err)
-		netdev_info(ndev, "Cannot register adin1300 PHY board fixup\n");
+	if (!adin1300_registered) {
+		err = phy_register_fixup_for_uid(PHY_ID_ADIN1300, 0xffffffff,
+							adin1300_phy_fixup);
+		if (err)
+			netdev_info(ndev, "Cannot register adin1300 PHY board fixup\n");
+		else
+			adin1300_registered = 1;
+	}
 }
 
 int of_fec_enet_parse_fixup(struct device_node *np)
