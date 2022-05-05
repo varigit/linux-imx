@@ -113,10 +113,43 @@ static int adin_ext_write(struct phy_device *phydev, const u32 regnum, const u16
 	return phy_write(phydev, ADIN1300_MII_EXT_REG_DATA, val);
 }
 
+/**
+ * adin_get_phy_mode_override - Get phy-mode override for adin PHY
+ *
+ * The function gets phy-mode string from property 'adi,phy-mode-override'
+ * and return its index in phy_modes table, or errno in error case.
+ */
+static int adin_get_phy_mode_override(struct phy_device *phydev)
+{
+	struct device *dev = &phydev->mdio.dev;
+	struct device_node *of_node = dev->of_node;
+	const char *phy_mode_override;
+	const char *prop_phy_mode_override = "adi,phy-mode-override";
+	int err, i;
+
+	err = of_property_read_string(of_node, prop_phy_mode_override,
+				      &phy_mode_override);
+	if (err < 0)
+		return err;
+
+	for (i = 0; i < PHY_INTERFACE_MODE_MAX; i++)
+		if (!strcasecmp(phy_mode_override, phy_modes(i)))
+			return i;
+
+	printk("%s: Error %s = '%s' is not valid\n", __func__,
+	       prop_phy_mode_override, phy_mode_override);
+
+	return -ENODEV;
+}
 
 static int adin_config_rgmii_mode(struct phy_device *phydev)
 {
 	u16 val;
+	int phy_mode_override = adin_get_phy_mode_override(phydev);
+
+	if (phy_mode_override >= 0) {
+		phydev->interface = (phy_interface_t) phy_mode_override;
+	}
 
 	val = adin_ext_read(phydev, ADIN1300_GE_RGMII_CFG_REG);
 
@@ -148,9 +181,18 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
 	return adin_ext_write(phydev, ADIN1300_GE_RGMII_CFG_REG, val);
 }
 
-static int adin1300_phy_fixup(struct phy_device *dev)
+static int adin1300_phy_fixup(struct phy_device *phydev)
 {
-	return adin_config_rgmii_mode(dev);
+	int rc;
+
+	rc = adin_config_rgmii_mode(phydev);
+	if (rc < 0)
+		return rc;
+
+	printk("%s: PHY@%d is using mode '%s'\n",
+		__func__, phydev->mdio.addr, phy_modes(phydev->interface));
+
+	return 0;
 }
 
 void fec_enet_register_fixup(struct net_device *ndev)
