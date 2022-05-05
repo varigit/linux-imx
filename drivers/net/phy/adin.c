@@ -14,6 +14,7 @@
 #include <linux/mii.h>
 #include <linux/phy.h>
 #include <linux/property.h>
+#include <linux/of.h>
 
 #define PHY_ID_ADIN1200				0x0283bc20
 #define PHY_ID_ADIN1300				0x0283bc30
@@ -207,6 +208,39 @@ struct adin_priv {
 	u64			stats[ARRAY_SIZE(adin_hw_stats)];
 };
 
+/**
+ * adin_get_phy_mode_override - Get phy-mode override for adin PHY
+ *
+ * The function gets phy-mode string from property 'adi,phy-mode-override'
+ * and return its index in phy_modes table, or errno in error case.
+ */
+int adin_get_phy_mode_override(struct phy_device *phydev)
+{
+	struct device *dev = &phydev->mdio.dev;
+	struct device_node *of_node = dev->of_node;
+	const char *phy_mode_override;
+	const char *prop_phy_mode_override = "adi,phy-mode-override";
+	int err, i;
+
+	err = of_property_read_string(of_node, prop_phy_mode_override,
+				      &phy_mode_override);
+	if (err < 0)
+		return err;
+
+	phydev_info(phydev,
+		    "%s = '%s'\n", prop_phy_mode_override, phy_mode_override);
+
+	for (i = 0; i < PHY_INTERFACE_MODE_MAX; i++)
+		if (!strcasecmp(phy_mode_override, phy_modes(i)))
+			return i;
+
+	phydev_err(phydev,
+		   "%s = '%s' is not valid\n",
+		   prop_phy_mode_override, phy_mode_override);
+
+	return -ENODEV;
+}
+
 static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
 {
 	size_t i;
@@ -246,6 +280,11 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
 {
 	u32 val;
 	int reg;
+	int phy_mode_override = adin_get_phy_mode_override(phydev);
+
+	if (phy_mode_override >= 0) {
+		phydev->interface = (phy_interface_t) phy_mode_override;
+	}
 
 	if (!phy_interface_is_rgmii(phydev))
 		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
