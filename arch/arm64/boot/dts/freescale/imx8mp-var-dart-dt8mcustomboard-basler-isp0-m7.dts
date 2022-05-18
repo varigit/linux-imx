@@ -8,7 +8,7 @@
 #include "imx8mp-var-common-m7.dtsi"
 
 / {
-	model = "Variscite DART-MX8M-PLUS M7 on DT8MCustomBoard 2.x with Basler camera on ISP0";
+	model = "Variscite DART-MX8M-PLUS M7 on DT8MCustomBoard 2.x and above with Basler camera on ISP0";
 };
 
 &i2c4 {
