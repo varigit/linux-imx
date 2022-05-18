@@ -8,7 +8,7 @@
 #include "imx8mp-var-common-m7.dtsi"
 
 / {
-	model = "Variscite DART-MX8M-PLUS M7 on DT8MCustomBoard 2.x";
+	model = "Variscite DART-MX8M-PLUS M7 on DT8MCustomBoard 2.x and above";
 };
 
 /*
