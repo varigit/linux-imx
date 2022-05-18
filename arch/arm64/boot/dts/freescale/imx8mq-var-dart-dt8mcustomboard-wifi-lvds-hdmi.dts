@@ -10,5 +10,5 @@
 #include "imx8mq-var-dart-dt8mcustomboard-hdmi.dtsi"
 
 / {
-	model = "Variscite DART-MX8M on DT8MCustomBoard 2.x WIFI+LVDS+HDMI";
+	model = "Variscite DART-MX8M on DT8MCustomBoard 2.x and above, with WIFI+LVDS+HDMI support";
 };
