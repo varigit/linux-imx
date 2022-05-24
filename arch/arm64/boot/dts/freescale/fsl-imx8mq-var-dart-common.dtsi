@@ -496,6 +496,7 @@
 	status = "okay";
 	phy-reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
 	phy-reset-duration = <10>;
+	phy-reset-post-delay = <20>;
 
 	mdio {
 		#address-cells = <1>;
