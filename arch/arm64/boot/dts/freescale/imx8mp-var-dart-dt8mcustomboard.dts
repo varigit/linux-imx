@@ -166,7 +166,7 @@
 	phy-handle = <&ethphy1>;
 	phy-reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
 	phy-reset-duration = <10>;
-	phy-reset-post-delay = <100>;
+	phy-reset-post-delay = <20>;
 	status = "okay";
 };
 
