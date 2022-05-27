@@ -65,6 +65,10 @@
 	};
 };
 
+&extcon_usb1 {
+	status = "disabled";
+};
+
 &i2c4 {
 	ov5640_mipi1: ov5640_mipi@3c {
 		pinctrl-names = "default";
@@ -72,9 +76,14 @@
 		powerdown-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
 		reset-gpios = <&gpio4 12 GPIO_ACTIVE_LOW>;
 	};
+};
 
-	/delete-node/ pca6408_1;
-	/delete-node/ pca6408_2;
+&pca6408_1 {
+	status = "disabled";
+};
+
+&pca6408_2 {
+	status = "disabled";
 };
 
 &pcie {
@@ -112,12 +121,6 @@
 		fsl,pins = <
 			MX8MP_IOMUXC_SAI1_RXD3__GPIO4_IO05 				0x1c6
 			MX8MP_IOMUXC_GPIO1_IO14__GPIO1_IO14				0x16
-		>;
-	};
-
-	pinctrl_extcon: extcongrp {
-		fsl,pins = <
-			MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10				0x10
 		>;
 	};
 
