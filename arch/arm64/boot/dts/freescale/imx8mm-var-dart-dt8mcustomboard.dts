@@ -7,7 +7,7 @@
 #include "imx8mm-var-dart.dtsi"
 
 / {
-	model = "Variscite DART-MX8M-MINI on DT8MCustomBoard 2.x";
+	model = "Variscite DART-MX8M-MINI on DT8MCustomBoard 2.x and above";
 
 	chosen {
 		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
