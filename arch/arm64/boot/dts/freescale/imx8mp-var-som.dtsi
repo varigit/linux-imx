@@ -195,7 +195,7 @@
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy0>;
 	snps,reset-gpio = <&gpio1 10 GPIO_ACTIVE_LOW>;
-	snps,reset-delays-us = <100000 10000 100000>;
+	snps,reset-delays-us = <0 10000 20000>;
 	mdio_rst_after_resume;
 	status = "okay";
 
