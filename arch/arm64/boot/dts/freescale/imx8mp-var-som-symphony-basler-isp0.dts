@@ -7,7 +7,7 @@
 #include "imx8mp-var-som-symphony.dts"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-PLUS on Symphony-Board with Basler camera on ISP0";
+	model = "Variscite VAR-SOM-MX8M-PLUS on Symphony-Board 1.4a and above with Basler camera on ISP0";
 };
 
 &i2c3 {

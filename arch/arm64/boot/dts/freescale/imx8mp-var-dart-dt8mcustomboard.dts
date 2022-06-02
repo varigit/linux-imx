@@ -7,7 +7,7 @@
 #include "imx8mp-var-dart.dtsi"
 
 / {
-	model = "Variscite DART-MX8M-PLUS on DT8MCustomBoard 2.x";
+	model = "Variscite DART-MX8M-PLUS on DT8MCustomBoard 2.x and above";
 
 	chosen {
 		stdout-path = &uart1;

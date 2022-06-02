@@ -4,7 +4,7 @@
  */
 #include "imx8mp-var-som-symphony.dts"
 /{
-	model = "Variscite VAR-SOM-MX8M-PLUS HDMI on Symphony-Board";
+	model = "Variscite VAR-SOM-MX8M-PLUS HDMI on Symphony-Board 1.4a and above";
 };
 
 /{

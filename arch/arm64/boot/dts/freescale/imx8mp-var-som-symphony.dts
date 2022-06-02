@@ -7,7 +7,7 @@
 #include "imx8mp-var-som.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-PLUS on Symphony-Board";
+	model = "Variscite VAR-SOM-MX8M-PLUS on Symphony-Board 1.4a and above";
 
 	chosen {
 		stdout-path = &uart2;

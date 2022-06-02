@@ -5,7 +5,7 @@
 #include "imx8mp-var-dart-dt8mcustomboard.dts"
 
 /{
-	model = "Variscite DART-MX8M-PLUS HDMI on DT8MCustomBoard 2.x";
+	model = "Variscite DART-MX8M-PLUS HDMI on DT8MCustomBoard 2.x and above";
 };
 
 /{

@@ -7,7 +7,7 @@
 #include "imx8mp-var-som-symphony.dts"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-PLUS with 2nd OV5640 on Symphony-Board";
+	model = "Variscite VAR-SOM-MX8M-PLUS with 2nd OV5640 on Symphony-Board 1.4a and above";
 };
 
 &i2c5 {
