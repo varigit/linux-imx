@@ -54,6 +54,7 @@ struct ptn5150_info {
 	struct work_struct irq_work;
 	struct mutex mutex;
 	struct usb_role_switch *role_sw;
+	int irq_is_id;
 };
 
 /* List of detectable cables */
@@ -109,6 +110,16 @@ static void ptn5150_check_state(struct ptn5150_info *info)
 		}
 		break;
 	default:
+		if (info->irq_is_id) {
+			extcon_set_state_sync(info->edev, EXTCON_USB_HOST, false);
+			gpiod_set_value_cansleep(info->vbus_gpiod, 0);
+			extcon_set_state_sync(info->edev, EXTCON_USB, true);
+			if (info->role_sw) {
+				ret = usb_role_switch_set_role(info->role_sw, USB_ROLE_DEVICE);
+				if (ret)
+					dev_err(info->dev, "PTN5150_DFP_ATTACHED failed to set default role: %d\n", ret);
+			}
+		}
 		break;
 	}
 }
@@ -138,6 +149,8 @@ static void ptn5150_irq_work(struct work_struct *work)
 
 		cable_attach = int_status & PTN5150_REG_INT_CABLE_ATTACH_MASK;
 		if (cable_attach) {
+			ptn5150_check_state(info);
+		} else if (info->irq_is_id) {
 			ptn5150_check_state(info);
 		} else {
 			extcon_set_state_sync(info->edev,
@@ -219,6 +232,7 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
 	struct device_node *np = i2c->dev.of_node;
 	struct ptn5150_info *info;
 	int ret;
+	int irq_flags;
 
 	if (!np)
 		return -EINVAL;
@@ -240,6 +254,11 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
 			return dev_err_probe(dev, ret, "failed to get VBUS GPIO\n");
 		}
 	}
+
+	if (of_property_read_bool(np, "irq-is-id-quirk"))
+		info->irq_is_id = 1;
+	else
+		info->irq_is_id = 0;
 
 	mutex_init(&info->mutex);
 
@@ -267,10 +286,13 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
 		}
 	}
 
+	irq_flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+	if (info->irq_is_id)
+		irq_flags |= IRQF_TRIGGER_RISING;
+
 	ret = devm_request_threaded_irq(dev, info->irq, NULL,
 					ptn5150_irq_handler,
-					IRQF_TRIGGER_FALLING |
-					IRQF_ONESHOT,
+					irq_flags,
 					i2c->name, info);
 	if (ret < 0) {
 		dev_err(dev, "failed to request handler for INTB IRQ\n");
