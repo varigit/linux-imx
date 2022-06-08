@@ -303,7 +303,8 @@
 		reg = <0x3d>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_typec>;
-		int-gpio = <&lsio_gpio5 9 GPIO_ACTIVE_HIGH>;
+		interrupt-parent = <&lsio_gpio5>;
+		interrupts = <9 IRQ_TYPE_LEVEL_HIGH>;
 
 		port {
 			typec_dr_sw: endpoint {
