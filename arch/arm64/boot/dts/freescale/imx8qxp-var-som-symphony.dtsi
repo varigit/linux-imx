@@ -752,7 +752,8 @@
 };
 
 &usbotg3_cdns3 {
-	dr_mode = "peripheral";
+	dr_mode = "otg";
+	usb-role-switch;
 	status = "okay";
 
 	port {
