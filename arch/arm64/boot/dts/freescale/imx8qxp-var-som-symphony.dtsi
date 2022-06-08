@@ -305,6 +305,7 @@
 		pinctrl-0 = <&pinctrl_typec>;
 		interrupt-parent = <&lsio_gpio5>;
 		interrupts = <9 IRQ_TYPE_LEVEL_HIGH>;
+		irq-is-id-quirk;
 
 		port {
 			typec_dr_sw: endpoint {
