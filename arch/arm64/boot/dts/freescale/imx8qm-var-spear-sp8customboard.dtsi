@@ -341,7 +341,8 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_ptn5150>;
 		reg = <0x3d>;
-		int-gpio = <&lsio_gpio0 19 GPIO_ACTIVE_HIGH>;
+		interrupt-parent = <&lsio_gpio0>;
+		interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
 		status ="okay";
 
 		port {
