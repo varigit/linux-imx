@@ -321,6 +321,7 @@
 		reg = <0x3d>;
 		interrupt-parent = <&lsio_gpio3>;
 		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
+		irq-is-id-quirk;
 		status ="okay";
 
 		port {
