@@ -69,6 +69,7 @@ struct ptn5150_info {
 	int irq;
 	struct work_struct irq_work;
 	struct mutex mutex;
+	int irq_is_id;
 };
 
 /* List of detectable cables */
@@ -153,9 +154,8 @@ static int ptn5150_poll_cable_status(struct ptn5150_info *info) {
 		ptn5150_event_disconnected(info);
 		break;
 	default:
-		dev_err(info->dev,
-			"Unknown Port status : %x\n",
-			port_status);
+		if (info->irq_is_id)
+			ptn5150_event_dfp_attached(info);
 		break;
 	}
 
@@ -192,7 +192,9 @@ static void ptn5150_irq_work(struct work_struct *work)
 				mutex_unlock(&info->mutex);
 				return;
 			}
-		} else {
+		} else if (info->irq_is_id) {
+			ptn5150_poll_cable_status(info); 
+		}else {
 			ptn5150_event_disconnected(info);
 		}
 	}
@@ -265,6 +267,7 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
 	struct device_node *np = i2c->dev.of_node;
 	struct ptn5150_info *info;
 	int ret;
+	int irq_flags;
 
 	if (!np)
 		return -EINVAL;
@@ -293,6 +296,11 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
 		}
 	}
 
+	if (of_property_read_bool(np, "irq-is-id-quirk"))
+		info->irq_is_id = 1;
+	else
+		info->irq_is_id = 0;
+
 	mutex_init(&info->mutex);
 
 	INIT_WORK(&info->irq_work, ptn5150_irq_work);
@@ -312,10 +320,13 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
 			return info->irq;
 		}
 
+		irq_flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+		if (info->irq_is_id)
+			irq_flags |= IRQF_TRIGGER_RISING;
+
 		ret = devm_request_threaded_irq(dev, info->irq, NULL,
 						ptn5150_irq_handler,
-						IRQF_TRIGGER_FALLING |
-						IRQF_ONESHOT,
+						irq_flags,
 						i2c->name, info);
 		if (ret < 0) {
 			dev_err(dev, "failed to request handler for INTB IRQ\n");

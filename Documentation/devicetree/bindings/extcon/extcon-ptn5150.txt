@@ -14,6 +14,26 @@ Required properties:
 - pinctrl-names : a pinctrl state named "default" must be defined.
 - pinctrl-0 : phandle referencing pin configuration of interrupt and vbus
 	control.
+- irq-is-id-quirk: The PTN5150 has an open drain output, ID, that is driven low when a
+      UFP is attached. ID is pulled high by an external resistor when either
+      1) no cable is attached or 2) a DFP is attached.
+
+      For designs that do not connect the PTN5150 IRQ, this boolean allows
+      using the ID output as an IRQ by triggering on falling and rising edges.
+
+      A falling edge indicates a UFP is attached (e.g. flash drive). Change
+      to host mode using usb_role_switch_set_role.
+
+      A rising edge indicates the UFP is removed. Prepare for when a DFP
+      is connected by changing to device mode using usb_role_switch_set_role.
+
+      This is useful because it allows a single device tree to support
+      the following:
+
+      Variscite's Symphony board <= 1.4 connects the PTN5150 IRQ pin to
+      a GPIO on the SoM. Starting in Symphony board >= 1.4a, to allow
+      compatibility with all Variscite i.MX8 SoMs, PTN5150 ID pin is
+      instead connected to the same GPIO on the SoM.
 
 Example:
 	ptn5150@1d {
