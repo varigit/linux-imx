@@ -469,6 +469,7 @@
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy0>;
 	phy-reset-duration = <10>;
+	phy-reset-post-delay = <20>;
 	status = "okay";
 
 	mdio {
@@ -498,6 +499,7 @@
 	phy-handle = <&ethphy1>;
 	phy-reset-gpios = <&lsio_gpio2 29 GPIO_ACTIVE_LOW>;
 	phy-reset-duration = <10>;
+	phy-reset-post-delay = <20>;
 	fsl,magic-packet;
 	status = "okay";
 };
