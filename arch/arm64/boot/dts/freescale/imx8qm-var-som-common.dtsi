@@ -606,6 +606,7 @@
 		pinctrl-0 = <&pinctrl_ptn5150>;
 		reg = <0x3d>;
 		int-gpio = <&lsio_gpio3 11 GPIO_ACTIVE_HIGH>;
+		irq-is-id-quirk;
 		status ="okay";
 	};
 };
