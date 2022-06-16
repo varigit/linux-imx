@@ -260,6 +260,7 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_typec>;
 		int-gpio = <&lsio_gpio5 9 GPIO_ACTIVE_HIGH>;
+		irq-is-id-quirk;
 	};
 
 	/* MIPI-CSI2 sensor */
