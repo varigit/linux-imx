@@ -142,6 +142,38 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-ddr3l-val.dtb imx8mq-ddr4-val.dtb imx8mq-ddr4-val-gpmi-nand.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk-pcie-ep.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mq-var-dart-dt8mcustomboard-legacy-m4-sd-dp.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-m4-sd-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-m4-sd-lvds-dp.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-m4-sd-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-m4-sd-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-m4-wifi-dp.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-m4-wifi-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-m4-wifi-lvds-dp.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-m4-wifi-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-m4-wifi-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-sd-dp.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-sd-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-sd-lvds-dp.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-sd-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-sd-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-wifi-dp.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-wifi-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-wifi-lvds-dp.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-wifi-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-legacy-wifi-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-sd-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-sd-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-sd-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-sd-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-wifi-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds-hdmi.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb imx8qm-mek-ov5640.dtb \
 			  imx8qm-mek-enet2-tja1100.dtb imx8qm-mek-rpmsg.dtb \
 			  imx8qm-mek-hdmi.dtb \
