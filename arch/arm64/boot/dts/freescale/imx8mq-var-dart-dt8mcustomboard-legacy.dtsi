@@ -1,0 +1,168 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright 2017 NXP
+ * Copyright (C) 2017-2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
+ * Copyright 2018-2021 Variscite Ltd.
+ */
+
+#include "imx8mq-var-dart-dt8mcustomboard.dtsi"
+
+/ {
+	gpio-keys {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_keys>;
+
+		up {
+			gpios = <&gpio4 18 GPIO_ACTIVE_LOW>;
+		};
+
+		down {
+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+		};
+
+		home {
+			gpios = <&gpio4 13 GPIO_ACTIVE_LOW>;
+		};
+
+		back {
+			gpios = <&gpio4 6 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	leds {
+		emmc {
+			gpios = <&gpio4 17 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	can0_osc: can0_osc {
+		clock-frequency = <20000000>;
+	};
+
+	/delete-node/ extcon_usb1;
+};
+
+&can0 {
+	spi-max-frequency = <10000000>;
+	/delete-property/ microchip,rx-int-gpios;
+};
+
+&pcie0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pcie0>;
+	reset-gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
+};
+
+&pcie1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pcie1>;
+	reset-gpio = <&gpio4 19 GPIO_ACTIVE_LOW>;
+};
+
+&usb_dwc3_0 {
+	extcon = <&typec_ptn5150>;
+};
+
+&i2c2 {
+	typec_ptn5150: typec@3d {
+		status = "okay";
+		compatible = "nxp,ptn5150";
+		reg = <0x3d>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_extcon>;
+		int-gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+	};
+
+	ov5640_mipi1: ov5640_mipi1@3c {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_csi1>;
+		pwn-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
+		rst-gpios = <&gpio5 28 GPIO_ACTIVE_HIGH>;
+	};
+
+	ft5x06_ts: ft5x06_ts@38 {
+		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>;
+	};
+};
+
+&i2c4 {
+	ov5640_mipi2: ov5640_mipi2@3c {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_csi2>;
+		pwn-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+		rst-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
+	};
+
+	/delete-node/ pca6408_1;
+	/delete-node/ pca6408_2;
+};
+
+&iomuxc {
+	pinctrl_can: cangrp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6		0xc0
+		>;
+	};
+
+	pinctrl_captouch: captouchgrp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_SAI1_RXD3_GPIO4_IO5 		0x46
+			MX8MQ_IOMUXC_GPIO1_IO14_GPIO1_IO14		0x80
+		>;
+	};
+
+	pinctrl_csi1: csi1grp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_SAI1_RXD6_GPIO4_IO8		0x19
+			MX8MQ_IOMUXC_UART4_RXD_GPIO5_IO28		0x19
+		>;
+	};
+
+	pinctrl_csi2: csi2grp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_SAI1_RXD7_GPIO4_IO9		0x19
+			MX8MQ_IOMUXC_SAI1_TXD0_GPIO4_IO12		0x19
+		>;
+	};
+
+	pinctrl_hdmi: hdmigrp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5		0xc1
+		>;
+	};
+
+	pinctrl_gpio_keys: keygrp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_SAI1_TXD3_GPIO4_IO15		0xc6
+			MX8MQ_IOMUXC_SAI1_TXD6_GPIO4_IO18		0xc6
+			MX8MQ_IOMUXC_SAI1_TXD1_GPIO4_IO13		0xc6
+			MX8MQ_IOMUXC_SAI1_RXD4_GPIO4_IO6		0xc6
+		>;
+	};
+
+	pinctrl_leds: ledgrp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_SAI1_RXD1_GPIO4_IO3		0xc6
+			MX8MQ_IOMUXC_SAI1_TXD2_GPIO4_IO14		0xc6
+			MX8MQ_IOMUXC_SAI1_RXD2_GPIO4_IO4		0xc6
+			MX8MQ_IOMUXC_SAI1_TXD5_GPIO4_IO17		0xc6
+		>;
+	};
+	pinctrl_pcie0: pcie0grp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_SAI1_RXD5_GPIO4_IO7		0x16
+		>;
+	};
+
+	pinctrl_pcie1: pcie1grp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_SAI1_TXD7_GPIO4_IO19		0x16
+		>;
+	};
+
+	pinctrl_extcon: extcongrp {
+		fsl,pins = <
+			MX8MQ_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x16
+		>;
+	};
+};

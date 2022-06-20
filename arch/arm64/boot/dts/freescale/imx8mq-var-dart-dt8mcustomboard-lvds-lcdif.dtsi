@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright 2017 NXP
+ * Copyright 2018-2020 Variscite Ltd.
+ */
+
+
+&backlight {
+	status = "okay";
+};
+
+&dphy {
+	status = "okay";
+};
+
+&dsi_lvds_bridge {
+	status = "okay";
+};
+
+&ft5x06_ts {
+	status = "okay";
+};
+
+&irqsteer {
+	status = "okay";
+};
+
+&lcdif {
+	status = "okay";
+	max-memory-bandwidth = <314676293>; /* 1280x1024-32@60 */
+
+	assigned-clocks = <&clk IMX8MQ_CLK_LCDIF_PIXEL>,
+			  <&clk IMX8MQ_VIDEO_PLL1_BYPASS>,
+			  <&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
+			  <&clk IMX8MQ_VIDEO_PLL1>;
+	assigned-clock-parents = <&clk IMX8MQ_VIDEO_PLL1_OUT>,
+				 <&clk IMX8MQ_VIDEO_PLL1>,
+				 <&clk IMX8MQ_CLK_27M>;
+	assigned-clock-rate = <126000000>, <0>, <0>, <1134000000>;
+};
+
+&mipi_dsi {
+	status = "okay";
+};
+
+&pwm1 {
+	status = "okay";
+};

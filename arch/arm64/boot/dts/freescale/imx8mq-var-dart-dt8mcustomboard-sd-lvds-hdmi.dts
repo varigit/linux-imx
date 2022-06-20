@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright 2017 NXP
+ * Copyright 2018-2021 Variscite Ltd.
+ */
+
+#include "imx8mq-var-dart-dt8mcustomboard.dtsi"
+#include "imx8mq-var-dart-dt8mcustomboard-sd.dtsi"
+#include "imx8mq-var-dart-dt8mcustomboard-hdmi.dtsi"
+#include "imx8mq-var-dart-dt8mcustomboard-lvds-lcdif.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M on DT8MCustomBoard 2.x and above SD+LVDS+HDMI";
+};
