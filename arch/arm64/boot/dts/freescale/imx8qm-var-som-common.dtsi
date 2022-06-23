@@ -393,6 +393,7 @@
 			reg = <5>;
 			at803x,eee-disabled;
 			at803x,vddio-1p8v;
+			adi,phy-mode-override = "rgmii";
 		};
 	};
 };
