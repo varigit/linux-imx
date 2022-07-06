@@ -328,6 +328,7 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
 	struct device_node *np = dev->of_node;
 	void __iomem *base;
 	int ret;
+	bool is_som = false; 
 
 	check_m4_enabled();
 
@@ -352,6 +353,10 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
 	of_node_put(np);
 	if (WARN_ON(!base))
 		return -ENOMEM;
+
+	if (of_find_compatible_node(NULL, NULL, "variscite,imx8mm-var-som"))
+		is_som = true;
+
 
 	hws[IMX8MM_AUDIO_PLL1_REF_SEL] = imx_clk_hw_mux("audio_pll1_ref_sel", base + 0x0, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
 	hws[IMX8MM_AUDIO_PLL2_REF_SEL] = imx_clk_hw_mux("audio_pll2_ref_sel", base + 0x14, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
@@ -510,10 +515,13 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
 	hws[IMX8MM_CLK_I2C2] = imx8m_clk_hw_composite("i2c2", imx8mm_i2c2_sels, base + 0xad80);
 	hws[IMX8MM_CLK_I2C3] = imx8m_clk_hw_composite("i2c3", imx8mm_i2c3_sels, base + 0xae00);
 	hws[IMX8MM_CLK_I2C4] = imx8m_clk_hw_composite("i2c4", imx8mm_i2c4_sels, base + 0xae80);
-	hws[IMX8MM_CLK_UART1] = imx8m_clk_hw_composite("uart1", imx8mm_uart1_sels, base + 0xaf00);
-	hws[IMX8MM_CLK_UART2] = imx8m_clk_hw_composite_critical("uart2", imx8mm_uart2_sels, base + 0xaf80);
+	hws[IMX8MM_CLK_UART1] = imx8m_clk_hw_composite_critical("uart1", imx8mm_uart1_sels, base + 0xaf00);
+	hws[IMX8MM_CLK_UART2] = imx8m_clk_hw_composite("uart2", imx8mm_uart2_sels, base + 0xaf80);
 	hws[IMX8MM_CLK_UART3] = imx8m_clk_hw_composite("uart3", imx8mm_uart3_sels, base + 0xb000);
-	hws[IMX8MM_CLK_UART4] = imx8m_clk_hw_composite("uart4", imx8mm_uart4_sels, base + 0xb080);
+	if(is_som)
+		hws[IMX8MM_CLK_UART4] = imx8m_clk_hw_composite_critical("uart4", imx8mm_uart4_sels, base + 0xb080);
+	else
+		hws[IMX8MM_CLK_UART4] = imx8m_clk_hw_composite("uart4", imx8mm_uart4_sels, base + 0xb080);
 	hws[IMX8MM_CLK_USB_CORE_REF] = imx8m_clk_hw_composite("usb_core_ref", imx8mm_usb_core_sels, base + 0xb100);
 	hws[IMX8MM_CLK_USB_PHY_REF] = imx8m_clk_hw_composite("usb_phy_ref", imx8mm_usb_phy_sels, base + 0xb180);
 	hws[IMX8MM_CLK_GIC] = imx8m_clk_hw_composite_critical("gic", imx8mm_gic_sels, base + 0xb200);
