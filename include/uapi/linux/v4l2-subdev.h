@@ -206,4 +206,7 @@ struct v4l2_subdev_capability {
 #define VIDIOC_SUBDEV_QUERY_DV_TIMINGS		_IOR('V', 99, struct v4l2_dv_timings)
 #define VIDIOC_SUBDEV_DV_TIMINGS_CAP		_IOWR('V', 100, struct v4l2_dv_timings_cap)
 
+#define V4L2_SUBDEV_PRIV_IOCTL_GET_CTRL 1
+#define V4L2_SUBDEV_PRIV_IOCTL_SET_CTRL 2
+
 #endif

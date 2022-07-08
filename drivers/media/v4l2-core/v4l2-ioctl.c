@@ -2246,12 +2246,12 @@ static int v4l_s_ctrl(const struct v4l2_ioctl_ops *ops,
 	struct v4l2_ext_controls ctrls;
 	struct v4l2_ext_control ctrl;
 
+	if (ops->vidioc_s_ctrl)
+		return ops->vidioc_s_ctrl(file, fh, p);
 	if (vfh && vfh->ctrl_handler)
 		return v4l2_s_ctrl(vfh, vfh->ctrl_handler, p);
 	if (vfd->ctrl_handler)
 		return v4l2_s_ctrl(NULL, vfd->ctrl_handler, p);
-	if (ops->vidioc_s_ctrl)
-		return ops->vidioc_s_ctrl(file, fh, p);
 	if (ops->vidioc_s_ext_ctrls == NULL)
 		return -ENOTTY;
 
