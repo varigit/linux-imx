@@ -331,6 +331,7 @@
 	srp-disable;
 	adp-disable;
 	extcon = <0>, <&extcon_usb1>;
+	disable-over-current;
 	status = "okay";
 };
 
