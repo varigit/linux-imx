@@ -308,6 +308,7 @@
 	hnp-disable;
 	srp-disable;
 	adp-disable;
+	disable-over-current;
 	status = "okay";
 };
 
@@ -315,6 +316,7 @@
 	dr_mode = "host";
 	picophy,pre-emp-curr-control = <3>;
 	picophy,dc-vol-level-adjust = <7>;
+	disable-over-current;
 	status = "okay";
 };
 
