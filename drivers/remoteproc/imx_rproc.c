@@ -1074,6 +1074,19 @@ static int imx_rproc_partition_notify(struct notifier_block *nb,
 	return 0;
 }
 
+static int imx_rproc_parse_dt(struct device *dev, struct imx_rproc *priv)
+{
+	int ret = 0;
+
+	if (priv->dcfg->method == IMX_SCU_API) {
+		ret = of_property_read_u32(dev->of_node, "core-index", &priv->id);
+		if (ret)
+			dev_err(dev, "No reg <core index id>\n");
+	}
+
+	return ret;
+}
+
 static int imx_rproc_detect_mode(struct imx_rproc *priv)
 {
 	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
@@ -1108,12 +1121,6 @@ static int imx_rproc_detect_mode(struct imx_rproc *priv)
 			dev_err(dev, "No reg <core resource id>\n");
 			return ret;
 		}
-		ret = of_property_read_u32(dev->of_node, "core-index", &priv->id);
-		if (ret) {
-			dev_err(dev, "No reg <core index id>\n");
-			return ret;
-		}
-
 		priv->proc_nb.notifier_call = imx_rproc_partition_notify;
 
 
@@ -1252,6 +1259,10 @@ static int imx_rproc_probe(struct platform_device *pdev)
 			goto err_put_rproc;
 		/* mbox is optional, so not fail here */
 	}
+
+	ret = imx_rproc_parse_dt(dev, priv);
+	if (ret)
+		goto err_put_mbox;
 
 	ret = imx_rproc_addr_init(priv, pdev);
 	if (ret) {
