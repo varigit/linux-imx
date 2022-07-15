@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
  * Copyright 2020 NXP
- * Copyright 2020 Variscite
+ * Copyright 2022 Variscite
  */
 
 /dts-v1/;
@@ -47,6 +47,14 @@
 		A53_L2: l2-cache0 {
 			compatible = "cache";
 		};
+	};
+
+	pmu {
+		compatible = "arm,armv8-pmuv3";
+		interrupt-parent = <&gic>;
+		interrupts = <GIC_PPI 7
+			     (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
+		interrupt-affinity = <&A53_2>, <&A53_3>;
 	};
 
 	psci {
