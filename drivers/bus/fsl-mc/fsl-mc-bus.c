@@ -1250,6 +1250,7 @@ static void fsl_mc_bus_shutdown(struct platform_device *pdev)
 		return;
 
 	mc_io = mc->root_mc_bus_dev->mc_io;
+	fsl_mc_device_remove(mc->root_mc_bus_dev);
 	fsl_destroy_mc_io(mc_io);
 
 	bus_unregister_notifier(&fsl_mc_bus_type, &fsl_mc_nb);
