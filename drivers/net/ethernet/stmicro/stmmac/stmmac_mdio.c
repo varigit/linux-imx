@@ -224,6 +224,7 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
 	u32 value = MII_BUSY;
 	int data = 0;
 	u32 v;
+	int ret;
 
 	data = pm_runtime_resume_and_get(priv->device);
 	if (data < 0)
@@ -248,6 +249,10 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
 		}
 	}
 
+	ret = stmmac_bus_clks_config(priv, true);
+	if (ret)
+		return ret;
+
 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
 			       100, 10000)) {
 		data = -EBUSY;
@@ -265,6 +270,8 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
 
 	/* Read the data from the MII data register */
 	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+
+	stmmac_bus_clks_config(priv, false);
 
 err_disable_clks:
 	pm_runtime_put(priv->device);
@@ -317,6 +324,10 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
 		value |= MII_WRITE;
 	}
 
+	ret = stmmac_bus_clks_config(priv, true);
+	if (ret)
+		return ret;
+
 	/* Wait until any existing MII operation is complete */
 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
 			       100, 10000)) {
@@ -331,6 +342,8 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
 	/* Wait until any existing MII operation is complete */
 	ret = readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
 				 100, 10000);
+
+	stmmac_bus_clks_config(priv, false);
 
 err_disable_clks:
 	pm_runtime_put(priv->device);
