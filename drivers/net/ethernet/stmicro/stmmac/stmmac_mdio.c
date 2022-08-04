@@ -246,6 +246,11 @@ static int stmmac_mdio_read(struct stmmac_priv *priv, int data, u32 value)
 	unsigned int mii_address = priv->hw->mii.addr;
 	unsigned int mii_data = priv->hw->mii.data;
 	u32 v;
+	int ret;
+
+	ret = stmmac_bus_clks_config(priv, true);
+	if (ret)
+		return ret;
 
 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
 			       100, 10000))
@@ -259,7 +264,11 @@ static int stmmac_mdio_read(struct stmmac_priv *priv, int data, u32 value)
 		return -EBUSY;
 
 	/* Read the data from the MII data register */
-	return readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+	ret = readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+
+	stmmac_bus_clks_config(priv, false);
+
+	return ret;
 }
 
 /**
@@ -347,6 +356,11 @@ static int stmmac_mdio_write(struct stmmac_priv *priv, int data, u32 value)
 	unsigned int mii_address = priv->hw->mii.addr;
 	unsigned int mii_data = priv->hw->mii.data;
 	u32 v;
+	int ret;
+
+	ret = stmmac_bus_clks_config(priv, true);
+	if (ret)
+		return ret;
 
 	/* Wait until any existing MII operation is complete */
 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
@@ -358,8 +372,12 @@ static int stmmac_mdio_write(struct stmmac_priv *priv, int data, u32 value)
 	writel(value, priv->ioaddr + mii_address);
 
 	/* Wait until any existing MII operation is complete */
-	return readl_poll_timeout(priv->ioaddr + mii_address, v,
+	ret = readl_poll_timeout(priv->ioaddr + mii_address, v,
 				  !(v & MII_BUSY), 100, 10000);
+
+	stmmac_bus_clks_config(priv, false);
+
+	return ret;
 }
 
 /**
