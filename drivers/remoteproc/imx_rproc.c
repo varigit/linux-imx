@@ -512,6 +512,7 @@ static int imx_rproc_start(struct rproc *rproc)
 
 	switch (dcfg->method) {
 	case IMX_RPROC_MMIO:
+		imx_8m_setup_stack(rproc);
 		ret = regmap_update_bits(priv->regmap, dcfg->src_reg, dcfg->src_mask,
 					 dcfg->src_start);
 		break;
