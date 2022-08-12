@@ -74,6 +74,7 @@ static const phys_addr_t size_bytes __initconst =
 static phys_addr_t  size_cmdline __initdata = -1;
 static phys_addr_t base_cmdline __initdata;
 static phys_addr_t limit_cmdline __initdata;
+static char name_cmdline[CMA_MAX_NAME] = "reserved";
 
 static int __init early_cma(char *p)
 {
@@ -95,6 +96,24 @@ static int __init early_cma(char *p)
 	return 0;
 }
 early_param("cma", early_cma);
+
+static int __init early_cma_name(char *p)
+{
+	if (!p) {
+		pr_err("Config string not provided\n");
+		return -EINVAL;
+	}
+
+	if (!strlen(p)) {
+		pr_err("cma_name must have at least one character\n");
+		return -EINVAL;
+	}
+
+	snprintf(name_cmdline, CMA_MAX_NAME, p);
+
+	return 0;
+}
+early_param("cma_name", early_cma_name);
 
 #ifdef CONFIG_DMA_PERNUMA_CMA
 
@@ -231,7 +250,7 @@ int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
 	int ret;
 
 	ret = cma_declare_contiguous(base, size, limit, 0, 0, fixed,
-					"reserved", res_cma);
+					name_cmdline, res_cma);
 	if (ret)
 		return ret;
 
