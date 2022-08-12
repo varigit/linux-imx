@@ -644,6 +644,13 @@
 			altogether. For more information, see
 			kernel/dma/contiguous.c
 
+	cma_name=	Override the cma heap name
+			Format: <string>
+			When passing the cma kernel parameter, the default
+			cma name is 'reserved'. This parameter allows it to
+			be overriden to align with the device tree name,
+			like 'linux,cma'.
+
 	cma_pernuma=nn[MG]
 			[ARM64,KNL,CMA]
 			Sets the size of kernel per-numa memory area for
