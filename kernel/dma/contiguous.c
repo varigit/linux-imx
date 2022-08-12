@@ -68,6 +68,7 @@ struct cma *dma_contiguous_default_area;
 static phys_addr_t  size_cmdline __initdata = -1;
 static phys_addr_t base_cmdline __initdata;
 static phys_addr_t limit_cmdline __initdata;
+static char name_cmdline[CMA_MAX_NAME] = "reserved";
 
 static int __init early_cma(char *p)
 {
@@ -90,6 +91,24 @@ static int __init early_cma(char *p)
 }
 early_param("cma", early_cma);
 
+static int __init early_cma_name(char *p)
+{
+	if (!p) {
+		pr_err("Config string not provided\n");
+		return -EINVAL;
+	}
+
+	if (!strlen(p)) {
+		pr_err("cma_name must have at least one character\n");
+		return -EINVAL;
+	}
+
+	snprintf(name_cmdline, CMA_MAX_NAME, p);
+
+	return 0;
+}
+early_param("cma_name", early_cma_name);
+
 /*
  * cma_skip_dt_default_reserved_mem - This is called from the
  * reserved_mem framework to detect if the default cma region is being
@@ -101,7 +120,6 @@ bool __init cma_skip_dt_default_reserved_mem(void)
 }
 
 #ifdef CONFIG_DMA_NUMA_CMA
-
 static struct cma *dma_contiguous_numa_area[MAX_NUMNODES];
 static phys_addr_t numa_cma_size[MAX_NUMNODES] __initdata;
 static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
@@ -290,7 +308,7 @@ int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
 	int ret;
 
 	ret = cma_declare_contiguous(base, size, limit, 0, 0, fixed,
-					"reserved", res_cma);
+					name_cmdline, res_cma);
 	if (ret)
 		return ret;
 
