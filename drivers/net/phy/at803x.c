@@ -194,6 +194,7 @@ struct at803x_priv {
 	struct regulator_dev *vddio_rdev;
 	struct regulator_dev *vddh_rdev;
 	struct regulator *vddio;
+	int vddio_last_selector;
 	u64 stats[ARRAY_SIZE(at803x_hw_stats)];
 };
 
@@ -430,9 +431,13 @@ static int at803x_suspend(struct phy_device *phydev)
 {
 	int value;
 	int wol_enabled;
+	struct at803x_priv *priv = phydev->priv;
+	const struct regulator_ops *vddio_ops = priv->vddio_rdev->desc->ops;
 
 	value = phy_read(phydev, AT803X_INTR_ENABLE);
 	wol_enabled = value & AT803X_INTR_ENABLE_WOL;
+
+	priv->vddio_last_selector = vddio_ops->get_voltage_sel(priv->vddio_rdev);
 
 	if (wol_enabled)
 		value = BMCR_ISOLATE;
@@ -446,6 +451,11 @@ static int at803x_suspend(struct phy_device *phydev)
 
 static int at803x_resume(struct phy_device *phydev)
 {
+	struct at803x_priv *priv = phydev->priv;
+	const struct regulator_ops *vddio_ops = priv->vddio_rdev->desc->ops;
+
+	if (priv->vddio_last_selector >= 0)
+		vddio_ops->set_voltage_sel(priv->vddio_rdev, priv->vddio_last_selector);
 	return phy_modify(phydev, MII_BMCR, BMCR_PDOWN | BMCR_ISOLATE, 0);
 }
 
@@ -655,6 +665,7 @@ static int at803x_probe(struct phy_device *phydev)
 		return -ENOMEM;
 
 	phydev->priv = priv;
+	priv->vddio_last_selector = -1;
 
 	ret = at803x_parse_dt(phydev);
 	if (ret)
