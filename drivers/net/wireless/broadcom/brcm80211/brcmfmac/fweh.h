@@ -102,7 +102,7 @@ enum brcmf_fweh_event_code {
 	 * minimum length check in device firmware so it is
 	 * hard-coded here.
 	 */
-	BRCMF_E_LAST = 139
+	BRCMF_E_LAST = 191
 };
 #undef BRCMF_ENUM_DEF
 
