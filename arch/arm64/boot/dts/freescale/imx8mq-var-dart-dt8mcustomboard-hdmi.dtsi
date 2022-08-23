@@ -5,6 +5,10 @@
  */
 
 / {
+	chosen {
+		bootargs-append = "androidboot.primary_display=imx-dcss androidboot.gui_resolution=1080p androidboot.fbTileSupport=enable";
+	};
+
 	sound-hdmi {
 		status = "okay";
 	};

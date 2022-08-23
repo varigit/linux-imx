@@ -2,13 +2,81 @@
 /*
  * Copyright 2017 NXP
  * Copyright (C) 2017-2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
- * Copyright 2018-2021 Variscite Ltd.
+ * Copyright 2021-2022 Variscite Ltd.
  */
 
 /dts-v1/;
 
 #include <dt-bindings/usb/pd.h>
 #include "imx8mq.dtsi"
+
+/ {
+	firmware {
+		android {
+			compatible = "android,firmware";
+			/* default emmc node used for GSI */
+			boot_devices = "soc@0/30800000.bus/30b40000.mmc";
+			/* sd card node which used if androidboot.boot_device_root=mmcblk1 */
+			boot_devices_mmcblk1 = "soc@0/30800000.bus/30b50000.mmc";
+			/* emmc node which used if androidboot.boot_device_root=mmcblk0 */
+			boot_devices_mmcblk0 = "soc@0/30800000.bus/30b40000.mmc";
+			fstab {
+				compatible = "android,fstab";
+				system {
+					compatible = "android,system";
+					dev = "system";
+					type = "ext4";
+					mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb,avb_keys=/avb,logical,first_stage_mount";
+				};
+				system_ext {
+					compatible = "android,system_ext";
+					dev = "system_ext";
+					type = "ext4";
+					mnt_flags = "noatime,ro,errors=panic";
+					fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+				};
+				vendor {
+					compatible = "android,vendor";
+					dev = "vendor";
+					type = "ext4";
+					mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+				};
+				product {
+					compatible = "android,product";
+					dev = "product";
+					type = "ext4";
+					mnt_flags = "noatime,errors=panic,ro,barrier=1,inode_readahead_blks=8";
+					fsmgr_flags = "wait,slotselect,avb,logical,first_stage_mount";
+				};
+				metadata {
+					compatible = "android,metadata";
+					dev = "/dev/block/by-name/metadata";
+					type = "ext4";
+					mnt_flags = "noatime,nosuid,nodev,discard,sync";
+					fsmgr_flags = "wait,formattable,first_stage_mount,check";
+				};
+			};
+			vbmeta {
+				/*we need use FirstStageMountVBootV2 if we enable avb*/
+				compatible = "android,vbmeta";
+				/*parts means the partition witch can be mount in first stage*/
+				parts = "vbmeta,dtbo,boot,system,vendor,product";
+			};
+		};
+	};
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
+};
 
 / {
 	compatible = "variscite,imx8m-dart", "fsl,imx8mq";
@@ -540,7 +608,7 @@
 /* Bluetooth */
 &uart4 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart4>;
 	assigned-clocks = <&clk IMX8MQ_CLK_UART4>;
 	assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_80M>;
 	fsl,uart-has-rtscts;
@@ -574,4 +642,41 @@
 	pinctrl-0 = <&pinctrl_wdog>;
 	fsl,ext-reset-output;
 	status = "okay";
+};
+
+&tmu {
+	throttle-cfgs {
+		throttle_devfreq: devfreq {
+			throttle,max_state = <2>;
+			#cooling-cells = <2>;
+		};
+	};
+};
+
+&cpu_thermal {
+	trips {
+		cpu_alert1: trip1 {
+			temperature = <82000>;
+			hysteresis = <2000>;
+			type = "passive";
+		};
+		cpu_alert2: trip2 {
+			temperature = <86000>;
+			hysteresis = <2000>;
+			type = "passive";
+		};
+	};
+
+	cooling-maps {
+		map0 {
+			trip = <&cpu_alert1>;
+			cooling-device =
+				<&throttle_devfreq 0 1>;
+		};
+		map1 {
+			trip = <&cpu_alert2>;
+			cooling-device =
+				<&throttle_devfreq 0 2>;
+		};
+	};
 };
