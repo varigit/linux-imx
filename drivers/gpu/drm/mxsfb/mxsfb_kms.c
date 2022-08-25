@@ -136,9 +136,12 @@ static void mxsfb_set_formats(struct mxsfb_drm_private *mxsfb)
 		ctrl |= CTRL_BUS_WIDTH_16;
 		break;
 	case MEDIA_BUS_FMT_RGB666_1X18:
+	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
 		ctrl |= CTRL_BUS_WIDTH_18;
 		break;
 	case MEDIA_BUS_FMT_RGB888_1X24:
+	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA:
+	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
 		ctrl |= CTRL_BUS_WIDTH_24;
 		break;
 	default:
