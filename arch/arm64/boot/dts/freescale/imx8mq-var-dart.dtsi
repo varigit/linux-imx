@@ -32,19 +32,31 @@
 	};
 
 	sound-wm8904 {
-		compatible = "fsl,imx-audio-wm8904";
-		model = "wm8904-audio";
-		audio-cpu = <&sai3>;
-		audio-codec = <&wm8904>;
-		audio-routing =
+		compatible = "simple-audio-card";
+		simple-audio-card,bitclock-master = <&dailink_master>;
+		simple-audio-card,format = "i2s";
+		simple-audio-card,frame-master = <&dailink_master>;
+		simple-audio-card,name = "wm8904-audio";
+		simple-audio-card,routing =
 			"Headphone Jack", "HPOUTL",
 			"Headphone Jack", "HPOUTR",
 			"IN2L", "Line In Jack",
 			"IN2R", "Line In Jack",
-			"IN1L", "Mic Jack",
-			"Playback", "CPU-Playback",
-			"CPU-Capture", "Capture";
-		status = "okay";
+			"IN1L", "Microphone Jack",
+			"IN1R", "Microphone Jack";
+		simple-audio-card,widgets =
+			"Microphone", "Microphone Jack",
+			"Headphone", "Headphone Jack",
+			"Line", "Line In Jack";
+		simple-audio-card,mclk-fs = <256>;
+
+		dailink_master: simple-audio-card,codec {
+			sound-dai = <&wm8904>;
+		};
+
+		simple-audio-card,cpu {
+			sound-dai = <&sai3>;
+		};
 	};
 
 	sound-hdmi {
@@ -411,6 +423,7 @@
 
 	wm8904: codec@1a {
 		compatible = "wlf,wm8904";
+		#sound-dai-cells = <0>;
 		reg = <0x1a>;
 		clocks = <&clk IMX8MQ_CLK_SAI3_ROOT>;
 		clock-names = "mclk";
