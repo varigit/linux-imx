@@ -10,7 +10,7 @@
 #include "imx8mn-var-som.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-NANO on Symphony-Board 1.4a and above";
+	model = "Variscite VAR-SOM-MX8M-NANO on Symphony-Board";
 	compatible = "variscite,var-som-mx8mn", "fsl,imx8mn";
 
 	chosen {
