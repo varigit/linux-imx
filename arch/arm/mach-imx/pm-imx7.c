@@ -1148,7 +1148,7 @@ void __init imx7d_pm_init(void)
 
 		/* map the m4 bootrom from dtb */
 		np = of_find_node_by_path(
-			"/soc/sram@00180000");
+			"/soc/sram@180000");
 		if (np)
 			m4_bootrom_base = of_iomap(np, 0);
 		WARN_ON(!m4_bootrom_base);
