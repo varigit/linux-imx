@@ -206,7 +206,7 @@ static const struct imx_rproc_att imx_rproc_att_imx8mn[] = {
 	/* OCRAM */
 	{ 0x20240000, 0x00940000, 0x00040000, ATT_OWN },
 	/* DDR (Data) */
-	{ 0x40000000, 0x40000000, 0x80000000, 0 },
+	{ 0x40000000, 0x40000000, 0x80000000, ATT_IOMEM },
 };
 
 static const struct imx_rproc_att imx_rproc_att_imx8mq[] = {
