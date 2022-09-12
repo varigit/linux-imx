@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
  * Copyright 2017 NXP
- * Copyright 2018-2020 Variscite Ltd.
+ * Copyright 2018-2022 Variscite Ltd.
  */
 
+#include "imx8mq-var-dart-lvds-panel.dtsi"
 
 &backlight {
 	status = "okay";
@@ -15,6 +16,15 @@
 
 &dsi_lvds_bridge {
 	status = "okay";
+
+	ports {
+		port@2 {
+			reg = <2>;
+			bridge_out_panel: endpoint {
+				remote-endpoint = <&panel_out_bridge>;
+			};
+		};
+	};
 };
 
 &ft5x06_ts {

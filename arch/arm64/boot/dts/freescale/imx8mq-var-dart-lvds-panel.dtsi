@@ -1,0 +1,28 @@
+/ {
+	panel {
+		compatible = "panel-lvds";
+		data-mapping = "jeida-24";
+		width-mm = <154>;
+		height-mm = <87>;
+		panel-timing {
+			clock-frequency = <39000000>;
+			hactive = <800>;
+			vactive = <480>;
+			hback-porch = <40>;
+			hfront-porch = <40>;
+			vback-porch = <29>;
+			vfront-porch = <13>;
+			hsync-len = <48>;
+			vsync-len = <3>;
+			hsync-active = <0>;
+			vsync-active = <0>;
+			de-active = <1>;
+			pixelclk-active = <0>;
+		};
+		port {
+			panel_out_bridge: endpoint {
+				remote-endpoint = <&bridge_out_panel>;
+			};
+		};
+	};
+};

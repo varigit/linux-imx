@@ -2,7 +2,7 @@
 /*
  * Copyright 2017 NXP
  * Copyright (C) 2017-2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
- * Copyright 2018-2021 Variscite Ltd.
+ * Copyright 2018-2022 Variscite Ltd.
  */
 
 /dts-v1/;
@@ -176,7 +176,7 @@
 		>;
 	};
 
-	pinctrl_lvds: lvdsgrp {
+	plnctrl_dsi_bridge: lvdsgrp {
 		fsl,pins = <
 			MX8MQ_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x16
 		>;
@@ -293,42 +293,24 @@
 	status = "okay";
 
 	dsi_lvds_bridge: sn65dsi84@2c {
-		compatible = "ti,sn65dsi83";
+		compatible = "ti,sn65dsi84";
 		reg = <0x2c>;
-		ti,dsi-lanes = <3>;
-		ti,lvds-format = <1>;
-		ti,lvds-bpp = <24>;
-		ti,lvds-channels = <1>;
-		ti,width-mm = <154>;
-		ti,height-mm = <87>;
-		enable-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_lvds>;
 		status = "disabled";
+		enable-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
+		pinctrl-0 = <&plnctrl_dsi_bridge>;
 
-		display-timings {
-			lvds {
-				clock-frequency = <39000000>;
-				hactive = <800>;
-				vactive = <480>;
-				hback-porch = <40>;
-				hfront-porch = <40>;
-				vback-porch = <29>;
-				vfront-porch = <13>;
-				hsync-len = <48>;
-				vsync-len = <3>;
-				hsync-active = <0>;
-				vsync-active = <0>;
-				de-active = <1>;
-				pixelclk-active = <0>;
-			};
-		};
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
 
-		port@0 {
-			dsi_lvds_bridge_in: endpoint {
-				remote-endpoint = <&mipi_dsi_out>;
+			port@0 {
+				reg = <0>;
+				bridge_in_dsi: endpoint {
+					remote-endpoint = <&mipi_dsi_out>;
+					data-lanes = <1 2 3>;
+				};
 			};
-		};
+	        };
 	};
 
 	pmic@8 {
@@ -478,7 +460,7 @@
 		port@1 {
 			reg = <1>;
 			mipi_dsi_out: endpoint {
-				remote-endpoint = <&dsi_lvds_bridge_in>;
+				remote-endpoint = <&bridge_in_dsi>;
 			};
 		};
 	};
