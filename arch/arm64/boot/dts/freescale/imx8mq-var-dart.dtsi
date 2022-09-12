@@ -319,7 +319,7 @@
 				reg = <0>;
 				bridge_in_dsi: endpoint {
 					remote-endpoint = <&mipi_dsi_out>;
-					data-lanes = <1 2 3>;
+					data-lanes = <1 2 3 4>;
 				};
 			};
 	        };
