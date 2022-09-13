@@ -59,20 +59,7 @@
 	reset-gpio = <&gpio4 19 GPIO_ACTIVE_LOW>;
 };
 
-&usb_dwc3_0 {
-	extcon = <&typec_ptn5150>;
-};
-
 &i2c2 {
-	typec_ptn5150: typec@3d {
-		status = "okay";
-		compatible = "nxp,ptn5150";
-		reg = <0x3d>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_extcon>;
-		int-gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
-	};
-
 	ov5640_mipi1: ov5640_mipi1@3c {
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_csi1>;
@@ -157,12 +144,6 @@
 	pinctrl_pcie1: pcie1grp {
 		fsl,pins = <
 			MX8MQ_IOMUXC_SAI1_TXD7_GPIO4_IO19		0x16
-		>;
-	};
-
-	pinctrl_extcon: extcongrp {
-		fsl,pins = <
-			MX8MQ_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x16
 		>;
 	};
 };
