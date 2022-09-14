@@ -4,6 +4,7 @@
 		data-mapping = "jeida-24";
 		width-mm = <154>;
 		height-mm = <87>;
+		backlight = <&backlight>;
 		panel-timing {
 			clock-frequency = <39000000>;
 			hactive = <800>;
