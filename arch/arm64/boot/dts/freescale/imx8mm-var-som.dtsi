@@ -760,7 +760,8 @@
 
 	pinctrl_can: cangrp {
 		fsl,pins = <
-			MX8MM_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x16
+			MX8MM_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x16 	/* CAN INT */
+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x16	/* CAN RX-INT - SOM rev1.3+ only */
 		>;
 	};
 
