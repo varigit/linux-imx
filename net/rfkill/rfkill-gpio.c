@@ -13,13 +13,14 @@
 #include <linux/slab.h>
 #include <linux/acpi.h>
 #include <linux/gpio/consumer.h>
+#include <linux/delay.h>
 
 struct rfkill_gpio_data {
 	const char		*name;
 	enum rfkill_type	type;
 	struct gpio_desc	*reset_gpio;
 	struct gpio_desc	*shutdown_gpio;
-
+	uint32_t		delay_gpio;
 	struct rfkill		*rfkill_dev;
 	struct clk		*clk;
 
@@ -34,6 +35,8 @@ static int rfkill_gpio_set_power(void *data, bool blocked)
 		clk_enable(rfkill->clk);
 
 	gpiod_set_value_cansleep(rfkill->shutdown_gpio, !blocked);
+	if(rfkill->delay_gpio > 0)
+		mdelay(rfkill->delay_gpio);
 	gpiod_set_value_cansleep(rfkill->reset_gpio, !blocked);
 
 	if (blocked && !IS_ERR(rfkill->clk) && rfkill->clk_enabled)
@@ -109,6 +112,9 @@ static int rfkill_gpio_probe(struct platform_device *pdev)
 		return PTR_ERR(gpio);
 
 	rfkill->shutdown_gpio = gpio;
+
+	if (device_property_read_u32(&pdev->dev, "reset-delay", &rfkill->delay_gpio))
+		dev_info(&pdev->dev, "Reset-delay is set\n");
 
 	/* Make sure at-least one GPIO is defined for this instance */
 	if (!rfkill->reset_gpio && !rfkill->shutdown_gpio) {
