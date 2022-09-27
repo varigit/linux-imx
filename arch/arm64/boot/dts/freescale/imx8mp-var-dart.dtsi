@@ -66,11 +66,25 @@
 		};
 	};
 
+        wifi_rfkill {
+                compatible = "net,rfkill-gpio";
+                pinctrl-names = "default";
+                pinctrl-0 = <&pinctrl_wifi>;
+                reset-gpios = <&gpio2 7 GPIO_ACTIVE_HIGH>;
+                shutdown-gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
+		reset-delay = <1>;
+                name = "wifi_rfkill";
+                type = "wlan";
+                status = "okay";
+        };
+
         bt_rfkill {
                 compatible = "net,rfkill-gpio";
                 pinctrl-names = "default";
                 pinctrl-0 = <&pinctrl_bt>;
                 reset-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+                shutdown-gpios = <&gpio2 9 GPIO_ACTIVE_LOW>;
+		reset-delay = <20>;
                 name = "bt_rfkill";
                 type = "bluetooth";
                 status = "okay";
@@ -356,9 +370,9 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc1>;
+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
 	bus-width = <4>;
 	non-removable;
 	keep-power-in-suspend;
