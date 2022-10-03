@@ -456,7 +456,15 @@ static int imx_sec_dsim_probe(struct platform_device *pdev)
 
 	pm_runtime_enable(dev);
 
-	return component_add(dev, &imx_sec_dsim_ops);
+	ret = component_add(dev, &imx_sec_dsim_ops);
+	if (ret) {
+		pm_runtime_disable(dev);
+		sec_dsim_of_put_resets(dsim_dev);
+		if (ret != -EPROBE_DEFER)
+			dev_err(dev, "Failed to add component\n");
+	}
+
+	return ret;
 }
 
 static int imx_sec_dsim_remove(struct platform_device *pdev)
