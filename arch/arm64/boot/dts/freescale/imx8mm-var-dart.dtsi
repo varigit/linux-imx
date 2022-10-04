@@ -66,11 +66,22 @@
 		};
 	};
 
+        wifi_rfkill {
+                compatible = "net,rfkill-gpio";
+                reset-gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
+		reset-delay = <15>;
+                name = "wifi_rfkill";
+                type = "wlan";
+                status = "okay";
+        };
+
 	bt_rfkill {
 		compatible = "net,rfkill-gpio";
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_bt>;
 		reset-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+                shutdown-gpios = <&gpio5 5 GPIO_ACTIVE_LOW>;
+		reset-delay = <10>;
 		name = "bt_rfkill";
 		type = "bluetooth";
 		status = "okay";
@@ -96,6 +107,26 @@
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		gpio = <&gpio1 7 GPIO_ACTIVE_LOW>;
+	};
+
+	reg_wifi_3v3: regulator-wifi-3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "wifi-3v3";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio2 7 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	reg_wifi_1v8: regulator-wifi-1v8 {
+		compatible = "regulator-fixed";
+		regulator-name = "wifi-1v8";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		gpio = <&gpio2 20 GPIO_ACTIVE_LOW>;
+		startup-delay-us = <20000>;
+		vin-supply = <&reg_wifi_3v3>;
+		enable-active-low;
 	};
 
 	reserved-memory {
@@ -446,6 +477,10 @@
 	bus-width = <4>;
 	non-removable;
 	keep-power-in-suspend;
+	status = "okay";
+
+	vmmc-supply = <&reg_wifi_3v3>;
+	vqmmc-supply = <&reg_wifi_1v8>;
 	status = "okay";
 
 	brcmf: wifi@1 {
