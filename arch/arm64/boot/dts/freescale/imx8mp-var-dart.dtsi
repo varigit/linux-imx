@@ -17,7 +17,10 @@
 		ethernet1 = &fec;
 	};
 
-	/delete-node/ memory@40000000;
+	memory@40000000 {
+		reg = <0x0 0x40000000 0 0xc0000000>,
+		      <0x1 0x00000000 0 0xc0000000>;
+	};
 
 	reserved-memory {
 		/* CMA region is configured by kernel command line as cma=<size>M */
