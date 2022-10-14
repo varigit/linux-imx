@@ -1392,6 +1392,7 @@
 		usb3-lpm-capable;
 		snps,has-lpm-erratum;
 		snps,lpm-nyet-threshold = <0xf>;
+		snps,dis_rxdet_inp3_quirk;
 		status = "disabled";
 	};
 
@@ -1425,6 +1426,7 @@
 		power-domains = <&usb_otg2_pd>;
 		usb3-resume-missing-cas;
 		usb3-lpm-capable;
+		snps,dis_rxdet_inp3_quirk;
 		status = "disabled";
 	};
 
