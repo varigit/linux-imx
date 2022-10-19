@@ -28,10 +28,6 @@
 	status = "disabled";
 };
 
-&sdma1 {
-	status = "disabled";
-};
-
 &flexcan2 {
 	status = "disabled";
 };
