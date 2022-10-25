@@ -73,6 +73,7 @@
 #include <linux/selection.h>
 #include <linux/font.h>
 #include <linux/smp.h>
+#include <linux/linux_logo.h>
 #include <linux/init.h>
 #include <linux/interrupt.h>
 #include <linux/crc32.h> /* For counting font checksums */
@@ -539,6 +540,27 @@ static int search_for_mapped_con(void)
 	return retval;
 }
 
+static void update_logo_shown(struct vc_data *vc)
+{
+#ifdef CONFIG_LOGO
+ 	if (!logo_lines || (fg_console != vc->vc_num))
+ 		return;
+
+ 	if (fb_logos_freed()) {
+ 		logo_shown = FBCON_LOGO_CANSHOW;
+ 		return;
+ 	}
+
+	if (logo_lines > vc->vc_bottom) {
+		logo_shown = FBCON_LOGO_CANSHOW;
+		pr_info("fbcon_init: boot-logo may be bigger than screen.\n");
+ 	} else if (logo_shown != FBCON_LOGO_DONTSHOW) {
+ 		logo_shown = FBCON_LOGO_DRAW;
+ 		vc->vc_top = logo_lines;
+ 	}
+#endif
+}
+
 static int do_fbcon_takeover(int show_logo)
 {
 	int err, i;
@@ -652,6 +674,7 @@ static void fbcon_prepare_logo(struct vc_data *vc, struct fb_info *info,
 	if (logo_shown == FBCON_LOGO_DONTSHOW)
 		return;
 
+#if 0
 	if (logo_lines > vc->vc_bottom) {
 		logo_shown = FBCON_LOGO_CANSHOW;
 		printk(KERN_INFO
@@ -661,6 +684,8 @@ static void fbcon_prepare_logo(struct vc_data *vc, struct fb_info *info,
 		vc->vc_top = logo_lines;
 	}
 }
+#endif
+	update_logo_shown(vc);
 #endif /* MODULE */
 
 #ifdef CONFIG_FB_TILEBLITTING
@@ -2087,8 +2112,9 @@ static int fbcon_switch(struct vc_data *vc)
 		if (conp2->vc_top == logo_lines
 		    && conp2->vc_bottom == conp2->vc_rows)
 			conp2->vc_top = 0;
-		logo_shown = FBCON_LOGO_CANSHOW;
+/*		logo_shown = FBCON_LOGO_CANSHOW; */
 	}
+	update_logo_shown(vc);
 
 	prev_console = ops->currcon;
 	if (prev_console != -1)
