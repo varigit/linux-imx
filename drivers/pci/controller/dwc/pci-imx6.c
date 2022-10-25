@@ -692,6 +692,7 @@ static int imx6_pcie_attach_pd(struct device *dev)
 	}
 
 	return 0;
+
 err_ret:
 	imx6_pcie_detach_pd(dev);
 	return ret;
@@ -813,6 +814,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
 		break;
 	}
 
+	return ret;
 err_pciex2_per:
 	clk_disable_unprepare(imx6_pcie->pcie_phy_pclk);
 err_pcie_phy_pclk:
@@ -1341,15 +1343,6 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
 		break;
 	}
 
-	/* Some boards don't have PCIe reset GPIO. */
-	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
-		msleep(100);
-		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-					!imx6_pcie->gpio_active_high);
-		/* Wait for 100ms after PERST# deassertion (PCIe r5.0, 6.6.1) */
-		msleep(100);
-	}
-
 	return;
 }
 
@@ -1821,7 +1814,9 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
 	/* Start LTSSM. */
 	imx6_pcie_ltssm_enable(dev);
 
-	dw_pcie_wait_for_link(pci);
+	ret = dw_pcie_wait_for_link(pci);
+	if (ret)
+		goto err_reset_phy;
 
 	if (pci->link_gen >= 2) {
 		/* Fill up target link speed before speed change. */
@@ -1867,7 +1862,11 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
 		}
 
 		/* Make sure link training is finished as well! */
-		dw_pcie_wait_for_link(pci);
+		ret = dw_pcie_wait_for_link(pci);
+		if (ret) {
+			dev_err(dev, "Failed to bring link up!\n");
+			goto err_reset_phy;
+		}
 	} else {
 		dev_info(dev, "Link: Gen2 disabled\n");
 	}
