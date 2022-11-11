@@ -15,6 +15,7 @@
 			  &mu 3 1>;
 		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>, <&m4_reserved>, <&rsc_table>;
 		syscon = <&src>;
+		fsl,startup-delay-ms = <500>;
 	};
 
 	reserved-memory {
