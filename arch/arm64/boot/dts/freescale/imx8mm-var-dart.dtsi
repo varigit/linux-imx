@@ -12,6 +12,11 @@
 / {
 	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
 
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x0 0x40000000 0 0x80000000>;
+	};
+
 	reg_audio: audio_vdd {
 		compatible = "regulator-fixed";
 		regulator-name = "wm8904_supply";
@@ -73,10 +78,15 @@
 	};
 
 	sound-micfil {
-		compatible = "fsl,imx-audio-micfil";
+		compatible = "fsl,imx-audio-card";
 		model = "imx-audio-micfil";
-		cpu-dai = <&micfil>;
-		status = "disabled";
+		pri-dai-link {
+			link-name = "micfil hifi";
+			format = "i2s";
+			cpu {
+				sound-dai = <&micfil>;
+			};
+		};
 	};
 };
 
@@ -94,6 +104,26 @@
 
 &A53_3 {
 	cpu-supply = <&buck2_reg>;
+};
+
+&ddrc {
+	operating-points-v2 = <&ddrc_opp_table>;
+
+	ddrc_opp_table: opp-table {
+		compatible = "operating-points-v2";
+
+		opp-25M {
+			opp-hz = /bits/ 64 <25000000>;
+		};
+
+		opp-100M {
+			opp-hz = /bits/ 64 <100000000>;
+		};
+
+		opp-750M {
+			opp-hz = /bits/ 64 <750000000>;
+		};
+	};
 };
 
 &fec1 {
@@ -117,8 +147,13 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <0>;
 			at803x,led-act-blind-workaround;
-			at803x,eee-disabled;
-			at803x,vddio-1p8v;
+			qca,disable-smarteee;
+			vddio-supply = <&vddio>;
+
+			vddio: vddio-regulator {
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
 		};
 	};
 };
@@ -423,6 +458,7 @@
 };
 
 &micfil {
+	#sound-dai-cells = <0>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pdm>;
 	assigned-clocks = <&clk IMX8MM_CLK_PDM>;
@@ -430,7 +466,6 @@
 	assigned-clock-rates = <196608000>;
 	status = "disabled";
 };
-
 &mu {
 	status = "okay";
 };
@@ -452,6 +487,10 @@
 };
 
 &vpu_h1 {
+	status = "okay";
+};
+
+&vpu_v4l2 {
 	status = "okay";
 };
 

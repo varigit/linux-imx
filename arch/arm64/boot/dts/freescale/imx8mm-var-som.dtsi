@@ -12,6 +12,11 @@
 / {
 	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
 
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x0 0x40000000 0 0x80000000>;
+	};
+
 	reg_audio: audio_vdd {
 		compatible = "regulator-fixed";
 		regulator-name = "wm8904_supply";
@@ -97,6 +102,22 @@
 	cpu-supply = <&buck2_reg>;
 };
 
+&ddrc {
+	operating-points-v2 = <&ddrc_opp_table>;
+
+	ddrc_opp_table: opp-table {
+		compatible = "operating-points-v2";
+
+		opp-266M {
+			opp-hz = /bits/ 64 <266500000>;
+		};
+
+		opp-600M {
+			opp-hz = /bits/ 64 <600000000>;
+		};
+	};
+};
+
 &fec1 {
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&pinctrl_fec1>;
@@ -118,8 +139,13 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <4>;
 			at803x,led-act-blind-workaround;
-			at803x,eee-disabled;
-			at803x,vddio-1p8v;
+			qca,disable-smarteee;
+			vddio-supply = <&vddio>;
+
+			vddio: vddio-regulator {
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
 		};
 	};
 };
@@ -338,6 +364,8 @@
 	assigned-clocks = <&clk IMX8MM_CLK_SAI5>;
 	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
 	assigned-clock-rates = <1536000>;
+	fsl,sai-multi-lane;
+	dmas = <&sdma2 8 25 0>, <&sdma2 9 25 0>;
 	status = "okay";
 };
 
@@ -496,6 +524,10 @@
 };
 
 &vpu_h1 {
+	status = "okay";
+};
+
+&vpu_v4l2 {
 	status = "okay";
 };
 
