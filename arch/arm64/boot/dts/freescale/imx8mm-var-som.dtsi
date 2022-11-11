@@ -17,6 +17,16 @@
 		reg = <0x0 0x40000000 0 0x80000000>;
 	};
 
+	panel_lvds: panel-lvds {
+		compatible = "panel-lvds";
+
+		port {
+			panel_in_bridge: endpoint {
+				remote-endpoint = <&bridge_out_panel>;
+			};
+		};
+	};
+
 	reg_audio: audio_vdd {
 		compatible = "regulator-fixed";
 		regulator-name = "wm8904_supply";
@@ -160,40 +170,30 @@
 	status = "okay";
 
 	dsi_lvds_bridge: sn65dsi84@2c {
-		compatible = "ti,sn65dsi83";
+		compatible = "ti,sn65dsi84";
 		reg = <0x2c>;
-		ti,dsi-lanes = <4>;
-		ti,lvds-format = <1>;
-		ti,lvds-bpp = <24>;
-		ti,lvds-channels = <1>;
-		ti,width-mm = <154>;
-		ti,height-mm = <87>;
 		enable-gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_lvds>;
 		status = "okay";
 
-		display-timings {
-			lvds {
-				clock-frequency = <33000000>;
-				hactive = <800>;
-				vactive = <480>;
-				hback-porch = <40>;
-				hfront-porch = <40>;
-				vback-porch = <29>;
-				vfront-porch = <13>;
-				hsync-len = <48>;
-				vsync-len = <3>;
-				hsync-active = <0>;
-				vsync-active = <0>;
-				de-active = <1>;
-				pixelclk-active = <0>;
-			};
-		};
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
 
-		port {
-			lvds_in: endpoint {
-				remote-endpoint = <&dsi_out>;
+			port@0 {
+				reg = <0>;
+				bridge_in_dsi: endpoint {
+					remote-endpoint = <&mipi_dsi_out>;
+					data-lanes = <1 2 3 4>;
+				};
+			};
+
+			port@2 {
+				reg = <2>;
+				bridge_out_panel: endpoint {
+					remote-endpoint = <&panel_in_bridge>;
+				};
 			};
 		};
 	};
@@ -431,8 +431,8 @@
 	status = "okay";
 
 	port@1 {
-		dsi_out: endpoint {
-			remote-endpoint = <&lvds_in>;
+		mipi_dsi_out: endpoint {
+			remote-endpoint = <&bridge_in_dsi>;
 			attach-bridge;
 		};
 	};
