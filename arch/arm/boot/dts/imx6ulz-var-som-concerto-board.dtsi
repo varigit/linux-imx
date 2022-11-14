@@ -1,0 +1,47 @@
+/*
+ * Copyright (C) 2019 Variscite Ltd. - https://www.variscite.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include "imx6ul-imx6ull-var-som-concerto-board.dtsi"
+
+/ {
+	backlight {
+		status = "disabled";
+	};
+};
+
+&iomuxc_snvs {
+	pinctrl_enet2_gpio: enet2_gpiogrp {
+		fsl,pins = <
+			MX6ULL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0 /* fec2 reset */
+		>;
+	};
+
+	pinctrl_ft5x06_ts_gpio: ft5x06_ts_gpiogrp {
+		fsl,pins = <
+			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x80000000
+		>;
+	};
+
+	pinctrl_gpio_keys_snvs: gpio_keys_snvsgrp {
+		fsl,pins = <
+			MX6ULL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x17059 /* Wakeup */
+		>;
+	};
+};
+
+&can1 {
+	status = "disabled";
+};
+
+&fec2 {
+	status = "disabled";
+};
+
+&lcdif {
+	status = "disabled";
+};

@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 2019 Variscite Ltd. - https://www.variscite.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include "imx6ulz.dtsi"
+
+#include "imx6ulz-var-som.dtsi"
+#include "imx6ul-imx6ull-var-som-nand.dtsi"
+
+#include "imx6ulz-var-som-symphony-board.dtsi"
+#include "imx6ul-imx6ull-var-som-concerto-board-sd-card.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-6UL with i.MX6ULZ, NAND flash & SD card support on Symphony-Board";
+	compatible = "variscite,imx6ul-var-som", "fsl,imx6ulz";
+};
