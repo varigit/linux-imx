@@ -77,10 +77,12 @@ struct imx_rproc_mem {
 
 /* att flags */
 /* M4 own area. Can be mapped at probe */
+#define ATT_IOMEM	BIT(30)
 #define ATT_OWN		BIT(31)
 /* I = [0:7] */
 #define ATT_CORE_MASK	0xffff
 #define ATT_CORE(I)	BIT((I))
+
 
 /* address translation table */
 struct imx_rproc_att {
@@ -198,7 +200,7 @@ static const struct imx_rproc_att imx_rproc_att_imx8mn[] = {
 	/* OCRAM */
 	{ 0x20240000, 0x00940000, 0x00040000, ATT_OWN },
 	/* DDR (Data) */
-	{ 0x40000000, 0x40000000, 0x80000000, 0 },
+	{ 0x40000000, 0x40000000, 0x80000000, ATT_IOMEM },
 };
 
 static const struct imx_rproc_att imx_rproc_att_imx8mq[] = {
@@ -224,7 +226,7 @@ static const struct imx_rproc_att imx_rproc_att_imx8mq[] = {
 	/* OCRAM */
 	{ 0x20220000, 0x00920000, 0x00020000, ATT_OWN },
 	/* DDR (Data) */
-	{ 0x40000000, 0x40000000, 0x80000000, 0 },
+	{ 0x40000000, 0x40000000, 0x80000000, ATT_IOMEM },
 };
 
 static const struct imx_rproc_att imx_rproc_att_imx7ulp[] = {

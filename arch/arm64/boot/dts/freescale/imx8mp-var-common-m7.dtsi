@@ -15,19 +15,12 @@
 			reg = <0 0x80000000 0 0x1000000>;
 		};
 
-		rsc_table: rsc_table@40000000 {
-			reg = <0 0x40000000 0 0x8000>;
-			no-map;
-		};
-
 		vdev0vring0: vdev0vring0@40000000 {
-			compatible = "shared-dma-pool";
 			reg = <0 0x40000000 0 0x8000>;
 			no-map;
 		};
 
 		vdev0vring1: vdev0vring1@40008000 {
-			compatible = "shared-dma-pool";
 			reg = <0 0x40008000 0 0x8000>;
 			no-map;
 		};
@@ -38,7 +31,7 @@
 			no-map;
 		};
 
-		rsc-table {
+		rsc_table: rsc_table@400ff000 {
 			reg = <0 0x400ff000 0 0x1000>;
 			no-map;
 		};
@@ -52,7 +45,7 @@
 		mboxes = <&mu 0 1
 			  &mu 1 1
 			  &mu 3 1>;
-		memory-region = <&vdev0vring0>, <&vdev0vring1>, <&vdevbuffer>, <&rsc_table>, <&m7_reserved>;
-		status = "disabled";
+		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>, <&m7_reserved>, <&rsc_table>;
+		status = "okay";
 	};
 };
