@@ -110,6 +110,12 @@
 	};
 };
 
+&i2c1 {
+	sn65dsi84@2c {
+		backlight = <&backlight>;
+	};
+};
+
 &i2c2 {
 	clock-frequency = <100000>;
 	pinctrl-names = "default", "gpio";
