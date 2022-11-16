@@ -39,8 +39,6 @@
 	can0_osc: can0_osc {
 		clock-frequency = <20000000>;
 	};
-
-	/delete-node/ extcon_usb1;
 };
 
 &can0 {
@@ -70,14 +68,8 @@
 	reset-gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
 };
 
-&usbotg1 {
-	/delete-property/ extcon;
-};
-
 &iomuxc {
 	/delete-node/ pca6408grp;
-
-	/delete-node/ extcongrp;
 
 	pinctrl_can: cangrp {
 		fsl,pins = <
