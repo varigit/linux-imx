@@ -19,6 +19,7 @@
 #include <drm/drm_mipi_dsi.h>
 #include <drm/drm_connector.h>
 #include <drm/drm_crtc_helper.h>
+#include <linux/backlight.h>
 #include <video/mipi_display.h>
 #include <video/of_videomode.h>
 #include <video/videomode.h>
@@ -36,6 +37,7 @@ struct sn65dsi83 {
     struct device_node *host_node;
     struct mipi_dsi_device *dsi;
     struct sn65dsi83_brg *brg;
+    struct backlight_device *bl;
 };
 
 static int sn65dsi83_attach_dsi(struct sn65dsi83 *sn65dsi83);
@@ -142,7 +144,13 @@ static struct sn65dsi83 *bridge_to_sn65dsi83(struct drm_bridge *bridge)
 
 static void sn65dsi83_bridge_enable(struct drm_bridge *bridge)
 {
+    int ret = 0;
     struct sn65dsi83 *sn65dsi83 = bridge_to_sn65dsi83(bridge);
+
+    ret = backlight_enable(sn65dsi83->bl);
+    if (ret < 0)
+        dev_dbg(DRM_DEVICE(bridge), "failed to enable backlight: %d\n",
+			     ret);
     dev_dbg(DRM_DEVICE(bridge),"%s\n",__func__);
     sn65dsi83->brg->funcs->setup(sn65dsi83->brg);
     sn65dsi83->brg->funcs->start_stream(sn65dsi83->brg);
@@ -271,6 +279,10 @@ static int sn65dsi83_parse_dt(struct device_node *np,
 
     sn65dsi83->brg->width_mm = width;
     sn65dsi83->brg->height_mm = height;
+
+    sn65dsi83->bl = devm_of_find_backlight(dev);
+    if (IS_ERR(sn65dsi83->bl))
+                return PTR_ERR(sn65dsi83->bl);
 
     /* Read default timing if there is not device tree node for */
     if ((of_get_videomode(np, &sn65dsi83->brg->vm, 0)) < 0)
