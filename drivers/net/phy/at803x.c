@@ -672,9 +672,13 @@ static int at803x_probe(struct phy_device *phydev)
 		return ret;
 
 	if (priv->vddio) {
+		const struct regulator_ops *vddio_ops = priv->vddio_rdev->desc->ops;
+
 		ret = regulator_enable(priv->vddio);
 		if (ret < 0)
 			return ret;
+
+		priv->vddio_last_selector = vddio_ops->get_voltage_sel(priv->vddio_rdev);
 	}
 
 	return 0;
