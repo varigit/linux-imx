@@ -853,6 +853,8 @@ static int at803x_parse_dt(struct phy_device *phydev)
 			phydev_err(phydev, "failed to get VDDIO regulator\n");
 			return ret;
 		}
+		const struct regulator_ops *vddio_ops = priv->vddio_rdev->desc->ops;
+		priv->vddio_last_selector = vddio_ops->get_voltage_sel(priv->vddio_rdev);
 
 		/* Only AR8031/8033 support 1000Base-X for SFP modules */
 		ret = phy_sfp_probe(phydev, &at803x_sfp_ops);
