@@ -42,6 +42,7 @@
 		regulator-name = "eth_phy_pwr";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
+		regulator-enable-ramp-delay = <20000>;
 		gpio = <&gpio1 7 GPIO_ACTIVE_LOW>;
 	};
 
