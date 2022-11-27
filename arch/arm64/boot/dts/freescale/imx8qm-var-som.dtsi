@@ -184,19 +184,30 @@
 		ethphy0: ethernet-phy@4 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <4>;
-			at803x,eee-disabled;
-			at803x,vddio-1p8v;
+			qca,disable-smarteee;
+			vddio-supply = <&vddio0>;
+
+			vddio0: vddio-regulator {
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
 		};
 
 		ethphy1: ethernet-phy@5 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <5>;
-			at803x,eee-disabled;
-			at803x,vddio-1p8v;
+			qca,disable-smarteee;
+			vddio-supply = <&vddio1>;
 			adi,phy-mode-override = "rgmii";
+
+			vddio1: vddio-regulator {
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
 		};
 	};
 };
+
 
 &i2c0 {
 	#address-cells = <1>;
