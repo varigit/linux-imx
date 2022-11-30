@@ -873,6 +873,8 @@ static int gpio_keys_probe(struct platform_device *pdev)
 
 		error = gpio_keys_setup_key(pdev, input, ddata,
 					    button, i, child);
+		if (error == ENXIO)
+			return -EPROBE_DEFER;
 		if (error) {
 			fwnode_handle_put(child);
 			return error;
