@@ -14,7 +14,7 @@
 	fsl,spi-num-chipselects = <1>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_ecspi4 &pinctrl_ecspi4_cs>;
-	cs-gpios = <&gpio2 15 0>;
+	cs-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
 	status = "okay";
 
 	spidev@0 {
