@@ -157,7 +157,7 @@ static const struct imx_rproc_att imx_rproc_att_imx8qm[] = {
 	{ 0x20000000, 0x35000000, 0x00020000, ATT_OWN | ATT_IOMEM | ATT_CORE(0)},
 	{ 0x20000000, 0x39000000, 0x00020000, ATT_OWN | ATT_IOMEM | ATT_CORE(1)},
 	/* DDR (Data) */
-	{ 0x80000000, 0x80000000, 0x60000000, 0 },
+	{ 0x80000000, 0x80000000, 0x60000000, ATT_IOMEM },
 };
 
 static const struct imx_rproc_att imx_rproc_att_imx8qxp[] = {
