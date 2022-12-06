@@ -331,6 +331,9 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
 
 	check_m4_enabled();
 
+	if (of_find_compatible_node(NULL, NULL, "fsl,imx8mn-cm7"))
+		set_cm4_enable(true);
+
 	clk_hw_data = kzalloc(struct_size(clk_hw_data, hws,
 					  IMX8MN_CLK_END), GFP_KERNEL);
 	if (WARN_ON(!clk_hw_data))
