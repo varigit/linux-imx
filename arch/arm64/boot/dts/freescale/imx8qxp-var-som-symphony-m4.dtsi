@@ -21,6 +21,7 @@
 		status = "okay";
 		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
 				<&pd IMX_SC_R_M4_0_MU_1A>;
+		fsl,startup-delay-ms = <500>;
 	};
 
 	reserved-memory {
