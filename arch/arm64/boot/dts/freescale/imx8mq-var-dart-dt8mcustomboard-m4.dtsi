@@ -51,6 +51,11 @@
 	};
 };
 
+/*
+ * ATTENTION: M4 may use IPs like below
+ * ECSPI1, GPIO4, GPT1, I2C3, UART2, PWM2, TMU, WDOG3
+ */
+
 &i2c3 {
 	status = "disabled";
 };
