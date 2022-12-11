@@ -865,8 +865,7 @@ static bool check_version(struct fsl_mc_version *mc_version, u32 major,
 /* Probe routine for CAAM top (controller) level */
 static int caam_probe(struct platform_device *pdev)
 {
-	int ret, ring, gen_sk;
-	int ent_delay = RTSDCTL_ENT_DLY_MIN;
+	int ret, ring;
 	u64 caam_id;
 	const struct soc_device_attribute *imx_soc_match;
 	static struct platform_device_info caam_dma_pdev_info = {
@@ -881,7 +880,7 @@ static int caam_probe(struct platform_device *pdev)
 	struct caam_drv_private *ctrlpriv;
 	struct caam_perfmon __iomem *perfmon;
 	struct dentry *dfs_root;
-	u32 scfgr, comp_params, rng_vid;
+	u32 scfgr, comp_params;
 	int pg_size;
 	int BLOCK_OFFSET = 0;
 	bool reg_access = true;
@@ -1161,79 +1160,18 @@ set_dma_mask:
 		return -ENOMEM;
 	}
 
-	if (ctrlpriv->era < 10)
-		rng_vid = (rd_reg32(&ctrl->perfmon.cha_id_ls) &
-			   CHA_ID_LS_RNG_MASK) >> CHA_ID_LS_RNG_SHIFT;
-	else
-		rng_vid = (rd_reg32(&ctrl->vreg.rng) & CHA_VER_VID_MASK) >>
-			   CHA_VER_VID_SHIFT;
-
-	/*
-	 * If SEC has RNG version >= 4 and RNG state handle has not been
-	 * already instantiated, do RNG instantiation
-	 * In case of SoCs with Management Complex, RNG is managed by MC f/w.
-	 */
-	if (!(ctrlpriv->mc_en && ctrlpriv->pr_support) && rng_vid >= 4) {
-		ctrlpriv->rng4_sh_init =
-			rd_reg32(&ctrl->r4tst[0].rdsta);
-		/*
-		 * If the secure keys (TDKEK, JDKEK, TDSK), were already
-		 * generated, signal this to the function that is instantiating
-		 * the state handles. An error would occur if RNG4 attempts
-		 * to regenerate these keys before the next POR.
-		 */
-		gen_sk = ctrlpriv->rng4_sh_init & RDSTA_SKVN ? 0 : 1;
-		ctrlpriv->rng4_sh_init &= RDSTA_MASK;
-		do {
-			int inst_handles =
-				rd_reg32(&ctrl->r4tst[0].rdsta) &
-								RDSTA_MASK;
-			/*
-			 * If either SH were instantiated by somebody else
-			 * (e.g. u-boot) then it is assumed that the entropy
-			 * parameters are properly set and thus the function
-			 * setting these (kick_trng(...)) is skipped.
-			 * Also, if a handle was instantiated, do not change
-			 * the TRNG parameters.
-			 */
-			if (needs_entropy_delay_adjustment())
-				ent_delay = 12000;
-			if (!(ctrlpriv->rng4_sh_init || inst_handles)) {
-				dev_info(dev,
-					 "Entropy delay = %u\n",
-					 ent_delay);
-				kick_trng(&pdev->dev, ent_delay);
-				ent_delay += 400;
-			}
-			/*
-			 * if instantiate_rng(...) fails, the loop will rerun
-			 * and the kick_trng(...) function will modify the
-			 * upper and lower limits of the entropy sampling
-			 * interval, leading to a successful initialization of
-			 * the RNG.
-			 */
-			ret = instantiate_rng(dev, inst_handles,
-					      gen_sk);
-			/*
-			 * Entropy delay is determined via TRNG characterization.
-			 * TRNG characterization is run across different voltages
-			 * and temperatures.
-			 * If worst case value for ent_dly is identified,
-			 * the loop can be skipped for that platform.
-			 */
-			if (needs_entropy_delay_adjustment())
-				break;
-			if (ret == -EAGAIN)
-				/*
-				 * if here, the loop will rerun,
-				 * so don't hog the CPU
-				 */
-				cpu_relax();
-		} while ((ret == -EAGAIN) && (ent_delay < RTSDCTL_ENT_DLY_MAX));
-		if (ret) {
-			dev_err(dev, "failed to instantiate RNG");
+	caam_dma_pdev_info.parent = dev;
+	caam_dma_pdev_info.dma_mask = dma_get_mask(dev);
+	caam_dma_dev = platform_device_register_full(&caam_dma_pdev_info);
+	if (IS_ERR(caam_dma_dev)) {
+		dev_err(dev, "Unable to create and register caam-dma dev\n");
+		return PTR_ERR(caam_dma_dev);
+	} else {
+		set_dma_ops(&caam_dma_dev->dev, get_dma_ops(dev));
+		ret = devm_add_action_or_reset(dev, caam_dma_dev_unregister,
+					       caam_dma_dev);
+		if (ret)
 			return ret;
-		}
 	}
 
 	if (reg_access) {
