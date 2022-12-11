@@ -67,15 +67,6 @@
 		};
 	};
 
-	bt_rfkill {
-		compatible = "net,rfkill-gpio";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_bt>;
-		reset-gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
-		name = "bt_rfkill";
-		type = "bluetooth";
-		status = "okay";
-	};
 };
 
 / {
@@ -92,6 +83,16 @@
 	reg_eth_phy: eth_phy {
 		compatible = "regulator-fixed";
 		regulator-name = "eth_phy_pwr";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		status = "disabled";
+	};
+	
+	reg_wifi_3v3: regulator-wifi-3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "wifi-3v3";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
@@ -352,7 +353,6 @@
 			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B		0xc6
 		>;
 	};
-
 	pinctrl_wifi: wifigrp {
 		fsl,pins = <
 			MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4		0xc1	/* WIFI_PWR_VSEL */
