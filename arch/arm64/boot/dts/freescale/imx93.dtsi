@@ -677,6 +677,14 @@
 				timeout-sec = <40>;
 			};
 
+			tpm3: pwm@424e0000 {
+				compatible = "fsl,imx7ulp-pwm";
+				reg = <0x424e0000 0x1000>;
+				clocks = <&clk IMX93_CLK_TPM3_GATE>;
+				#pwm-cells = <3>;
+				status = "disabled";
+			};
+
 			tpm4: pwm@424f0000 {
 				compatible = "fsl,imx7ulp-pwm";
 				reg = <0x424f0000 0x1000>;
