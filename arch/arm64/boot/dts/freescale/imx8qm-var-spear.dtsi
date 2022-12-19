@@ -218,6 +218,14 @@
 	status = "okay";
 };
 
+&gpio0_mipi_csi0 {
+       status = "disabled";
+};
+
+&gpio0_mipi_csi1 {
+       status = "disabled";
+};
+
 &i2c4 {
 	#address-cells = <1>;
 	#size-cells = <0>;
