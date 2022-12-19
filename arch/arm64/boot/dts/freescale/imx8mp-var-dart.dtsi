@@ -94,9 +94,6 @@
 	snps,reset-gpio = <&gpio2 11 GPIO_ACTIVE_LOW>;
 	snps,reset-delays-us = <0 10000 20000>;
 	mdio_rst_after_resume;
-	snps,force_thresh_dma_mode;
-	snps,mtl-tx-config = <&mtl_tx_setup>;
-	snps,mtl-rx-config = <&mtl_rx_setup>;
 	status = "okay";
 
 	mdio {
@@ -118,61 +115,6 @@
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
 			};
-		};
-	};
-
-	mtl_tx_setup: tx-queues-config {
-		snps,tx-queues-to-use = <5>;
-		snps,tx-sched-sp;
-		queue0 {
-			snps,dcb-algorithm;
-			snps,priority = <0x1>;
-		};
-		queue1 {
-			snps,dcb-algorithm;
-			snps,priority = <0x2>;
-		};
-		queue2 {
-			snps,dcb-algorithm;
-			snps,priority = <0x4>;
-		};
-		queue3 {
-			snps,dcb-algorithm;
-			snps,priority = <0x8>;
-		};
-		queue4 {
-			snps,dcb-algorithm;
-			snps,priority = <0xf0>;
-		};
-	};
-
-	mtl_rx_setup: rx-queues-config {
-		snps,rx-queues-to-use = <5>;
-		snps,rx-sched-sp;
-		queue0 {
-			snps,dcb-algorithm;
-			snps,priority = <0x1>;
-			snps,map-to-dma-channel = <0>;
-		};
-		queue1 {
-			snps,dcb-algorithm;
-			snps,priority = <0x2>;
-			snps,map-to-dma-channel = <1>;
-		};
-		queue2 {
-			snps,dcb-algorithm;
-			snps,priority = <0x4>;
-			snps,map-to-dma-channel = <2>;
-		};
-		queue3 {
-			snps,dcb-algorithm;
-			snps,priority = <0x8>;
-			snps,map-to-dma-channel = <3>;
-		};
-		queue4 {
-			snps,dcb-algorithm;
-			snps,priority = <0xf0>;
-			snps,map-to-dma-channel = <4>;
 		};
 	};
 };
