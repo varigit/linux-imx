@@ -1942,8 +1942,8 @@ static void lpuart_dma_shutdown(struct lpuart_port *sport)
 	}
 
 	if (sport->lpuart_dma_tx_use) {
-		if (wait_event_interruptible(sport->dma_wait,
-			!sport->dma_tx_in_progress) != false) {
+		if (wait_event_interruptible_timeout(sport->dma_wait,
+			!sport->dma_tx_in_progress, msecs_to_jiffies(300)) <= 0) {
 			sport->dma_tx_in_progress = false;
 			dmaengine_terminate_sync(sport->dma_tx_chan);
 		}
@@ -3028,10 +3028,13 @@ static void serial_lpuart_enable_wakeup(struct lpuart_port *sport, bool on)
 
 	if (lpuart_is_32(sport)) {
 		val = lpuart32_read(&sport->port, UARTCTRL);
-		if (on)
-			val |= (UARTCTRL_RIE | UARTCTRL_ILIE);
-		else
-			val &= ~(UARTCTRL_RIE | UARTCTRL_ILIE);
+		if (on) {
+			/* set rx_watermark to 0 in wakeup source mode */
+			lpuart32_write(&sport->port, 0, UARTWATER);
+			val |= UARTCTRL_RIE;
+		} else {
+			val &= ~UARTCTRL_RIE;
+		}
 		lpuart32_write(&sport->port, val, UARTCTRL);
 	} else {
 		val = readb(sport->port.membase + UARTCR2);
