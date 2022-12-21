@@ -735,3 +735,6 @@
 &vpu_encoder {
 	status = "okay";
 };
+
+/delete-node/ &adma_pwm;
+/delete-node/ &adma_pwm_lpcg;
