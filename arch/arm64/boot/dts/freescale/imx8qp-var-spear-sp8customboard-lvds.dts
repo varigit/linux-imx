@@ -19,5 +19,7 @@
 #include "imx8qp-var.dtsi"
 
 / {
+	compatible = "variscite,imx8qp-var-spear", "variscite,imx8qm-var-spear", "fsl,imx8qp", "fsl,imx8qm";
+
 	model = "Variscite VAR-SOM-MX8 i.MX8QP on SP8Custom-Board LVDS";
 };
