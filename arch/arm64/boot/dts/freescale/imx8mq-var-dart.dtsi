@@ -11,7 +11,7 @@
 #include "imx8mq.dtsi"
 
 / {
-	compatible = "variscite,imx8m-dart", "fsl,imx8mq";
+	compatible = "variscite,imx8mq-var-dart", "fsl,imx8mq";
 
 	reg_audio: audio_vdd {
 		compatible = "regulator-fixed";

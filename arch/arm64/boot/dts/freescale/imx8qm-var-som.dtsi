@@ -17,7 +17,7 @@
 #include <dt-bindings/usb/pd.h>
 
 / {
-	compatible = "fsl,imx8qm-var-som", "fsl,imx8qm";
+	compatible = "variscite,imx8qm-var-som", "fsl,imx8qm";
 
 	aliases {
 		gpio0 = &lsio_gpio0;

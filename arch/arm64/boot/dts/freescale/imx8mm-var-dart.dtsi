@@ -10,7 +10,7 @@
 #include "imx8mm.dtsi"
 
 / {
-	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
+	compatible = "variscite,imx8mm-var-dart", "fsl,imx8mm";
 
 	memory@40000000 {
 		device_type = "memory";
