@@ -2227,6 +2227,18 @@ static int fec_enet_mii_init(struct platform_device *pdev)
 	int err = -ENXIO;
 	u32 mii_speed, holdtime;
 	u32 bus_freq;
+	static bool wait_for_mdio_bus = false;
+
+	bus_freq = 2500000; /* 2.5MHz by default */
+	node = of_get_child_by_name(pdev->dev.of_node, "mdio");
+	if (node) {
+		wait_for_mdio_bus = false;
+		of_property_read_u32(node, "clock-frequency", &bus_freq);
+		suppress_preamble = of_property_read_bool(node,
+							  "suppress-preamble");
+	}
+	if (wait_for_mdio_bus)
+		return -EPROBE_DEFER;
 
 	/*
 	 * The i.MX28 dual fec interfaces are not equal.
@@ -2253,14 +2265,6 @@ static int fec_enet_mii_init(struct platform_device *pdev)
 			return 0;
 		}
 		return -ENOENT;
-	}
-
-	bus_freq = 2500000; /* 2.5MHz by default */
-	node = of_get_child_by_name(pdev->dev.of_node, "mdio");
-	if (node) {
-		of_property_read_u32(node, "clock-frequency", &bus_freq);
-		suppress_preamble = of_property_read_bool(node,
-							  "suppress-preamble");
 	}
 
 	/*
@@ -2333,6 +2337,8 @@ static int fec_enet_mii_init(struct platform_device *pdev)
 	fep->mii_bus->parent = &pdev->dev;
 
 	err = of_mdiobus_register(fep->mii_bus, node);
+	if (err == -EPROBE_DEFER)
+		wait_for_mdio_bus = true;
 	if (err)
 		goto err_out_free_mdiobus;
 	of_node_put(node);
