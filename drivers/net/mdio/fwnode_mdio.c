@@ -8,6 +8,8 @@
 
 #include <linux/acpi.h>
 #include <linux/fwnode_mdio.h>
+#include <linux/gpio/consumer.h>
+#include <linux/gpio/driver.h>
 #include <linux/of.h>
 #include <linux/phy.h>
 
@@ -95,6 +97,7 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
 	bool is_c45 = false;
 	u32 phy_id;
 	int rc;
+	struct gpio_desc *reset_gpio;
 
 	mii_ts = fwnode_find_mii_timestamper(child);
 	if (IS_ERR(mii_ts))
@@ -105,10 +108,26 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
 	if (rc >= 0)
 		is_c45 = true;
 
+	reset_gpio = fwnode_gpiod_get_index(child, "reset", 0, GPIOD_OUT_LOW, "PHY reset");
+	if (reset_gpio == ERR_PTR(-EPROBE_DEFER)) {
+		dev_dbg(&bus->dev, "reset signal for PHY@%u not ready\n", addr);
+		return -EPROBE_DEFER;
+	} else if (IS_ERR(reset_gpio)) {
+		if (reset_gpio == ERR_PTR(-ENOENT))
+			dev_dbg(&bus->dev, "reset signal for PHY@%u not defined\n", addr);
+		else
+			dev_dbg(&bus->dev, "failed to request reset for PHY@%u, error %ld\n", addr, PTR_ERR(reset_gpio));
+		reset_gpio = NULL;
+	} else
+		dev_dbg(&bus->dev, "deassert reset signal for PHY@%u\n", addr);
+
 	if (is_c45 || fwnode_get_phy_id(child, &phy_id))
 		phy = get_phy_device(bus, addr, is_c45);
 	else
 		phy = phy_device_create(bus, addr, phy_id, 0, NULL);
+
+	gpiochip_free_own_desc(reset_gpio);
+
 	if (IS_ERR(phy)) {
 		unregister_mii_timestamper(mii_ts);
 		return PTR_ERR(phy);
