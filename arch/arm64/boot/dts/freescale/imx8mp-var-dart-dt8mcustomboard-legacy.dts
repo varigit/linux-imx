@@ -94,7 +94,14 @@
 	};
 };
 
+&eqos {
+	mdio {
+		/delete-node/ ethernet-phy@1;
+	};
+};
+
 &fec {
+	/delete-property/ phy-handle;
 	status = "disabled";
 };
 
