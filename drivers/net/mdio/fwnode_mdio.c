@@ -120,6 +120,7 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
 	bool is_c45 = false;
 	u32 phy_id;
 	int rc;
+	int reset_deassert_delay = 0;
 	struct gpio_desc *reset_gpio;
 
 	psec = fwnode_find_pse_control(child);
@@ -147,8 +148,13 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
 		else
 			dev_dbg(&bus->dev, "failed to request reset for PHY@%u, error %ld\n", addr, PTR_ERR(reset_gpio));
 		reset_gpio = NULL;
-	} else
+	} else {
 		dev_dbg(&bus->dev, "deassert reset signal for PHY@%u\n", addr);
+		fwnode_property_read_u32(child, "reset-deassert-us",
+					 &reset_deassert_delay);
+		if (reset_deassert_delay)
+			fsleep(reset_deassert_delay);
+	}
 
 	if (is_c45 || fwnode_get_phy_id(child, &phy_id))
 		phy = get_phy_device(bus, addr, is_c45);
