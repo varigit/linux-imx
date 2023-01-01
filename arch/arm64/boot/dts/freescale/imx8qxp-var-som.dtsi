@@ -10,7 +10,7 @@
 #include "imx8qxp.dtsi"
 
 / {
-	compatible = "variscite,var-som-mx8x", "fsl,imx8qxp";
+	compatible = "variscite,imx8qxp-var-som", "fsl,imx8qxp";
 
 	aliases {
 		i2c0 = &i2c0;
