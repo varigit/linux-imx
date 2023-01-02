@@ -223,6 +223,26 @@
 	status = "okay";
 };
 
+&fec1 {
+	mdio {
+		ethphy1: ethernet-phy@5 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <5>;
+			qca,disable-smarteee;
+			vddio-supply = <&vddio1>;
+			adi,phy-mode-override = "rgmii";
+			reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <100000>;
+			reset-deassert-us = <100000>;
+
+			vddio1: vddio-regulator {
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
+		};
+	};
+};
+
 &fec2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_fec2>;
@@ -231,9 +251,6 @@
 	fsl,magic-packet;
 	status = "okay";
 	phy-supply = <&reg_phy1_pwr>;
-	phy-reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
-	phy-reset-duration = <100>;
-	phy-reset-post-delay = <100>;
 };
 
 &flexcan3 {
