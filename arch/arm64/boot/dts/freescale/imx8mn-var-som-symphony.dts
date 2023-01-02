@@ -8,6 +8,7 @@
 
 #include <dt-bindings/usb/pd.h>
 #include "imx8mn-var-som.dtsi"
+#include "imx8mn-android.dtsi"
 
 / {
 	model = "Variscite VAR-SOM-MX8M-NANO on Symphony-Board";
@@ -463,4 +464,8 @@
 	bus-width = <4>;
 	vmmc-supply = <&reg_usdhc2_vmmc>;
 	status = "okay";
+};
+
+&lcdif {
+	/delete-property/ trusty;
 };
