@@ -82,6 +82,5 @@
 };
 
 &lcdif {
-	trusty;
 	status = "okay";
 };

@@ -20,6 +20,7 @@
 
 	panel_lvds: panel-lvds {
 		compatible = "panel-lvds";
+		status = "okay";
 
 		port {
 			panel_in_bridge: endpoint {
