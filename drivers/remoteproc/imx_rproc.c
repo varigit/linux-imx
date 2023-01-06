@@ -279,7 +279,7 @@ static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
 	/* OCRAM_PXP (Data) */
 	{ 0x20240000, 0x00940000, 0x00008000, 0 },
 	/* DDR (Data) */
-	{ 0x80000000, 0x80000000, 0x60000000, 0 },
+	{ 0x80000000, 0x80000000, 0x60000000, ATT_IOMEM },
 };
 
 static const struct imx_rproc_att imx_rproc_att_imx6sx[] = {
