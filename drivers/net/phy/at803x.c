@@ -194,6 +194,7 @@ struct at803x_priv {
 	struct regulator_dev *vddio_rdev;
 	struct regulator_dev *vddh_rdev;
 	struct regulator *vddio;
+	int vddio_last_selector;
 	u64 stats[ARRAY_SIZE(at803x_hw_stats)];
 };
 
