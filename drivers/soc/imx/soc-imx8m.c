@@ -283,6 +283,7 @@ void set_cm4_enable(bool state)
 	m4_is_enabled = state;
 	printk("M4 is enabled\n");
 }
+EXPORT_SYMBOL_GPL(set_cm4_enable);
 
 int check_m4_enabled(void)
 {
