@@ -89,6 +89,11 @@
 		off-on-delay = <20000>;
 		enable-active-high;
 	};
+
+
+	sound-wm8904 {
+		status = "okay";
+	};
 };
 
 &iomuxc {
