@@ -963,7 +963,7 @@ static void brcmf_del_if(struct brcmf_pub *drvr, s32 bsscfgidx,
 
 void brcmf_remove_interface(struct brcmf_if *ifp, bool locked)
 {
-	if (!ifp || WARN_ON(ifp->drvr->iflist[ifp->bsscfgidx] != ifp))
+	if (!ifp || ifp->drvr->iflist[ifp->bsscfgidx] != ifp)
 		return;
 	brcmf_dbg(TRACE, "Enter, bsscfgidx=%d, ifidx=%d\n", ifp->bsscfgidx,
 		  ifp->ifidx);
