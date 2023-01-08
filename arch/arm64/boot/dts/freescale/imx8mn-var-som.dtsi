@@ -49,6 +49,15 @@
 		enable-active-high;
 	};
 
+	reg_wifi_3v3: regulator-wifi-3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "wifi-3v3";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio2 7 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
 	sound-spdif {
 		compatible = "fsl,imx-audio-spdif";
 		model = "imx-spdif";
@@ -85,6 +94,26 @@
 			sound-dai = <&sai5>;
 		};
 	};
+
+	wifi_rfkill {
+		compatible = "net,rfkill-gpio";
+		reset-gpios = <&gpio2 20 GPIO_ACTIVE_HIGH>;
+		shutdown-gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
+		reset-delay = <500>;
+		name = "wifi_rfkill";
+		type = "wlan";
+		status = "okay";
+    	};
+
+	bt_rfkill {
+               compatible = "net,rfkill-gpio";
+               pinctrl-names = "default";
+               pinctrl-0 = <&pinctrl_bt>;
+               reset-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+               name = "bt_rfkill";
+               type = "bluetooth";
+               status = "okay";
+        };
 };
 
 &A53_0 {
@@ -704,7 +733,7 @@
 /* Bluetooth */
 &uart2 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart2>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart2>;
 	assigned-clocks = <&clk IMX8MN_CLK_UART2>;
 	assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_80M>;
 	uart-has-rtscts;
@@ -716,9 +745,10 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc1>;
+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+	vmmc-supply = <&reg_wifi_3v3>;
 	bus-width = <4>;
 	non-removable;
 	wakeup-source;
@@ -728,6 +758,7 @@
 	brcmf: bcrmf@1 {
 		reg = <1>;
 		compatible = "brcm,bcm4329-fmac";
+		laird,regdomain = "US";
 	};
 };
 
