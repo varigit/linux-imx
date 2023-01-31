@@ -354,6 +354,10 @@
 	status = "okay";
 };
 
+&snvs_rtc {
+	status = "disabled";
+};
+
 &iomuxc {
 	pinctrl_eqos: eqosgrp {
 		fsl,pins = <
