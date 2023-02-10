@@ -1,10 +1,35 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
  * Copyright 2017 NXP
- * Copyright 2018-2022 Variscite Ltd.
+ * Copyright 2018-2023 Variscite Ltd.
  */
 
 /* Set WIFI SDIO voltage at 1.8V */
+/ {
+	wifi_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi>;
+		reset-gpios = <&gpio3 2 GPIO_ACTIVE_HIGH>;
+		reset-delay = <500>;
+		name = "wifi_rfkill";
+		type = "wlan";
+		status = "okay";
+	};
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+		shutdown-gpios = <&gpio5 5 GPIO_ACTIVE_LOW>;
+		reset-delay = <500>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
+};
+
 &gpio1 {
 	wifi_vsel_hog {
 		gpio-hog;
@@ -14,6 +39,9 @@
 	};
 };
 
+&reg_wifi_3v3 {
+	status="okay";
+};
 /* Bluetooth */
 &uart4 {
 	status = "okay";
@@ -24,16 +52,17 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc2>;
+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
 	bus-width = <4>;
 	non-removable;
 	keep-power-in-suspend;
 	status = "okay";
+	vmmc-supply = <&reg_wifi_3v3>;
 
 	brcmf: bcrmf@1 {
-		reg = <1>;
-		compatible = "brcm,bcm4329-fmac";
-	};
+	       reg = <1>;
+	       compatible = "brcm,bcm4329-fmac";
+       };
 };
