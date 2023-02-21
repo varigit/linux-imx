@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2020-2021 Variscite Ltd.
+ */
+
+#include "imx8mp-var-dart-dt8mcustomboard-legacy-basler-isi0.dts"
+#include "imx8mp-var-common-m7.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M-PLUS M7 on DT8MCustomBoard 1.x with Basler camera on ISI0";
+};
+
+&gpio4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_basler>;
+
+	cam_pwr_hog {
+		gpio-hog;
+		gpios = <8 0>;
+		output-high;
+		line-name = "basler_cam_pwr";
+	};
+};
+
+&iomuxc {
+	pinctrl_basler: baslergrp {
+		fsl,pins = <
+			MX8MP_IOMUXC_SAI1_RXD6__GPIO4_IO08	0x19
+		>;
+	};
+};

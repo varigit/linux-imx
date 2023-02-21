@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2020-2021 Variscite Ltd.
+ */
+
+#include "imx8mp-var-som-symphony-basler-isi0.dts"
+#include "imx8mp-var-common-m7.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-MX8M-PLUS M7 on Symphony-Board with Basler camera on ISI0";
+};
+
+&i2c3 {
+	/delete-node/ov5640_mipi@3c;
+
+	basler_camera_vvcam@36 {
+		compatible = "basler,basler-camera", "basler-camera";
+		reg = <0x36>;
+		csi_id = <0x00>;
+		status = "okay";
+
+		port {
+			basler_ep_0: endpoint {
+				data-lanes = <1 2 3 4>;
+				clock-lanes = <0>;
+				link-frequencies = /bits/ 64 <500000000>;
+				remote-endpoint = <&mipi_csi0_ep>;
+			};
+		};
+	};
+};
+
+&mipi_csi_0 {
+	status = "okay";
+
+	port@0 {
+		mipi_csi0_ep: endpoint {
+			remote-endpoint = <&basler_ep_0>;
+			data-lanes = <4>;
+			csis-hs-settle = <16>;
+		};
+	};
+};
+
+&cameradev {
+        status = "okay";
+};
+
+&isi_0 {
+	status = "okay";
+	dma-coherent;
+	bsl,dma-invalidate;
+	fsl,chain_buf;
+};
+
+&isi_1 {
+	status = "disabled";
+	fsl,chain_buf;
+};
+
+&isp_0 {
+	status = "disabled";
+};
+
+&isp_1 {
+	status = "disabled";
+};
+
+&dewarp {
+	status = "disabled";
+};
+
+&gpio1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_basler>;
+
+	cam_pwr_hog {
+		gpio-hog;
+		gpios = <8 0>;
+		output-high;
+		line-name = "basler_cam_pwr";
+	};
+};
+
+&iomuxc {
+	pinctrl_basler: baslergrp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO08__GPIO1_IO08	0x19
+		>;
+	};
+};
