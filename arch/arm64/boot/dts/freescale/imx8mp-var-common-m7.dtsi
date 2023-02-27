@@ -53,6 +53,7 @@
 			  &mu 1 1
 			  &mu 3 1>;
 		memory-region = <&vdev0vring0>, <&vdev0vring1>, <&vdevbuffer>, <&rsc_table>, <&m7_reserved>;
-		status = "disabled";
+		status = "okay";
+		fsl,startup-delay-ms = <500>;
 	};
 };

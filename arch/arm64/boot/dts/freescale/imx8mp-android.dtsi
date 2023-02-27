@@ -25,6 +25,7 @@
 		ranges;
 		#address-cells = <2>;
 		#size-cells = <2>;
+		status="okay";
 		trusty-irq {
 			compatible = "android,trusty-irq-v1";
 			interrupt-ranges = < 0 15 0>;
@@ -39,10 +40,6 @@
 	};
 };
 
-&{/reserved-memory/linux,cma} {
-	status = "disabled";
-};
-
 &lcdif1 {
 	trusty;
 	status = "okay";
@@ -54,6 +51,7 @@
 };
 
 &resmem {
+	status="okay";
 	ramoops@94400000 {
 		compatible = "ramoops";
 		reg = <0 0x94400000 0 0x00100000>;
@@ -64,7 +62,8 @@
         };
 
 	secure_region: secure {
-		 compatible = "imx-secure-ion-pool";
-		 reg = <0x0 0xE0000000 0 0x10000000>;
+		status="disabled";
+		compatible = "imx-secure-ion-pool";
+		reg = <0x0 0xE0000000 0 0x10000000>;
 	};
 };
