@@ -44,6 +44,18 @@ unevaluatedProperties: false
       supports an adin PHY (e.g. ADIN1300) or another PHY (e.g. AR8033) at the same
       address, but they require different phy-modes.
 
+  adi,disable-fast-down-1000base-t:
+    $ref: /schemas/types.yaml#definitions/flag
+    description: |
+      If set, disables any ADI fast link down ("Enhanced Link Detection")
+      function bits for 1000base-t interfaces.
+
+  adi,disable-fast-down-100base-tx:
+    $ref: /schemas/types.yaml#definitions/flag
+    description: |
+      If set, disables any ADI fast link down ("Enhanced Link Detection")
+      function bits for 100base-tx interfaces.
+
 examples:
   - |
     ethernet {
