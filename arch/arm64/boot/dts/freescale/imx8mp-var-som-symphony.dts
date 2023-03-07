@@ -319,6 +319,10 @@
 	};
 };
 
+&isp0_reserved {
+	status = "disabled";
+};
+
 &flexcan2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_flexcan2>;
