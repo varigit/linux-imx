@@ -1731,12 +1731,15 @@ bool brcmf_p2p_send_action_frame(struct brcmf_cfg80211_info *cfg,
 	u8 action;
 	s32 tx_retry;
 	s32 extra_listen_time;
+	u32 requested_dwell = le32_to_cpu(af_params->dwell_time);
 	uint delta_ms;
 	unsigned long dwell_jiffies = 0;
 	bool dwell_overflow = false;
-        if (p2p->bss_idx[P2PAPI_BSSCFG_DEVICE].vif == NULL)
+        
+	if (p2p->bss_idx[P2PAPI_BSSCFG_DEVICE].vif == NULL)
                return false;
-	u32 requested_dwell = le32_to_cpu(af_params->dwell_time);
+	
+	requested_dwell = le32_to_cpu(af_params->dwell_time);
 	action_frame = &af_params->action_frame;
 	action_frame_len = le16_to_cpu(action_frame->len);
 
