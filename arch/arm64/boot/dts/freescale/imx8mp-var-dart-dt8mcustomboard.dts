@@ -153,8 +153,16 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <1>;
 			at803x,eee-disabled;
-			at803x,vddio-1p8v;
 			eee-broken-1000t;
+			reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <20000>;
+			vddio-supply = <&vddio1>;
+
+			vddio1: vddio-regulator {
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
 		};
 	};
 };
@@ -164,9 +172,6 @@
 	pinctrl-0 = <&pinctrl_fec>;
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy1>;
-	phy-reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
-	phy-reset-duration = <10>;
-	phy-reset-post-delay = <100>;
 	status = "okay";
 };
 
