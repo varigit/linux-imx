@@ -1387,7 +1387,7 @@ static int csis_ioc_qcap(struct v4l2_subdev *dev, void *args)
 #define USER_TO_KERNEL(TYPE)
 #define KERNEL_TO_USER(TYPE)
 #endif
-static long csis_priv_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg_user)
+static long __maybe_unused csis_priv_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg_user)
 {
 	int ret = 1;
 	struct csi_state *state = container_of(sd, struct csi_state, sd);
