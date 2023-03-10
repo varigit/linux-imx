@@ -3401,7 +3401,7 @@ static void ov5640_set_power_off(struct ov5640_dev *sensor)
 }
 
 /* download ov5640 settings to sensor through i2c */
-static int ov5640_download_firmware(struct ov5640 *sensor,
+static int ov5640_download_firmware(struct ov5640_dev *sensor,
 					const struct reg_value *pModeSetting,
 					s32 ArySize)
 {
@@ -3409,7 +3409,6 @@ static int ov5640_download_firmware(struct ov5640 *sensor,
 	u16 RegAddr = 0;
 	u8 Mask = 0;
 	u8 Val = 0;
-	u8 RegVal = 0;
 	unsigned int i, retval = 0;
 
 	for (i = 0; i < ArySize; ++i, ++pModeSetting) {
@@ -3428,14 +3427,12 @@ static int ov5640_download_firmware(struct ov5640 *sensor,
 		if (Delay_ms)
 			usleep_range(1000 * Delay_ms, 1000 * Delay_ms + 100);//  msleep(Delay_ms);
 	}
-err:
 	return retval;
 }
 
-static int ov5640_af_init(struct ov5640 *sensor)
+static int ov5640_af_init(struct ov5640_dev *sensor)
 {
 	u8 value = 0;
-	int ret= 0;
 
 	ov5640_download_firmware(sensor, af_firmware, ARRAY_SIZE(af_firmware));
 
@@ -3662,7 +3659,7 @@ power_off:
 
 /* --------------- Subdev Operations --------------- */
 
-static int ov5640_af_set_mode(struct ov5640 *sensor, int mode)
+static int ov5640_af_set_mode(struct ov5640_dev *sensor, int mode)
 {
 	int err = 0;
 
@@ -3712,17 +3709,17 @@ static int ov5640_af_set_mode(struct ov5640 *sensor, int mode)
 	return 0;
 }
 
-static int ov5640_af_start_single(struct ov5640 *sensor)
+static int ov5640_af_start_single(struct ov5640_dev *sensor)
 {
 	return ov5640_af_set_mode(sensor, V4L2_CID_AUTO_FOCUS_START);
 }
 
-static int ov5640_af_stop_single(struct ov5640 *sensor)
+static int ov5640_af_stop_single(struct ov5640_dev *sensor)
 {
 	return ov5640_af_set_mode(sensor, V4L2_CID_AUTO_FOCUS_STOP);
 }
 
-static int ov5640_af_set_auto(struct ov5640 *sensor, int enable)
+static int ov5640_af_set_auto(struct ov5640_dev *sensor, int enable)
 {
 	int ret = 0;
 
@@ -3734,7 +3731,7 @@ static int ov5640_af_set_auto(struct ov5640 *sensor, int enable)
 	return ret;
 }
 
-static int ov5640_af_set_focus_range(struct ov5640 *sensor, int value)
+static int __maybe_unused ov5640_af_set_focus_range(struct ov5640_dev *sensor, int value)
 {
 	int ret = 0;
 
@@ -3750,7 +3747,7 @@ static int ov5640_af_set_focus_range(struct ov5640 *sensor, int value)
 	return ret;
 }
 
-static int ov5640_af_set_focus_lock(struct ov5640 *sensor, int value)
+static int __maybe_unused ov5640_af_set_focus_lock(struct ov5640_dev *sensor, int value)
 {
 	if (value != V4L2_LOCK_FOCUS) {
 		pr_err("%s: Invalid focus cmd (%#x)\n", __func__, value);
@@ -3760,7 +3757,7 @@ static int ov5640_af_set_focus_lock(struct ov5640 *sensor, int value)
 	return ov5640_af_set_mode(sensor, V4L2_CID_3A_LOCK);
 }
 
-static int ov5640_af_get_status(struct ov5640 *sensor, int *status)
+static int ov5640_af_get_status(struct ov5640_dev *sensor, int *status)
 {
 	int err;
 	u8 val = 0;
@@ -3792,7 +3789,7 @@ static int ov5640_af_get_status(struct ov5640 *sensor, int *status)
 	return 0;
 }
 
-static int ov5640_af_set_region(struct ov5640 *sensor, uint16_t x, uint16_t y)
+static int ov5640_af_set_region(struct ov5640_dev *sensor, uint16_t x, uint16_t y)
 {
 	int err = 0;
 
@@ -3841,7 +3838,6 @@ static long ov5640_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
 {
 	struct v4l2_control *ctrl = arg;
 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
-	struct i2c_client *client = sensor->i2c_client;
 
 	int ret = 0;
 
@@ -4395,7 +4391,6 @@ static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
 {
 	struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
-	struct i2c_client *client = sensor->i2c_client;
 	int val;
 
 	/* v4l2_ctrl_lock() locks our own mutex */
@@ -4422,7 +4417,6 @@ static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
 {
 	struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
-	struct i2c_client *client = sensor->i2c_client;
 	int ret;
 
 	/* v4l2_ctrl_lock() locks our own mutex */
