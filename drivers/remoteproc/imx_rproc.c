@@ -391,6 +391,17 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx93 = {
 	.method		= IMX_RPROC_SMC,
 };
 
+static bool imx_rproc_is_imx93(struct rproc *rproc)
+{
+	struct imx_rproc *priv = rproc->priv;
+	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
+
+	if (dcfg == &imx_rproc_cfg_imx93)
+		return true;
+	else
+		return false;
+}
+
 static int imx_rproc_ready(struct rproc *rproc)
 {
 	struct imx_rproc *priv = rproc->priv;
@@ -546,7 +557,8 @@ static int imx_rproc_start(struct rproc *rproc)
 					 dcfg->src_start);
 		break;
 	case IMX_RPROC_SMC:
-		imx_8m_setup_stack(rproc);
+		if (!imx_rproc_is_imx93(rproc))
+			imx_8m_setup_stack(rproc);
 		arm_smccc_smc(IMX_SIP_RPROC, IMX_SIP_RPROC_START, 0, 0, 0, 0, 0, 0, &res);
 		ret = res.a0;
 		break;
