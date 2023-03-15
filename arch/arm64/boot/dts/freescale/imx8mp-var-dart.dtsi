@@ -396,6 +396,10 @@
 	status = "okay";
 };
 
+&dsp {
+	status = "disabled";
+};
+
 &iomuxc {
 	pinctrl_eqos: eqosgrp {
 		fsl,pins = <

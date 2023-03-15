@@ -5,6 +5,7 @@
  */
 
 #include "imx8mp-var-dart.dtsi"
+#include "imx8mp-android.dtsi"
 
 / {
 	model = "Variscite DART-MX8M-PLUS on DT8MCustomBoard 2.x and above";
@@ -828,4 +829,3 @@
 	};
 };
 
-#include "imx8mp-android.dtsi"

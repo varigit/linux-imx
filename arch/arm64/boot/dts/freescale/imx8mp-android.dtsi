@@ -19,39 +19,20 @@
 			};
 		};
 	};
-
-	trusty {
-		compatible = "android,trusty-smc-v1";
-		ranges;
-		#address-cells = <2>;
-		#size-cells = <2>;
-		status="okay";
-		trusty-irq {
-			compatible = "android,trusty-irq-v1";
-			interrupt-ranges = < 0 15 0>;
-			ipi-range = <8 15 8>;
-		};
-		trusty-virtio {
-			compatible = "android,trusty-virtio-v1";
-		};
-		trusty-log {
-			compatible = "android,trusty-log-v1";
-		};
-	};
 };
 
 &lcdif1 {
-	trusty;
 	status = "okay";
 };
 
 &isp0_reserved {
 	no-map;
+	status="disabled";
 	reg = <0 0x82400000 0 0x10000000>;
 };
 
 &resmem {
-	status="okay";
+	status="disabled";
 	ramoops@94400000 {
 		compatible = "ramoops";
 		reg = <0 0x94400000 0 0x00100000>;
