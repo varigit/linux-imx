@@ -11,7 +11,7 @@
 
 	chosen {
 		stdout-path = &uart2;
-		bootargs-append = "console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200 androidboot.console=ttymxc1  androidboot.primary_display=imx-drm androidboot.board=varsommx8mp androidboot.wifisdio=30b40000.mmc androidboot.btmmchost=mmc0 androidboot.wificountrycode=US";
+		bootargs-append = "console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200 androidboot.console=ttymxc1  androidboot.primary_display=imx-drm androidboot.vendor.board=varsommx8mp androidboot.wifisdio=30b40000.mmc androidboot.btmmchost=mmc0 androidboot.wificountrycode=US";
 	};
 
 	gpio-keys {
