@@ -8,7 +8,7 @@
 #include "imx8mp-android.dtsi"
 
 / {
-	model = "Variscite DART-MX8M-PLUS on DT8MCustomBoard 2.x and above";
+	model = "Variscite DART-MX8M-PLUS on DT8MCustomBoard 2.x";
 
 	chosen {
 		stdout-path = &uart1;
@@ -191,6 +191,22 @@
 	sda-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 
+	typec@3d {
+		compatible = "nxp,ptn5150";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_extcon>;
+		reg = <0x3d>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+		irq-is-id-quirk;
+		status ="okay";
+
+		port {
+			typec_dr_sw: endpoint {
+				remote-endpoint = <&usb3_drd_sw>;
+			};
+		};
+	};
 	ov5640_mipi0: ov5640_mipi@3c {
 		compatible = "ovti,ov5640";
 		reg = <0x3c>;
@@ -450,8 +466,17 @@
 	hnp-disable;
 	srp-disable;
 	adp-disable;
-	extcon = <&extcon_usb1>;
+	usb-role-switch;
+	role-switch-default-mode = "peripheral";
+	snps,dis-u1-entry-quirk;
+	snps,dis-u2-entry-quirk;
 	status = "okay";
+
+	port {
+		usb3_drd_sw: endpoint {
+			remote-endpoint = <&typec_dr_sw>;
+		};
+	};
 };
 
 &usb3_phy1 {

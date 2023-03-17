@@ -7,7 +7,7 @@
 #include "imx8mp-var-som.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-PLUS on Symphony-Board 1.4a and above";
+	model = "Variscite VAR-SOM-MX8M-PLUS on Symphony-Board";
 
 	chosen {
 		stdout-path = &uart2;
@@ -195,7 +195,7 @@
 	status = "okay";
 
 	/* USB Type-C Controller */
-	extcon_ptn5150: typec@3d {
+	typec@3d {
 		compatible = "nxp,ptn5150";
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_extcon>;
@@ -204,6 +204,11 @@
 		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
 		irq-is-id-quirk;
 		status ="okay";
+		port {
+			typec_dr_sw: endpoint {
+				remote-endpoint = <&usb3_drd_sw>;
+			};
+		};
 	};
 
 	/* GPIO expander */
@@ -418,8 +423,17 @@
 	hnp-disable;
 	srp-disable;
 	adp-disable;
-	extcon = <&extcon_ptn5150>;
+	usb-role-switch;
+	role-switch-default-mode = "peripheral";
+	snps,dis-u1-entry-quirk;
+	snps,dis-u2-entry-quirk;
 	status = "okay";
+
+	port {
+		usb3_drd_sw: endpoint {
+			remote-endpoint = <&typec_dr_sw>;
+		};
+	};
 };
 
 &usb3_phy1 {
