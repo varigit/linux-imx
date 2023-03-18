@@ -53,16 +53,6 @@
 	ft5x06_ts: ft5x06_ts@38 {
 		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>;
 	};
-
-	/* USB Type-C Controller */
-	extcon_ptn5150: typec@3d {
-		compatible = "nxp,ptn5150";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_extcon>;
-		reg = <0x3d>;
-		int-gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
-		status ="okay";
-	};
 };
 
 &i2c4 {
@@ -72,19 +62,20 @@
 		powerdown-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
 		reset-gpios = <&gpio4 12 GPIO_ACTIVE_LOW>;
 	};
+};
 
-	/delete-node/ pca6408_1;
-	/delete-node/ pca6408_2;
+&pca6408_1 {
+	status = "disabled";
+};
+
+&pca6408_2 {
+	status = "disabled";
 };
 
 &pcie {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pcie>;
 	reset-gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
-};
-
-&usb_dwc3_0 {
-	extcon = <&extcon_ptn5150>;
 };
 
 &can0 {
@@ -103,35 +94,22 @@
 	};
 };
 
+&eqos {
+	mdio {
+		/delete-node/ ethernet-phy@1;
+	};
+};
+
 &fec {
+	/delete-property/ phy-handle;
 	status = "disabled";
 };
 
 &iomuxc {
-	pinctrl_flexcan1: flexcan1grp {
-		fsl,pins = <
-			MX8MP_IOMUXC_SAI5_RXD2__CAN1_RX					0x154
-			MX8MP_IOMUXC_SAI5_RXD1__CAN1_TX					0x154
-		>;
-	};
-
-	pinctrl_flexcan2: flexcan2grp {
-		fsl,pins = <
-			MX8MP_IOMUXC_SAI5_MCLK__CAN2_RX					0x154
-			MX8MP_IOMUXC_SAI5_RXD3__CAN2_TX					0x154
-		>;
-	};
-
 	pinctrl_captouch: captouchgrp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SAI1_RXD3__GPIO4_IO05 				0x1c6
 			MX8MP_IOMUXC_GPIO1_IO14__GPIO1_IO14				0x16
-		>;
-	};
-
-	pinctrl_extcon: extcongrp {
-		fsl,pins = <
-			MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10				0x10
 		>;
 	};
 

@@ -8,6 +8,58 @@
 	model = "Variscite DART-MX8M-PLUS HDMI on DT8MCustomBoard 1.x";
 };
 
+/{
+	sound_hdmi: sound_hdmi {
+		compatible = "fsl,imx-audio-hdmi";
+		model = "audio-hdmi";
+		audio-cpu = <&aud2htx>;
+		hdmi-out;
+		constraint-rate = <44100>,
+				<88200>,
+				<176400>,
+				<32000>,
+				<48000>,
+				<96000>,
+				<192000>;
+		status = "okay";
+	};
+};
+
+&irqsteer_hdmi {
+	status = "okay";
+};
+
+&hdmi_blk_ctrl {
+	status = "okay";
+};
+
+&hdmi_pavi {
+	status = "okay";
+};
+
+&hdmi {
+	status = "okay";
+};
+
+&hdmiphy {
+	status = "okay";
+};
+
+&lcdif1 {
+	status = "disabled";
+};
+
+&lcdif2 {
+	status = "okay";
+};
+
+/* HDMI */
+&lcdif3 {
+	status = "okay";
+	thres-low  = <1 2>;             /* (FIFO * 1 / 2) */
+	thres-high = <3 4>;             /* (FIFO * 3 / 4) */
+};
+
 &gpio1 {
         pinctrl-names = "default";
         pinctrl-0 = <&pinctrl_hdmi>;
@@ -18,4 +70,8 @@
                 output-low;
                 line-name = "hdmi_on";
         };
+};
+
+&aud2htx {
+       status = "okay";
 };
