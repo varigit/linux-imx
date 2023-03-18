@@ -214,6 +214,8 @@ imx8mp_hdmi_mode_valid(struct dw_hdmi *hdmi, void *data,
 	if (!imx8mp_hdmi_check_clk_rate(mode->clock))
 		return MODE_CLOCK_RANGE;
 
+	if (mode->hdisplay > 1920 || mode->vdisplay > 1080)
+         return MODE_BAD_HVALUE;
 	/* We don't support double-clocked and Interlaced modes */
 	if (mode->flags & DRM_MODE_FLAG_DBLCLK ||
 			mode->flags & DRM_MODE_FLAG_INTERLACE)
