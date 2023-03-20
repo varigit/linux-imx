@@ -349,8 +349,13 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct device_node *np = dev->of_node;
+	struct device_node *cm_np;
 	void __iomem *base;
 	int ret;
+
+	cm_np = of_find_compatible_node(NULL, NULL, "fsl,imx8mn-cm7");
+	if (of_device_is_available(cm_np))
+		mcore_booted = true;
 
 	clk_hw_data = kzalloc(struct_size(clk_hw_data, hws,
 					  IMX8MN_CLK_END), GFP_KERNEL);
