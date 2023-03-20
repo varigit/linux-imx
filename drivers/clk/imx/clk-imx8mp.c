@@ -716,8 +716,13 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct device_node *np;
+	struct device_node *cm_np;
 	void __iomem *anatop_base, *ccm_base;
 	int err;
+
+	cm_np = of_find_compatible_node(NULL, NULL, "fsl,imx8mn-cm7");
+	if (of_device_is_available(cm_np))
+		mcore_booted = true;
 
 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mp-anatop");
 	anatop_base = devm_of_iomap(dev, np, 0, NULL);
