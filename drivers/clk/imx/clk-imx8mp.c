@@ -723,10 +723,6 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
 
 	check_m4_enabled();
 
-	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mn-cm7");
-	if (of_device_is_available(np))
-		mcore_booted = true;
-
 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mp-anatop");
 	anatop_base = of_iomap(np, 0);
 	of_node_put(np);
