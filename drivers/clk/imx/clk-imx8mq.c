@@ -316,10 +316,15 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct device_node *np = dev->of_node;
+	struct device_node *cm_np;
 	void __iomem *base;
 	int err;
 
 	check_m4_enabled();
+
+	cm_np = of_find_compatible_node(NULL, NULL, "fsl,imx8mq-cm4");
+	if (of_device_is_available(cm_np))
+		mcore_booted = true;
 
 	clk_hw_data = kzalloc(struct_size(clk_hw_data, hws,
 					  IMX8MQ_CLK_END), GFP_KERNEL);
