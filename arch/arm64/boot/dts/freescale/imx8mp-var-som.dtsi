@@ -370,7 +370,7 @@
 };
 
 &vpu_v4l2 {
-	status = "disabled";
+	status = "okay";
 };
 
 &gpu_3d {
