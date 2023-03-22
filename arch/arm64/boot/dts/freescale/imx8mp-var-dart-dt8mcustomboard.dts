@@ -127,15 +127,6 @@
 		#clock-cells = <0>;
 		clock-frequency = <40000000>;
 	};
-
-	extcon_usb1: extcon_usb1 {
-		compatible = "linux,extcon-usb-gpio";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_extcon>;
-		id-gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
-		status = "okay";
-	};
-
 };
 
 &aud2htx {
