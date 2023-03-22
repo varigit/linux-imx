@@ -56,6 +56,12 @@ unevaluatedProperties: false
       If set, disables any ADI fast link down ("Enhanced Link Detection")
       function bits for 100base-tx interfaces.
 
+  adi,1000base-t-retrain-en:
+    $ref: /schemas/types.yaml#definitions/flag
+    description: |
+      If set, enables the retrain function which retrains the link when the
+      receiver status becomes not okay.
+
 examples:
   - |
     ethernet {
