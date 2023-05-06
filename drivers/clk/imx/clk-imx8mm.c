@@ -330,6 +330,7 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
 	int ret;
 	bool is_som = false; 
 
+
 	check_m4_enabled();
 
 	clk_hw_data = kzalloc(struct_size(clk_hw_data, hws,
@@ -357,6 +358,8 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
 	if (of_find_compatible_node(NULL, NULL, "variscite,imx8mm-var-som"))
 		is_som = true;
 
+        if (of_find_compatible_node(NULL, NULL, "fsl,imx8mm-cm4"))
+               mcore_booted = true;
 
 	hws[IMX8MM_AUDIO_PLL1_REF_SEL] = imx_clk_hw_mux("audio_pll1_ref_sel", base + 0x0, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
 	hws[IMX8MM_AUDIO_PLL2_REF_SEL] = imx_clk_hw_mux("audio_pll2_ref_sel", base + 0x14, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
