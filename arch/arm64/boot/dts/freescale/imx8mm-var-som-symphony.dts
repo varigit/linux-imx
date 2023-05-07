@@ -10,6 +10,8 @@
 	model = "Variscite VAR-SOM-MX8M-MINI on Symphony-Board";
 
 	chosen {
+		bootargs = "console=ttymxc3,115200 earlycon=ec_imx6q,0x30a60000,115200 loglevel=8 ignore_loglevel ";
+		bootargs-append = "console=ttymxc3,115200 earlycon=ec_imx6q,0x30a60000,115200 androidboot.console=ttymxc3 androidboot.primary_display=imx-drm androidboot.vendor.board=varsommx8mmini androidboot.wifisdio=30b40000.mmc androidboot.btmmchost=mmc0";
 		stdout-path = &uart4;
 	};
 
@@ -45,7 +47,7 @@
 		home {
 			label = "Home";
 			gpios = <&pca9534 2 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_HOME>;
+			linux,code = <KEY_HOMEPAGE>;
 			wakeup-source;
 		};
 
@@ -96,14 +98,6 @@
 		regulator-max-microvolt = <5000000>;
 		gpio = <&gpio5 1 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
-	};
-
-	extcon_usb1: extcon_usb1 {
-		compatible = "linux,extcon-usb-gpio";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_extcon>;
-		id-gpio = <&gpio1 11 GPIO_ACTIVE_HIGH>;
-		status = "okay";
 	};
 };
 
@@ -183,6 +177,23 @@
 			gpios = <7 GPIO_ACTIVE_HIGH>;
 			output-low;
 			line-name = "enet_sel";
+		};
+	};
+
+	/* USB Type-C Controller */
+	typec@3d {
+		compatible = "nxp,ptn5150";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_extcon>;
+		reg = <0x3d>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <11 IRQ_TYPE_NONE>;
+		irq-is-id-quirk;
+		status ="okay";
+		port {
+			typec_dr_sw: endpoint {
+				remote-endpoint = <&usb3_drd_sw>;
+			};
 		};
 	};
 };
@@ -344,14 +355,27 @@
 
 &usbotg1 {
 	dr_mode = "otg";
-	picophy,pre-emp-curr-control = <3>;
-	picophy,dc-vol-level-adjust = <7>;
+	samsung,picophy-pre-emp-curr-control = <3>;
+	samsung,picophy-dc-vol-level-adjust = <7>;
 	hnp-disable;
 	srp-disable;
 	adp-disable;
-	extcon = <0>, <&extcon_usb1>;
+	usb-role-switch;
+	role-switch-default-mode = "peripheral";
+	hnp-disable;
+	srp-disable;
+	adp-disable;
+	usb-role-switch;
 	disable-over-current;
+	samsung,picophy-pre-emp-curr-control = <3>;
+	samsung,picophy-dc-vol-level-adjust = <7>;
 	status = "okay";
+
+	port {
+		usb3_drd_sw: endpoint {
+			remote-endpoint = <&typec_dr_sw>;
+		};
+	};
 };
 
 &usbotg2 {

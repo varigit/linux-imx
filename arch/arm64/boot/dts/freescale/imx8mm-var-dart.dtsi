@@ -9,6 +9,28 @@
 #include <dt-bindings/usb/pd.h>
 #include "imx8mm.dtsi"
 #include "imx8mm-android.dtsi"
+/ {
+        wifi_rfkill {
+                compatible = "net,rfkill-gpio";
+                reset-gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
+		reset-delay = <15>;
+                name = "wifi_rfkill";
+                type = "wlan";
+                status = "okay";
+        };
+
+	bt_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt>;
+		reset-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+                shutdown-gpios = <&gpio5 5 GPIO_ACTIVE_LOW>;
+		reset-delay = <10>;
+		name = "bt_rfkill";
+		type = "bluetooth";
+		status = "okay";
+	};
+};
 
 / {
 	compatible = "variscite,dart-mx8mm", "fsl,imx8mm";
@@ -45,12 +67,25 @@
 		regulator-max-microvolt = <3300000>;
 		gpio = <&gpio1 7 GPIO_ACTIVE_LOW>;
 	};
-
-	reserved-memory {
-		/* cma region is provided by kernel command line as cma=<size>M */
-		/delete-node/ linux,cma;
+	reg_wifi_3v3: regulator-wifi-3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "wifi-3v3";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio2 7 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
 	};
 
+	reg_wifi_1v8: regulator-wifi-1v8 {
+		compatible = "regulator-fixed";
+		regulator-name = "wifi-1v8";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		gpio = <&gpio2 20 GPIO_ACTIVE_LOW>;
+		startup-delay-us = <20000>;
+		vin-supply = <&reg_wifi_3v3>;
+		enable-active-low;
+	};
 	sound-wm8904 {
 		compatible = "simple-audio-card";
 		simple-audio-card,bitclock-master = <&dailink_master>;
@@ -117,7 +152,7 @@
 	cpu-supply = <&buck2_reg>;
 };
 
-&ddrc {
+/*&ddrc {
 	operating-points-v2 = <&ddrc_opp_table>;
 
 	ddrc_opp_table: opp-table {
@@ -135,7 +170,7 @@
 			opp-hz = /bits/ 64 <750000000>;
 		};
 	};
-};
+};*/
 
 &fec1 {
 	pinctrl-names = "default", "sleep";
@@ -396,7 +431,7 @@
 /* Bluetooth */
 &uart4 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart4>;
 	assigned-clocks = <&clk IMX8MM_CLK_UART4>;
 	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_80M>;
 	uart-has-rtscts;
@@ -414,6 +449,10 @@
 	bus-width = <4>;
 	non-removable;
 	keep-power-in-suspend;
+	status = "okay";
+
+	vmmc-supply = <&reg_wifi_3v3>;
+	vqmmc-supply = <&reg_wifi_1v8>;
 	status = "okay";
 
 	brcmf: wifi@1 {

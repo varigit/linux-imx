@@ -10,6 +10,8 @@
 	model = "Variscite DART-MX8M-MINI on DT8MCustomBoard 2.x and above";
 
 	chosen {
+		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
+		bootargs-append = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200 androidboot.console=ttymxc0 androidboot.primary_display=imx-drm androidboot.wifisdio=30b40000.mmc androidboot.btmmchost=mmc0 androidboot.wificountrycode=US";
 		stdout-path = &uart1;
 	};
 
@@ -38,21 +40,21 @@
 		up {
 			label = "Up";
 			gpios = <&pca6408_1 5 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_UP>;
+			linux,code = <KEY_VOLUMEUP>;
 			wakeup-source;
 		};
 
 		down {
 			label = "Down";
 			gpios = <&pca6408_1 6 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_DOWN>;
+			linux,code = <KEY_VOLUMEDOWN>;
 			wakeup-source;
 		};
 
 		home {
 			label = "Home";
 			gpios = <&pca6408_1 4 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_HOME>;
+			linux,code = <KEY_HOMEPAGE>;
 			wakeup-source;
 		};
 
@@ -95,14 +97,6 @@
 		enable-active-high;
 	};
 
-	extcon_usb1: extcon_usb1 {
-		compatible = "linux,extcon-usb-gpio";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_extcon>;
-		id-gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
-		status = "okay";
-	};
-
 	can0_osc: can0_osc {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -119,6 +113,23 @@
 	sda-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 
+	/* USB Type-C Controller */
+	extcon_ptn5150: typec@3d {
+		compatible = "nxp,ptn5150";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_extcon>;
+		reg = <0x3d>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <10 IRQ_TYPE_NONE>;
+		irq-is-id-quirk;
+		status ="okay";
+
+		port {
+			typec1_dr_sw: endpoint {
+				remote-endpoint = <&usb1_drd_sw>;
+			};
+		};
+	};
 	/* Capacitive touch controller */
 	ft5x06_ts: ft5x06_ts@38 {
 		compatible = "edt,edt-ft5206";
@@ -326,14 +337,20 @@
 
 &usbotg1 {
 	dr_mode = "otg";
-	picophy,pre-emp-curr-control = <3>;
-	picophy,dc-vol-level-adjust = <7>;
-	extcon = <0>,<&extcon_usb1>;
 	hnp-disable;
 	srp-disable;
 	adp-disable;
+	usb-role-switch;
 	disable-over-current;
+	samsung,picophy-pre-emp-curr-control = <3>;
+	samsung,picophy-dc-vol-level-adjust = <7>;
 	status = "okay";
+
+	port {
+		usb1_drd_sw: endpoint {
+			remote-endpoint = <&typec1_dr_sw>;
+		};
+	};
 };
 
 &usbotg2 {
