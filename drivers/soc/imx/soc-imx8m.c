@@ -263,6 +263,7 @@ free_soc:
 	kfree(soc_dev_attr);
 	return ret;
 }
+EXPORT_SYMBOL_GPL(set_cm4_enable);
 
 device_initcall(imx8_soc_init);
 
