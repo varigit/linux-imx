@@ -196,7 +196,7 @@
 			no-map;
 		};
 
-		rsc_table: rsc_table@2021f000 {
+		rsc_table: rsc-table@2021f000 {
 			reg = <0 0x2021f000 0 0x1000>;
 			no-map;
 		};
