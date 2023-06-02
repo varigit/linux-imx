@@ -331,6 +331,11 @@
 	};
 };
 
+&lpm {
+	soc-supply = <&buck1>;
+	status = "okay";
+};
+
 &lpspi8 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_lpspi8>;
