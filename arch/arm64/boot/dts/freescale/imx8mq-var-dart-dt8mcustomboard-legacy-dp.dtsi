@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
  * Copyright 2017 NXP
- * Copyright 2018-2022 Variscite Ltd.
+ * Copyright 2018-2023 Variscite Ltd.
  */
+/ {
+	chosen {
+		bootargs-append = "androidboot.primary_display=imx-dcss androidboot.gui_resolution=1080p androidboot.fbTileSupport=enable androidboot.wifisdio=30b50000.mmc androidboot.btmmchost=mmc0";
+	};
+};
 
 &dcss {
 	status = "okay";

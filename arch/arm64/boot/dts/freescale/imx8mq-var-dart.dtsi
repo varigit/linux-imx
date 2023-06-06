@@ -2,7 +2,7 @@
 /*
  * Copyright 2017 NXP
  * Copyright (C) 2017-2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
- * Copyright 2018-2022 Variscite Ltd.
+ * Copyright 2018-2023 Variscite Ltd.
  */
 
 /dts-v1/;
@@ -12,6 +12,21 @@
 
 / {
 	compatible = "variscite,imx8m-dart", "fsl,imx8mq";
+
+	resmem: reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		/* global autoconfigured region for contiguous allocations */
+		linux,cma {
+			compatible = "shared-dma-pool";
+			reusable;
+			size = <0 0x38000000>;
+			alloc-ranges = <0 0x80000000 0 0x38000000>;
+			linux,cma-default;
+		};
+	};
 
 	reg_audio: audio_vdd {
 		compatible = "regulator-fixed";
@@ -24,6 +39,16 @@
 	reg_eth_phy: eth_phy {
 		compatible = "regulator-fixed";
 		regulator-name = "eth_phy_pwr";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		status = "disabled";
+	};
+
+	reg_wifi_3v3: regulator-wifi-3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "wifi-3v3";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
@@ -109,7 +134,7 @@
 	cpu-supply = <&reg_cpu_dvfs>;
 };
 
-&ddrc {
+/*&ddrc {
 	operating-points-v2 = <&ddrc_opp_table>;
 
 	ddrc_opp_table: opp-table {
@@ -126,7 +151,7 @@
 		/*
 		 * On imx8mq B0 PLL can't be bypassed so low bus is 166M
 		 */
-		opp-166M {
+/*		opp-166M {
 			opp-hz = /bits/ 64 <166935483>;
 		};
 
@@ -134,7 +159,7 @@
 			opp-hz = /bits/ 64 <800000000>;
 		};
 	};
-};
+};*/
 
 &fec1 {
 	pinctrl-names = "default";
@@ -314,7 +339,6 @@
 			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B		0xc6
 		>;
 	};
-
 	pinctrl_wifi: wifigrp {
 		fsl,pins = <
 			MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4		0xc1	/* WIFI_PWR_VSEL */
@@ -565,7 +589,7 @@
 /* Bluetooth */
 &uart4 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart4>;
 	assigned-clocks = <&clk IMX8MQ_CLK_UART4>;
 	assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_80M>;
 	fsl,uart-has-rtscts;

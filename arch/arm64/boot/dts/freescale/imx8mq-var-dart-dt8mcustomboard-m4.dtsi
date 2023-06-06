@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
  * Copyright 2017 NXP
- * Copyright 2019-2022 Variscite Ltd.
+ * Copyright 2019-2023 Variscite Ltd.
  */
 
 / {
@@ -38,6 +38,7 @@
 	};
 
 	imx8mq-cm4 {
+		status = "okay";
 		compatible = "fsl,imx8mq-cm4";
 		rsc-da = <0x40000000>;
 		clocks = <&clk IMX8MQ_CLK_M4_DIV>;

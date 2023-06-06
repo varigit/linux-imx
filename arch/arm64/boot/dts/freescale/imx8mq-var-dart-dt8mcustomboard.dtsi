@@ -2,15 +2,20 @@
 /*
  * Copyright 2017 NXP
  * Copyright (C) 2017-2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
- * Copyright 2018-2022 Variscite Ltd.
+ * Copyright 2018-2023 Variscite Ltd.
  */
 
 #include "imx8mq-var-dart.dtsi"
+#include "imx8mq-android.dtsi"
 
 / {
 	chosen {
-		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
+		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200 androidboot.wifisdio=30b50000.mmc androidboot.btmmchost=mmc0";
 		stdout-path = &uart1;
+	};
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x00000000 0x40000000 0 0xc0000000>;
 	};
 
 	backlight: backlight {
@@ -621,7 +626,7 @@
 	srp-disable;
 	adp-disable;
 	usb-role-switch;
-	role-switch-default-mode = "none";
+	role-switch-default-mode = "peripheral";
 	snps,dis-u1-entry-quirk;
 	snps,dis-u2-entry-quirk;
 	status = "okay";
