@@ -263,7 +263,6 @@ free_soc:
 	kfree(soc_dev_attr);
 	return ret;
 }
-EXPORT_SYMBOL_GPL(set_cm4_enable);
 
 device_initcall(imx8_soc_init);
 
@@ -278,6 +277,13 @@ bool imx_src_is_m4_enabled(void)
 	return m4_is_enabled;
 }
 EXPORT_SYMBOL_GPL(imx_src_is_m4_enabled);
+
+void set_cm4_enable(bool state)
+{
+	m4_is_enabled = state;
+	printk("M4 is enabled\n");
+}
+EXPORT_SYMBOL_GPL(set_cm4_enable);
 
 int check_m4_enabled(void)
 {
