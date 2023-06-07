@@ -10,7 +10,7 @@
 
 / {
 	chosen {
-		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200 androidboot.wifisdio=30b50000.mmc androidboot.btmmchost=mmc0";
+		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200 androidboot.wifisdio=30b50000.mmc androidboot.btmmchost=mmc1";
 		stdout-path = &uart1;
 	};
 	memory@40000000 {

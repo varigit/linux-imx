@@ -6,7 +6,7 @@
 
 / {
 	chosen {
-		bootargs-append = "androidboot.primary_display=imx-dcss androidboot.gui_resolution=1080p androidboot.fbTileSupport=enable androidboot.wifisdio=30b50000.mmc androidboot.btmmchost=mmc0";
+		bootargs-append = "androidboot.primary_display=imx-dcss androidboot.gui_resolution=1080p androidboot.fbTileSupport=enable androidboot.wifisdio=30b50000.mmc androidboot.btmmchost=mmc1";
 	};
 
 	sound-hdmi {
