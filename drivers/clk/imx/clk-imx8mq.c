@@ -321,10 +321,6 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
 
 	check_m4_enabled();
 
-	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mq-cm4");
-	if (of_device_is_available(np))
-		mcore_booted = true;
-
 	clk_hw_data = kzalloc(struct_size(clk_hw_data, hws,
 					  IMX8MQ_CLK_END), GFP_KERNEL);
 	if (WARN_ON(!clk_hw_data))
@@ -348,6 +344,10 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
 	of_node_put(np);
 	if (WARN_ON(!base))
 		return -ENOMEM;
+
+	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mq-cm4");
+	if (of_device_is_available(np))
+		mcore_booted = true;
 
 	hws[IMX8MQ_ARM_PLL_REF_SEL] = imx_clk_hw_mux("arm_pll_ref_sel", base + 0x28, 16, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
 	hws[IMX8MQ_GPU_PLL_REF_SEL] = imx_clk_hw_mux("gpu_pll_ref_sel", base + 0x18, 16, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
