@@ -199,6 +199,7 @@ cat <<EOF >> debian/control
 
 Package: linux-headers-$version
 Architecture: $debarch
+Provides: linux-headers
 Description: Linux kernel headers for $version on $debarch
  This package provides kernel header files for $version on $debarch
  .
