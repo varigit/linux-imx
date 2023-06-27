@@ -10,3 +10,8 @@
 / {
 	model = "Variscite DART-MX8M on DT8MCustomBoard 2.x and above M4+WIFI+LVDS";
 };
+/ {
+        chosen {
+                bootargs-append = "androidboot.primary_display=imx-dcss androidboot.gui_resolution=1080p androidboot.fbTileSupport=enable androidboot.wifisdio=30b50000.mmc androidboot.btmmchost=mmc1";
+        };
+};
