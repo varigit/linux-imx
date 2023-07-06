@@ -304,7 +304,7 @@
 
 &pwm1 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_pwm1>;
+	pinctrl-0 = <&pinctrl_backlight>;
 	status = "okay";
 };
 
@@ -529,7 +529,7 @@
 		>;
 	};
 
-	pinctrl_pwm1: pwm1grp {
+	pinctrl_backlight: backlightgrp {
 		fsl,pins = <
 			MX8MM_IOMUXC_GPIO1_IO01_PWM1_OUT		0x06
 		>;
