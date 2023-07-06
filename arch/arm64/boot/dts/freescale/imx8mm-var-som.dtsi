@@ -113,22 +113,6 @@
 	cpu-supply = <&buck2_reg>;
 };
 
-&ddrc {
-	operating-points-v2 = <&ddrc_opp_table>;
-
-	ddrc_opp_table: opp-table {
-		compatible = "operating-points-v2";
-
-		opp-266M {
-			opp-hz = /bits/ 64 <266500000>;
-		};
-
-		opp-600M {
-			opp-hz = /bits/ 64 <600000000>;
-		};
-	};
-};
-
 &fec1 {
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&pinctrl_fec1>;
