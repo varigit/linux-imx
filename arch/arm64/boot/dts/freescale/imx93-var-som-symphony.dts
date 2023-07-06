@@ -238,7 +238,7 @@
 		ethphy1: ethernet-phy@5 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <5>;
-			at803x,eee-disabled;
+			qca,disable-smarteee;
 			eee-broken-1000t;
 			reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
