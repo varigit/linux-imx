@@ -32,7 +32,7 @@
 		wakeup {
 			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_WAKEUP>;
-			gpio-key,wakeup;
+			wakeup-source;
 		};
 	};
 
