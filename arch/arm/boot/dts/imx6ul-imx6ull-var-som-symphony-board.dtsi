@@ -75,7 +75,6 @@
 		interrupt-parent = <&gpio1>;
 		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
 		#gpio-cells = <2>;
-		wakeup-source;
 	};
 };
 

@@ -27,7 +27,6 @@
 		user {
 			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_BACK>;
-			gpio-key,wakeup;
 		};
 	};
 
