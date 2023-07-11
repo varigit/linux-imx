@@ -1,0 +1,56 @@
+# SPDX-License-Identifier: GPL-2.0+
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/net/mxl,yaml.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+title: MaxLinear MXL8611x PHY
+
+maintainers:
+  - Nate Drude <nate.d@variscite.com>
+
+description: |
+  Bindings for MaxLinear mxl8611x PHYs
+
+allOf:
+  - $ref: ethernet-phy.yaml#
+
+properties:
+  mxl-8611x,led0_cfg:
+    description: |
+      Register value for COM_EXT_LED0_CFG
+    default: 0x0610
+
+  mxl-8611x,led1_cfg:
+    description: |
+      Register value for COM_EXT_LED1_CFG
+    default: 0x0620
+
+  mxl-8611x,led2_cfg:
+    description: |
+      Register value for COM_EXT_LED2_CFG
+    default: 0x0640
+
+examples:
+  - |
+    ethernet {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        phy-mode = "rgmii-id";
+
+        ethernet-phy@0 {
+            reg = <0>;
+
+        mxl-8611x,led0_cfg = <(
+          MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
+          MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
+          MXL8611X_LEDX_CFG_TRAFFIC_ACT_BLINK_IND
+        )>;
+        mxl-8611x,led1_cfg = <(
+          MXL8611X_LEDX_CFG_LINK_UP_10MB_ON |
+          MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
+          MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
+        )>;
+        };
+    };
