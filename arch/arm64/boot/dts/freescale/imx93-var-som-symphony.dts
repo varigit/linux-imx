@@ -163,13 +163,6 @@
 		#size-cells = <2>;
 		ranges;
 
-		linux,cma {
-			compatible = "shared-dma-pool";
-			reusable;
-			size = <0 0x4000000>;
-			linux,cma-default;
-		};
-
 		ethosu_mem: ethosu_region@88000000 {
 			compatible = "shared-dma-pool";
 			reusable;
