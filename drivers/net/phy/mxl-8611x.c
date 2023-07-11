@@ -24,6 +24,7 @@
 
 #include <linux/kernel.h>
 #include <linux/etherdevice.h>
+#include <linux/of.h>
 #include <linux/phy.h>
 #include <linux/module.h>
 #include <linux/bitfield.h>
@@ -218,20 +219,6 @@
 			MXL8611X_EXT_RGMII_CFG1_TX_1G_DELAY_DEFAULT
 #define MXL8611X_EXT_RGMII_CFG1_TX_10MB_100MB_CUSTOM \
 			MXL8611X_EXT_RGMII_CFG1_TX_10MB_100MB_DEFAULT
-
-/* Adjust default LED settings */
-#define MXL8611X_LED0_CFG_CUSTOM		(MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON | \
-										MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON | \
-										MXL8611X_LEDX_CFG_LINK_UP_10MB_ON)
-#define MXL8611X_LED1_CFG_CUSTOM		(MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON | \
-										MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON | \
-										MXL8611X_LEDX_CFG_LINK_UP_100MB_ON)
-#define MXL8611X_LED2_CFG_CUSTOM		(MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON | \
-										MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON | \
-										MXL8611X_LEDX_CFG_LINK_UP_1GB_ON)
-#define MXL8611X_LED_BLINK_CFG_CUSTOM	(MXL8611X_LED_BLINK_CFG_FREQ_MODE1_8HZ | \
-										MXL8611X_LED_BLINK_CFG_FREQ_MODE2_4HZ | \
-										MXL8611X_LED_BLINK_CFG_DUTY_CYCLE_50_PERC_ON)
 
 /* ******************************************************** */
 /* Customer specific configuration END						*/
@@ -479,37 +466,33 @@ static int mxl86110_write_page(struct phy_device *phydev, int page)
 };
 
 /**
- * mxl8611x_led_cfg() - applies LED configuration
+ * mxl8611x_led_cfg() - applies LED configuration from device tree
  * @phydev: pointer to the phy_device
  *
- * Custom settings can be defined in custom config section of the driver
  * returns 0 or negative errno code
  */
 static int mxl8611x_led_cfg(struct phy_device *phydev)
 {
 	int ret = 0;
+	int i;
+	char propname[25];
+	struct device_node *node = phydev->mdio.dev.of_node;
+	u32 val;
 
-	/* Write default LED settings. Can be adapted if target platform requires
-	 * different LED behaviour
-	 */
-	ret = mxlphy_write_extended_reg(phydev, MXL8611X_LED0_CFG_REG,
-									MXL8611X_LED0_CFG_CUSTOM);
-	if (ret < 0)
-		return ret;
+	/* Loop through three the LED registers */
+	for (i = 0; i < 3; i++) {
+		/* Read property from device tree */
+		snprintf(propname, 25, "mxl-8611x,led%d_cfg", i);
+		if (of_property_read_u32(node, propname, &val))
+			continue;
 
-	ret = mxlphy_write_extended_reg(phydev, MXL8611X_LED1_CFG_REG,
-									MXL8611X_LED1_CFG_CUSTOM);
-	if (ret < 0)
-		return ret;
+		/* Update PHY LED register */
+		ret = mxlphy_write_extended_reg(phydev, MXL8611X_LED0_CFG_REG + i, val);
+		if (ret < 0)
+			return ret;
+	}
 
-	ret = mxlphy_write_extended_reg(phydev, MXL8611X_LED2_CFG_REG,
-									MXL8611X_LED2_CFG_CUSTOM);
-	if (ret < 0)
-		return ret;
-
-	ret = mxlphy_write_extended_reg(phydev, MXL8611X_LED_BLINK_CFG_REG,
-									MXL8611X_LED_BLINK_CFG_CUSTOM);
-	return ret;
+	return 0;
 }
 
 /**
