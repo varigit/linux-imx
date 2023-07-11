@@ -148,6 +148,12 @@
 				<192000>;
 		status = "okay";
 	};
+
+	sound-xcvr {
+		compatible = "fsl,imx-audio-xcvr";
+		model = "imx-audio-xcvr";
+		cpu-dai = <&xcvr>;
+	};
 };
 
 &aud2htx {
@@ -625,6 +631,11 @@
 &ldo4 {
 	regulator-min-microvolt = <1800000>;
 	regulator-max-microvolt = <1800000>;
+};
+
+&xcvr {
+	#sound-dai-cells = <0>;
+	status = "okay";
 };
 
 &iomuxc {
