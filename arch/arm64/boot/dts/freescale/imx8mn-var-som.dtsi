@@ -186,7 +186,6 @@
 		ethphy0: ethernet-phy@4 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <4>;
-			at803x,led-act-blind-workaround;
 			qca,disable-smarteee;
 			vddio-supply = <&vddio>;
 			reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
