@@ -7,7 +7,7 @@
 
 / {
 	model = "Variscite i.MX7 Dual VAR-SOM-MX7";
-	compatible = "variscite,imx7d-var-som", "fsl,imx7d";
+	compatible = "variscite,imx7-var-som", "fsl,imx7d";
 
 	memory@80000000 {
 		device_type = "memory";
