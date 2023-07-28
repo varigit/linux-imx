@@ -4,5 +4,5 @@
  * Copyright 2023 Variscite Ltd.
  */
 
-#include "imx93-var-som-symphony.dts"
+#include "imx93-var-som-1.x-symphony.dts"
 #include "imx93-var-som-symphony-m33.dtsi"

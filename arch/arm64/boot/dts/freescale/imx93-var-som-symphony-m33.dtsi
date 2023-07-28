@@ -4,5 +4,10 @@
  * Copyright 2023 Variscite Ltd.
  */
 
-#include "imx93-var-som-symphony.dts"
-#include "imx93-var-som-symphony-m33.dtsi"
+&flexcan1 {
+	status = "disabled";
+};
+
+&lpspi6 {
+    status = "disabled";
+};
