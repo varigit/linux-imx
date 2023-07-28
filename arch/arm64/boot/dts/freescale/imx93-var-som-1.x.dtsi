@@ -3,11 +3,12 @@
  * Copyright 2023 Variscite Ltd.
  */
 
-/dts-v1/;
-
 #include "imx93-var-som.dtsi"
-#include "imx93-var-som-symphony.dtsi"
 
-/ {
-	model = "Variscite VAR-SOM-MX93 2.x and newer on Symphony-Board";
+&iw612_pwrseq {
+    status = "disabled";
+};
+
+&usdhc3 {
+    /delete-property/ mmc-pwrseq;
 };

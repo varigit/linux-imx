@@ -13,6 +13,15 @@
 / {
 	compatible = "variscite,imx93-var-som", "fsl,imx93";
 
+	iw612_pwrseq: iw612_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		post-power-on-delay-ms = <100>;
+		power-off-delay-us = <10000>;
+		reset-gpios = <&gpio4 14 GPIO_ACTIVE_LOW>,	/* WIFI_RESET */
+			      <&gpio3 7 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
+		status = "okay";
+	};
+
 	reg_eqos_phy: regulator-eqos-phy {
 		compatible = "regulator-fixed";
 		pinctrl-names = "default";
@@ -413,6 +422,7 @@
 	pinctrl-1 = <&pinctrl_usdhc3>, <&pinctrl_wifi>;
 	pinctrl-2 = <&pinctrl_usdhc3>, <&pinctrl_wifi>;
 	bus-width = <4>;
+	mmc-pwrseq = <&iw612_pwrseq>;
 	non-removable;
 	wakeup-source;
 	status = "okay";
