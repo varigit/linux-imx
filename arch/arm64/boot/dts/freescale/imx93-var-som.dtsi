@@ -215,12 +215,23 @@
 
 	pinctrl_usdhc3: usdhc3grp {
 		fsl,pins = <
-			MX93_PAD_SD3_CLK__USDHC3_CLK			0x1306
-			MX93_PAD_SD3_CMD__USDHC3_CMD			0x1306
-			MX93_PAD_SD3_DATA0__USDHC3_DATA0		0x1306
-			MX93_PAD_SD3_DATA1__USDHC3_DATA1		0x1306
-			MX93_PAD_SD3_DATA2__USDHC3_DATA2		0x1306
-			MX93_PAD_SD3_DATA3__USDHC3_DATA3		0x1306
+			MX93_PAD_SD3_CLK__USDHC3_CLK		0x1382
+			MX93_PAD_SD3_CMD__USDHC3_CMD		0x1382
+			MX93_PAD_SD3_DATA0__USDHC3_DATA0	0x1382
+			MX93_PAD_SD3_DATA1__USDHC3_DATA1	0x1382
+			MX93_PAD_SD3_DATA2__USDHC3_DATA2	0x1382
+			MX93_PAD_SD3_DATA3__USDHC3_DATA3	0x1382
+		>;
+	};
+
+	pinctrl_usdhc3_sleep: usdhc3grp-sleep {
+		fsl,pins = <
+			MX93_PAD_SD3_CLK__GPIO3_IO20		0x400
+			MX93_PAD_SD3_CMD__GPIO3_IO21		0x400
+			MX93_PAD_SD3_DATA0__GPIO3_IO22		0x400
+			MX93_PAD_SD3_DATA1__GPIO3_IO23		0x400
+			MX93_PAD_SD3_DATA2__GPIO3_IO24		0x400
+			MX93_PAD_SD3_DATA3__GPIO3_IO25		0x400
 		>;
 	};
 };
@@ -417,10 +428,11 @@
 &usdhc3 {
 	#address-cells = <1>;
 	#size-cells = <0>;
-	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+	pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
 	pinctrl-0 = <&pinctrl_usdhc3>, <&pinctrl_wifi>;
 	pinctrl-1 = <&pinctrl_usdhc3>, <&pinctrl_wifi>;
 	pinctrl-2 = <&pinctrl_usdhc3>, <&pinctrl_wifi>;
+	pinctrl-3 = <&pinctrl_usdhc3_sleep>, <&pinctrl_wifi>;
 	bus-width = <4>;
 	mmc-pwrseq = <&iw612_pwrseq>;
 	non-removable;
