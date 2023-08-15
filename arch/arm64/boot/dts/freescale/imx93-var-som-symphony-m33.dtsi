@@ -8,6 +8,21 @@
 	status = "disabled";
 };
 
+/* GPIO4 is used for M33 rled example */
+&gpio4 {
+    status = "disabled";
+};
+
 &lpspi6 {
+    status = "disabled";
+};
+
+/* Disable BT since Wi-Fi is disabled and this allows JTAG pin access */
+&lpuart5 {
+    status = "disabled";
+};
+
+/* Disable Wi-Fi as it uses a GPIO4 bank pin */
+&usdhc3 {
     status = "disabled";
 };
