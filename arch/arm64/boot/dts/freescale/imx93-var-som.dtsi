@@ -367,7 +367,7 @@
 	status = "okay";
 
 	/* Resistive touch controller */
-	ads7846@0 {
+	ads7846_ts: ads7846@0 {
 		reg = <0>;      /* CS0 */
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_restouch>;
