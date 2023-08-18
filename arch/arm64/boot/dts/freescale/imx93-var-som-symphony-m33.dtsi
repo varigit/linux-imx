@@ -4,12 +4,22 @@
  * Copyright 2023 Variscite Ltd.
  */
 
+/* Resistive touch controller uses GPIO4 */
+&ads7846_ts {
+    status = "disabled";
+};
+
 &flexcan1 {
 	status = "disabled";
 };
 
 /* GPIO4 is used for M33 rled example */
 &gpio4 {
+    status = "disabled";
+};
+
+/* Wi-Fi disabled for m33 examples */
+&iw612_pwrseq {
     status = "disabled";
 };
 
