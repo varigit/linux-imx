@@ -950,5 +950,15 @@
 	status = "okay";
 };
 
+&phyx1_lpcg {
+	clocks = <&xtal100m>, <&hsio_per_clk>,
+		<&hsio_per_clk>, <&hsio_per_clk>;
+};
+
+&phyx2_lpcg {
+	clocks = <&xtal100m>, <&hsio_per_clk>,
+		<&xtal100m>, <&hsio_per_clk>;
+};
+
 /delete-node/ &adma_pwm;
 /delete-node/ &adma_pwm_lpcg;
