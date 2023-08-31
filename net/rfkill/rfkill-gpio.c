@@ -103,7 +103,7 @@ static int rfkill_gpio_probe(struct platform_device *pdev)
 
 	gpio = devm_gpiod_get_optional(&pdev->dev, "reset", GPIOD_OUT_LOW);
 	if (IS_ERR(gpio))
-		return PTR_ERR(gpio);
+		return -EPROBE_DEFER;
 
 	rfkill->reset_gpio = gpio;
 
