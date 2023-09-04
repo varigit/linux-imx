@@ -12,6 +12,7 @@
 	imx8mn-cm7 {
 		compatible = "fsl,imx8mn-cm7";
 		rsc-da = <0x40000000>;
+		clocks = <&clk IMX8MN_CLK_DUMMY>;
 		mbox-names = "tx", "rx", "rxdb";
 		mboxes = <&mu 0 1
 			  &mu 1 1
