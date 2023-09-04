@@ -22,33 +22,33 @@
 			linux,cma-default;
 		};
 
-		ivshmem_reserved: ivshmem@0x7bb00000 {
+		ivshmem_reserved: ivshmem@7bb00000 {
 			no-map;
 			reg = <0 0x7bb00000 0x0 0x00100000>;
 		};
 
-		ivshmem2_reserved: ivshmem2@0x7ba00000 {
+		ivshmem2_reserved: ivshmem2@7ba00000 {
 			no-map;
 			reg = <0 0x7ba00000 0x0 0x00100000>;
 		};
 
-		pci_reserved: pci@0x7b800000 {
+		pci_reserved: pci@7b800000 {
 			no-map;
 			reg = <0 0x7b800000 0x0 0x00200000>;
 		};
 
-		loader_reserved: loader@0x7b700000 {
+		loader_reserved: loader@7b700000 {
 			no-map;
 			reg = <0 0x7b700000 0x0 0x00100000>;
 		};
 
-		jh_reserved: jh@0x77c00000 {
+		jh_reserved: jh@77c00000 {
 			no-map;
 			reg = <0 0x77c00000 0x0 0x00400000>;
 		};
 
 		/* 128MB, align to end of cma */
-		inmate_reserved: inmate@0x6fc00000 {
+		inmate_reserved: inmate@6fc00000 {
 			no-map;
 			reg = <0 0x6fc00000 0x0 0x08000000>;
 		};
