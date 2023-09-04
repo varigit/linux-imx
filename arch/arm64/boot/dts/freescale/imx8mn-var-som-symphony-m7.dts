@@ -26,7 +26,7 @@
 		#size-cells = <2>;
 		ranges;
 
-		m_core_reserved: m_core@0x7e000000 {
+		m_core_reserved: m_core@7e000000 {
 			no-map;
 			reg = <0 0x7e000000 0 0x1000000>;
 		};
