@@ -69,6 +69,15 @@
 #define ADIN1300_EEE_CAP_REG			0x8000
 #define ADIN1300_EEE_ADV_REG			0x8001
 #define ADIN1300_EEE_LPABLE_REG			0x8002
+#define ADIN1300_FLD_EN_REG			0x8E27
+#define   ADIN1300_FLD_PCS_ERR_100_EN		BIT(7)
+#define   ADIN1300_FLD_PCS_ERR_1000_EN		BIT(6)
+#define   ADIN1300_FLD_SLCR_OUT_STUCK_100_EN	BIT(5)
+#define   ADIN1300_FLD_SLCR_OUT_STUCK_1000_EN	BIT(4)
+#define   ADIN1300_FLD_SLCR_IN_ZDET_100_EN	BIT(3)
+#define   ADIN1300_FLD_SLCR_IN_ZDET_1000_EN	BIT(2)
+#define   ADIN1300_FLD_SLCR_IN_INVLD_100_EN	BIT(1)
+#define   ADIN1300_FLD_SLCR_IN_INVLD_1000_EN	BIT(0)
 #define ADIN1300_CLOCK_STOP_REG			0x9400
 #define ADIN1300_LPI_WAKE_ERR_CNT_REG		0xa000
 #define ADIN1300_B_1000_RTRN_EN_REG		0xa001
@@ -486,6 +495,30 @@ static int adin_enable_retrain(struct phy_device *phydev)
 	return 0;
 }
 
+static int adin_fast_down_disable(struct phy_device *phydev)
+{
+	struct device *dev = &phydev->mdio.dev;
+	int bits = 0;
+
+	if (device_property_read_bool(dev, "adi,disable-fast-down-1000base-t"))
+		bits |= ADIN1300_FLD_PCS_ERR_1000_EN |
+				ADIN1300_FLD_SLCR_OUT_STUCK_1000_EN |
+				ADIN1300_FLD_SLCR_IN_ZDET_1000_EN |
+				ADIN1300_FLD_SLCR_IN_INVLD_1000_EN;
+
+	if (device_property_read_bool(dev, "adi,disable-fast-down-100base-tx"))
+		bits |= ADIN1300_FLD_PCS_ERR_100_EN |
+				ADIN1300_FLD_SLCR_OUT_STUCK_100_EN |
+				ADIN1300_FLD_SLCR_IN_ZDET_100_EN |
+				ADIN1300_FLD_SLCR_IN_INVLD_100_EN;
+
+	if (bits)
+		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
+					 ADIN1300_FLD_EN_REG, bits);
+	else
+		return 0;
+}
+
 static int adin_config_init(struct phy_device *phydev)
 {
 	int rc;
@@ -509,6 +542,10 @@ static int adin_config_init(struct phy_device *phydev)
 		return rc;
 
 	rc = adin_enable_retrain(phydev);
+	if (rc < 0)
+		return rc;
+
+	rc = adin_fast_down_disable(phydev);
 	if (rc < 0)
 		return rc;
 
