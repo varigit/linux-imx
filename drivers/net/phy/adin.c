@@ -68,6 +68,8 @@
 #define ADIN1300_EEE_LPABLE_REG			0x8002
 #define ADIN1300_CLOCK_STOP_REG			0x9400
 #define ADIN1300_LPI_WAKE_ERR_CNT_REG		0xa000
+#define ADIN1300_B_1000_RTRN_EN_REG		0xa001
+#define   ADIN1300_B_1000_RTRN_EN		BIT(0)
 
 #define ADIN1300_GE_SOFT_RESET_REG		0xff0c
 #define   ADIN1300_GE_SOFT_RESET		BIT(0)
@@ -407,6 +409,18 @@ static int adin_set_tunable(struct phy_device *phydev,
 	}
 }
 
+static int adin_enable_retrain(struct phy_device *phydev)
+{
+	struct device *dev = &phydev->mdio.dev;
+
+	if (device_property_read_bool(dev, "adi,1000base-t-retrain-en"))
+		return phy_set_bits_mmd(phydev, MDIO_MMD_VEND1,
+			      ADIN1300_B_1000_RTRN_EN_REG,
+			      ADIN1300_B_1000_RTRN_EN);
+
+	return 0;
+}
+
 static int adin_config_init(struct phy_device *phydev)
 {
 	int rc;
@@ -426,6 +440,10 @@ static int adin_config_init(struct phy_device *phydev)
 		return rc;
 
 	rc = adin_set_edpd(phydev, ETHTOOL_PHY_EDPD_DFLT_TX_MSECS);
+	if (rc < 0)
+		return rc;
+
+	rc = adin_enable_retrain(phydev);
 	if (rc < 0)
 		return rc;
 
