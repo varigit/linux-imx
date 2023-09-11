@@ -13,11 +13,17 @@
 
 &i2c4 {
 	pca6408_1: gpio@20 {
-		cam_pwr_hog {
+		cam0_pwr_hog {
 			gpio-hog;
 			gpios = <3 0>;
 			output-high;
-			line-name = "basler_cam_pwr";
+			line-name = "basler0_cam_pwr";
+		};
+		cam1_pwr_hog {
+			gpio-hog;
+			gpios = <2 0>;
+			output-high;
+			line-name = "basler1_cam_pwr";
 		};
 	};
 };
