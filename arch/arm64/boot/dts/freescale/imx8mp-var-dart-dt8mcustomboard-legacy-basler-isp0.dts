@@ -15,18 +15,25 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_basler>;
 
-	cam_pwr_hog {
+	cam0_pwr_hog {
 		gpio-hog;
 		gpios = <8 0>;
 		output-high;
-		line-name = "basler_cam_pwr";
+		line-name = "basler0_cam_pwr";
+	};
+	cam1_pwr_hog {
+		gpio-hog;
+		gpios = <9 0>;
+		output-high;
+		line-name = "basler1_cam_pwr";
 	};
 };
 
 &iomuxc {
 	pinctrl_basler: baslergrp {
 		fsl,pins = <
-			MX8MP_IOMUXC_SAI1_RXD6__GPIO4_IO08	0x19
+			MX8MP_IOMUXC_SAI1_RXD6__GPIO4_IO08	0x10
+			MX8MP_IOMUXC_SAI1_RXD7__GPIO4_IO09	0x10
 		>;
 	};
 };
