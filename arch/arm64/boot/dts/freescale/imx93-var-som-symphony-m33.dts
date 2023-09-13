@@ -6,3 +6,7 @@
 
 #include "imx93-var-som-symphony.dts"
 #include "imx93-var-som-symphony-m33.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-MX93 2.x and newer M33 on Symphony-Board";
+};
