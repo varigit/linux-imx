@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2023 Variscite Ltd.
+ */
+
+#include "imx93-var-som.dtsi"
+
+&ads7846_ts {
+	status = "disabled";
+};
+
+&lpspi8 {
+	/* Test SPI device */
+	spidev@0 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_restouch>;
+		reg = <0>;
+		compatible = "var,spidev";
+		spi-max-frequency = <1000000>;
+		status = "okay";
+	};
+};
