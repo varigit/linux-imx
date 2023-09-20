@@ -786,11 +786,11 @@
 	};
 };
 
-&vpu_decoder {
+&vpu_core0 {
 	status = "okay";
 };
 
-&vpu_encoder {
+&vpu_core1 {
 	status = "okay";
 
 };
