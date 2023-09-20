@@ -196,7 +196,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qm-var-som-symphony-dp.dtb imx8qm-var-som-symphony
                           imx8qp-var-som-symphony-dp-m4.dtb imx8qp-var-som-symphony-hdmi-m4.dtb imx8qp-var-som-symphony-lvds-m4.dtb \
                           imx8qm-var-spear-sp8customboard-dp.dtb imx8qm-var-spear-sp8customboard-hdmi.dtb imx8qm-var-spear-sp8customboard-lvds.dtb \
                           imx8qm-var-spear-sp8customboard-dp-m4.dtb imx8qm-var-spear-sp8customboard-hdmi-m4.dtb imx8qm-var-spear-sp8customboard-lvds-m4.dtb \
-                          imx8qp-var-spear-sp8customboard-dp.dtb imx8qp-var-spear-sp8customboard-hdmi.dtb imx8qp-var-spear-sp8customboard-lvds.dtb \
+                          imx8qp-var-spear-sp8customboard-dp.dtb imx8qp-var-spear-sp8customboard-hdmi.dtb imx8qp-var-spear-sp8customboard-lvds.dtb imx8qp-var-spear-sp8customboard-lvds-m4.dtb \
                           imx8qp-var-spear-sp8customboard-dp-m4.dtb imx8qp-var-spear-sp8customboard-hdmi-m4.dtb imx8qp-var-som-symphony-lvds-m4.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
