@@ -796,29 +796,17 @@
 &lsio_gpio1 {
 	/* Enable wakeup-source from Capacitive touch */
 
-	pad-wakeup-num = <1>;	/* Total number of wakeup pads in gpio1 bank */
 
 	/*
 	 IMX8QM_LVDS0_GPIO01:   Touch IRQ pin id
 	 SC_PAD_WAKEUP_LOW_LVL: trigger type
 	 5:                     Touch IRQ gpio pin
 	*/
-	pad-wakeup = <IMX8QM_LVDS0_GPIO01 SC_PAD_WAKEUP_LOW_LVL 5>;
 };
 
 &lsio_gpio5 {
 	/* Enable wakeup-source from all gpio-keys*/
 
-	pad-wakeup-num = <4>;  /* Total number of wakeup pads in gpio5 bank */
-
-	/*
-	 Each triple means:
-	 gpio-key pin id
-	 trigger type
-	 gpio pin
-	*/
-	/*            KEY_BACK                                        KEY_DOWN,                                        KEY_HOME,                                       KEY_UP */
-	pad-wakeup = <IMX8QM_USDHC1_DATA4 SC_PAD_WAKEUP_LOW_LVL 19>, <IMX8QM_USDHC1_STROBE SC_PAD_WAKEUP_LOW_LVL 23>, <IMX8QM_USDHC1_DATA5 SC_PAD_WAKEUP_LOW_LVL 20>, <IMX8QM_USDHC1_DATA6 SC_PAD_WAKEUP_LOW_LVL 21>;
 };
 
 &mipi_csi_0 {
@@ -941,14 +929,3 @@
 
 	status = "okay";
 };
-
-&vpu_decoder {
-	status = "okay";
-};
-
-&vpu_encoder {
-	status = "okay";
-};
-
-/delete-node/ &adma_pwm;
-/delete-node/ &adma_pwm_lpcg;

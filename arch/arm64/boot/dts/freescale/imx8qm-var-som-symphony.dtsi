@@ -19,6 +19,7 @@
 / {
 	chosen {
 		stdout-path = &lpuart0;
+                bootargs-append = "androidboot.wifisdio=5b030000.mmc androidboot.btmmchost=mmc2";
 	};
 
         gpio-keys {
@@ -33,7 +34,7 @@
 		home {
 			label = "Home";
 			gpios = <&pca9534 2 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_HOME>;
+			linux,code = <KEY_HOMEPAGE>;
 		};
 
                 menu {
@@ -604,15 +605,14 @@
 
 &lsio_gpio0 {
 	/* Enable wakeup-source from Capacitive touch */
+       pad-wakeup-num = <1>;   /* Total number of wakeup pads in gpio0 bank */
 
-	pad-wakeup-num = <1>;	/* Total number of wakeup pads in gpio0 bank */
-
-	/*
-	 IMX8QM_GPT1_COMPARE:   Touch IRQ pin id
-	 SC_PAD_WAKEUP_LOW_LVL: trigger type
-	 19:                    Touch IRQ gpio pin
-	*/
-	pad-wakeup = <IMX8QM_GPT1_COMPARE SC_PAD_WAKEUP_LOW_LVL 19>;
+       /*
+        IMX8QM_GPT1_COMPARE:   Touch IRQ pin id
+        SC_PAD_WAKEUP_LOW_LVL: trigger type
+        19:                    Touch IRQ gpio pin
+       */
+        pad-wakeup = <IMX8QM_GPT1_COMPARE SC_PAD_WAKEUP_LOW_LVL 19>;
 
 	cam_buf_hog {
 		gpio-hog;
@@ -624,15 +624,14 @@
 
 &lsio_gpio1 {
 	/* Enable wakeup-source from all pca9534 gpio-keys*/
+       pad-wakeup-num = <1>;   /* Total number of wakeup pads in gpio1 bank */
 
-	pad-wakeup-num = <1>;	/* Total number of wakeup pads in gpio1 bank */
-
-	/*
-	 IMX8QM_MIPI_CSI0_MCLK_OUT: PCA9534 IRQ pin id
-	 SC_PAD_WAKEUP_LOW_LVL:     trigger type
-	 24:                        PCA9534 IRQ gpio pin
-	*/
-	pad-wakeup = <IMX8QM_MIPI_CSI0_MCLK_OUT SC_PAD_WAKEUP_LOW_LVL 24>;
+       /*
+        IMX8QM_MIPI_CSI0_MCLK_OUT: PCA9534 IRQ pin id
+        SC_PAD_WAKEUP_LOW_LVL:     trigger type
+        24:                        PCA9534 IRQ gpio pin
+       */
+       pad-wakeup = <IMX8QM_MIPI_CSI0_MCLK_OUT SC_PAD_WAKEUP_LOW_LVL 24>;
 };
 
 &mipi_csi_0 {
@@ -727,14 +726,3 @@
 		};
 	};
 };
-
-&vpu_decoder {
-	status = "okay";
-};
-
-&vpu_encoder {
-	status = "okay";
-};
-
-/delete-node/ &adma_pwm;
-/delete-node/ &adma_pwm_lpcg;
