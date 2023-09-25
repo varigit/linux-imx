@@ -13,6 +13,7 @@
 
 	chosen {
 		stdout-path = &lpuart3;
+		bootargs = "console=ttyLP3,115200 earlycon=lpuart32,0x5a090000,115200";
 	};
 
 	backlight: backlight {
@@ -46,7 +47,7 @@
 		home {
 			label = "Home";
 			gpios = <&pca9534 2 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_HOME>;
+			linux,code = <KEY_HOMEPAGE>;
 		};
 
 		 menu {
@@ -780,15 +781,6 @@
 			remote-endpoint = <&typec_dr_sw>;
 		};
 	};
-};
-
-&vpu_decoder {
-	status = "okay";
-};
-
-&vpu_encoder {
-	status = "okay";
-
 };
 
 /delete-node/ &adc1;

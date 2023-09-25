@@ -49,6 +49,11 @@
 		#size-cells = <2>;
 		ranges;
 
+		gpu_reserved: gpu_reserved@880000000 {
+			no-map;
+			reg = <0x8 0x80000000 0 0x10000000>;
+		};
+
 		decoder_boot: decoder-boot@84000000 {
 			reg = <0 0x84000000 0 0x2000000>;
 			no-map;
@@ -60,12 +65,7 @@
 		};
 
 		decoder_rpc: decoder-rpc@0x92000000 {
-			reg = <0 0x92000000 0 0x200000>;
-			no-map;
-		};
-
-		encoder_rpc: encoder-rpc@0x92200000 {
-			reg = <0 0x92200000 0 0x200000>;
+			reg = <0 0x92000000 0 0x100000>;
 			no-map;
 		};
 
@@ -93,9 +93,17 @@
 			no-map;
 		};
 
-		encoder_reserved: encoder_reserved@94400000 {
+		encoder_rpc: encoder-rpc@0x94400000 {
+			reg = <0 0x94400000 0 0x700000>;
 			no-map;
-			reg = <0 0x94400000 0 0x800000>;
+		};
+		/* global autoconfigured region for contiguous allocations */
+		linux,cma {
+			compatible = "shared-dma-pool";
+			reusable;
+			size = <0 0x3c000000>;
+			alloc-ranges = <0 0xc0000000 0 0x3c000000>;
+			linux,cma-default;
 		};
 	};
 
@@ -189,9 +197,9 @@
 
 	pinctrl_bt: btgrp {
 		fsl,pins = <
-			IMX8QXP_QSPI0A_DATA1_LSIO_GPIO3_IO10			0x06000021
-			IMX8QXP_MIPI_DSI1_I2C0_SCL_LSIO_GPIO1_IO29		0x06000021
-			IMX8QXP_QSPI0A_DATA2_LSIO_GPIO3_IO11			0x06000021
+			IMX8QXP_QSPI0A_DATA1_LSIO_GPIO3_IO10			0x06000021 /*BT_EN*/
+			IMX8QXP_MIPI_DSI1_I2C0_SCL_LSIO_GPIO1_IO29		0x06000021 /*BT_BUF*/
+			IMX8QXP_QSPI0A_DATA2_LSIO_GPIO3_IO11			0x06000021 /*BT_???*/
 		>;
 	};
 
@@ -348,12 +356,16 @@
 		>;
 	};
 
+	pinctrl_wifi_reg: wifireg {
+		fsl,pins = <
+			IMX8QXP_QSPI0A_SCLK_LSIO_GPIO3_IO16			0x06000021 /* WIFI 3V3*/
+			IMX8QXP_QSPI0A_DQS_LSIO_GPIO3_IO13			0x06000021 /* WIFI 1V8*/
+		>;
+	};
 	pinctrl_wifi: wifigrp {
 		fsl,pins = <
 			IMX8QXP_SCU_BOOT_MODE3_SCU_DSC_RTC_CLOCK_OUTPUT_32K	0x20
-			IMX8QXP_QSPI0A_SCLK_LSIO_GPIO3_IO16			0x06000021
-			IMX8QXP_QSPI0A_DQS_LSIO_GPIO3_IO13			0x06000021
-			IMX8QXP_QSPI0A_DATA0_LSIO_GPIO3_IO09			0x06000021
+			IMX8QXP_QSPI0A_DATA0_LSIO_GPIO3_IO09			0x06000021 /* WiFI Enable*/
 		>;
 	};
 };
@@ -403,7 +415,7 @@
 /* Bluetooth */
 &lpuart0 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_lpuart0>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_lpuart0>;
 	dma-names = "tx","rx";
 	dmas = <&edma2 9 0 0>,
 		<&edma2 8 0 1>;
@@ -524,34 +536,20 @@
 	status = "okay";
 };
 
-&vpu_decoder {
-	boot-region = <&decoder_boot>;
-	rpc-region = <&decoder_rpc>;
-	reg-csr = <0x2d040000>;
-	core_type = <1>;
-	status = "disabled";
+&vpu {
+	compatible = "nxp,imx8qxp-vpu";
+	status = "okay";
 };
 
-&vpu_encoder {
-	boot-region = <&encoder_boot>;
-	rpc-region = <&encoder_rpc>;
-	reserved-region = <&encoder_reserved>;
-	reg-rpc-system = <0x40000000>;
-	resolution-max = <1920 1920>;
-	mbox-names = "enc1_tx0", "enc1_tx1", "enc1_rx";
-	mboxes = <&mu1_m0 0 0
-		  &mu1_m0 0 1
-		  &mu1_m0 1 0>;
-	status = "disabled";
-
-	core0@1020000 {
-		compatible = "fsl,imx8-mu1-vpu-m0";
-		reg = <0x1020000 0x20000>;
-		reg-csr = <0x1050000 0x10000>;
-		interrupts = <GIC_SPI 470 IRQ_TYPE_LEVEL_HIGH>;
-		fsl,vpu_ap_mu_id = <17>;
-		fw-buf-size = <0x200000>;
-		rpc-buf-size = <0x80000>;
-		print-buf-size = <0x80000>;
-	};
+&vpu_core0 {
+	reg = <0x2d040000 0x10000>;
+	memory-region = <&decoder_boot>, <&decoder_rpc>;
+	status = "okay";
 };
+
+&vpu_core1 {
+	reg = <0x2d050000 0x10000>;
+	memory-region = <&encoder_boot>, <&encoder_rpc>;
+	status = "okay";
+};
+#include "imx8qxp-android.dtsi"

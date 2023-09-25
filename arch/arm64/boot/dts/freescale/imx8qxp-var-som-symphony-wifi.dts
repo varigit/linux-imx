@@ -7,6 +7,52 @@
 
 / {
 	model = "Variscite VAR-SOM-MX8X on Symphony-Board WIFI";
+	chosen {
+		stdout-path = &lpuart3;
+		bootargs = "console=ttyLP3,115200 earlycon=lpuart32,0x5a090000,115200";
+                bootargs-append = "androidboot.backlight.dev=backlight androidboot.wifisdio=5b020000.mmc androidboot.btmmchost=mmc1";
+	};
+
+	regulators {
+		reg_wifi_3v3: regulator-wifi-3v3 {
+		      compatible = "regulator-fixed";
+		      regulator-name = "wifi-3v3";
+		      regulator-min-microvolt = <3300000>;
+		      regulator-max-microvolt = <3300000>;
+		      gpio = <&lsio_gpio3 16 GPIO_ACTIVE_HIGH>;
+		      enable-active-high;
+		};
+
+		reg_wifi_1v8: regulator-wifi-1v8 {
+		      compatible = "regulator-fixed";
+		      regulator-name = "wifi-1v8";
+		      regulator-min-microvolt = <1800000>;
+		      regulator-max-microvolt = <1800000>;
+		      gpio = <&lsio_gpio3 13 GPIO_ACTIVE_HIGH>;
+		      enable-active-high;
+		};
+	};
+	wifi_rfkill {
+		compatible = "net,rfkill-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi>;
+		reset-gpios = <&lsio_gpio3 9 GPIO_ACTIVE_HIGH>;
+		name = "wifi_rfkill";
+		type = "wlan";
+		status = "okay";
+	};
+
+	bt_rfkill {
+                compatible = "net,rfkill-gpio";
+                pinctrl-names = "default";
+                pinctrl-0 = <&pinctrl_bt>;
+                reset-gpios = <&lsio_gpio3 10 GPIO_ACTIVE_HIGH>;
+		reset-delay = <500>;
+		shutdown-gpios = <&lsio_gpio1 29 GPIO_ACTIVE_LOW>;
+                name = "bt_rfkill";
+                type = "bluetooth";
+                status = "okay";
+        };
 };
 
 &iomuxc {
@@ -40,13 +86,16 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc2>,<&pinctrl_wifi_reg>;
+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>,<&pinctrl_wifi_reg>;
+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>,<&pinctrl_wifi_reg>;
 	bus-width = <4>;
 	non-removable;
 	keep-power-in-suspend;
 	status = "okay";
+
+	vmmc-supply = <&reg_wifi_3v3>;
+	vqmmc-supply = <&reg_wifi_1v8>;
 
 	brcmf: bcrmf@1 {
 		reg = <1>;
