@@ -157,8 +157,8 @@
 			qca,disable-smarteee;
 			vddio-supply = <&vddio0>;
 			reset-gpios = <&lsio_gpio1 2 GPIO_ACTIVE_LOW>;
-			reset-assert-us = <100000>;
-			reset-deassert-us = <100000>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <20000>;
 
 			vddio0: vddio-regulator {
 				regulator-min-microvolt = <1800000>;
