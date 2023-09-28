@@ -30,6 +30,7 @@
 
 #include "imx_rproc.h"
 
+#define IMX8M_TCML_ADDR		0x7e0000
 #define IMX7D_SRC_SCR			0x0C
 #define IMX7D_ENABLE_M4			BIT(3)
 #define IMX7D_SW_M4P_RST		BIT(2)
@@ -125,6 +126,8 @@ struct imx_rproc {
 	struct device_link              **pd_dev_link;
 	u32				startup_delay;
 	struct sys_off_data		data;
+	u32				m_core_ddr_addr;
+	u32				last_load_addr;
 };
 
 static const struct imx_rproc_att imx_rproc_att_imx95_m7[] = {
@@ -390,6 +393,37 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx95_m7 = {
 	.method		= IMX_RPROC_SMC,
 };
 
+/*
+ * Stack pointer and reset vector must be initialized
+ * See: https://www.nxp.com/docs/en/application-note/AN5317.pdf
+ * https://github.com/varigit/uboot-imx/blob/imx_v2020.04_5.4.24_2.1.0_var02/arch/arm/mach-imx/imx_bootaux.c#L115
+ * https://github.com/varigit/uboot-imx/blob/imx_v2020.04_5.4.24_2.1.0_var02/arch/arm/include/asm/arch-imx8m/imx-regs-imx8mm.h#L17
+ */
+static void imx_8m_setup_stack(struct rproc *rproc)
+{
+	struct imx_rproc *priv = rproc->priv;
+	void __iomem *io_tcml = ioremap(IMX8M_TCML_ADDR, 8);
+
+	/* Initialize tcml stack pointer and reset vector */
+	if (priv->m_core_ddr_addr && priv->last_load_addr >= priv->m_core_ddr_addr) {
+		void __iomem *io_ddr = ioremap(priv->m_core_ddr_addr, 8);
+
+		dev_info(priv->dev, "Setting up stack pointer and reset vector from firmware in DDR\n");
+		writel(readl(io_ddr), io_tcml);
+		writel(readl(io_ddr + 4), io_tcml + 4);
+		iounmap(io_ddr);
+	} else {
+		dev_info(priv->dev, "Setting up stack pointer and reset vector from firmware in TCML\n");
+		writel(readl(io_tcml), io_tcml);
+		writel(readl(io_tcml + 4), io_tcml + 4);
+	}
+
+	dev_info(priv->dev, "Stack: 0x%x\n", readl(io_tcml));
+	dev_info(priv->dev, "Reset Vector: 0x%x\n", readl(io_tcml + 4));
+
+	iounmap(io_tcml);
+}
+
 static int imx_rproc_start(struct rproc *rproc)
 {
 	struct imx_rproc *priv = rproc->priv;
@@ -404,6 +438,7 @@ static int imx_rproc_start(struct rproc *rproc)
 
 	switch (dcfg->method) {
 	case IMX_RPROC_MMIO:
+		imx_8m_setup_stack(rproc);
 		if (priv->gpr) {
 			ret = regmap_clear_bits(priv->gpr, dcfg->gpr_reg,
 						dcfg->gpr_wait);
@@ -414,6 +449,8 @@ static int imx_rproc_start(struct rproc *rproc)
 		}
 		break;
 	case IMX_RPROC_SMC:
+		if (!of_device_is_compatible(dev->of_node, "fsl,imx93-cm33"))
+			imx_8m_setup_stack(rproc);
 		ret = clk_prepare_enable(priv->clk_audio);
 		if (ret)
 			dev_err(dev, "Failed to enable audio clk!\n");
@@ -624,6 +661,13 @@ static int imx_rproc_prepare(struct rproc *rproc)
 			return -ENOMEM;
 		}
 
+		/* Get m4/m7 ddr address from device tree */
+		if (0 == strcmp(it.node->name, "m4") || 0 == strcmp(it.node->name, "m7")
+			|| 0 == strcmp(it.node->name, "m_core")) {
+			priv->m_core_ddr_addr = rmem->base;
+			dev_info(priv->dev, "%s ddr @ 0x%x\n", it.node->name, (u32) rmem->base);
+		}
+
 		rproc_add_carveout(rproc, mem);
 	}
 
@@ -724,8 +768,11 @@ static u64 imx_rproc_get_boot_addr(struct rproc *rproc, const struct firmware *f
 	u64 sh_addr;
 
 	if (!of_device_is_compatible(dev->of_node, "fsl,imx93-cm33")
-	    && !of_device_is_compatible(dev->of_node, "fsl,imx95-cm7"))
-		return rproc_elf_get_boot_addr(rproc, fw);
+	    && !of_device_is_compatible(dev->of_node, "fsl,imx95-cm7")) {
+		/* Save the location of the last firmware load for start function */
+		priv->last_load_addr = rproc_elf_get_boot_addr(rproc, fw);
+		return priv->last_load_addr;
+	}
 
 	/* First, get the section header according to the elf class */
 	shdr = elf_data + elf_hdr_get_e_shoff(class, ehdr);
@@ -1228,6 +1275,8 @@ static int imx_rproc_probe(struct platform_device *pdev)
 	priv->rproc = rproc;
 	priv->dcfg = dcfg;
 	priv->dev = dev;
+	priv->m_core_ddr_addr = 0;
+	priv->last_load_addr = 0;
 
 	dev_set_drvdata(dev, rproc);
 	priv->workqueue = create_workqueue(dev_name(dev));
