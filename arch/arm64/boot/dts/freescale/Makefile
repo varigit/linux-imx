@@ -402,9 +402,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx93-9x9-qsb.dtb \
 dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-symphony.dtb \
 			  imx93-var-som-symphony-m33.dtb \
 			  imx93-var-som-wbe-symphony.dtb \
-			  imx93-var-som-wbe-symphony-m33.dtb \
-			  imx93-var-som-1.x-symphony.dtb \
-			  imx93-var-som-1.x-symphony-m33.dtb
+			  imx93-var-som-wbe-symphony-m33.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-venice-gw72xx-0x-imx219.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-venice-gw72xx-0x-rs232-rts.dtb
