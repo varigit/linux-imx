@@ -519,7 +519,7 @@
 &lpuart7 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart7>;
-	status = "disabled";
+	status = "okay";
 };
 
 &mu1 {

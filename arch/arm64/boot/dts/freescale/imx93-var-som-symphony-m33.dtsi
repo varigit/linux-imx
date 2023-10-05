@@ -32,6 +32,11 @@
     status = "disabled";
 };
 
+/* Used by M33 examples console/debug output */
+&lpuart7 {
+	status = "disabled";
+};
+
 /* Disable Wi-Fi as it uses a GPIO4 bank pin */
 &usdhc3 {
     status = "disabled";
