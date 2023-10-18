@@ -750,11 +750,19 @@
 	};
 };
 
-&vpu_decoder {
+&vpu {
 	status = "okay";
 };
 
-&vpu_encoder {
+&vpu_core0 {
+	status = "okay";
+};
+
+&vpu_core1 {
+	status = "okay";
+};
+
+&vpu_core2 {
 	status = "okay";
 };
 
