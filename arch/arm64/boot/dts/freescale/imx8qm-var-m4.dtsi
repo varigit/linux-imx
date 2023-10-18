@@ -55,12 +55,12 @@
 		 * 0x8800_0000 ~ 0x8FFF_FFFF is reserved for M4
 		 * Shouldn't be used at A core and Linux side.
 		 */
-		m40_reserved: m4@0x88000000 {
+		m40_reserved: m4@88000000 {
 			no-map;
 			reg = <0 0x88000000 0 0x800000>;
 		};
 
-		m41_reserved: m4@0x88800000 {
+		m41_reserved: m4@88800000 {
 			no-map;
 			reg = <0 0x88800000 0 0x7800000>;
 		};
