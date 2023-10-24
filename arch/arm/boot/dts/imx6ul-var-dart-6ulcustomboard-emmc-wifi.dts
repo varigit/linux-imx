@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 Variscite Ltd. - https://www.variscite.com
+ * Copyright (C) 2015-2024 Variscite Ltd. - https://www.variscite.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -18,6 +18,6 @@
 
 
 / {
-	model = "Variscite DART-6UL with i.MX6UL, eMMC & WiFi support on VAR-6ULCustomBoard";
+	model = "Variscite DART-6UL with i.MX6UL, eMMC, WiFi & WM8904 support on VAR-6ULCustomBoard";
 	compatible = "variscite,imx6ul-var-dart", "fsl,imx6ul";
 };
