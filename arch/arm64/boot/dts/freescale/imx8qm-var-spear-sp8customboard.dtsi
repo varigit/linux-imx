@@ -747,6 +747,7 @@
 &lpspi0 {
 	#address-cells = <1>;
 	#size-cells = <0>;
+	assigned-clock-rates = <60000000>;
 	fsl,spi-num-chipselects = <2>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_lpspi0 &pinctrl_lpspi0_cs>;
