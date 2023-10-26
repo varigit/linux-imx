@@ -107,3 +107,11 @@
 &sai5_lpcg {
 	status = "okay";
 };
+
+&spdif1 {
+	status = "okay";
+};
+
+&spdif1_lpcg {
+	status = "okay";
+};
