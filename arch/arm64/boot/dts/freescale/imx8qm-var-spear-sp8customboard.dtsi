@@ -965,9 +965,24 @@
 	status = "okay";
 };
 
+&phyx1 {
+	fsl,refclk-pad-mode = <IMX8_PCIE_REFCLK_PAD_INPUT>;
+	status = "okay";
+};
+
 &phyx1_lpcg {
 	clocks = <&xtal100m>, <&hsio_per_clk>,
 		<&hsio_per_clk>, <&hsio_per_clk>;
+};
+
+&phyx2_0 {
+	fsl,refclk-pad-mode = <IMX8_PCIE_REFCLK_PAD_INPUT>;
+	status = "okay";
+};
+
+&phyx2_1 {
+	fsl,refclk-pad-mode = <IMX8_PCIE_REFCLK_PAD_INPUT>;
+	status = "okay";
 };
 
 &phyx2_lpcg {
