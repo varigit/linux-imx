@@ -1,0 +1,20 @@
+name: Pull Request Close
+
+on:
+  pull_request:
+    # Trigger on pull requests closed
+    types:
+      - closed
+    # Targeted only to these specific branches/patterns:
+    branches:
+      - 'lf-6.1.y_var03'
+
+jobs:
+  push-to-varigit:
+    # Only run job if PR is successfully merged
+    if: github.event.pull_request.merged == true
+    uses: varigit-dev/action-workflows/.github/workflows/repo-sync.yml@master
+    with:
+      dest-repo: ${{ vars.VARIGIT_SSH_REMOTE }}
+    secrets:
+      ssh-key: ${{ secrets.VARIGIT_SSH_KEY }}
