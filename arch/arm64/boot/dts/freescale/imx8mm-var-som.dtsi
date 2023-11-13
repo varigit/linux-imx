@@ -121,7 +121,6 @@
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy0>;
 	phy-supply = <&reg_eth_phy>;
-	phy-reset-on-resume;
 	status = "okay";
 
 	mdio {
