@@ -222,6 +222,7 @@
 };
 
 &pwm2 {
+	#pwm-cells = <2>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pwm2>;
 	status = "okay";
@@ -230,14 +231,14 @@
 &reg_usb_h1_vbus {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usb_h1_vbus>;
-	gpio = <&gpio4 15 0>;
+	gpio = <&gpio4 15 GPIO_ACTIVE_HIGH>;
 	enable-active-high;
 };
 
 &reg_usb_otg_vbus {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usb_otg_vbus>;
-	gpio = <&gpio3 22 0>;
+	gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
 	enable-active-high;
 };
 

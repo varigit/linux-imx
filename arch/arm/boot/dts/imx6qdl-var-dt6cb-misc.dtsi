@@ -24,21 +24,21 @@
 
 		home {
 			label = "Home";
-			gpios = <&gpio5 11 1>;
+			gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_HOMEPAGE>; /* KEY_HOMEPAGE */
 			gpio-key,wakeup;
 		};
 
 		back {
 			label = "Back";
-			gpios = <&gpio4 26 1>;
+			gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_BACK>; /* KEY_BACK */
 			gpio-key,wakeup;
 		};
 
 		menu {
 			label = "Menu";
-			gpios = <&gpio4 25 1>;
+			gpios = <&gpio4 25 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_MENU>; /* KEY_MENU */
 			gpio-key,wakeup;
 		};
@@ -87,8 +87,8 @@
 		pinctrl-0 = <&pinctrl_ov564x_mipi>;
 		clocks = <&clks IMX6QDL_CLK_CKO2>;
 		clock-names = "csi_mclk";
-		pwn-gpios = <&gpio3 13 1>;
-		rst-gpios = <&gpio4 10 0>;
+		pwn-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
+		rst-gpios = <&gpio4 10 GPIO_ACTIVE_HIGH>;
 		csi_id = <1>;
 		mclk = <24000000>;
 		mclk_source = <0>;
@@ -215,7 +215,7 @@
 
 		pinctrl_usbotg: usbotggrp {
 			fsl,pins = <
-				MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x17059
+				MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
 			>;
 		};
 
@@ -231,13 +231,14 @@
 &pcie {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pcie>;
-	reset-gpio    = <&gpio4 11 0>;	/* gpio pin num of power good signal */
-	wake-up-gpio  = <&gpio4 31 1>;	/* gpio pin num of incoming wakeup signal */
-	disable-gpio  = <&gpio5 5 0>;	/* gpio pin num of outgoing rfkill/endpoint disable signal */
+	reset-gpio    = <&gpio4 11 GPIO_ACTIVE_HIGH>;	/* gpio pin num of power good signal */
+	wake-up-gpio  = <&gpio4 31 GPIO_ACTIVE_LOW>;	/* gpio pin num of incoming wakeup signal */
+	disable-gpio  = <&gpio5 5 GPIO_ACTIVE_HIGH>;	/* gpio pin num of outgoing rfkill/endpoint disable signal */
 	status = "okay";
 };
 
 &pwm2 {
+	#pwm-cells = <2>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pwm2>;
 	status = "okay";
@@ -246,14 +247,14 @@
 &reg_usb_h1_vbus {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usb_h1_vbus>;
-	gpio = <&gpio1 28 0>;
+	gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
 	enable-active-high;
 };
 
 &reg_usb_otg_vbus {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usb_otg_vbus>;
-	gpio = <&gpio4 15 0>;
+	gpio = <&gpio4 15 GPIO_ACTIVE_LOW>;
 	enable-active-high;
 };
 
@@ -274,7 +275,7 @@
 &usdhc2 {	/* uSDHC2, MMC/SD card */
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usdhc2_2>, <&pinctrl_usdhc2_gpio>;
-	cd-gpios = <&gpio1 6 1>;
+	cd-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
 	no-1-8-v;
 	keep-power-in-suspend;
 	enable-sdio-wakeup;

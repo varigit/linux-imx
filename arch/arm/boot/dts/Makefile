@@ -652,7 +652,6 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6qp-var-som-res.dtb \
 	imx6qp-var-som-symphony.dtb \
 	imx6qp-var-som-vsc.dtb \
-	imx6q-var-dt6customboard.dtb \
 	imx6q-vicut1.dtb \
 	imx6q-wandboard.dtb \
 	imx6q-wandboard-revb1.dtb \

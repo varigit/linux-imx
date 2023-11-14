@@ -231,7 +231,7 @@
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&pinctrl_ecspi3>;
 	pinctrl-1 = <&pinctrl_ecspi3_sleep>;
-	cs-gpios = <&gpio4 24 0>;
+	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 
 	/* Touch */
@@ -243,7 +243,7 @@
 		interrupt-parent = <&gpio4>;
 		interrupts = <25 0>;
 		spi-max-frequency = <1500000>;
-		pendown-gpio = <&gpio4 25 0>;
+		pendown-gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
 		ti,x-min = /bits/ 16 <125>;
 		ti,x-max = /bits/ 16 <4008>;
 		ti,y-min = /bits/ 16 <282>;
@@ -262,13 +262,24 @@
 &fec {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_enet_4>;
-	phy-mode = "rgmii";
-	phy-reset-gpios = <&gpio1 25 0>;
-	phy-reset-duration=<100>;
+	phy-mode = "rgmii-id";
+	phy-handle = <&ethphy>;
 	phy-reset-on-resume;
-	assigned-clocks = <&clks IMX6QDL_CLK_ENET_REF>;
-	assigned-clock-rates = <125000000>;
 	status = "okay";
+
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ethphy: ethernet-phy@7 {
+			reg = <7>;
+			compatible = "ethernet-phy-ieee802.3-c22";
+			assigned-clocks = <&clks IMX6QDL_CLK_ENET_REF>;
+			assigned-clock-rates = <125000000>;
+			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <100000>;
+		};
+	};
 };
 
 &gpc {
@@ -294,16 +305,16 @@
 		reg = <0x00200000 0x00200000>;
 	};
 
-	/* an 8 MiB partition */
+	/* an 12 MiB partition */
 	partition@2 {
 		label = "kernel";
-		reg = <0x00400000 0x00800000>;
+		reg = <0x00400000 0x00c00000>;
 	};
 
-	/* a 1012 MiB partition */
+	/* a 1008 MiB partition */
 	partition@3 {
 		label = "rootfs";
-		reg = <0x00c00000 0x3f400000>;
+		reg = <0x01000000 0x3f000000>;
 	};
 };
 
