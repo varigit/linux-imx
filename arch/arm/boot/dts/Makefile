@@ -519,6 +519,14 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6dl-tx6u-811x.dtb \
 	imx6dl-tx6u-81xx-mb7.dtb \
 	imx6dl-udoo.dtb \
+	imx6dl-var-som-cap.dtb \
+	imx6dl-var-som-res.dtb \
+	imx6dl-var-som-solo-cap.dtb \
+	imx6dl-var-som-solo-res.dtb \
+	imx6dl-var-som-solo-symphony.dtb \
+	imx6dl-var-som-solo-vsc.dtb \
+	imx6dl-var-som-symphony.dtb \
+	imx6dl-var-som-vsc.dtb \
 	imx6dl-victgo.dtb \
 	imx6dl-vicut1.dtb \
 	imx6dl-wandboard.dtb \
@@ -635,6 +643,15 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6q-tx6q-11x0-mb7.dtb \
 	imx6q-udoo.dtb \
 	imx6q-utilite-pro.dtb \
+	imx6q-var-dart.dtb \
+	imx6q-var-som-cap.dtb \
+	imx6q-var-som-res.dtb \
+	imx6q-var-som-symphony.dtb \
+	imx6q-var-som-vsc.dtb \
+	imx6qp-var-som-cap.dtb \
+	imx6qp-var-som-res.dtb \
+	imx6qp-var-som-symphony.dtb \
+	imx6qp-var-som-vsc.dtb \
 	imx6q-var-dt6customboard.dtb \
 	imx6q-vicut1.dtb \
 	imx6q-wandboard.dtb \
