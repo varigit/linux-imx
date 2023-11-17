@@ -26,21 +26,21 @@
 			label = "Home";
 			gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_HOMEPAGE>; /* KEY_HOMEPAGE */
-			gpio-key,wakeup;
+			wakeup-source;
 		};
 
 		back {
 			label = "Back";
 			gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_BACK>; /* KEY_BACK */
-			gpio-key,wakeup;
+			wakeup-source;
 		};
 
 		menu {
 			label = "Menu";
 			gpios = <&gpio4 25 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_MENU>; /* KEY_MENU */
-			gpio-key,wakeup;
+			wakeup-source;
 		};
 	};
 
