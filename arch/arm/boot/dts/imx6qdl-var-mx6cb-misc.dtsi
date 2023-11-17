@@ -27,7 +27,7 @@
 			label = "Back";
 			gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_BACK>; /* KEY_BACK */
-			gpio-key,wakeup;
+			wakeup-source;
 		};
 	};
 };
