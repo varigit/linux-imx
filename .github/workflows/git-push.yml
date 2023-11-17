@@ -1,0 +1,10 @@
+name: Git Push Workflow Actions
+
+on:
+  push
+
+jobs:
+  defconfig-check:
+    uses: varigit-dev/action-workflows/.github/workflows/defconfig-check.yml@master
+    with:
+      defconfig: arm64:imx8_var_defconfig 
