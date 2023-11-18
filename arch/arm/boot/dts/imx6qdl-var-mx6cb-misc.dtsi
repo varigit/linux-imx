@@ -79,6 +79,7 @@
 		pinctrl-0 = <&pinctrl_ft5x06>;
 		interrupt-parent = <&gpio3>;
 		interrupts = <7 0>;
+		wakeup-source;
 		status = "disabled";
 	};
 
