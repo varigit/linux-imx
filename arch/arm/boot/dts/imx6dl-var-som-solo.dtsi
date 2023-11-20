@@ -12,10 +12,6 @@
 	model = "Variscite i.MX6 DualLite/Solo VAR-SOM-DUAL/VAR-SOM-SOLO";
 };
 
-&fec {
-	/delete-property/ phy-reset-on-resume;
-};
-
 &reg_arm {
 	/delete-property/ vin-supply;
 };

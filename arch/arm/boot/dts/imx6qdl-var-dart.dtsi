@@ -225,7 +225,6 @@
 	pinctrl-0 = <&pinctrl_enet_4>;
 	phy-mode = "rgmii-id";
 	phy-handle = <&ethphy>;
-	phy-reset-on-resume;
 	status = "okay";
 
 	mdio {
