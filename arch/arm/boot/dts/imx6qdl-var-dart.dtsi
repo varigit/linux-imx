@@ -237,7 +237,8 @@
 			assigned-clocks = <&clks IMX6QDL_CLK_ENET_REF>;
 			assigned-clock-rates = <125000000>;
 			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
-			reset-assert-us = <100000>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <20000>;
 		};
 	};
 };
