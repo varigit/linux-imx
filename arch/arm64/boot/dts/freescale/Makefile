@@ -376,6 +376,8 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb imx8qxp-mek-ov5640.dtb \
 			  imx8qxp-17x17-val.dtb imx8dx-lpddr4-val.dtb imx8dx-17x17-val.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek-dom0.dtb imx8qxp-mek-root.dtb \
 			  imx8qxp-mek-inmate.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8qxp-var-som-symphony-sd.dtb imx8qxp-var-som-symphony-wifi.dtb \
+			  imx8qxp-var-som-symphony-sd-m4.dtb imx8qxp-var-som-symphony-wifi-m4.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx93-14x14-evk.dtb \
 			  imx93-14x14-evk-tja1103.dtb imx93-14x14-evk-rm67199.dtb \
 			  imx93-14x14-evk-mqs.dtb imx93-14x14-evk-aud-hat.dtb \
