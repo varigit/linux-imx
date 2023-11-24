@@ -742,12 +742,11 @@ static int mxc_isi_capture_open(struct file *file)
 
 	pm_runtime_get_sync(dev);
 
-	if (!is_imx8_isi) {
-		mutex_lock(&isi_cap->lock);
-		ret = isi_cap_fmt_init(isi_cap);
-		mutex_unlock(&isi_cap->lock);
-	}
-	else {
+	mutex_lock(&isi_cap->lock);
+	ret = isi_cap_fmt_init(isi_cap);
+	mutex_unlock(&isi_cap->lock);
+
+	if (is_imx8_isi) {
 		ret = v4l2_subdev_call(sd, core, s_power, 1);
 		if (ret) {
 			dev_err(dev, "Call subdev s_power fail!\n");
