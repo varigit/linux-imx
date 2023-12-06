@@ -400,6 +400,9 @@ dtb-$(CONFIG_ARCH_MXC) += imx93-9x9-qsb.dtb \
 			  imx93-9x9-qsb-lpspi.dtb imx93-9x9-qsb-lpspi-slave.dtb \
 			  imx93-9x9-qsb-ld.dtb imx93-9x9-qsb-aud-hat.dtb \
 			  imx93-9x9-qsb-rpmsg.dtb imx93-9x9-qsb-rpmsg-lpv.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-symphony.dtb \
+			  imx93-var-som-symphony-m33.dtb \
+			  imx93-var-som-wbe-symphony.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx91p-9x9-qsb.dtb imx91p-9x9-qsb-aud-hat.dtb \
 			  imx91p-9x9-qsb-mt9m114.dtb \

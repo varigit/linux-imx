@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2018 NXP
+ * Copyright 2023 Variscite Ltd.
+ */
+
+/* Resistive touch controller uses GPIO4 */
+&ads7846_ts {
+    status = "disabled";
+};
+
+&flexcan1 {
+	status = "disabled";
+};
+
+/* GPIO4 is used for M33 rled example */
+&gpio4 {
+    status = "disabled";
+};
+
+/* Wi-Fi disabled for m33 examples */
+&iw612_pwrseq {
+    status = "disabled";
+};
+
+&lpspi6 {
+    status = "disabled";
+};
+
+/* Disable BT since Wi-Fi is disabled and this allows JTAG pin access */
+&lpuart5 {
+    status = "disabled";
+};
+
+/* Used by M33 examples console/debug output */
+&lpuart7 {
+	status = "disabled";
+};
+
+/* Disable Wi-Fi as it uses a GPIO4 bank pin */
+&usdhc3 {
+    status = "disabled";
+};

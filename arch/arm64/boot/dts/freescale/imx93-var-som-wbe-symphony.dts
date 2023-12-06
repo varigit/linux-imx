@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2023 Variscite Ltd.
+ */
+
+/dts-v1/;
+
+#include "imx93-var-som-wbe.dtsi"
+#include "imx93-var-som-symphony.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-MX93 2.x and newer 802.15.4 on Symphony-Board";
+};
