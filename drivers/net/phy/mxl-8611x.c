@@ -167,6 +167,7 @@
 
 /* Chip Configuration Register - COM_EXT_CHIP_CFG */
 #define MXL86111_EXT_CHIP_CFG_REG			0xA001
+#define MXL86111_EXT_CHIP_CFG_RXDLY_ENABLE	BIT(8)
 #define MXL86111_EXT_CHIP_CFG_SW_RST_N_MODE	BIT(15)
 
 #define MXL86111_EXT_CHIP_CFG_MODE_SEL_MASK				GENMASK(2, 0)
@@ -558,6 +559,7 @@ static int mxl86110_config_init(struct phy_device *phydev)
 {
 	int page_to_restore, ret = 0;
 	unsigned int val = 0;
+	bool disable_rxdly = false;
 
 	page_to_restore = phy_select_page(phydev, MXL86110_DEFAULT_PAGE);
 	if (page_to_restore < 0)
@@ -567,6 +569,7 @@ static int mxl86110_config_init(struct phy_device *phydev)
 	case PHY_INTERFACE_MODE_RGMII:
 		/* no delay, will write 0 */
 		val = MXL8611X_EXT_RGMII_CFG1_NO_DELAY;
+		disable_rxdly = true;
 		break;
 	case PHY_INTERFACE_MODE_RGMII_RXID:
 		val = MXL8611X_EXT_RGMII_CFG1_RX_DELAY_CUSTOM;
@@ -574,6 +577,7 @@ static int mxl86110_config_init(struct phy_device *phydev)
 	case PHY_INTERFACE_MODE_RGMII_TXID:
 		val = MXL8611X_EXT_RGMII_CFG1_TX_1G_DELAY_CUSTOM |
 				MXL8611X_EXT_RGMII_CFG1_TX_10MB_100MB_CUSTOM;
+		disable_rxdly = true;
 		break;
 	case PHY_INTERFACE_MODE_RGMII_ID:
 		val = MXL8611X_EXT_RGMII_CFG1_TX_1G_DELAY_CUSTOM |
@@ -597,6 +601,15 @@ static int mxl86110_config_init(struct phy_device *phydev)
 		ret = mxlphy_modify_extended_reg(phydev, MXL8611x_UTP_EXT_SLEEP_CTRL_REG,
 					MXL8611x_UTP_EXT_SLEEP_CTRL_EN_SLEEP_SW_MASK,
 					MXL8611x_UTP_EXT_SLEEP_CTRL_EN_SLEEP_SW_OFF);
+		if (ret < 0)
+			goto error;
+	}
+
+	/* Disable RXDLY (RGMII Rx Clock Delay) */
+	if (disable_rxdly)
+	{
+		ret = mxlphy_modify_extended_reg(phydev, MXL86111_EXT_CHIP_CFG_REG,
+						 MXL86111_EXT_CHIP_CFG_RXDLY_ENABLE, 0);
 		if (ret < 0)
 			goto error;
 	}
@@ -1548,6 +1561,7 @@ static int mxl86111_config_init(struct phy_device *phydev)
 {
 	int page_to_restore, ret = 0;
 	unsigned int val = 0;
+	bool disable_rxdly = false;
 
 	page_to_restore = phy_select_page(phydev, MXL86111_EXT_SMI_SDS_PHYUTP_SPACE);
 	if (page_to_restore < 0)
@@ -1557,6 +1571,7 @@ static int mxl86111_config_init(struct phy_device *phydev)
 	case PHY_INTERFACE_MODE_RGMII:
 		/* no delay, will write 0 */
 		val = MXL8611X_EXT_RGMII_CFG1_NO_DELAY;
+		disable_rxdly = true;
 		break;
 	case PHY_INTERFACE_MODE_RGMII_RXID:
 		val = MXL8611X_EXT_RGMII_CFG1_RX_DELAY_CUSTOM;
@@ -1564,6 +1579,7 @@ static int mxl86111_config_init(struct phy_device *phydev)
 	case PHY_INTERFACE_MODE_RGMII_TXID:
 		val = MXL8611X_EXT_RGMII_CFG1_TX_1G_DELAY_CUSTOM |
 				MXL8611X_EXT_RGMII_CFG1_TX_10MB_100MB_CUSTOM;
+		disable_rxdly = true;
 		break;
 	case PHY_INTERFACE_MODE_RGMII_ID:
 		val = MXL8611X_EXT_RGMII_CFG1_TX_1G_DELAY_CUSTOM |
@@ -1583,6 +1599,16 @@ static int mxl86111_config_init(struct phy_device *phydev)
 				       MXL8611X_EXT_RGMII_CFG1_FULL_MASK, val);
 		if (ret < 0)
 			goto err_restore_page;
+
+		/* Configure RXDLY (RGMII Rx Clock Delay) */
+		if (disable_rxdly)
+		{
+			ret = mxlphy_modify_extended_reg(phydev, MXL86111_EXT_CHIP_CFG_REG,
+							 MXL86111_EXT_CHIP_CFG_RXDLY_ENABLE, 0);
+
+			if (ret < 0)
+				goto err_restore_page;
+		}
 	}
 
 	if (MXL8611x_UTP_DISABLE_AUTO_SLEEP_FEATURE_CUSTOM == 1) {
