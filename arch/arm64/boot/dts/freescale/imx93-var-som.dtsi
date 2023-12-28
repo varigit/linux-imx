@@ -434,6 +434,9 @@
 	pinctrl-2 = <&pinctrl_usdhc3>, <&pinctrl_wifi>;
 	pinctrl-3 = <&pinctrl_usdhc3_sleep>, <&pinctrl_wifi>;
 	bus-width = <4>;
+	fsl,tuning-start-tap = <28>;
+	fsl,tuning-step = <1>;
+	max-frequency = <190000000>;
 	mmc-pwrseq = <&iw612_pwrseq>;
 	non-removable;
 	wakeup-source;
