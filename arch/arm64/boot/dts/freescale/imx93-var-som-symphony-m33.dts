@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
  * Copyright 2018 NXP
- * Copyright 2023 Variscite Ltd.
+ * Copyright 2023-2024 Variscite Ltd.
  */
 
 #include "imx93-var-som-symphony.dts"
