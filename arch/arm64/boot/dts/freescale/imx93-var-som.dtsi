@@ -13,15 +13,6 @@
 / {
 	compatible = "variscite,imx93-var-som", "fsl,imx93";
 
-	iw612_pwrseq: iw612_pwrseq {
-		compatible = "mmc-pwrseq-simple";
-		post-power-on-delay-ms = <100>;
-		power-off-delay-us = <10000>;
-		reset-gpios = <&gpio4 14 GPIO_ACTIVE_LOW>,	/* WIFI_RESET */
-			      <&gpio3 7 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
-		status = "okay";
-	};
-
 	reg_eqos_phy: regulator-eqos-phy {
 		compatible = "regulator-fixed";
 		pinctrl-names = "default";
@@ -61,6 +52,15 @@
 		simple-audio-card,cpu {
 			sound-dai = <&sai1>;
 		};
+	};
+
+	usdhc3_pwrseq: usdhc3_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		post-power-on-delay-ms = <100>;
+		power-off-delay-us = <10000>;
+		reset-gpios = <&gpio4 14 GPIO_ACTIVE_LOW>,	/* WIFI_RESET */
+			      <&gpio3 7 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
+		status = "okay";
 	};
 };
 
@@ -148,13 +148,6 @@
 	pinctrl_reg_eqos_phy: regeqosgrp {
 		fsl,pins = <
 			MX93_PAD_UART2_TXD__GPIO1_IO07			0x51e
-		>;
-	};
-
-	pinctrl_wifi: wifigrp {
-		fsl,pins = <
-			MX93_PAD_ENET2_MDC__GPIO4_IO14			0x51e /* WIFI_REG_ON     */
-			MX93_PAD_SD2_RESET_B__GPIO3_IO07		0x51e /* WIFI_PWR_EN     */
 		>;
 	};
 
@@ -292,6 +285,13 @@
 			MX93_PAD_SD3_DATA1__GPIO3_IO23		0x400
 			MX93_PAD_SD3_DATA2__GPIO3_IO24		0x400
 			MX93_PAD_SD3_DATA3__GPIO3_IO25		0x400
+		>;
+	};
+
+	pinctrl_usdhc3_wlan: usdhc3wlangrp {
+		fsl,pins = <
+			MX93_PAD_ENET2_MDC__GPIO4_IO14			0x51e /* WIFI_REG_ON     */
+			MX93_PAD_SD2_RESET_B__GPIO3_IO07		0x51e /* WIFI_PWR_EN     */
 		>;
 	};
 };
@@ -487,12 +487,12 @@
 /* WiFi */
 &usdhc3 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
-	pinctrl-0 = <&pinctrl_usdhc3>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc3_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc3_200mhz>, <&pinctrl_wifi>;
-	pinctrl-3 = <&pinctrl_usdhc3_sleep>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc3>, <&pinctrl_usdhc3_wlan>;
+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>, <&pinctrl_usdhc3_wlan>;
+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>, <&pinctrl_usdhc3_wlan>;
+	pinctrl-3 = <&pinctrl_usdhc3_sleep>, <&pinctrl_usdhc3_wlan>;
 	bus-width = <4>;
-	mmc-pwrseq = <&iw612_pwrseq>;
+	mmc-pwrseq = <&usdhc3_pwrseq>;
 	non-removable;
 	wakeup-source;
 	fsl,sdio-async-interrupt-enabled;

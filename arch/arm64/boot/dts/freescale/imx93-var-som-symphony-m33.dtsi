@@ -19,7 +19,7 @@
 };
 
 /* Wi-Fi disabled for m33 examples */
-&iw612_pwrseq {
+&usdhc3_pwrseq {
     status = "disabled";
 };
 
