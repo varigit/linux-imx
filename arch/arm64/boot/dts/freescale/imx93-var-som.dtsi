@@ -495,5 +495,6 @@
 	mmc-pwrseq = <&iw612_pwrseq>;
 	non-removable;
 	wakeup-source;
+	fsl,sdio-async-interrupt-enabled;
 	status = "okay";
 };
