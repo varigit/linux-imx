@@ -292,6 +292,18 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-ddr3l-val.dtb imx8mq-ddr4-val.dtb imx8mq-ddr4-val-gpmi-nand.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk-pcie-ep.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-wevk.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mq-var-dart-dt8mcustomboard-m4-sd-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-sd-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-sd-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-sd-lvds-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-wifi-hdmi.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds.dtb \
+			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds-hdmi.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qm-var-som-symphony-dp.dtb imx8qm-var-som-symphony-hdmi.dtb imx8qm-var-som-symphony-lvds.dtb \
 			  imx8qm-var-som-symphony-dp-m4.dtb imx8qm-var-som-symphony-hdmi-m4.dtb imx8qm-var-som-symphony-lvds-m4.dtb \
