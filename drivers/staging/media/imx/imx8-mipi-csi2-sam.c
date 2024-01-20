@@ -514,8 +514,6 @@ static const struct csis_pix_format mipi_csis_formats[] = {
 #define mipi_csis_write(__csis, __r, __v) writel(__v, __csis->regs + __r)
 #define mipi_csis_read(__csis, __r) readl(__csis->regs + __r)
 
-static long csis_priv_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg_user);
-
 static void dump_csis_regs(struct csi_state *state, const char *label)
 {
 	struct {
@@ -1097,7 +1095,6 @@ long mipi_csis_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
        struct csi_state *state = mipi_sd_to_csi_state(sd);
        struct media_pad *source_pad;
        struct v4l2_subdev *sen_sd;
-       int ret = 1;
 
        /* Get remote source pad */
        source_pad = csis_get_remote_sensor_pad(state);
@@ -1106,18 +1103,13 @@ long mipi_csis_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
                return -EINVAL;
        }
 
-       if (strncmp("basler", source_pad->entity->name , strlen("basler")) == 0) {
-		return csis_priv_ioctl(sd, cmd, arg);
-       } else {
-	       /* Get remote source pad subdev */
-	       sen_sd = media_entity_to_v4l2_subdev(source_pad->entity);
-	       if (!sen_sd) {
-		       v4l2_err(&state->sd, "%s, No remote subdev found!\n", __func__);
-		       return -EINVAL;
-	       }
-	       return v4l2_subdev_call(sen_sd, core, ioctl, cmd, arg);
+      /* Get remote source pad subdev */
+       sen_sd = media_entity_to_v4l2_subdev(source_pad->entity);
+       if (!sen_sd) {
+               v4l2_err(&state->sd, "%s, No remote subdev found!\n", __func__);
+               return -EINVAL;
        }
-       return ret;
+       return v4l2_subdev_call(sen_sd, core, ioctl, cmd, arg);
 }
 
 static int mipi_csis_s_stream(struct v4l2_subdev *mipi_sd, int enable)
