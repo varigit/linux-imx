@@ -291,6 +291,7 @@ static int btsdio_probe(struct sdio_func *func,
 	    !mmc_card_is_removable(func->card->host)) {
 		switch (func->device) {
 		case SDIO_DEVICE_ID_BROADCOM_43341:
+		case SDIO_DEVICE_ID_BROADCOM_4339:
 		case SDIO_DEVICE_ID_BROADCOM_43430:
 		case SDIO_DEVICE_ID_BROADCOM_4345:
 		case SDIO_DEVICE_ID_BROADCOM_43455:
