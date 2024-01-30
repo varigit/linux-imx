@@ -671,6 +671,8 @@ static int nxp_download_firmware(struct hci_dev *hdev)
 	/* Allow the downloaded FW to initialize */
 	msleep(1200);
 
+	bt_dev_dbg(hdev, "FW Download Complete.");
+
 	return 0;
 }
 
