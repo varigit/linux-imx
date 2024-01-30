@@ -560,6 +560,8 @@ static int nxp_download_firmware(struct hci_dev *hdev)
 	/* Allow the downloaded FW to initialize */
 	usleep_range(800 * USEC_PER_MSEC, 1 * USEC_PER_SEC);
 
+	bt_dev_dbg(hdev, "FW Download Complete.");
+
 	return 0;
 }
 
