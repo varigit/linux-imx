@@ -1,8 +1,16 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
+ * Device tree overlay to support SD card on DART-MX8M
+ *
  * Copyright 2017 NXP
  * Copyright 2018-2024 Variscite Ltd.
  */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include "imx8mq-pinfunc.h"
 
 / {
 	reg_usdhc2_vmmc: regulator-vsd-3v3 {

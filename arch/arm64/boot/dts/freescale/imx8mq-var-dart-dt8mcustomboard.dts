@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Device tree for DART-MX8M on DT8MCustomBoard 2.0 and above
+ *
+ * Copyright 2017 NXP
+ * Copyright (C) 2017-2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
+ * Copyright 2018-2024 Variscite Ltd.
+ */
+
+#include "imx8mq-var-dart-dt8mcustomboard.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M on DT8MCustomBoard 2.0 and above";
+};

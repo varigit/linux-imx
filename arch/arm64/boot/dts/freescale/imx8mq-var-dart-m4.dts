@@ -1,8 +1,16 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
+ * Device tree overlay to support the M4 core on DART-MX8M
+ *
  * Copyright 2017 NXP
  * Copyright 2019-2024 Variscite Ltd.
  */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/clock/imx8mq-clock.h>
+#include "imx8mq-pinfunc.h"
 
 / {
 	reserved-memory {

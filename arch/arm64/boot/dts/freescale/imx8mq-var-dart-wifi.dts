@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
+ * Device tree overlay to support WiFi on DART-MX8M
+ *
  * Copyright 2017 NXP
  * Copyright 2018-2024 Variscite Ltd.
  */
+
+/dts-v1/;
+/plugin/;
 
 /* Set WIFI SDIO voltage at 1.8V */
 &gpio1 {

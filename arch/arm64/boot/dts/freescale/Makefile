@@ -292,7 +292,63 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-ddr3l-val.dtb imx8mq-ddr4-val.dtb imx8mq-ddr4-val-gpmi-nand.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk-pcie-ep.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mq-wevk.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mq-var-dart-dt8mcustomboard-m4-sd-hdmi.dtb \
+
+imx8mq-var-dart-dt8mcustomboard-m4-sd-hdmi-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard.dtb \
+	imx8mq-var-dart-sd.dtb \
+	imx8mq-var-dart-hdmi.dtbo \
+	imx8mq-var-dart-m4.dtbo
+imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard-lvds-dcss.dtb \
+	imx8mq-var-dart-sd.dtbo \
+	imx8mq-var-dart-m4.dtbo
+imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds-hdmi-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard.dtb \
+	imx8mq-var-dart-sd.dtbo \
+	imx8mq-var-dart-lvds-lcdif.dtbo \
+	imx8mq-var-dart-hdmi.dtbo \
+	imx8mq-var-dart-m4.dtbo
+imx8mq-var-dart-dt8mcustomboard-m4-wifi-hdmi-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard.dtb \
+	imx8mq-var-dart-wifi.dtbo \
+	imx8mq-var-dart-hdmi.dtbo \
+	imx8mq-var-dart-m4.dtbo
+imx8mq-var-dart-dt8mcustomboard-m4-wifi-lvds-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard-lvds-dcss.dtb \
+	imx8mq-var-dart-wifi.dtbo \
+	imx8mq-var-dart-m4.dtbo
+imx8mq-var-dart-dt8mcustomboard-m4-wifi-lvds-hdmi-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard.dtb \
+	imx8mq-var-dart-wifi.dtbo \
+	imx8mq-var-dart-lvds-lcdif.dtbo \
+	imx8mq-var-dart-hdmi.dtbo \
+	imx8mq-var-dart-m4.dtbo
+imx8mq-var-dart-dt8mcustomboard-sd-hdmi-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard.dtb \
+	imx8mq-var-dart-sd.dtbo \
+	imx8mq-var-dart-hdmi.dtbo
+imx8mq-var-dart-dt8mcustomboard-sd-lvds-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard-lvds-dcss.dtb \
+	imx8mq-var-dart-sd.dtbo
+imx8mq-var-dart-dt8mcustomboard-sd-lvds-hdmi-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard.dtb \
+	imx8mq-var-dart-sd.dtbo \
+	imx8mq-var-dart-hdmi.dtbo \
+	imx8mq-var-dart-lvds-lcdif.dtbo
+imx8mq-var-dart-dt8mcustomboard-wifi-hdmi-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard.dtb \
+	imx8mq-var-dart-wifi.dtbo \
+	imx8mq-var-dart-hdmi.dtbo
+imx8mq-var-dart-dt8mcustomboard-wifi-lvds-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard-lvds-dcss.dtb \
+	imx8mq-var-dart-wifi.dtbo
+imx8mq-var-dart-dt8mcustomboard-wifi-lvds-hdmi-dtbs := \
+	imx8mq-var-dart-dt8mcustomboard.dtb \
+	imx8mq-var-dart-wifi.dtbo \
+	imx8mq-var-dart-hdmi.dtbo \
+	imx8mq-var-dart-lvds-lcdif.dtbo
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mq-var-dart-dt8mcustomboard-m4-sd-hdmi.dtb\
 			  imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-sd-lvds-hdmi.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-m4-wifi-hdmi.dtb \

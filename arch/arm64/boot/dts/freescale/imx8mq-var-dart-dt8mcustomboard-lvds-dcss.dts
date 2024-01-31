@@ -1,10 +1,17 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
+ * Device tree to support LVDS DCSS on DART-MX8M
+ *
  * Copyright 2017 NXP
  * Copyright 2018-2024 Variscite Ltd.
  */
 
+#include "imx8mq-var-dart-dt8mcustomboard.dtsi"
 #include "imx8mq-var-dart-lvds-panel.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M on DT8MCustomBoard LVDS";
+};
 
 /delete-node/&hdmi;
 

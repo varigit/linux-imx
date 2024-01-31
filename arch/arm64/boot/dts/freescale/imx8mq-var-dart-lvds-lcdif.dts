@@ -1,9 +1,15 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
+ * Device tree overlay to support LVDS LCDIF on DART-MX8M
+ *
  * Copyright 2017 NXP
  * Copyright 2018-2024 Variscite Ltd.
  */
 
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/clock/imx8mq-clock.h>
 #include "imx8mq-var-dart-lvds-panel.dtsi"
 
 &backlight {
@@ -18,6 +24,9 @@
 	status = "okay";
 
 	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
 		port@2 {
 			reg = <2>;
 			bridge_out_panel: endpoint {

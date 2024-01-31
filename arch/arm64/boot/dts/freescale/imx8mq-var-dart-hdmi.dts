@@ -1,8 +1,15 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
+ * Device tree overlay to support HDMI on DART-MX8M
+ *
  * Copyright 2017 NXP
  * Copyright 2018-2024 Variscite Ltd.
  */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/clock/imx8mq-clock.h>
 
 / {
 	sound-hdmi {
