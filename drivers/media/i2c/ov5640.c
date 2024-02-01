@@ -459,6 +459,7 @@ struct ov5640_dev {
 	enum ov5640_frame_rate current_fr;
 	struct v4l2_fract frame_interval;
 	s64 current_link_freq;
+	int current_link_freq_id;
 
 	struct ov5640_ctrls ctrls;
 
@@ -2946,6 +2947,7 @@ static int ov5640_update_pixel_rate(struct ov5640_dev *sensor)
 			break;
 	}
 	WARN_ON(i == ARRAY_SIZE(ov5640_csi2_link_freqs));
+	sensor->current_link_freq_id = i;
 
 	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate, pixel_rate);
 	__v4l2_ctrl_s_ctrl(sensor->ctrls.link_freq, i);
@@ -3359,6 +3361,18 @@ static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
 			return val;
 		sensor->ctrls.exposure->val = val;
 		break;
+	case V4L2_CID_PIXEL_RATE:
+		val = sensor->current_mode->pixel_rate;
+		dev_info(&sensor->i2c_client->dev, "get pixel rate: %d Hz id=%d\n",
+			(int) ov5640_pixel_rates[val], val);
+		sensor->ctrls.pixel_rate->val = val;
+		break;
+	case V4L2_CID_LINK_FREQ:
+		val = sensor->current_link_freq_id;
+		dev_info(&sensor->i2c_client->dev, "get link frequency: %d Hz id=%d\n",
+			(int) sensor->current_link_freq, val);
+		sensor->ctrls.link_freq->val = val;
+		break;
 	}
 
 	return 0;
@@ -3540,7 +3554,9 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
 		goto free_ctrls;
 
 	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_VOLATILE;
 	ctrls->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+	ctrls->link_freq->flags |= V4L2_CTRL_FLAG_VOLATILE;
 	ctrls->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 	ctrls->gain->flags |= V4L2_CTRL_FLAG_VOLATILE;
 	ctrls->exposure->flags |= V4L2_CTRL_FLAG_VOLATILE;
