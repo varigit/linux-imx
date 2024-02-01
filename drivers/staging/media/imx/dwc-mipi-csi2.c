@@ -1122,6 +1122,7 @@ static int dwc_mipi_csi2_set_fmt(struct v4l2_subdev *sd,
 	struct csi2h_pix_format const *csi2h_fmt;
 	struct media_pad *source_pad;
 	struct v4l2_subdev *sen_sd;
+	s64 link_freq;
 	int ret;
 
 	/* Get remote source pad */
@@ -1152,6 +1153,29 @@ static int dwc_mipi_csi2_set_fmt(struct v4l2_subdev *sd,
 	}
 
 	v4l2_info(&csi2h->sd, "format: %#x\n", mf->code);
+
+	/* Calculate the line rate from the pixel rate. */
+	link_freq = v4l2_get_link_freq(sen_sd->ctrl_handler,
+				       mf->width,
+				       csi2h->num_lanes * 2);
+	if (link_freq < 0) {
+		v4l2_err(&csi2h->sd, "Unable to obtain link frequency: %d\n",
+			(int)link_freq);
+		return link_freq;
+	}
+
+	v4l2_info(&csi2h->sd, "link_freq: %d\n", (int)link_freq);
+
+	if (link_freq < 200000000)
+		csi2h->hsclkfreqrange = 0x3;
+	else if (link_freq < 250000000)
+		csi2h->hsclkfreqrange = 0x23;
+	else if (link_freq < 300000000)
+		csi2h->hsclkfreqrange = 0x14;
+	else if (link_freq < 350000000)
+		csi2h->hsclkfreqrange = 0x35;
+	else
+		csi2h->hsclkfreqrange = 0x05;
 
 	return 0;
 }
