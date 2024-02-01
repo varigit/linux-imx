@@ -468,7 +468,9 @@ struct ov5640_dev {
 	const struct ov5640_mode_info *last_mode;
 	enum ov5640_frame_rate current_fr;
 	struct v4l2_fract frame_interval;
+	s64 current_pixel_rate;
 	s64 current_link_freq;
+	u32 current_link_freq_id;
 
 	struct ov5640_ctrls ctrls;
 
@@ -2898,8 +2900,9 @@ static int ov5640_update_pixel_rate(struct ov5640_dev *sensor)
 	 * For DVP mode, maintain the pixel rate calculation using fixed FPS.
 	 */
 	if (!ov5640_is_csi2(sensor)) {
+		sensor->current_pixel_rate = ov5640_calc_pixel_rate(sensor);
 		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-					 ov5640_calc_pixel_rate(sensor));
+					 sensor->current_pixel_rate);
 
 		__v4l2_ctrl_vblank_update(sensor, timings->vblank_def);
 
@@ -2935,12 +2938,14 @@ static int ov5640_update_pixel_rate(struct ov5640_dev *sensor)
 		pixel_rate /= 2;
 		link_freq /= 2;
 	}
+	sensor->current_pixel_rate = pixel_rate;
 
 	for (i = 0; i < ARRAY_SIZE(ov5640_csi2_link_freqs); ++i) {
 		if (ov5640_csi2_link_freqs[i] == link_freq)
 			break;
 	}
 	WARN_ON(i == ARRAY_SIZE(ov5640_csi2_link_freqs));
+	sensor->current_link_freq_id = i;
 
 	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate, pixel_rate);
 	__v4l2_ctrl_s_ctrl(sensor->ctrls.link_freq, i);
@@ -3341,6 +3346,14 @@ static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
 	int val;
 
 	/* v4l2_ctrl_lock() locks our own mutex */
+	switch (ctrl->id) {
+	case V4L2_CID_PIXEL_RATE:
+		*ctrl->p_new.p_s64 = sensor->current_pixel_rate;
+		return 0;
+	case V4L2_CID_LINK_FREQ:
+		ctrl->val = sensor->current_link_freq_id;
+		return 0;
+	}
 
 	if (!pm_runtime_get_if_in_use(&sensor->i2c_client->dev))
 		return 0;
@@ -3543,8 +3556,10 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
 	if (ret)
 		goto free_ctrls;
 
-	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-	ctrls->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY |
+					  V4L2_CTRL_FLAG_VOLATILE;
+	ctrls->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY |
+					 V4L2_CTRL_FLAG_VOLATILE;
 	ctrls->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 	ctrls->gain->flags |= V4L2_CTRL_FLAG_VOLATILE;
 	ctrls->exposure->flags |= V4L2_CTRL_FLAG_VOLATILE;
@@ -3931,8 +3946,11 @@ static int ov5640_probe(struct i2c_client *client)
 	sensor->current_mode =
 		&ov5640_mode_data[OV5640_MODE_VGA_640_480];
 	sensor->last_mode = sensor->current_mode;
+	sensor->current_pixel_rate =
+		ov5640_pixel_rates[sensor->current_mode->pixel_rate];
 	sensor->current_link_freq =
 		ov5640_csi2_link_freqs[OV5640_DEFAULT_LINK_FREQ];
+	sensor->current_link_freq_id = OV5640_DEFAULT_LINK_FREQ;
 
 	sensor->ae_target = 52;
 
