@@ -365,7 +365,7 @@
 		mipi1_sensor_ep: endpoint {
 			remote-endpoint = <&ov5640_ep>;
 			data-lanes = <2>;
-			csis-hs-settle = <13>;
+			csis-hs-settle = <6>;
 			csis-clk-settle = <2>;
 			csis-wclk;
 		};

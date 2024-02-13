@@ -562,7 +562,7 @@
 		mipi_csi0_ep: endpoint {
 			remote-endpoint = <&ov5640_mipi_0_ep>;
 			data-lanes = <2>;
-			csis-hs-settle = <13>;
+			csis-hs-settle = <6>;
 			csis-clk-settle = <2>;
 			csis-wclk;
 		};
@@ -579,7 +579,7 @@
 		mipi_csi1_ep: endpoint {
 			remote-endpoint = <&ov5640_mipi_1_ep>;
 			data-lanes = <2>;
-			csis-hs-settle = <13>;
+			csis-hs-settle = <6>;
 			csis-clk-settle = <2>;
 			csis-wclk;
 		};
