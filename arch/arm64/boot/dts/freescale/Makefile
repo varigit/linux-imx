@@ -136,12 +136,6 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-basler-isi0-m7.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-basler-isi0.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-basler-isp0-m7.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-basler-isp0.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-legacy-basler-isi0-m7.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-legacy-basler-isi0.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-legacy-basler-isp0-m7.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-legacy-basler-isp0.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-legacy-m7.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-legacy.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-m7.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony.dtb
