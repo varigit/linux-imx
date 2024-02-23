@@ -86,6 +86,35 @@
 			sound-dai = <&sai5>;
 		};
 	};
+
+	reg_wifi_1v8: regulator-wifi-1v8 {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi_pwr_1v8>;
+		regulator-name = "WIFI_PWR_1V8";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		gpio = <&gpio2 20 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	reg_wifi_3v3: regulator-wifi-3v3 {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi_pwr_3v3>;
+		regulator-name = "WIFI_PWR_3V3";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio2 7 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	wifi_pwrseq: wifi-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi_en>;
+		reset-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
+	};
 };
 
 &A53_0 {
@@ -212,14 +241,6 @@
 };
 
 &iomuxc {
-	pinctrl-names = "default";
-
-	pinctrl_bt: btgrp {
-		fsl,pins = <
-			MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6		0xc1	/* BT_REG_ON       */
-		>;
-	};
-
 	pinctrl_can: cangrp {
 		fsl,pins = <
 			MX8MN_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x1c0	/* CAN-INT */
@@ -456,11 +477,27 @@
 		>;
 	};
 
-	pinctrl_wifi: wifigrp {
+	pinctrl_bt_en: btengrp {
+		fsl,pins = <
+			MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6		0xc1	/* BT_REG_ON       */
+		>;
+	};
+
+	pinctrl_wifi_en: wifiengrp {
+		fsl,pins = <
+			MX8MN_IOMUXC_SD1_RESET_B_GPIO2_IO10		0xc1	/* WIFI_REG_ON  */
+		>;
+	};
+
+	pinctrl_wifi_pwr_1v8: wifipwr1v8grp {
+		fsl,pins = <
+			MX8MN_IOMUXC_SD2_WP_GPIO2_IO20		0x140	/* WIFI_1V8_PWR_EN */
+		>;
+	};
+
+	pinctrl_wifi_pwr_3v3: wifipwr3v3grp {
 		fsl,pins = <
 			MX8MN_IOMUXC_SD1_DATA5_GPIO2_IO7		0xc1	/* WIFI_3V3_PWR_EN */
-			MX8MN_IOMUXC_SD2_WP_GPIO2_IO20			0x140	/* WIFI_1V8_PWR_EN */
-			MX8MN_IOMUXC_SD1_RESET_B_GPIO2_IO10		0xc1	/* WIFI_REG_ON     */
 		>;
 	};
 };
@@ -715,11 +752,24 @@
 /* Bluetooth */
 &uart2 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart2>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart2>;
 	assigned-clocks = <&clk IMX8MN_CLK_UART2>;
 	assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_80M>;
 	uart-has-rtscts;
 	status = "okay";
+
+	bluetooth {
+		compatible = "brcm,bcm4329-bt";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_en>;
+		clocks = <&osc_32k>;
+		clock-names = "txco";
+		max-speed = <3000000>;
+		vddio-supply = <&reg_wifi_1v8>;
+		vbat-supply = <&reg_wifi_3v3>;
+		shutdown-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+		brcm,bt-pcm-int-params = [01 00 00 00 00];
+	};
 };
 
 /* WIFI */
@@ -727,9 +777,12 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc1>;
+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+	vqmmc-supply = <&reg_wifi_1v8>;
+	vmmc-supply = <&reg_wifi_3v3>;
+	mmc-pwrseq = <&wifi_pwrseq>;
 	bus-width = <4>;
 	non-removable;
 	wakeup-source;
@@ -739,6 +792,7 @@
 	brcmf: bcrmf@1 {
 		reg = <1>;
 		compatible = "brcm,bcm4329-fmac";
+		laird,regdomain = "US";
 	};
 };
 
