@@ -9,3 +9,4 @@ jobs:
     with:
       defconfig: >-
         arm:imx_v7_var_defconfig
+        arm64:imx8_var_defconfig
