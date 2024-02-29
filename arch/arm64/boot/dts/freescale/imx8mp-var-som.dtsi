@@ -21,15 +21,6 @@
 		spi2 = &ecspi2;
 	};
 
-	iw612_pwrseq: iw612_pwrseq {
-		compatible = "mmc-pwrseq-simple";
-		post-power-on-delay-ms = <100>;
-		power-off-delay-us = <10000>;
-		reset-gpios = <&gpio2 8 GPIO_ACTIVE_LOW>,	/* WIFI_RESET */
-			      <&gpio2 19 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
-		status = "okay";
-	};
-
 	memory@40000000 {
 		reg = <0x0 0x40000000 0 0xc0000000>,
 		      <0x1 0x00000000 0 0xc0000000>;
@@ -52,6 +43,34 @@
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		regulator-always-on;
+	};
+
+	reg_bt_buf: bt-buffer {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_buf>;
+		regulator-name = "BT_BUF";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio1 4 GPIO_ACTIVE_LOW>;
+	};
+
+	reg_wifi_vmmc: regulator-wifi-mmc {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi_pwr>;
+		regulator-name = "WIFI_PWR";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	wifi_pwrseq: wifi-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi_en>;
+		reset-gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
 	};
 
 	sound-wm8904 {
@@ -333,7 +352,7 @@
 /* BT */
 &uart3 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart3>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart3>;
 	assigned-clocks = <&clk IMX8MP_CLK_UART3>;
 	assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_80M>;
 	uart-has-rtscts;
@@ -350,13 +369,14 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc1>;
+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
 	bus-width = <4>;
 	non-removable;
 	keep-power-in-suspend;
-	mmc-pwrseq = <&iw612_pwrseq>;
+	vmmc-supply = <&reg_wifi_vmmc>;
+	mmc-pwrseq = <&wifi_pwrseq>;
 	status = "okay";
 };
 
@@ -583,17 +603,27 @@
 		>;
 	};
 
-	pinctrl_wifi: wifigrp {
+	pinctrl_wifi_en: wifiengrp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SD1_DATA6__GPIO2_IO08				0xc0 /* WIFI_EN  */
+		>;
+	};
+
+	pinctrl_wifi_pwr: wifipwrgrp {
+		fsl,pins = <
 			MX8MP_IOMUXC_SD2_RESET_B__GPIO2_IO19				0xc0 /* WIFI_PWR */
 		>;
 	};
 
-	pinctrl_bt: btgrp {
+	pinctrl_bt_buf: btbufgrp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO04__GPIO1_IO04				0xc0 /* BT_BUF */
+		>;
+	};
+
+	pinctrl_bt_en: btgrp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SD1_DATA7__GPIO2_IO09				0xc0 /* BT_EN */
-			MX8MP_IOMUXC_GPIO1_IO04__GPIO1_IO04				0xc0 /* BT_BUF */
 			MX8MP_IOMUXC_SD1_RESET_B__GPIO2_IO10				0xc0
 		>;
 	};

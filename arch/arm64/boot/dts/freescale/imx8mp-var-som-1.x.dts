@@ -8,18 +8,29 @@
 /dts-v1/;
 /plugin/;
 
+#include <dt-bindings/gpio/gpio.h>
+
 &bluetooth_iw61x {
 	status = "disabled";
 };
 
-&iw612_pwrseq {
-	status = "disabled";
+&uart3 {
+	bluetooth {
+		compatible = "brcm,bcm4329-bt";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_en>;
+		clocks = <&osc_32k>;
+		clock-names = "txco";
+		max-speed = <3000000>;
+		shutdown-gpios = <&gpio2 9 GPIO_ACTIVE_HIGH>;
+		vbat-supply = <&reg_bt_buf>;
+		vddio-supply = <&reg_wifi_vmmc>;
+		brcm,bt-pcm-int-params = [01 00 00 00 00];
+	};
 };
 
 /* WIFI */
 &usdhc1 {
-	mmc-pwrseq = <>;
-
 	brcmf: bcrmf@1 {
 		reg = <1>;
 		compatible = "brcm,bcm4329-fmac";
