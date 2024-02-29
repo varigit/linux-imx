@@ -13,19 +13,6 @@
 / {
 	compatible = "variscite,imx93-var-som", "fsl,imx93";
 
-	reg_eqos_phy: regulator-eqos-phy {
-		compatible = "regulator-fixed";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_reg_eqos_phy>;
-		regulator-name = "eth_phy_pwr";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		startup-delay-us = <100000>;
-		regulator-always-on;
-	};
-
 	sound-wm8904 {
 		compatible = "simple-audio-card";
 		simple-audio-card,bitclock-master = <&dailink_master>;
@@ -69,7 +56,6 @@
 	pinctrl-0 = <&pinctrl_eqos>;
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy0>;
-	phy-supply = <&reg_eqos_phy>;
 	status = "okay";
 
 	mdio {
@@ -82,6 +68,9 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <0>;
 			eee-broken-1000t;
+			reset-gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <80000>;
 			mxl-8611x,led0_cfg = <(
 				MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
 				MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
@@ -119,6 +108,7 @@
 			MX93_PAD_ENET1_TD3__ENET_QOS_RGMII_TD3			0x57e
 			MX93_PAD_ENET1_TXC__CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK	0x5fe
 			MX93_PAD_ENET1_TX_CTL__ENET_QOS_RGMII_TX_CTL		0x57e
+			MX93_PAD_UART2_TXD__GPIO1_IO07				0x51e
 		>;
 	};
 
@@ -142,12 +132,6 @@
 			MX93_PAD_GPIO_IO13__LPSPI8_SIN			0x31e
 			MX93_PAD_GPIO_IO14__LPSPI8_SOUT			0x31e
 			MX93_PAD_GPIO_IO15__LPSPI8_SCK			0x31e
-		>;
-	};
-
-	pinctrl_reg_eqos_phy: regeqosgrp {
-		fsl,pins = <
-			MX93_PAD_UART2_TXD__GPIO1_IO07			0x51e
 		>;
 	};
 
