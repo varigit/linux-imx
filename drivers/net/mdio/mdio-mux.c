@@ -55,6 +55,7 @@ out:
 	return r;
 }
 
+#ifndef CONFIG_IMX_GKI_FIX
 static int mdio_mux_read_c45(struct mii_bus *bus, int phy_id, int dev_addr,
 			     int regnum)
 {
@@ -75,6 +76,7 @@ out:
 
 	return r;
 }
+#endif
 
 /*
  * The parent bus' lock is used to order access to the switch_fn.
@@ -101,6 +103,7 @@ out:
 	return r;
 }
 
+#ifndef CONFIG_IMX_GKI_FIX
 static int mdio_mux_write_c45(struct mii_bus *bus, int phy_id, int dev_addr,
 			      int regnum, u16 val)
 {
@@ -122,6 +125,7 @@ out:
 
 	return r;
 }
+#endif
 
 static int parent_count;
 
@@ -218,10 +222,12 @@ int mdio_mux_init(struct device *dev,
 			cb->mii_bus->read = mdio_mux_read;
 		if (parent_bus->write)
 			cb->mii_bus->write = mdio_mux_write;
+#ifndef CONFIG_IMX_GKI_FIX
 		if (parent_bus->read_c45)
 			cb->mii_bus->read_c45 = mdio_mux_read_c45;
 		if (parent_bus->write_c45)
 			cb->mii_bus->write_c45 = mdio_mux_write_c45;
+#endif
 		r = of_mdiobus_register(cb->mii_bus, child_bus_node);
 		if (r) {
 			mdiobus_free(cb->mii_bus);
