@@ -422,6 +422,11 @@ config MARVELL_10G_PHY
 	---help---
 	  Support for the Marvell Alaska MV88X3310 and compatible PHYs.
 
+config MAXLINEAR_8611X_PHY
+	tristate "MaxLinear MXL86110 and MXL86111 PHYs"
+	---help---
+	  Supports the MXL86110 and MXL86111 PHYs.
+
 config MESON_GXL_PHY
 	tristate "Amlogic Meson GXL Internal PHY"
 	depends on ARCH_MESON || COMPILE_TEST
