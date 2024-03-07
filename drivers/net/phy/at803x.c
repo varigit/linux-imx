@@ -861,6 +861,7 @@ static int at803x_probe(struct phy_device *phydev)
 {
 	struct device *dev = &phydev->mdio.dev;
 	struct at803x_priv *priv;
+	const struct regulator_ops *vddio_ops;
 	int ret;
 
 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
@@ -873,6 +874,11 @@ static int at803x_probe(struct phy_device *phydev)
 	ret = at803x_parse_dt(phydev);
 	if (ret)
 		return ret;
+
+	if (phydev->drv->phy_id == ATH8031_PHY_ID) {
+		vddio_ops = priv->vddio_rdev->desc->ops;
+		priv->vddio_last_selector = vddio_ops->get_voltage_sel(priv->vddio_rdev);
+	}
 
 	if (phydev->drv->phy_id == ATH8031_PHY_ID) {
 		int ccr = phy_read(phydev, AT803X_REG_CHIP_CONFIG);
