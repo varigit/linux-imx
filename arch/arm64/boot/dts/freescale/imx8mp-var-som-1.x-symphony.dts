@@ -3,9 +3,9 @@
  * Copyright 2020-2024 Variscite Ltd.
  */
 
-#include "imx8mp-var-som.dtsi"
+#include "imx8mp-var-som-1.x.dtsi"
 #include "imx8mp-var-som-symphony.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8M-PLUS on Symphony-Board";
+	model = "Variscite VAR-SOM-MX8M-PLUS 1.x on Symphony-Board";
 };

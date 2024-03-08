@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
  * Copyright 2019 NXP
- * Copyright 2020-2021 Variscite Ltd.
+ * Copyright 2020-2024 Variscite Ltd.
  */
 
 /dts-v1/;
 
 #include <dt-bindings/usb/pd.h>
+#include <dt-bindings/net/mxl-8611x.h>
 #include "imx8mp.dtsi"
 
 / {
@@ -18,6 +19,15 @@
 	};
 
 	/delete-node/ memory@40000000;
+
+	iw612_pwrseq: iw612_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		post-power-on-delay-ms = <100>;
+		power-off-delay-us = <10000>;
+		reset-gpios = <&gpio2 8 GPIO_ACTIVE_LOW>,	/* WIFI_RESET */
+			      <&gpio2 19 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
+		status = "okay";
+	};
 
 	reserved-memory {
 		/* CMA region is configured by kernel command line as cma=<size>M */
@@ -88,6 +98,16 @@
 			at803x,eee-disabled;
 			at803x,vddio-1p8v;
 			eee-broken-1000t;
+			mxl-8611x,led0_cfg = <(
+				MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
+				MXL8611X_LEDX_CFG_TRAFFIC_ACT_BLINK_IND
+			)>;
+			mxl-8611x,led1_cfg = <(
+				MXL8611X_LEDX_CFG_LINK_UP_10MB_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
+			)>;
 		};
 	};
 };
@@ -261,12 +281,8 @@
 	bus-width = <4>;
 	non-removable;
 	keep-power-in-suspend;
+	mmc-pwrseq = <&iw612_pwrseq>;
 	status = "okay";
-
-	brcmf: bcrmf@1 {
-		reg = <1>;
-		compatible = "brcm,bcm4329-fmac";
-	};
 };
 
 &usdhc3 {
