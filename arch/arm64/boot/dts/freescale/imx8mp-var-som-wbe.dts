@@ -9,8 +9,12 @@
 /plugin/;
 
 &ecspi1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
 	/* Disable resistive touch controller on CS0 */
 	ads7846@0 {
+		reg = <0>;
 		status = "disabled";
 	};
 
