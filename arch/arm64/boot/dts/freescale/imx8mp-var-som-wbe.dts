@@ -4,6 +4,7 @@
  *
  * Copyright 2023 Variscite Ltd.
  */
+ #include "imx8mp-pinfunc.h"
 
 /dts-v1/;
 /plugin/;
@@ -11,6 +12,7 @@
 &ecspi1 {
 	#address-cells = <1>;
 	#size-cells = <0>;
+	pinctrl-0 = <&pinctrl_ecspi1>, <&pinctrl_iw612_spi>;
 
 	/* Disable resistive touch controller on CS0 */
 	ads7846@0 {
@@ -20,11 +22,17 @@
 
 	/* Enable 802.15.4 SPI device on CS0 */
 	spidev@0 {
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_restouch>;
 		reg = <0>;
 		compatible = "var,spidev";
 		spi-max-frequency = <1000000>;
 		status = "okay";
+	};
+};
+
+&iomuxc {
+	pinctrl_iw612_spi: iw612_spi_grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_GPIO1_IO12__GPIO1_IO12				0xc0
+		>;
 	};
 };
