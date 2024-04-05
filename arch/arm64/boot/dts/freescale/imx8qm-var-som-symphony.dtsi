@@ -676,8 +676,12 @@
 	status = "disabled";
 };
 
+&phyx2_0{
+       fsl,refclk-pad-mode = <IMX8_PCIE_REFCLK_PAD_INPUT>;
+       status = "okay";
+};
+
 &pciea{
-	ext_osc = <1>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pciea>;
 	reset-gpio = <&lsio_gpio3 14 GPIO_ACTIVE_LOW>;
