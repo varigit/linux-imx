@@ -1,0 +1,11 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2024 Variscite Ltd.
+ */
+
+#include "imx8mm-var-dart-m4.dtsi"
+#include "imx8mm-var-dart-1.x.dtsi"
+
+/ {
+	model = "Variscite DART-MX8MM 1.x Cortex-M4 on DT8MCustomBoard";
+};
