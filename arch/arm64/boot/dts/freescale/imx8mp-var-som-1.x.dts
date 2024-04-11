@@ -14,6 +14,10 @@
 	status = "disabled";
 };
 
+&bt_buf_hog {
+	status = "disabled";
+};
+
 &uart3 {
 	bluetooth {
 		compatible = "brcm,bcm4329-bt";
