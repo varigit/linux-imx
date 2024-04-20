@@ -551,3 +551,5 @@
 		>;
 	};
 };
+
+#include "imx8mm-android.dtsi"
