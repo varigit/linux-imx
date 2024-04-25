@@ -524,6 +524,11 @@
 	status = "okay";
 };
 
+&vpu {
+	compatible = "nxp,imx8qxp-vpu";
+	status = "okay";
+};
+
 &vpu_core0 {
 	reg = <0x2d040000 0x10000>;
 	memory-region = <&decoder_boot>, <&decoder_rpc>;
