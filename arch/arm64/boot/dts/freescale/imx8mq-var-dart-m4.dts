@@ -12,7 +12,7 @@
 #include <dt-bindings/clock/imx8mq-clock.h>
 #include "imx8mq-pinfunc.h"
 
-/ {
+&{/} {
 	reserved-memory {
 		#address-cells = <2>;
 		#size-cells = <2>;
