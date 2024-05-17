@@ -9,34 +9,38 @@
 /plugin/;
 
 #include "imx8mm-pinfunc.h"
+#include <dt-bindings/gpio/gpio.h>
 
 &bluetooth_iw61x {
 	status = "disabled";
 };
 
-&iw612_pwrseq {
-	status = "disabled";
+&bt_en_hog {
+    status = "disabled";
+};
+
+&uart2 {
+	bluetooth {
+		compatible = "brcm,bcm4329-bt";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_en>;
+		clocks = <&osc_32k>;
+		clock-names = "txco";
+		max-speed = <3000000>;
+		vddio-supply = <&reg_wifi_1v8>;
+		vbat-supply = <&reg_wifi_3v3>;
+		shutdown-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+		brcm,bt-pcm-int-params = [01 00 00 00 00];
+	};
 };
 
 /* WIFI */
 &usdhc1 {
 	#address-cells = <1>;
 	#size-cells = <0>;
-	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_wifi>, <&pinctrl_wifi_v1>;
-	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_wifi>, <&pinctrl_wifi_v1>;
-	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_wifi>, <&pinctrl_wifi_v1>;
-	mmc-pwrseq = <>;
 
 	brcmf: wifi@1 {
 		reg = <1>;
 		compatible = "brcm,bcm4329-fmac";
-	};
-};
-
-&iomuxc {
-	pinctrl_wifi_v1: wifigrp_v1 {
-		fsl,pins = <
-			MX8MM_IOMUXC_SD1_DATA5_GPIO2_IO7		0xc1	/* WIFI_3V3_PWR_EN */
-		>;
 	};
 };
