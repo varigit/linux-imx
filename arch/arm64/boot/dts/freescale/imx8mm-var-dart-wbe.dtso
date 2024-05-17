@@ -35,3 +35,12 @@
 		>;
 	};
 };
+
+/* GPIO2_IO7 is the WBE interrupt, not a controllable Wi-Fi supply. */
+&reg_wifi_3v3 {
+	status = "disabled";
+};
+
+&usdhc1 {
+	vmmc-supply = <>;
+};

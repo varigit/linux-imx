@@ -10,10 +10,25 @@
 	status = "disabled";
 };
 
-&iw61x_pwrseq {
+&bt_en_hog {
 	status = "disabled";
 };
 
 &usdhc1 {
-	/delete-property/ mmc-pwrseq;
+	mmc-pwrseq = <&wifi_pwrseq>;
+};
+
+&uart2 {
+	bluetooth {
+		compatible = "brcm,bcm4329-bt";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_en>;
+		clocks = <&osc_32k>;
+		clock-names = "txco";
+		max-speed = <3000000>;
+		vddio-supply = <&reg_wifi_1v8>;
+		vbat-supply = <&reg_wifi_3v3>;
+		shutdown-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+		brcm,bt-pcm-int-params = [01 00 00 00 00];
+	};
 };
