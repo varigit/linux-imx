@@ -423,6 +423,26 @@
 	};
 };
 
+&gpio5 {
+		bt_buf_hog: bt_buf_hog {
+		gpio-hog;
+		gpios = <5 GPIO_ACTIVE_LOW>;
+		output-high;
+		line-name = "bt_buf";
+		status = "okay";
+	};
+};
+
+&gpio2 {
+		bt_enable: bt_enable {
+		gpio-hog;
+		gpios = <6 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "bt_enable";
+		status = "okay";
+	};
+};
+
 &snvs_pwrkey {
 	status = "okay";
 };
