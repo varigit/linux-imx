@@ -34,7 +34,7 @@
 
 		home {
 			label = "Home";
-			linux,code = <KEY_HOME>;
+			linux,code = <KEY_HOMEPAGE>;
 			gpios = <&pca6408_1 4 GPIO_ACTIVE_LOW>;
 			wakeup-source;
 		};
