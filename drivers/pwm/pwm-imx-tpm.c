@@ -20,6 +20,7 @@
 #include <linux/io.h>
 #include <linux/module.h>
 #include <linux/of.h>
+#include <linux/pinctrl/consumer.h>
 #include <linux/platform_device.h>
 #include <linux/pwm.h>
 #include <linux/slab.h>
@@ -413,6 +414,7 @@ static void pwm_imx_tpm_remove(struct platform_device *pdev)
 static int __maybe_unused pwm_imx_tpm_suspend(struct device *dev)
 {
 	struct imx_tpm_pwm_chip *tpm = dev_get_drvdata(dev);
+	int ret;
 
 	if (tpm->enable_count > 0)
 		return -EBUSY;
@@ -427,7 +429,13 @@ static int __maybe_unused pwm_imx_tpm_suspend(struct device *dev)
 	clk_disable_unprepare(tpm->clk);
 	tpm->clk_is_prepared = 0;
 
-	return 0;
+	ret = pinctrl_pm_select_sleep_state(dev);
+	if (ret) {
+		clk_prepare_enable(tpm->clk);
+		tpm->clk_is_prepared = 1;
+	}
+
+	return ret;
 }
 
 static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
@@ -435,13 +443,19 @@ static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
 	struct imx_tpm_pwm_chip *tpm = dev_get_drvdata(dev);
 	int ret = 0;
 
+	ret = pinctrl_pm_select_default_state(dev);
+	if (ret)
+		return ret;
+
 	if (!tpm->clk_is_prepared) {
 		printk("%s: preparing clock\n", __func__);
 		ret = clk_prepare_enable(tpm->clk);
-		if (!ret)
+		if (!ret) {
 			tpm->clk_is_prepared = 1;
-		else
+		} else {
 			dev_err(dev, "failed to prepare or enable clock: %d\n", ret);
+			pinctrl_pm_select_sleep_state(dev);
+		}
 	}
 
 	return ret;
