@@ -1124,6 +1124,7 @@ static int mxcfb_set_par(struct fb_info *fbi)
 	int ov_pos_ret = 0;
 	struct mxcfb_info *mxc_fbi_fg = NULL;
 	bool ovfbi_enable = false, on_the_fly;
+		int prev_line_length;
 
 	if (ipu_ch_param_bad_alpha_pos(fbi_to_pixfmt(fbi, true)) &&
 	    mxc_fbi->alpha_chan_en) {
@@ -1204,6 +1205,7 @@ static int mxcfb_set_par(struct fb_info *fbi)
 	if (mxc_fbi->first_set_par && mxc_fbi->late_init)
 		ipu_disable_hsp_clk(mxc_fbi->ipu);
 
+		prev_line_length = fbi->fix.line_length;
 	mem_len = fbi->var.yres_virtual * fbi->fix.line_length;
 	if (mxc_fbi->resolve && mxc_fbi->gpu_sec_buf_off) {
 		if (fbi->var.vmode & FB_VMODE_YWRAP)
@@ -1218,6 +1220,11 @@ static int mxcfb_set_par(struct fb_info *fbi)
 
 		if (mxcfb_map_video_memory(fbi) < 0)
 			return -ENOMEM;
+         } else {
+ 		if (prev_line_length && (prev_line_length != fbi->fix.line_length)) {
+ 			memset((char *)fbi->screen_base, 0, fbi->fix.smem_len);
+ 			mxc_fbi->first_set_par = false;
+		}
 	}
 
 	if (mxc_fbi->first_set_par) {
