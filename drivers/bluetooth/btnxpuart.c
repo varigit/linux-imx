@@ -1524,6 +1524,7 @@ static void nxp_serdev_remove(struct serdev_device *serdev)
 	hci_free_dev(hdev);
 }
 
+#ifdef CONFIG_PM_SLEEP
 static int nxp_serdev_suspend(struct device *dev)
 {
 	struct btnxpuart_dev *nxpdev = dev_get_drvdata(dev);
@@ -1541,6 +1542,7 @@ static int nxp_serdev_resume(struct device *dev)
 	ps_control(psdata->hdev, PS_STATE_AWAKE);
 	return 0;
 }
+#endif
 
 static struct btnxpuart_data w8987_data __maybe_unused = {
 	.helper_fw_name = NULL,
