@@ -169,6 +169,10 @@
 	status = "okay";
 };
 
+&gpio1 {
+	status = "okay";
+};
+
 &ldb0_phy {
 	status = "okay";
 };
@@ -219,14 +223,17 @@
 	/* Capacitive touch controller */
 	ft5x06_ts: ft5x06_ts@38 {
 		compatible = "edt,edt-ft5206";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_captouch>;
 		reg = <0x38>;
 		reset-gpios = <&pca6408_2 4 GPIO_ACTIVE_LOW>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
 		touchscreen-size-x = <800>;
 		touchscreen-size-y = <480>;
 		touchscreen-inverted-x;
 		touchscreen-inverted-y;
 		wakeup-source;
-		poll-interval = <20>;
 		status = "okay";
 	};
 
@@ -387,6 +394,12 @@
 		fsl,pins = <
 			IMX95_PAD_GPIO_IO35__GPIO5_IO_BIT15				0x31e
 			IMX95_PAD_GPIO_IO22__GPIO2_IO_BIT22				0x31e
+		>;
+	};
+
+	pinctrl_captouch: captouchgrp {
+		fsl,pins = <
+			IMX95_PAD_UART2_TXD__AONMIX_TOP_GPIO1_IO_BIT7           0x31e
 		>;
 	};
 
