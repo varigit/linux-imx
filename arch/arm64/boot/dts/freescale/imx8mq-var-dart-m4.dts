@@ -13,6 +13,9 @@
 #include "imx8mq-pinfunc.h"
 
 &{/} {
+	#address-cells = <2>;
+	#size-cells = <2>;
+
 	reserved-memory {
 		#address-cells = <2>;
 		#size-cells = <2>;

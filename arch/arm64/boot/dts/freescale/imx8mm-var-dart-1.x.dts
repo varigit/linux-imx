@@ -18,6 +18,8 @@
 
 /* WIFI */
 &usdhc1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
 	mmc-pwrseq = <>;
 
 	brcmf: wifi@1 {
