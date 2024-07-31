@@ -1,13 +1,14 @@
 /*
- * Copyright (C) 2015-2017 Variscite Ltd. - http://www.variscite.com
+ * Copyright (C) 2015-2024 Variscite Ltd. - http://www.variscite.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
-/* NAND & WI-FI devices enabled eMMC & SDCARD disabled.*/
+/* WI-FI & eMMC devices enabled NAND & SDCARD disabled.*/
 #define WIFI
-#define NAND
+#define EMMC
 #define WIFI_5G
 
 #include "imx6ul-var-dart.dtsi"
+#include "imx6ul-imx6ull-var-som-wm8731.dtsi"
