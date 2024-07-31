@@ -64,36 +64,6 @@
 		};
 	};
 
-	sound {
-		compatible = "simple-audio-card";
-		simple-audio-card,name = "wm8731audio";
-		simple-audio-card,widgets =
-			"Headphone", "Headphone Jack",
-			"Line", "Line Jack",
-			"Microphone", "Mic Jack";
-		simple-audio-card,routing =
-			"Headphone Jack", "RHPOUT",
-			"Headphone Jack", "LHPOUT",
-			"LLINEIN", "Line Jack",
-			"RLINEIN", "Line Jack",
-			"MICIN", "Mic Bias",
-			"Mic Bias", "Mic Jack";
-		simple-audio-card,format = "i2s";
-		simple-audio-card,bitclock-master = <&sound_master>;
-		simple-audio-card,frame-master = <&sound_master>;
-		/*simple-audio-card,bitclock-inversion;*/
-
-		sound_master: simple-audio-card,cpu {
-			sound-dai = <&sai2>;
-		};
-
-		simple-audio-card,codec {
-			sound-dai = <&codec>;
-			system-clock-id = <2>;  /* WM8731_SYSCLK_MCLK */
-			system-clock-frequency = <12288000>;
-		};
-	};
-
 	keys {
 		compatible = "gpio-keys";
 
@@ -416,14 +386,6 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c2>;
 	status = "okay";
-
-	codec: wm8731@1a {
-		#sound-dai-cells = <0>;
-		compatible = "wlf,wm8731";
-		reg = <0x1a>;
-		clocks = <&clks IMX6UL_CLK_SAI2>;
-		clock-names = "mclk";
-	};
 
 	ft5x06_ts@38 {
 		compatible = "edt,edt-ft5x06";
