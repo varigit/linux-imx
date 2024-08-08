@@ -149,6 +149,8 @@ static int asoc_simple_card_hw_params(struct snd_pcm_substream *substream,
 	struct simple_card_data *priv = snd_soc_card_get_drvdata(rtd->card);
 	struct simple_dai_props *dai_props =
 		simple_priv_to_props(priv, rtd->num);
+	struct asoc_simple_dai *codec = &dai_props->codec_dai;
+	struct asoc_simple_dai *cpu = &dai_props->cpu_dai;
 	unsigned int mclk, mclk_fs = 0;
 	int ret = 0;
 
@@ -159,13 +161,13 @@ static int asoc_simple_card_hw_params(struct snd_pcm_substream *substream,
 
 	if (mclk_fs) {
 		mclk = params_rate(params) * mclk_fs;
-		ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
-					     SND_SOC_CLOCK_IN);
+		ret = snd_soc_dai_set_sysclk(codec_dai, codec->clk_id, mclk,
+					     codec->clk_direction);
 		if (ret && ret != -ENOTSUPP)
 			goto err;
 
-		ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
-					     SND_SOC_CLOCK_OUT);
+		ret = snd_soc_dai_set_sysclk(cpu_dai, cpu->clk_id, mclk,
+					     cpu->clk_direction);
 		if (ret && ret != -ENOTSUPP)
 			goto err;
 	}
