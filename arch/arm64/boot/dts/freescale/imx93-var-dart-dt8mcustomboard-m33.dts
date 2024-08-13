@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2018 NXP
+ * Copyright 2023-2024 Variscite Ltd.
+ */
+
+#include "imx93-var-dart-dt8mcustomboard.dts"
+#include "imx93-var-dart-dt8mcustomboard-m33.dtsi"
+
+/ {
+	model = "Variscite DART-MX93 M33 on DT8MCustomBoard";
+};
