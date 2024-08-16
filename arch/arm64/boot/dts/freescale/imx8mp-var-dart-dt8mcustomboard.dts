@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
  * Copyright 2019 NXP
- * Copyright 2020-2023 Variscite Ltd.
+ * Copyright 2020-2024 Variscite Ltd.
  */
 
 #include "imx8mp-var-dart.dtsi"

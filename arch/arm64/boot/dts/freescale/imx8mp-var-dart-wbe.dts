@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay to support the DART-MX8M-PLUS 2.0 with WBE (802.15.4)
+ *
+ * Copyright 2024 Variscite Ltd.
+ */
+
+/dts-v1/;
+/plugin/;
+
+&ecspi1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	pinctrl-0 = <&pinctrl_ecspi1>;
+
+	/* Disable resistive touch controller on CS0 */
+	ads7846@0 {
+		reg = <0>;
+		status = "disabled";
+	};
+
+	/* Enable 802.15.4 SPI device on CS0 */
+	spidev@0 {
+		reg = <0>;
+		compatible = "var,spidev";
+		spi-max-frequency = <1000000>;
+		status = "okay";
+	};
+};
