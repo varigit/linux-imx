@@ -152,6 +152,12 @@
 	};
 };
 
+ /* Move gpu_reserved to support SOMs with <= 1GB memory */
+&gpu_reserved {
+	reg = <0x0 0x60000000 0 0x10000000>;
+	no-map;
+};
+
 &i2c1 {
 	clock-frequency = <400000>;
 	pinctrl-names = "default", "gpio";
