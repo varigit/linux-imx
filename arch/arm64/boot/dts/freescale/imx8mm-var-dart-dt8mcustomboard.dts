@@ -36,16 +36,16 @@
 		status = "okay";
 
 		up {
-			label = "Up";
+			label = "Volume Up";
 			gpios = <&pca6408_1 5 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_UP>;
+			linux,code = <KEY_VOLUMEUP>;
 			wakeup-source;
 		};
 
 		down {
-			label = "Down";
+			label = "Volume Down";
 			gpios = <&pca6408_1 6 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_DOWN>;
+			linux,code = <KEY_VOLUMEDOWN>;
 			wakeup-source;
 		};
 
