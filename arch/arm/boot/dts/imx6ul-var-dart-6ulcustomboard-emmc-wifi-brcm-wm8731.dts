@@ -12,13 +12,13 @@
 
 #include "imx6ul-var-dart.dtsi"
 #include "imx6ul-imx6ull-var-dart-emmc.dtsi"
-#include "imx6ul-imx6ull-var-dart-wifi.dtsi"
+#include "imx6ul-imx6ull-var-dart-wifi-brcm.dtsi"
 #include "imx6ul-imx6ull-var-dart-wm8731.dtsi"
 
 #include "imx6ul-var-dart-6ulcustomboard.dtsi"
 
 
 / {
-	model = "Variscite DART-6UL with i.MX6UL, eMMC, WiFi & WM8731 support on VAR-6ULCustomBoard";
+	model = "Variscite DART-6UL with i.MX6UL, eMMC, WiFi BRCM & WM8731 support on VAR-6ULCustomBoard";
 	compatible = "variscite,imx6ul-var-dart", "fsl,imx6ul";
 };
