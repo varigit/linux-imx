@@ -1,0 +1,11 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * 2024 Variscite Ltd.
+ */
+
+#include "imx8mp-var-dart-1.x.dtsi"
+#include "imx8mp-var-dart-dt8mcustomboard.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M-PLUS v1.x on DT8MCustomBoard 2.x and above";
+};
