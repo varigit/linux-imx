@@ -26,8 +26,8 @@
 		};
 
 		up {
-			label = "Up";
-			linux,code = <KEY_UP>;
+			label = "Volume Up";
+			linux,code = <KEY_VOLUMEUP>;
 			gpios = <&pca6408_1 5 GPIO_ACTIVE_LOW>;
 			wakeup-source;
 		};
@@ -40,8 +40,8 @@
 		};
 
 		down {
-			label = "Down";
-			linux,code = <KEY_DOWN>;
+			label = "Volume Down";
+			linux,code = <KEY_VOLUMEDOWN>;
 			gpios = <&pca6408_1 6 GPIO_ACTIVE_LOW>;
 			wakeup-source;
 		};
