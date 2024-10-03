@@ -798,8 +798,15 @@
 
 };
 
+&phyx1_lpcg {
+	clocks = <&xtal100m>, <&hsio_per_clk>,
+		<&hsio_per_clk>, <&hsio_per_clk>;
+};
+
 /delete-node/ &adc1;
 /delete-node/ &adc1_lpcg;
 /delete-node/ &emvsim0;
 /delete-node/ &emvsim0_lpcg;
 /delete-node/ &hdmi_rx_pxl_link_lpcg;
+/delete-node/ &hsio_refa_clk;
+/delete-node/ &hsio_refb_clk;
