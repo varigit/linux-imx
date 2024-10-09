@@ -266,7 +266,7 @@
 	status = "okay";
 
 	ov5640_mipi0: ov5640_mipi0@3c {
-		compatible = "ovti,ov5640";
+		compatible = "ov5640_mainline";
 		reg = <0x3c>;
 		clocks = <&clk_ov5640_fixed>;
 		clock-names = "xclk";
