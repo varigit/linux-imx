@@ -761,7 +761,7 @@ static int brcmf_cfg80211_request_ap_if(struct brcmf_if *ifp)
 				       &iface_create_ver);
 	if (err) {
 		brcmf_err("fail to get supported version, err=%d\n", err);
-		return -EOPNOTSUPP;
+		err = -EOPNOTSUPP;
 	}
 
 	switch (iface_create_ver) {
