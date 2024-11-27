@@ -107,6 +107,12 @@
 #define MXL8611x_UTP_EXT_SLEEP_CTRL_EN_SLEEP_SW_OFF		0
 #define MXL8611x_UTP_EXT_SLEEP_CTRL_EN_SLEEP_SW_MASK	BIT(15)
 
+/* RGMII In-Band Status and MDIO Configuration Register */
+#define MXL8611X_EXT_RGMII_MDIO_CFG				0xA005
+#define MXL8611X_EXT_RGMII_MDIO_CFG_EPA0_MASK			GENMASK(6, 6)
+#define MXL8611X_EXT_RGMII_MDIO_CFG_EBA_MASK			GENMASK(5, 5)
+#define MXL8611X_EXT_RGMII_MDIO_CFG_BA_MASK			GENMASK(4, 0)
+
 /* LED registers and defines */
 #define MXL8611X_LED0_CFG_REG 0xA00C
 #define MXL8611X_LED1_CFG_REG 0xA00D
@@ -497,6 +503,49 @@ static int mxl8611x_led_cfg(struct phy_device *phydev)
 }
 
 /**
+ * mxl8611x_broadcast_cfg() - applies broadcast configuration
+ * @phydev: pointer to the phy_device
+ *
+ * configures the broadcast setting for the PHY based on the device tree
+ * if the "mxl-8611x,broadcast-enabled" property is present the PHY broadcasts
+ * address 0 on the MDIO bus. This feature enables PHY to always respond to MDIO access
+ * returns 0 or negative errno code
+ */
+static int mxl8611x_broadcast_cfg(struct phy_device *phydev)
+{
+	int ret = 0;
+	struct device_node *node;
+	u32 val;
+
+	if (!phydev) {
+		pr_err("%s, Invalid phy_device pointer\n", __func__);
+		return -EINVAL;
+	}
+
+	node = phydev->mdio.dev.of_node;
+	if (!node) {
+		phydev_err(phydev, "%s, Invalid device tree node\n", __func__);
+		return -EINVAL;
+	}
+
+	val = mxlphy_read_extended_reg(phydev, MXL8611X_EXT_RGMII_MDIO_CFG);
+
+	if (of_property_read_bool(node, "mxl-8611x,broadcast-enabled"))
+		val |= MXL8611X_EXT_RGMII_MDIO_CFG_EPA0_MASK;
+	else
+		val &= ~MXL8611X_EXT_RGMII_MDIO_CFG_EPA0_MASK;
+
+	ret = mxlphy_write_extended_reg(phydev, MXL8611X_EXT_RGMII_MDIO_CFG, val);
+	if (ret) {
+		phydev_err(phydev, "%s, failed to write 0x%x to RGMII MDIO CFG register (0x%x): ret = %d\n",
+			   __func__, val, MXL8611X_EXT_RGMII_MDIO_CFG, ret);
+		return ret;
+	}
+
+	return 0;
+}
+
+/**
  * mxl8611x_synce_clk_cfg() - applies syncE/clk output configuration
  * @phydev: pointer to the phy_device
  *
@@ -615,6 +664,10 @@ static int mxl86110_config_init(struct phy_device *phydev)
 	}
 
 	ret = mxl8611x_led_cfg(phydev);
+	if (ret < 0)
+		goto error;
+
+	ret = mxl8611x_broadcast_cfg(phydev);
 	if (ret < 0)
 		goto error;
 
@@ -1621,6 +1674,10 @@ static int mxl86111_config_init(struct phy_device *phydev)
 	}
 
 	ret = mxl8611x_led_cfg(phydev);
+	if (ret < 0)
+		goto err_restore_page;
+
+	ret = mxl8611x_broadcast_cfg(phydev);
 	if (ret < 0)
 		goto err_restore_page;
 
