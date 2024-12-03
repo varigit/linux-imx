@@ -16,6 +16,12 @@ allOf:
   - $ref: ethernet-phy.yaml#
 
 properties:
+  mxl-8611x,broadcast-enabled:
+    description: |
+      If set, the PHY responds to the MDIO interface's broadcasts access
+      from PHY address 0.
+    type: boolean
+
   mxl-8611x,led0_cfg:
     description: |
       Register value for COM_EXT_LED0_CFG
@@ -42,6 +48,7 @@ examples:
         ethernet-phy@0 {
             reg = <0>;
 
+        mxl-8611x,broadcast-enabled;
         mxl-8611x,led0_cfg = <(
           MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
           MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
