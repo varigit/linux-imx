@@ -155,6 +155,14 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6dl-yapp4-orion.dtb \
 	imx6dl-yapp4-phoenix.dtb \
 	imx6dl-yapp4-ursa.dtb \
+	imx6dl-var-som-cap.dtb \
+	imx6dl-var-som-res.dtb \
+	imx6dl-var-som-solo-cap.dtb \
+	imx6dl-var-som-solo-res.dtb \
+	imx6dl-var-som-solo-symphony.dtb \
+	imx6dl-var-som-solo-vsc.dtb \
+	imx6dl-var-som-symphony.dtb \
+	imx6dl-var-som-vsc.dtb \
 	imx6q-apalis-eval.dtb \
 	imx6q-apalis-ixora.dtb \
 	imx6q-apalis-ixora-v1.1.dtb \
@@ -266,7 +274,6 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6q-tx6q-11x0-mb7.dtb \
 	imx6q-udoo.dtb \
 	imx6q-utilite-pro.dtb \
-	imx6q-var-dt6customboard.dtb \
 	imx6q-vicut1.dtb \
 	imx6q-wandboard.dtb \
 	imx6q-wandboard-revb1.dtb \
@@ -274,6 +281,11 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6q-yapp4-crux.dtb \
 	imx6q-yapp4-pegasus.dtb \
 	imx6q-zii-rdu2.dtb \
+	imx6q-var-dart.dtb \
+	imx6q-var-som-cap.dtb \
+	imx6q-var-som-res.dtb \
+	imx6q-var-som-symphony.dtb \
+	imx6q-var-som-vsc.dtb \
 	imx6qp-mba6b.dtb \
 	imx6qp-nitrogen6_max.dtb \
 	imx6qp-nitrogen6_som2.dtb \
@@ -297,6 +309,10 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6qp-yapp4-crux-plus.dtb \
 	imx6qp-yapp4-pegasus-plus.dtb \
 	imx6qp-zii-rdu2.dtb \
+	imx6qp-var-som-cap.dtb \
+	imx6qp-var-som-res.dtb \
+	imx6qp-var-som-symphony.dtb \
+	imx6qp-var-som-vsc.dtb \
 	imx6s-dhcom-drc02.dtb
 dtb-$(CONFIG_SOC_IMX6SL) += \
 	imx6sl-evk.dtb \
