@@ -153,7 +153,6 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <4>;
 			at803x,eee-disabled;
-			eee-broken-1000t;
 			reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
 			reset-deassert-us = <80000>;
