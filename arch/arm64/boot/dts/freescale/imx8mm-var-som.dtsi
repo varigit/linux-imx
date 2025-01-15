@@ -8,6 +8,7 @@
 
 #include <dt-bindings/phy/phy-imx8-pcie.h>
 #include <dt-bindings/usb/pd.h>
+#include <dt-bindings/net/mxl-8611x.h>
 #include "imx8mm.dtsi"
 
 / {
@@ -163,13 +164,33 @@
 			vddio-supply = <&vddio>;
 			reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
-			reset-deassert-us = <20000>;
+			reset-deassert-us = <100000>;
+			mxl-8611x,led0_cfg = <(
+				MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
+				MXL8611X_LEDX_CFG_TRAFFIC_ACT_BLINK_IND
+			)>;
+			mxl-8611x,led1_cfg = <(
+				MXL8611X_LEDX_CFG_LINK_UP_10MB_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
+			)>;
 
 			vddio: vddio-regulator {
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
 			};
 		};
+	};
+};
+
+&gpio2 {
+	bt_en_hog: bt-en-hog {
+		gpio-hog;
+		gpios = <6 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "bt_en";
+		status = "okay";
 	};
 };
 
@@ -408,17 +429,9 @@
 	uart-has-rtscts;
 	status = "okay";
 
-	bluetooth {
-		compatible = "brcm,bcm4329-bt";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_bt_en>;
-		clocks = <&osc_32k>;
-		clock-names = "txco";
-		max-speed = <3000000>;
-		vddio-supply = <&reg_wifi_1v8>;
-		vbat-supply = <&reg_wifi_3v3>;
-		shutdown-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
-		brcm,bt-pcm-int-params = [01 00 00 00 00];
+	bluetooth_iw61x: bluetooth_iw61x {
+		compatible = "nxp,88w8987-bt";
+		status = "okay";
 	};
 };
 
@@ -438,12 +451,6 @@
 	wakeup-source;
 	keep-power-in-suspend;
 	status = "okay";
-
-	brcmf: wifi@1 {
-		reg = <1>;
-		compatible = "brcm,bcm4329-fmac";
-		laird,regdomain = "US";
-	};
 };
 
 /* EMMC */

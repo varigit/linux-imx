@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay to support the VAR-SOM-MX8M-MINI 1.x
+ *
+ * Copyright 2025 Variscite Ltd.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include "imx8mm-pinfunc.h"
+#include <dt-bindings/gpio/gpio.h>
+
+&bluetooth_iw61x {
+	status = "disabled";
+};
+
+&bt_en_hog {
+    status = "disabled";
+};
+
+&uart2 {
+	bluetooth {
+		compatible = "brcm,bcm4329-bt";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_en>;
+		clocks = <&osc_32k>;
+		clock-names = "txco";
+		max-speed = <3000000>;
+		vddio-supply = <&reg_wifi_1v8>;
+		vbat-supply = <&reg_wifi_3v3>;
+		shutdown-gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+		brcm,bt-pcm-int-params = [01 00 00 00 00];
+	};
+};
+
+/* WIFI */
+&usdhc1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	brcmf: wifi@1 {
+		reg = <1>;
+		compatible = "brcm,bcm4329-fmac";
+	};
+};
