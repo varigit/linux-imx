@@ -471,7 +471,8 @@ static int imx_rproc_start(struct rproc *rproc)
 		}
 		break;
 	case IMX_RPROC_SMC:
-		if (!of_device_is_compatible(dev->of_node, "fsl,imx93-cm33"))
+		if (!of_device_is_compatible(dev->of_node, "fsl,imx93-cm33")
+		    && !of_device_is_compatible(dev->of_node, "fsl,imx95-cm7"))
 			imx_8m_setup_stack(rproc);
 		ret = clk_prepare_enable(priv->clk_audio);
 		if (ret)
