@@ -379,6 +379,14 @@ config VIDEO_OV5640
 	  This is a Video4Linux2 sensor driver for the Omnivision
 	  OV5640 camera sensor with a MIPI CSI-2 interface.
 
+config VIDEO_OV5640_MAINLINE
+	tristate "OmniVision OV5640 sensor support from mainline"
+	depends on OF
+	depends on GPIOLIB
+	help
+	  This is a Video4Linux2 sensor driver for the Omnivision
+	  OV5640 camera sensor with a MIPI CSI-2 interface.
+
 config VIDEO_OV5645
 	tristate "OmniVision OV5645 sensor support"
 	depends on OF
