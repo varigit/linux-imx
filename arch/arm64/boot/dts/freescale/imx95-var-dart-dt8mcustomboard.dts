@@ -433,6 +433,13 @@
 	};
 };
 
+&lpuart1 {
+	/* console */
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart1>;
+	status = "okay";
+};
+
 /* Header (J12.4, J12.6) */
 &lpuart8 {
 	pinctrl-names = "default";
@@ -603,6 +610,13 @@
 	pinctrl_rtc: rtcgrp {
 		fsl,pins = <
 			IMX95_PAD_GPIO_IO32__GPIO5_IO_BIT12				0x31e
+		>;
+	};
+
+	pinctrl_uart1: uart1grp {
+		fsl,pins = <
+			IMX95_PAD_UART1_RXD__AONMIX_TOP_LPUART1_RX			0x31e
+			IMX95_PAD_UART1_TXD__AONMIX_TOP_LPUART1_TX			0x31e
 		>;
 	};
 
