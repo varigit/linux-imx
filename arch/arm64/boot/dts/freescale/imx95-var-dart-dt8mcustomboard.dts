@@ -126,16 +126,6 @@
 		};
 	};
 
-	reg_enet1_phy: regulator-enet1-phy {
-		compatible = "regulator-fixed";
-		regulator-name = "enet1-phy";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		gpio = <&pca6408_2 0 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		status = "okay";
-	};
-
 	reg_usdhc2_vmmc: regulator-usdhc2 {
 		compatible = "regulator-fixed";
 		pinctrl-names = "default";
@@ -473,13 +463,14 @@
 };
 
 &netc_emdio {
-	phy-supply = <&reg_enet1_phy>;
-	status = "okay";
 
 	ethphy1: ethernet-phy@1 {
 		compatible = "ethernet-phy-ieee802.3-c22";
 		eee-broken-1000t;
 		reg = <1>;
+		reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
+		reset-assert-us = <10000>;
+		reset-deassert-us = <20000>;
 	};
 };
 
