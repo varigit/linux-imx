@@ -224,6 +224,7 @@
 
 	bluetooth {
 		compatible = "nxp,88w8987-bt";
+		status = "okay";
 #if 0
 		modprobe btnxpuart
 		[   41.327300] Bluetooth: hci0: Opcode 0x0c03 failed: -110
