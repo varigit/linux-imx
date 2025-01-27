@@ -438,17 +438,6 @@
 			IMX95_PAD_SD3_DATA3__USDHC3_DATA3				0x13fe
 		>;
 	};
-
-	pinctrl_usdhc3_200mhz: usdhc3-200mhzgrp {
-		fsl,pins = <
-			IMX95_PAD_SD3_CLK__USDHC3_CLK					0x15fe
-			IMX95_PAD_SD3_CMD__USDHC3_CMD					0x13fe
-			IMX95_PAD_SD3_DATA0__USDHC3_DATA0				0x13fe
-			IMX95_PAD_SD3_DATA1__USDHC3_DATA1				0x13fe
-			IMX95_PAD_SD3_DATA2__USDHC3_DATA2				0x13fe
-			IMX95_PAD_SD3_DATA3__USDHC3_DATA3				0x13fe
-		>;
-	};
 };
 
 &usdhc1 {
