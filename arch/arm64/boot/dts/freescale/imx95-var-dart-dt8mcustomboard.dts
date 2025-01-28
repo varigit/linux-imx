@@ -348,6 +348,16 @@
 	};
 };
 
+&lpi2c4 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	clock-frequency = <400000>;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&pinctrl_lpi2c4>;
+	pinctrl-1 = <&pinctrl_lpi2c4>;
+	status = "okay";
+};
+
 &lpi2c8 {
 	pca6408_1: gpio@20 {
 		compatible = "nxp,pcal6408";
@@ -548,6 +558,13 @@
 		fsl,pins = <
 			IMX95_PAD_GPIO_IO28__GPIO2_IO_BIT28				0x31e
 			IMX95_PAD_GPIO_IO29__GPIO2_IO_BIT29				0x31e
+		>;
+	};
+
+	pinctrl_lpi2c4: lpi2c4grp {
+		fsl,pins = <
+			IMX95_PAD_GPIO_IO30__LPI2C4_SDA					0x40000b9e
+			IMX95_PAD_GPIO_IO31__LPI2C4_SCL					0x40000b9e
 		>;
 	};
 
