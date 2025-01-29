@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay to support the VAR-SOM-MX8M-PLUS 1.x
+ *
+ * Copyright 2023-2025 Variscite Ltd.
+ */
+
+/dts-v1/;
+/plugin/;
+
+&bluetooth_iw61x {
+	status = "disabled";
+};
+
+&iw612_pwrseq {
+	status = "disabled";
+};
+
+/* WIFI */
+&usdhc1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	mmc-pwrseq = <>;
+
+	brcmf: bcrmf@1 {
+		reg = <1>;
+		compatible = "brcm,bcm4329-fmac";
+		laird,regdomain = "US";
+	};
+};

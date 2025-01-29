@@ -134,6 +134,87 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb imx8mp-evk-rm67191.dtb imx8mp-evk-it626
 			  imx8mp-evk-hifiberry-dac2.dtb imx8mp-evk-hifiberry-dacplusadc.dtb \
 			  imx8mp-evk-usdhc1-m2.dtb imx8mp-evk-rm67199.dtb \
 			  imx8mp-evk-dpdk.dtb imx8mp-evk-8mic-swpdm.dtb imx8mp-evk-rpmsg-lpv.dtb imx8mp-evk-revA3-8mic-revE.dtb
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-basler-isi0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-basler-isi0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-basler-isp0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-basler-isp0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-dt8mcustomboard-m7.dtb
+
+imx8mp-var-dart-1.x-dt8mcustomboard-dtbs := imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-dt8mcustomboard-basler-isi0-m7-dtbs := imx8mp-var-dart-dt8mcustomboard-basler-isi0-m7.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-dt8mcustomboard-basler-isi0-dtbs := imx8mp-var-dart-dt8mcustomboard-basler-isi0.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-dt8mcustomboard-basler-isp0-m7-dtbs := imx8mp-var-dart-dt8mcustomboard-basler-isp0-m7.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-dt8mcustomboard-basler-isp0-dtbs := imx8mp-var-dart-dt8mcustomboard-basler-isp0.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-dt8mcustomboard-m7-dtbs := imx8mp-var-dart-dt8mcustomboard-m7.dtb imx8mp-var-dart-1.x.dtbo
+
+imx8mp-var-dart-wbe-dt8mcustomboard-dtbs := imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-wbe.dtbo
+imx8mp-var-dart-wbe-dt8mcustomboard-basler-isi0-m7-dtbs := imx8mp-var-dart-dt8mcustomboard-basler-isi0-m7.dtb imx8mp-var-dart-wbe.dtbo
+imx8mp-var-dart-wbe-dt8mcustomboard-basler-isi0-dtbs := imx8mp-var-dart-dt8mcustomboard-basler-isi0.dtb imx8mp-var-dart-wbe.dtbo
+imx8mp-var-dart-wbe-dt8mcustomboard-basler-isp0-m7-dtbs := imx8mp-var-dart-dt8mcustomboard-basler-isp0-m7.dtb imx8mp-var-dart-wbe.dtbo
+imx8mp-var-dart-wbe-dt8mcustomboard-basler-isp0-dtbs := imx8mp-var-dart-dt8mcustomboard-basler-isp0.dtb imx8mp-var-dart-wbe.dtbo
+imx8mp-var-dart-wbe-dt8mcustomboard-m7-dtbs := imx8mp-var-dart-dt8mcustomboard-m7.dtb imx8mp-var-dart-wbe.dtbo
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-1.x-dt8mcustomboard.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-1.x-dt8mcustomboard-basler-isi0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-1.x-dt8mcustomboard-basler-isi0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-1.x-dt8mcustomboard-basler-isp0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-1.x-dt8mcustomboard-basler-isp0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-1.x-dt8mcustomboard-m7.dtb
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-dt8mcustomboard.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-dt8mcustomboard-basler-isi0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-dt8mcustomboard-basler-isi0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-dt8mcustomboard-basler-isp0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-dt8mcustomboard-basler-isp0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-dt8mcustomboard-m7.dtb
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-2nd-ov5640-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-2nd-ov5640.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-basler-isi0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-basler-isi0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-basler-isp0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-basler-isp0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-m7.dtb
+
+imx8mp-var-som-1.x-symphony-dtbs := imx8mp-var-som-symphony.dtb imx8mp-var-som-1.x.dtbo
+imx8mp-var-som-1.x-symphony-2nd-ov5640-m7-dtbs := imx8mp-var-som-symphony-2nd-ov5640-m7.dtb imx8mp-var-som-1.x.dtbo
+imx8mp-var-som-1.x-symphony-2nd-ov5640-dtbs := imx8mp-var-som-symphony-2nd-ov5640.dtb imx8mp-var-som-1.x.dtbo
+imx8mp-var-som-1.x-symphony-basler-isi0-m7-dtbs := imx8mp-var-som-symphony-basler-isi0-m7.dtb imx8mp-var-som-1.x.dtbo
+imx8mp-var-som-1.x-symphony-basler-isi0-dtbs := imx8mp-var-som-symphony-basler-isi0.dtb imx8mp-var-som-1.x.dtbo
+imx8mp-var-som-1.x-symphony-basler-isp0-m7-dtbs := imx8mp-var-som-symphony-basler-isp0-m7.dtb imx8mp-var-som-1.x.dtbo
+imx8mp-var-som-1.x-symphony-basler-isp0-dtbs := imx8mp-var-som-symphony-basler-isp0.dtb imx8mp-var-som-1.x.dtbo
+imx8mp-var-som-1.x-symphony-m7-dtbs := imx8mp-var-som-symphony-m7.dtb imx8mp-var-som-1.x.dtbo
+
+imx8mp-var-som-wbe-symphony-dtbs := imx8mp-var-som-symphony.dtb imx8mp-var-som-wbe.dtbo
+imx8mp-var-som-wbe-symphony-2nd-ov5640-m7-dtbs := imx8mp-var-som-symphony-2nd-ov5640-m7.dtb imx8mp-var-som-wbe.dtbo
+imx8mp-var-som-wbe-symphony-2nd-ov5640-dtbs := imx8mp-var-som-symphony-2nd-ov5640.dtb imx8mp-var-som-wbe.dtbo
+imx8mp-var-som-wbe-symphony-basler-isi0-m7-dtbs := imx8mp-var-som-symphony-basler-isi0-m7.dtb imx8mp-var-som-wbe.dtbo
+imx8mp-var-som-wbe-symphony-basler-isi0-dtbs := imx8mp-var-som-symphony-basler-isi0.dtb imx8mp-var-som-wbe.dtbo
+imx8mp-var-som-wbe-symphony-basler-isp0-m7-dtbs := imx8mp-var-som-symphony-basler-isp0-m7.dtb imx8mp-var-som-wbe.dtbo
+imx8mp-var-som-wbe-symphony-basler-isp0-dtbs := imx8mp-var-som-symphony-basler-isp0.dtb imx8mp-var-som-wbe.dtbo
+imx8mp-var-som-wbe-symphony-m7-dtbs := imx8mp-var-som-symphony-m7.dtb imx8mp-var-som-wbe.dtbo
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-1.x-symphony.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-1.x-symphony-2nd-ov5640-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-1.x-symphony-2nd-ov5640.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-1.x-symphony-basler-isi0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-1.x-symphony-basler-isi0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-1.x-symphony-basler-isp0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-1.x-symphony-basler-isp0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-1.x-symphony-m7.dtb
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-2nd-ov5640-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-2nd-ov5640.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-basler-isi0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-basler-isi0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-basler-isp0-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-basler-isp0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-m7.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-msc-sm2s-ep1.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-phyboard-pollux-rdk.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-ab2.dtb
