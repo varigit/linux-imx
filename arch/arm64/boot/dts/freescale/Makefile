@@ -668,6 +668,7 @@ imx95-19x19-verdin-rm692c9-dtbs := imx95-19x19-verdin.dtb imx95-19x19-verdin-rm6
 dtb-$(CONFIG_ARCH_MXC) += imx95-19x19-verdin-rm692c9.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-dt8mcustomboard.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-1.0-dt8mcustomboard.dtb
 
 dtb-$(CONFIG_ARCH_S32) += s32g274a-evb.dtb
 dtb-$(CONFIG_ARCH_S32) += s32g274a-rdb2.dtb

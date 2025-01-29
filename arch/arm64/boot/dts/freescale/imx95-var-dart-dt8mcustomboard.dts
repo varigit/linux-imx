@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
  * Copyright 2023 NXP
- * Copyright 2024 Variscite Ltd.
+ * Copyright 2024-2025 Variscite Ltd.
  */
 
 #include <dt-bindings/clock/fsl,imx95-clock.h>
@@ -297,8 +297,8 @@
 		pinctrl-0 = <&pinctrl_captouch>;
 		reg = <0x38>;
 		reset-gpios = <&pca6408_2 4 GPIO_ACTIVE_LOW>;
-		interrupt-parent = <&gpio1>;
-		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
 		touchscreen-size-x = <800>;
 		touchscreen-size-y = <480>;
 		touchscreen-inverted-x;
@@ -385,7 +385,7 @@
 	pinctrl-0 = <&pinctrl_lpspi7>;
 	pinctrl-1 = <&pinctrl_lpspi7>;
 	cs-gpios = <&gpio2 4 GPIO_ACTIVE_LOW>,
-		   <&gpio5 13 GPIO_ACTIVE_LOW>,
+		   <&gpio1 7 GPIO_ACTIVE_LOW>,
 		   <&gpio5 4 GPIO_ACTIVE_LOW>;
 	status = "okay";
 
@@ -506,7 +506,7 @@
 &scmi_iomuxc {
 	pinctrl_captouch: captouchgrp {
 		fsl,pins = <
-			IMX95_PAD_UART2_TXD__AONMIX_TOP_GPIO1_IO_BIT7           0x31e
+			IMX95_PAD_GPIO_IO33__GPIO5_IO_BIT13				0x31e
 		>;
 	};
 
@@ -571,7 +571,7 @@
 	pinctrl_lpspi7: lpspi7grp {
 		fsl,pins = <
 			IMX95_PAD_GPIO_IO04__GPIO2_IO_BIT4				0x3fe		/* j16.4 ADS7846 */
-			IMX95_PAD_GPIO_IO33__GPIO5_IO_BIT13				0x3fe		/* j14.4 MCP2518FDT */
+			IMX95_PAD_UART2_TXD__AONMIX_TOP_GPIO1_IO_BIT7			0x3fe		/* j14.4 MCP2518FDT */
 			IMX95_PAD_XSPI1_DATA4__GPIO5_IO_BIT4				0x3fe		/* j25.2 spidev */
 			IMX95_PAD_GPIO_IO05__LPSPI7_SIN					0x3fe
 			IMX95_PAD_GPIO_IO06__LPSPI7_SOUT				0x3fe
