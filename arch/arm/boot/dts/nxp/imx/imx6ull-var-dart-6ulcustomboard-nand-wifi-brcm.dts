@@ -13,6 +13,7 @@
 #include "imx6ull-var-dart.dtsi"
 #include "imx6ul-imx6ull-var-dart-nand.dtsi"
 #include "imx6ul-imx6ull-var-dart-wifi-brcm.dtsi"
+#include "imx6ul-imx6ull-var-dart-nand-wifi-brcm.dtsi"
 
 #include "imx6ull-var-dart-6ulcustomboard.dtsi"
 
