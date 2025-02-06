@@ -77,6 +77,9 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
 	u32 val;
 	const char * domain;
 
+	sdio->need_power_in_suspend =
+		device_property_present(dev, "sdio,must-keep-power-in-suspend");
+
 	/* Apple ARM64 platforms have their own idea of board type, passed in
 	 * via the device tree. They also have an antenna SKU parameter
 	 */

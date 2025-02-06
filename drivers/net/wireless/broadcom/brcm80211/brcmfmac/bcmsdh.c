@@ -1166,6 +1166,7 @@ static int brcmf_ops_sdio_suspend(struct device *dev)
 	struct sdio_func *func;
 	struct brcmf_bus *bus_if;
 	struct brcmf_sdio_dev *sdiodev;
+	struct brcmfmac_sdio_pd *pdata;
 	mmc_pm_flag_t sdio_flags;
 	int ret = 0;
 
@@ -1177,16 +1178,19 @@ static int brcmf_ops_sdio_suspend(struct device *dev)
 
 	bus_if = dev_get_drvdata(dev);
 	sdiodev = bus_if->bus_priv.sdio;
+	pdata = &sdiodev->settings->bus.sdio;
 
-	if (sdiodev->wowl_enabled) {
+	if (sdiodev->wowl_enabled || pdata->need_power_in_suspend) {
 		brcmf_sdiod_freezer_on(sdiodev);
 		brcmf_sdio_wd_timer(sdiodev->bus, 0);
 
 		sdio_flags = MMC_PM_KEEP_POWER;
-		if (sdiodev->settings->bus.sdio.oob_irq_supported)
-			enable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
-		else
-			sdio_flags |= MMC_PM_WAKE_SDIO_IRQ;
+		if (sdiodev->wowl_enabled) {
+			if (pdata->oob_irq_supported)
+				enable_irq_wake(pdata->oob_irq_nr);
+			else
+				sdio_flags |= MMC_PM_WAKE_SDIO_IRQ;
+		}
 
 		if (sdio_set_host_pm_flags(sdiodev->func1, sdio_flags))
 			brcmf_err("Failed to set pm_flags %x\n", sdio_flags);
@@ -1206,6 +1210,7 @@ static int brcmf_ops_sdio_resume(struct device *dev)
 {
 	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
 	struct brcmf_sdio_dev *sdiodev = bus_if->bus_priv.sdio;
+	struct brcmfmac_sdio_pd *pdata = &sdiodev->settings->bus.sdio;
 	struct sdio_func *func = container_of(dev, struct sdio_func, dev);
 	int ret = 0;
 
@@ -1213,14 +1218,14 @@ static int brcmf_ops_sdio_resume(struct device *dev)
 	if (func->num != 2)
 		return 0;
 
-	if (!sdiodev->wowl_enabled) {
+	if (!sdiodev->wowl_enabled && !pdata->need_power_in_suspend) {
 		/* bus was powered off and device removed, probe again */
 		ret = brcmf_sdiod_probe(sdiodev);
 		if (ret)
 			brcmf_err("Failed to probe device on resume\n");
 	} else {
-		if (sdiodev->settings->bus.sdio.oob_irq_supported)
-			disable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
+		if (sdiodev->wowl_enabled && pdata->oob_irq_supported)
+			disable_irq_wake(pdata->oob_irq_nr);
 
 		brcmf_sdiod_freezer_off(sdiodev);
 	}

@@ -78,6 +78,7 @@ enum brcmf_bus_type {
  *			Set this to true if the SDIO host controller has higher
  *			align requirement than 32 bytes for each scatterlist
  *			item.
+ * @need_power-in_suspend: requirement to remain powered during suspend
  * @sd_head_align:	alignment requirement for start of data buffer.
  * @sd_sgentry_align:	length alignment requirement for each sg entry.
  * @reset:		This function can get called if the device communication
@@ -95,6 +96,7 @@ struct brcmfmac_sdio_pd {
 	unsigned int	oob_irq_nr;
 	unsigned long	oob_irq_flags;
 	bool		broken_sg_support;
+	bool		need_power_in_suspend;
 	unsigned short	sd_head_align;
 	unsigned short	sd_sgentry_align;
 	void		(*reset)(void);
