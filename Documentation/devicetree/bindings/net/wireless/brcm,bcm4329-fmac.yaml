@@ -120,6 +120,12 @@ properties:
       NVRAM. This would normally be filled in by the bootloader from platform
       configuration data.
 
+  sdio,must-keep-power-in-suspend:
+    $ref: /schemas/types.yaml#/definitions/flag
+    description: |
+      SDIO only. When set, the WiFi module must be kept powered as it otherwise
+      would not wake up properly during resume.
+
 required:
   - compatible
   - reg
