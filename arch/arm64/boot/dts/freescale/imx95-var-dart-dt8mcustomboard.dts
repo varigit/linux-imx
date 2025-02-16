@@ -480,7 +480,7 @@
 		reg = <1>;
 		reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
 		reset-assert-us = <10000>;
-		reset-deassert-us = <20000>;
+		reset-deassert-us = <100000>;
 
 		mxl-8611x,led0_cfg = <(
 			MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
