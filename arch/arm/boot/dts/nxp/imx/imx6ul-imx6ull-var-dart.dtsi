@@ -64,7 +64,6 @@
 
 		sound_master: simple-audio-card,codec {
 			sound-dai = <&codec>;
-			system-clock-frequency = <12288000>;
 		};
 	};
 };
