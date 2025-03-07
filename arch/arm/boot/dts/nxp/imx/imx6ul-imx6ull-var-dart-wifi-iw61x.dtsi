@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2025 Variscite Ltd. - https://www.variscite.com
+ * Copyright 2024-2025 Variscite Ltd. - https://www.variscite.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -15,13 +15,14 @@
 			regulator-max-microvolt = <3300000>;
 		};
 	};
-};
 
-&iomuxc {
-	pinctrl_32k_clk: 32kclkgrp {
-		fsl,pins = <
-			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x03029
-		>;
+	iw61x_pwrseq: iw61x_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		post-power-on-delay-ms = <100>;
+		power-off-delay-us = <10000>;
+		reset-gpios = <&gpio5 6 GPIO_ACTIVE_LOW>,	/* WIFI_RESET */
+			      <&gpio5 2 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
+		status = "okay";
 	};
 };
 
@@ -33,19 +34,15 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_32k_clk>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_32k_clk>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_32k_clk>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_wifi>;
+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_wifi>;
+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_wifi>;
 	assigned-clocks = <&clks IMX6UL_CLK_USDHC1_SEL>, <&clks IMX6UL_CLK_USDHC1>;
 	assigned-clock-parents = <&clks IMX6UL_CLK_PLL2_PFD2>;
 	assigned-clock-rates = <0>, <132000000>;
 	fsl,tuning-step = <2>;
 	keep-power-in-suspend;
 	vmmc-supply = <&reg_sd1_vmmc>;
+	mmc-pwrseq = <&iw61x_pwrseq>;
 	status = "okay";
-
-	brcmf: bcrmf@1 {
-		reg = <1>;
-		compatible = "brcm,bcm4329-fmac";
-	};
 };
