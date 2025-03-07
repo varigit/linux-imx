@@ -9,10 +9,7 @@
 #include "imx6ul-imx6ull-var-dart.dtsi"
 
 &iomuxc {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_hog>;
-
-	pinctrl_hog: hoggrp {
+	pinctrl_wifi: wifigrp {
 		fsl,pins = <
 			MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT Enable */
 			MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x03029	/* WLAN Enable */
