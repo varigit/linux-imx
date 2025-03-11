@@ -17,6 +17,14 @@
 	};
 };
 
+&iomuxc {
+	pinctrl_32k_clk: 32kclkgrp {
+		fsl,pins = <
+			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x03029
+		>;
+	};
+};
+
 &tsc {
 	status = "disabled";
 };
