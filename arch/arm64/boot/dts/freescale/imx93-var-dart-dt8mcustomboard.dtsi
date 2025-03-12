@@ -38,17 +38,6 @@
 		clock-frequency = <24000000>;
 	};
 
-	cm33: imx93-cm33 {
-		compatible = "fsl,imx93-cm33";
-		mbox-names = "tx", "rx", "rxdb";
-		mboxes = <&mu1 0 1
-			  &mu1 1 1
-			  &mu1 3 1>;
-		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>,
-				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
-		fsl,startup-delay-ms = <500>;
-	};
-
 	ethosu {
 		compatible = "arm,ethosu";
 		fsl,cm33-proc = <&cm33>;
