@@ -435,7 +435,6 @@
 	mmc-pwrseq = <&usdhc3_pwrseq>;
 	non-removable;
 	wakeup-source;
-	fsl,sdio-async-interrupt-enabled;
 	status = "okay";
 };
 
