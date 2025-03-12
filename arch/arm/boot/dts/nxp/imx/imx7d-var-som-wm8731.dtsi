@@ -1,0 +1,62 @@
+/* SPDX-License-Identifier: GPL-2.0+ OR MIT
+ *
+ * Copyright 2024 Variscite Ltd.
+ */
+
+/ {
+	/delete-node/ sound;
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "wm8731audio";
+		simple-audio-card,widgets =
+			"Headphone", "Headphone Jack",
+			"Line", "Line Jack",
+			"Microphone", "Mic Jack";
+		simple-audio-card,routing =
+			"Headphone Jack", "RHPOUT",
+			"Headphone Jack", "LHPOUT",
+			"LLINEIN", "Line Jack",
+			"RLINEIN", "Line Jack",
+			"MICIN", "Mic Bias",
+			"Mic Bias", "Mic Jack";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&sound_master>;
+		simple-audio-card,frame-master = <&sound_master>;
+		/*simple-audio-card,bitclock-inversion;*/
+
+		assigned-clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_SRC>,
+				  <&clks IMX7D_AUDIO_MCLK_ROOT_DIV>;
+		assigned-clock-parents = <&clks IMX7D_PLL_AUDIO_POST_DIV>;
+		assigned-clock-rates = <0>, <12288000>;
+
+		sound_master: simple-audio-card,cpu {
+			sound-dai = <&sai1 0>;
+		};
+
+		simple-audio-card,codec {
+			sound-dai = <&wm8731>;
+			system-clock-frequency = <12288000>;
+		};
+	};
+};
+
+&i2c2 {
+	/delete-node/ audio-codec@1a;
+
+	wm8731: wm8731@1a {
+		#sound-dai-cells = <0>;
+		AVDD-supply = <&vgen6_reg>;
+		compatible = "wlf,wm8731";
+		reg = <0x1a>;
+		clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_DIV>;
+		clock-names = "mclk";
+		status = "okay";
+	};
+};
+
+&sai1 {
+	#sound-dai-cells = <1>;
+	assigned-clock-rates = <0>, <36864000>;
+	/delete-property/ fsl,sai-mclk-direction-output;
+};

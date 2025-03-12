@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0+ OR MIT
+//
+// Copyright (C) 2016-2024 Variscite Ltd.
+
+#include "imx7d-var-som-nand-wm8731.dts"
+#include "imx7d-var-som-m4.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-MX7 M4 with NAND flash & WM8731 on VAR-MX7CustomBoard";
+};
