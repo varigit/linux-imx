@@ -256,6 +256,10 @@
 	status = "disabled";
 };
 
+&wdog3 {
+	status = "okay";
+};
+
 &iomuxc {
 	pinctrl_captouch: captouchgrp {
 		fsl,pins = <
