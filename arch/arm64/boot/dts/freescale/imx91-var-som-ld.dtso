@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay to support low drive mode
+ *
+ * Copyright 2024 NXP
+ * Copyright 2025 Variscite Ltd.
+ */
+
+/dts-v1/;
+/plugin/;
+
+ #include <dt-bindings/clock/imx91-clock.h>
+
+&flexspi1 {
+	assigned-clocks = <&clk IMX91_CLK_FLEXSPI1>;
+	assigned-clock-parents = <&clk IMX91_CLK_SYS_PLL_PFD1>;
+	assigned-clock-rates = <266000000>;
+};
+
+&lpm {
+	no-od-mode;
+	ld-mode-enabled;
+	soc-supply = <&buck1>;
+	status = "okay";
+};
+
+&usdhc1 {
+	assigned-clocks = <&clk IMX91_CLK_USDHC1>;
+	assigned-clock-parents = <&clk IMX91_CLK_SYS_PLL_PFD1>;
+	assigned-clock-rates = <266000000>;
+};
+
+&usdhc2 {
+	assigned-clocks = <&clk IMX91_CLK_USDHC2>;
+	assigned-clock-parents = <&clk IMX91_CLK_SYS_PLL_PFD1>;
+	assigned-clock-rates = <266000000>;
+};
+
+&usdhc3 {
+	assigned-clocks = <&clk IMX91_CLK_USDHC3>;
+	assigned-clock-parents = <&clk IMX91_CLK_SYS_PLL_PFD1>;
+	assigned-clock-rates = <266000000>;
+};
