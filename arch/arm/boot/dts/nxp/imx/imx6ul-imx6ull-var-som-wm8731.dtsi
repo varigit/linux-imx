@@ -50,3 +50,7 @@
 		status = "okay";
 	};
 };
+
+&sai2 {
+	assigned-clock-rates = <0>, <12288000>;
+};
