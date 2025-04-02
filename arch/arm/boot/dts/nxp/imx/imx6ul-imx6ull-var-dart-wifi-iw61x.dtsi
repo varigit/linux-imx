@@ -42,6 +42,7 @@
 	assigned-clock-rates = <0>, <132000000>;
 	fsl,tuning-step = <2>;
 	keep-power-in-suspend;
+	non-removable;
 	vmmc-supply = <&reg_sd1_vmmc>;
 	mmc-pwrseq = <&iw61x_pwrseq>;
 	status = "okay";
