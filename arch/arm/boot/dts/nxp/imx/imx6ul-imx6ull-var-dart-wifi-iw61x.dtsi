@@ -47,3 +47,10 @@
 	mmc-pwrseq = <&iw61x_pwrseq>;
 	status = "okay";
 };
+
+&uart2 {
+	bluetooth_iw61x: bluetooth_iw61x {
+		compatible = "nxp,88w8987-bt";
+		status = "okay";
+	};
+};
