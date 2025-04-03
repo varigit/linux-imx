@@ -39,7 +39,9 @@
 
 /* WIFI */
 &usdhc1 {
-    vqmmc-supply = < >;
+	#address-cells = <1>;
+	#size-cells = <0>;
+	vqmmc-supply = < >;
 	brcmf: wifi@1 {
 		reg = <1>;
 		compatible = "brcm,bcm4329-fmac";
