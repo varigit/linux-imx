@@ -6,6 +6,7 @@
 
 /dts-v1/;
 
+#include <dt-bindings/net/mxl-8611x.h>
 #include <dt-bindings/usb/pd.h>
 #include "imx8mn.dtsi"
 
@@ -18,6 +19,15 @@
 		/* On SOM revions 1.2 and below the frequency should be 20000000 */
 		clock-frequency = <40000000>;
 		clock-output-names = "can_osc";
+	};
+
+	iw612_pwrseq: iw612_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		post-power-on-delay-ms = <100>;
+		power-off-delay-us = <10000>;
+		reset-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>,	/* WIFI_RESET */
+			      <&gpio2 20 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
+		status = "okay";
 	};
 
 	panel_lvds: panel-lvds {
@@ -192,7 +202,17 @@
 			vddio-supply = <&vddio>;
 			reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
-			reset-deassert-us = <20000>;
+			reset-deassert-us = <100000>;
+			mxl-8611x,led0_cfg = <(
+				MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
+				MXL8611X_LEDX_CFG_TRAFFIC_ACT_BLINK_IND
+			)>;
+			mxl-8611x,led1_cfg = <(
+				MXL8611X_LEDX_CFG_LINK_UP_10MB_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
+			)>;
 
 			vddio: vddio-regulator {
 				regulator-min-microvolt = <1800000>;
@@ -459,7 +479,6 @@
 
 	pinctrl_wifi: wifigrp {
 		fsl,pins = <
-			MX8MN_IOMUXC_SD1_DATA5_GPIO2_IO7		0xc1	/* WIFI_3V3_PWR_EN */
 			MX8MN_IOMUXC_SD2_WP_GPIO2_IO20			0x140	/* WIFI_1V8_PWR_EN */
 			MX8MN_IOMUXC_SD1_RESET_B_GPIO2_IO10		0xc1	/* WIFI_REG_ON     */
 		>;
@@ -722,6 +741,11 @@
 	assigned-clock-parents = <&clk IMX8MN_SYS_PLL1_80M>;
 	uart-has-rtscts;
 	status = "okay";
+
+	bluetooth_iw61x: bluetooth_iw61x {
+		compatible = "nxp,88w8987-bt";
+		status = "okay";
+	};
 };
 
 /* WIFI */
@@ -736,12 +760,8 @@
 	non-removable;
 	wakeup-source;
 	keep-power-in-suspend;
+	mmc-pwrseq = <&iw612_pwrseq>;
 	status = "okay";
-
-	brcmf: bcrmf@1 {
-		reg = <1>;
-		compatible = "brcm,bcm4329-fmac";
-	};
 };
 
 /* EMMC */
