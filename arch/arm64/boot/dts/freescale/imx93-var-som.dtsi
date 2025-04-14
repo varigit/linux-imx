@@ -56,6 +56,7 @@
 	pinctrl-0 = <&pinctrl_eqos>;
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy0>;
+	snps,clk-csr = <5>;
 	status = "okay";
 
 	mdio {
