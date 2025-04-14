@@ -277,10 +277,13 @@
 
 &wdog1 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_wdog>;
 	/*
 	 * To actually use ext-reset-output
 	 * connect pins J3.17 & J3.11 on the Symphony-Board
-	 */
+	 * AND make sure that R136 is present on your Symphony board.
+	 * (Please make sure that you are aware of the
+	 * ramifications regarding Ethernet when adding R136)
+	pinctrl-0 = <&pinctrl_wdog>;
 	fsl,ext-reset-output;
+	*/
 };
