@@ -70,8 +70,8 @@
 			micrel,led-mode = <1>;
 			reset-names = "phy";
 			reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-			reset-assert-us = <1000>;
-			reset-deassert-us = <200>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <100000>;
 			clocks = <&rmii_ref_clk>;
 			clock-names = "rmii-ref";
 			reg = <1>;
@@ -83,8 +83,8 @@
 			micrel,led-mode = <1>;
 			reset-names = "phy";
 			reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-			reset-assert-us = <1000>;
-			reset-deassert-us = <200>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <100000>;
 			clocks = <&rmii_ref_clk>;
 			clock-names = "rmii-ref";
 			reg = <3>;
