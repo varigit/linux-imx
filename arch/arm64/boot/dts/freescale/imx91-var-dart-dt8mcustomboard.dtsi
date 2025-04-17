@@ -66,17 +66,6 @@
 		clock-frequency = <40000000>;
 	};
 
-	reg_fec_phy: regulator-fec-phy {
-		compatible = "regulator-fixed";
-		regulator-name = "fec-phy";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-		regulator-enable-ramp-delay = <20000>;
-		gpio = <&pca6408_2 0 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		regulator-always-on;
-	};
-
 	reg_usdhc2_vmmc: regulator-usdhc2 {
 		compatible = "regulator-fixed";
 		pinctrl-names = "default";
@@ -138,6 +127,9 @@
 			reg = <1>;
 			at803x,eee-disabled;
 			eee-broken-1000t;
+			reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <20000>;
 			vddio-supply = <&vddio1>;
 
 			vddio1: vddio-regulator {
@@ -154,7 +146,6 @@
 	pinctrl-1 = <&pinctrl_fec_sleep>;
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy1>;
-	phy-supply = <&reg_fec_phy>;
 	status = "okay";
 };
 

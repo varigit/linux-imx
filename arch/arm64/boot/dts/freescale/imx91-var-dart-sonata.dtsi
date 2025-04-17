@@ -235,10 +235,6 @@
 	};
 };
 
-&reg_fec_phy {
-        /delete-property/ gpio;
-};
-
 &rtc {
 	/delete-property/ pinctrl-names;
 	/delete-property/ pinctrl-0;
