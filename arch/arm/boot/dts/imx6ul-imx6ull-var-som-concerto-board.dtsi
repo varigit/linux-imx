@@ -64,8 +64,6 @@
 	pinctrl-0 = <&pinctrl_enet2>, <&pinctrl_enet2_gpio>, <&pinctrl_enet2_mdio>;
 	phy-mode = "rmii";
 	phy-handle = <&ethphy1>;
-	phy-reset-gpios=<&gpio5 5 GPIO_ACTIVE_LOW>;
-	phy-reset-duration=<100>;
 	status = "okay";
 
 	mdio {
@@ -76,6 +74,10 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			micrel,rmii-reference-clock-select-25-mhz;
 			micrel,led-mode = <1>;
+			reset-names = "phy";
+			reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <100000>;
 			clocks = <&rmii_ref_clk>;
 			clock-names = "rmii-ref";
 			reg = <1>;
@@ -85,6 +87,10 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			micrel,rmii-reference-clock-select-25-mhz;
 			micrel,led-mode = <0>;
+			reset-names = "phy";
+			reset-gpios = <&gpio5 5 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <100000>;
 			clocks = <&rmii_ref_clk>;
 			clock-names = "rmii-ref";
 			reg = <3>;
