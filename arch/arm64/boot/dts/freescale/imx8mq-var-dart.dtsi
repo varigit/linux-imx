@@ -153,6 +153,9 @@
 	dsi_lvds_bridge: sn65dsi84@2c {
 		compatible = "ti,sn65dsi84";
 		reg = <0x2c>;
+		no-hfp;
+		no-hbp;
+		no-hsa;
 		status = "disabled";
 		enable-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
 		pinctrl-0 = <&plnctrl_dsi_bridge>;
