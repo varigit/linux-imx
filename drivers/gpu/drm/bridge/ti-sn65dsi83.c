@@ -147,6 +147,9 @@ struct sn65dsi83 {
 	struct regulator		*vcc;
 	bool				lvds_dual_link;
 	bool				lvds_dual_link_even_odd_swap;
+	bool                            no_hfp;
+	bool 				no_hbp;
+	bool 				no_hsa;
 };
 
 static const struct regmap_range sn65dsi83_readable_ranges[] = {
@@ -282,6 +285,13 @@ static int sn65dsi83_attach(struct drm_bridge *bridge,
 	dsi->lanes = dsi_lanes;
 	dsi->format = MIPI_DSI_FMT_RGB888;
 	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST;
+
+        if(ctx->no_hfp)
+	        dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_NO_HFP;
+        if(ctx->no_hbp)
+                dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_NO_HBP;
+        if(ctx->no_hsa)
+               dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_NO_HSA;
 
 	ret = devm_mipi_dsi_attach(dev, dsi);
 	if (ret < 0) {
@@ -639,6 +649,16 @@ static int sn65dsi83_parse_dt(struct sn65dsi83 *ctx, enum sn65dsi83_model model)
 		return PTR_ERR(panel_bridge);
 
 	ctx->panel_bridge = panel_bridge;
+
+        ctx->no_hfp = of_property_read_bool(dev->of_node, "no-hfp");
+	if (ctx->no_hfp)
+                dev_info(dev, "Skipping horizontal front porch (no-hfp set)\n");
+        ctx->no_hbp = of_property_read_bool(dev->of_node, "no-hbp");
+        if (ctx->no_hbp)
+                dev_info(dev, "Horizontal back porch will be skipped (no-hbp)\n");
+        ctx->no_hsa = of_property_read_bool(dev->of_node, "no-hsa");
+        if (ctx->no_hsa)
+                dev_info(dev, "Horizontal sync active will be skipped (no-hsa)\n");
 
 	ctx->vcc = devm_regulator_get(dev, "vcc");
 	if (IS_ERR(ctx->vcc))
