@@ -10,3 +10,4 @@ jobs:
       defconfig: >-
         arm:imx_v7_var_defconfig
         arm64:imx8_var_defconfig
+        arm64:imx8mq_var_dart_defconfig
