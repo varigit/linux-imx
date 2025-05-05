@@ -469,6 +469,14 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-var-dart-dt8mcustomboard-m4-sd-hdmi.dtb \
 #dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-v1.1-eval.dtb
 #dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-v1.1-ixora-v1.1.dtb
 #dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-v1.1-ixora-v1.2.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8qm-var-som-symphony-dp.dtb imx8qm-var-som-symphony-hdmi.dtb imx8qm-var-som-symphony-lvds.dtb \
+			  imx8qm-var-som-symphony-dp-m4.dtb imx8qm-var-som-symphony-hdmi-m4.dtb imx8qm-var-som-symphony-lvds-m4.dtb \
+			  imx8qp-var-som-symphony-dp.dtb imx8qp-var-som-symphony-hdmi.dtb imx8qp-var-som-symphony-lvds.dtb \
+			  imx8qp-var-som-symphony-dp-m4.dtb imx8qp-var-som-symphony-hdmi-m4.dtb imx8qp-var-som-symphony-lvds-m4.dtb \
+			  imx8qm-var-spear-sp8customboard-dp.dtb imx8qm-var-spear-sp8customboard-hdmi.dtb imx8qm-var-spear-sp8customboard-lvds.dtb \
+			  imx8qm-var-spear-sp8customboard-dp-m4.dtb imx8qm-var-spear-sp8customboard-hdmi-m4.dtb imx8qm-var-spear-sp8customboard-lvds-m4.dtb \
+			  imx8qp-var-spear-sp8customboard-dp.dtb imx8qp-var-spear-sp8customboard-hdmi.dtb imx8qp-var-spear-sp8customboard-lvds.dtb \
+			  imx8qp-var-spear-sp8customboard-dp-m4.dtb imx8qp-var-spear-sp8customboard-hdmi-m4.dtb imx8qp-var-som-symphony-lvds-m4.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb imx8qm-mek-ov5640.dtb \
 			  imx8qm-mek-enet2-tja1100.dtb imx8qm-mek-rpmsg.dtb \
 			  imx8qm-mek-hdmi.dtb \
