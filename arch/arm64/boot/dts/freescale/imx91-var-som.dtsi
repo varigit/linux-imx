@@ -57,6 +57,7 @@
 	pinctrl-1 = <&pinctrl_eqos_sleep>;
 	phy-mode = "rgmii";
 	phy-handle = <&ethphy0>;
+	snps,clk-csr = <5>;
 	status = "okay";
 
 	mdio {
