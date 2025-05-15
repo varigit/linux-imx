@@ -10,5 +10,5 @@
 #include "imx91-var-dart-sonata.dtsi"
 
 / {
-	model = "Variscite DART-MX91 on Sonata";
+	model = "Variscite DART-MX91 on Sonata-Board";
 };
