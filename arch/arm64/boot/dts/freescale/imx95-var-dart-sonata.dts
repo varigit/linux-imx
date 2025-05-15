@@ -9,6 +9,10 @@
 / {
 	model = "Variscite DART-MX95 on Sonata Board 1.0";
 
+	aliases {
+		ethernet2 = &enetc_port2;
+	};
+
 	sfp_eth2:sfp-eth2 {
 		compatible = "sff,sfp";
 		i2c-bus = <&lpi2c3>;
