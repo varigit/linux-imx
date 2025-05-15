@@ -7,7 +7,7 @@
 #include "imx95-var-dart-dt8mcustomboard.dts"
 
 / {
-	model = "Variscite DART-MX95 on Sonata Board 1.0";
+	model = "Variscite DART-MX95 on Sonata-Board";
 
 	aliases {
 		ethernet2 = &enetc_port2;

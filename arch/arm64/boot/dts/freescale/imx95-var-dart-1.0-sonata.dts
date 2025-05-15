@@ -7,7 +7,7 @@
 #include "imx95-var-dart-sonata.dts"
 
 / {
-	model = "Variscite DART-MX95 V1.0 on Sonata Board 1.0";
+	model = "Variscite DART-MX95 V1.0 on Sonata-Board";
 };
 
 &ft5x06_ts {
