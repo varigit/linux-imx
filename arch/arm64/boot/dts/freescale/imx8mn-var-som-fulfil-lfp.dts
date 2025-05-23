@@ -84,7 +84,9 @@
 			MX8MN_IOMUXC_ECSPI2_SS0_GPIO5_IO13		0x114
 			MX8MN_IOMUXC_I2C4_SCL_GPIO5_IO20		0x114
 			MX8MN_IOMUXC_I2C4_SDA_GPIO5_IO21		0x114
+			MX8MN_IOMUXC_UART2_RXD_GPIO5_IO24 		0x114
 			MX8MN_IOMUXC_UART2_TXD_GPIO5_IO25		0x114
+			MX8MN_IOMUXC_UART3_RXD_GPIO5_IO26		0x114
 		>;
 	};
 	pinctrl_uart1: uart1grp {
@@ -103,20 +105,12 @@
 		>;
 	};
 
-	pinctrl_uart3: uart3grp {
-		fsl,pins = <
-			MX8MN_IOMUXC_UART3_RXD_UART3_DCE_RX		0x140
-			MX8MN_IOMUXC_UART3_TXD_UART3_DCE_TX		0x140
-		>;
-	};
-
 	pinctrl_uart4: uart4grp {
 		fsl,pins = <
-			MX8MN_IOMUXC_UART4_RXD_UART4_DTE_TX		0x140
-			MX8MN_IOMUXC_UART4_TXD_UART4_DTE_RX		0x140
+			MX8MN_IOMUXC_UART4_RXD_UART4_DCE_RX		0x140
+			MX8MN_IOMUXC_UART4_TXD_UART4_DCE_TX		0x140
 		>;
 	};
-
 
 	pinctrl_ecspi2_j17: ecspi2grp_j17 {
         fsl,pins = <
@@ -130,7 +124,6 @@
         fsl,pins = <
 			MX8MN_IOMUXC_UART1_TXD_ECSPI3_MOSI		0x13
 			MX8MN_IOMUXC_UART1_RXD_ECSPI3_SCLK		0x13
-			MX8MN_IOMUXC_UART2_RXD_ECSPI3_MISO		0x13
         >;
     };
 
@@ -140,28 +133,32 @@
 			MX8MN_IOMUXC_I2C2_SDA_I2C2_SDA			0x400001c3
 		>;
 	};
+
+	pinctrl_ecspi1: ecspi1grp {
+			fsl,pins = <
+				MX8MN_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK		0x13
+				MX8MN_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI		0x13
+				MX8MN_IOMUXC_ECSPI1_MISO_ECSPI1_MISO		0x13
+				MX8MN_IOMUXC_GPIO1_IO00_GPIO1_IO0		0x13
+				MX8MN_IOMUXC_ENET_MDIO_GPIO1_IO17		0x13
+				MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19		0x13
+				MX8MN_IOMUXC_ENET_TX_CTL_GPIO1_IO22		0x13
+			>;
+	};
 };
 
 &fec1{
 	status = "disabled";
 };
 
-&pinctrl_ecspi1 {
-		fsl,pins = <
-			MX8MN_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK		0x13
-			MX8MN_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI		0x13
-			MX8MN_IOMUXC_ECSPI1_MISO_ECSPI1_MISO		0x13
-			MX8MN_IOMUXC_GPIO1_IO00_GPIO1_IO0		0x13
-			MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19		0x13
-		>;
-};
 
 &ecspi1 {
 	status = "okay";
-	fsl,spi-num-chipselects = <2>;
-	cs-gpios = <&gpio5 9 GPIO_ACTIVE_LOW>,
-		   <&gpio1  0 GPIO_ACTIVE_LOW>,
-		   <&gpio1  23 GPIO_ACTIVE_LOW>;
+    pinctrl-names = "default";
+    pinctrl-0     = <&pinctrl_ecspi1>;
+	cs-gpios = <&gpio1 22 GPIO_ACTIVE_LOW>,
+			<&gpio1  0 GPIO_ACTIVE_LOW>,
+			<&gpio1 17 GPIO_ACTIVE_LOW>;
 	/delete-node/ ads7846@0;
 	/delete-node/ spidev@2;
     /*/delete-property/ dmas;
@@ -198,19 +195,12 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_ecspi3>;
 	status = "okay";
-	fsl,spi-num-chipselects = <2>;
-	cs-gpios = <&gpio5 25 GPIO_ACTIVE_LOW>,
-			<&gpio5  11 GPIO_ACTIVE_LOW>;
-	/* Test SPI device */
+	fsl,spi-num-chipselects = <1>;
+	cs-gpios = <&gpio1  24 GPIO_ACTIVE_LOW>;
+
+	// LEDS
 	spidev@0 {
 		reg = <0>;
-		compatible = "var,spidev";
-		spi-max-frequency = <12000000>;
-		status = "okay";
-	};
-
-	spidev@1 {
-		reg = <1>;
 		compatible = "var,spidev";
 		spi-max-frequency = <12000000>;
 		status = "okay";
@@ -221,6 +211,7 @@
 	// DISABLED to avoid conflict because pinctrl_ecspi2_j17 reports ECSPI2_MISO which is in use by pinctrl_csi1
 	status = "disabled";
 };
+
 &mipi_dsi {
 	status = "disabled";
 };
@@ -274,13 +265,6 @@
 };
 
 &uart2 {
-	status = "okay";
-};
-
-/* Header */
-&uart3 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart3>;
 	status = "okay";
 };
 
