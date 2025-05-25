@@ -106,8 +106,14 @@
 		data-mapping = "jeida-24";
 		status = "okay";
 
+		/*
+		 * Timings according to VLCD-CAP-GLD-LVDS datasheet.
+		 * pixel clock required: typ. 30 Mhz, max. 40 MHz
+		 * video PLL clock: 498 MHz (see lcdif node)
+		 * pixel clock: 498000000 Hz / 7 / 2 = 35571429 Hz
+		 */
 		panel-timing {
-			clock-frequency = <71000000>;
+			clock-frequency = <35571429>;
 			hactive = <800>;
 			vactive = <480>;
 			hback-porch = <40>;
