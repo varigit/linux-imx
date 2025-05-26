@@ -25,6 +25,5 @@
 	brcmf: bcrmf@1 {
 		reg = <1>;
 		compatible = "brcm,bcm4329-fmac";
-		laird,regdomain = "US";
 	};
 };
