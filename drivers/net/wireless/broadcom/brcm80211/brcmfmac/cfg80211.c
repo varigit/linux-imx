@@ -5169,8 +5169,14 @@ brcmf_cfg80211_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
 		ie_offset =  DOT11_MGMT_HDR_LEN +
 			     DOT11_BCN_PRB_FIXED_LEN;
 		ie_len = len - ie_offset;
-		if (vif == cfg->p2p.bss_idx[P2PAPI_BSSCFG_PRIMARY].vif)
+		if (vif == cfg->p2p.bss_idx[P2PAPI_BSSCFG_PRIMARY].vif) {
 			vif = cfg->p2p.bss_idx[P2PAPI_BSSCFG_DEVICE].vif;
+			if (!vif) {
+				bphy_err(drvr, "No p2p device available for probe response\n");
+				err = -ENODEV;
+				goto exit;
+			}
+		}
 		err = brcmf_vif_set_mgmt_ie(vif,
 					    BRCMF_VNDR_IE_PRBRSP_FLAG,
 					    &buf[ie_offset],
