@@ -44,7 +44,6 @@
 
 		dailink_master: simple-audio-card,codec {
 			sound-dai = <&wm8904>;
-			system-clock-frequency = <12288000>;
 		};
 
 		simple-audio-card,cpu {
