@@ -32,7 +32,8 @@
 			"IN2L", "Line In Jack",
 			"IN2R", "Line In Jack",
 			"IN1L", "Microphone Jack",
-			"IN1R", "Microphone Jack";
+			"IN1R", "Microphone Jack",
+			"Microphone Jack", "MICBIAS";
 		simple-audio-card,mclk-fs = <256>;
 		simple-audio-card,format = "i2s";
 		simple-audio-card,bitclock-master = <&dailink_master>;
