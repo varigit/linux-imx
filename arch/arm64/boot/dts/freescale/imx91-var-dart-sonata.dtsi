@@ -8,6 +8,7 @@
 / {
 	lvds_panel: lvds-panel {
 		compatible = "sgd,gktw70sdae4se", "panel-lvds";
+		backlight = <&backlight>;
 		width-mm = <153>;
 		height-mm = <87>;
 		label = "gktw70sdae4se";
@@ -245,6 +246,13 @@
 	st33ktpm2i: st33ktpm2i@2e {
 		compatible = "infineon,slb9673";
 		reg = <0x2e>;
+	};
+
+	backlight: backlight@2c {
+		compatible = "maxim,ds1050z";
+		reg = <0x2c>;
+		default-brightness = <25>; /* 25/32 ≈ 78% brightness (32 = 100% PWM duty cycle) */
+		status = "okay";
 	};
 };
 
