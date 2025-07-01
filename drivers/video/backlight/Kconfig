@@ -472,6 +472,16 @@ config BACKLIGHT_LED
 	  If you have a LCD backlight adjustable by LED class driver, say Y
 	  to enable this driver.
 
+config BACKLIGHT_DS1050Z
+	tristate "Backlight driver for Maxim DS1050Z"
+	depends on I2C
+	help
+	  If you have a Maxim DS1050Z, say Y to enable the
+	  backlight driver.
+
+	  To compile this driver as a module, choose M here: the module will
+	  be called ds1050z_bl
+
 endif # BACKLIGHT_CLASS_DEVICE
 
 endmenu
