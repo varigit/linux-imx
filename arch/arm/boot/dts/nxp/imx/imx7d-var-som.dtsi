@@ -313,7 +313,11 @@
 
 	wm8904: audio-codec@1a {
 		#sound-dai-cells = <0>;
+		DCVDD-supply = <&vgen6_reg>;
+		DBVDD-supply = <&vgen6_reg>;
 		AVDD-supply = <&vgen6_reg>;
+		CPVDD-supply = <&vgen6_reg>;
+		MICVDD-supply = <&vgen6_reg>;
 		compatible = "wlf,wm8904";
 		reg = <0x1a>;
 		clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_DIV>;
