@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2025 Variscite Ltd.
+ */
+
+/dts-v1/;
+
+#include "imx93-var-dart.dtsi"
+#include "imx93-var-dart-dt8mcustomboard.dtsi"
+#include "imx93-var-dart-sonata.dtsi"
+
+/ {
+	model = "Variscite DART-MX93 on Sonata-Board";
+};

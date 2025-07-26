@@ -342,9 +342,9 @@
 
 	pinctrl_lpspi8: lpspi8grp {
 		fsl,pins = <
-			MX93_PAD_GPIO_IO00__GPIO2_IO00			0x31e /* j14.2 spidev */
+			MX93_PAD_GPIO_IO00__GPIO2_IO00			0x31e /* j14.2 spidev chip select or WBE IRQ */
 			MX93_PAD_GPIO_IO01__GPIO2_IO01			0x31e /* j14.4 MCP2518FDT */
-			MX93_PAD_GPIO_IO12__GPIO2_IO12			0x31e /* j16.4 ADS7846 */
+			MX93_PAD_GPIO_IO12__GPIO2_IO12			0x31e /* j16.4 ADS7846 or wlan spidev chip select */
 			MX93_PAD_GPIO_IO13__LPSPI8_SIN			0x31e
 			MX93_PAD_GPIO_IO14__LPSPI8_SOUT			0x31e
 			MX93_PAD_GPIO_IO15__LPSPI8_SCK			0x31e

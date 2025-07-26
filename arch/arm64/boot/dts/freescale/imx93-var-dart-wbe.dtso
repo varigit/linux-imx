@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay to support the DART-MX93 SoM featuring
+ * WiFi/BT chipset with 802.15.4, used on the Sonata-Board
+ *
+ * Copyright 2025 Variscite Ltd.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+&{/} {
+	model = "Variscite DART-MX93 with 802.15.4 on Sonata-Board";
+};
+
+&lpspi8 {
+	cs-gpios = <&gpio2 1 GPIO_ACTIVE_LOW>, /* j14.4 */
+		   <&gpio2 12 GPIO_ACTIVE_LOW>;
+};
+
+&pca9534 {
+	wlanspi-buf-en {
+		gpio-hog;
+		gpios = <2 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "wlanspi-buf-en";
+	};
+
+	pcie2-sel {
+		gpio-hog;
+		gpios = <6 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "pcie2-sw";
+	};
+};
