@@ -69,3 +69,12 @@
 	reset-gpio = <&pca6408_2 2 GPIO_ACTIVE_LOW>;
 	status = "okay";
 };
+
+&lpi2c8 {
+	st33ktpm2xi2c: st33ktpm2xi2c@2e {
+		compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
+		reg = <0x2e>;
+		label = "tpm";
+		reset-gpios = <&pca9534 0 GPIO_ACTIVE_HIGH>;
+	};
+};
