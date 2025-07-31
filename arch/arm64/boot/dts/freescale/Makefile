@@ -263,6 +263,41 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-basler-isp0-m7.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-basler-isp0.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-wbe-symphony-m7.dtb
 
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-sonata.dtb \
+                          imx8mp-var-dart-sonata-basler-isi0-m7.dtb \
+                          imx8mp-var-dart-sonata-basler-isi0.dtb \
+                          imx8mp-var-dart-sonata-basler-isp0-m7.dtb \
+                          imx8mp-var-dart-sonata-basler-isp0.dtb \
+                          imx8mp-var-dart-sonata-m7.dtb
+
+imx8mp-var-dart-1.x-sonata-dtbs := imx8mp-var-dart-sonata.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-sonata-basler-isi0-m7-dtbs := imx8mp-var-dart-sonata-basler-isi0-m7.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-sonata-basler-isi0-dtbs := imx8mp-var-dart-sonata-basler-isi0.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-sonata-basler-isp0-m7-dtbs := imx8mp-var-dart-sonata-basler-isp0-m7.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-sonata-basler-isp0-dtbs := imx8mp-var-dart-sonata-basler-isp0.dtb imx8mp-var-dart-1.x.dtbo
+imx8mp-var-dart-1.x-sonata-m7-dtbs := imx8mp-var-dart-sonata-m7.dtb imx8mp-var-dart-1.x.dtbo
+
+imx8mp-var-dart-wbe-sonata-dtbs := imx8mp-var-dart-sonata.dtb imx8mp-var-dart-wbe.dtbo imx8mp-var-dart-wbe-sonata.dtbo
+imx8mp-var-dart-wbe-sonata-basler-isi0-m7-dtbs := imx8mp-var-dart-sonata-basler-isi0-m7.dtb imx8mp-var-dart-wbe.dtbo imx8mp-var-dart-wbe-sonata.dtbo
+imx8mp-var-dart-wbe-sonata-basler-isi0-dtbs := imx8mp-var-dart-sonata-basler-isi0.dtb imx8mp-var-dart-wbe.dtbo imx8mp-var-dart-wbe-sonata.dtbo
+imx8mp-var-dart-wbe-sonata-basler-isp0-m7-dtbs := imx8mp-var-dart-sonata-basler-isp0-m7.dtb imx8mp-var-dart-wbe.dtbo imx8mp-var-dart-wbe-sonata.dtbo
+imx8mp-var-dart-wbe-sonata-basler-isp0-dtbs := imx8mp-var-dart-sonata-basler-isp0.dtb imx8mp-var-dart-wbe.dtbo imx8mp-var-dart-wbe-sonata.dtbo
+imx8mp-var-dart-wbe-sonata-m7-dtbs := imx8mp-var-dart-sonata-m7.dtb imx8mp-var-dart-wbe.dtbo imx8mp-var-dart-wbe-sonata.dtbo
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-1.x-sonata.dtb \
+                          imx8mp-var-dart-1.x-sonata-basler-isi0-m7.dtb \
+                          imx8mp-var-dart-1.x-sonata-basler-isi0.dtb \
+                          imx8mp-var-dart-1.x-sonata-basler-isp0-m7.dtb \
+                          imx8mp-var-dart-1.x-sonata-basler-isp0.dtb \
+                          imx8mp-var-dart-1.x-sonata-m7.dtb
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-sonata.dtb \
+                          imx8mp-var-dart-wbe-sonata-basler-isi0-m7.dtb \
+                          imx8mp-var-dart-wbe-sonata-basler-isi0.dtb \
+                          imx8mp-var-dart-wbe-sonata-basler-isp0-m7.dtb \
+                          imx8mp-var-dart-wbe-sonata-basler-isp0.dtb \
+                          imx8mp-var-dart-wbe-sonata-m7.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-msc-sm2s-ep1.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-phyboard-pollux-rdk.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-ab2.dtb

@@ -1,0 +1,75 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2025 Variscite Ltd.
+ */
+
+&i2c2 {
+	/* GPIO Expander 3 */
+	pca9534: gpio@22 {
+		compatible = "nxp,pca9534";
+		reg = <0x22>;
+		gpio-controller;
+		#gpio-cells = <2>;
+
+		/*
+		 * ETH10G_SEL
+		 * output-lo: Configure mux for DART-MX8MP DSI
+		 * output-hi: Configure mux for 10G Ethernet (not supported by 8MP)
+		 */
+		eth10g_sel {
+			gpio-hog;
+			gpios = <5 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "eth10g_sel";
+		};
+
+		/*
+		 * PCIE2_SEL
+		 * output-lo: Configure mux for DART-MX95 PCIE2
+		 * output-hi: Configure mux for DART-MX8MP DSI
+		 */
+		pcie2_sel {
+			gpio-hog;
+			gpios = <6 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "pcie2_sel";
+		};
+
+		/*
+		 * RGB_SEL
+		 * output-lo: Configure mux for DARTs LVDS
+		 * output-hi: Configure mux for DART-MX91 RGB2LVDS
+		 */
+		rgb_sel {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "rgb_sel";
+		};
+	};
+};
+
+&ethphy1 {
+	reset-deassert-us = <100000>;
+	mxl-8611x,led0_cfg = <(
+		MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
+		MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
+		MXL8611X_LEDX_CFG_TRAFFIC_ACT_BLINK_IND
+	)>;
+	mxl-8611x,led1_cfg = <(
+		MXL8611X_LEDX_CFG_LINK_UP_10MB_ON |
+		MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
+		MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
+	)>;
+};
+
+&i2c4 {
+	/* TPM 2.0 */
+	st33ktpm2xi2c: st33ktpm2xi2c@2e {
+		compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
+		reg = <0x2e>;
+		label = "tpm";
+		reset-gpios = <&pca9534 0 GPIO_ACTIVE_HIGH>;
+	};
+};
