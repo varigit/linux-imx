@@ -628,11 +628,6 @@
 	};
 };
 
-&ldo4 {
-	regulator-min-microvolt = <1800000>;
-	regulator-max-microvolt = <1800000>;
-};
-
 &xcvr {
 	#sound-dai-cells = <0>;
 	status = "okay";
