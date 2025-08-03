@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2025 Variscite Ltd.
+ */
+
+#include "imx8mp-var-dart-dt8mcustomboard-basler-isp0.dts"
+#include "imx8mp-var-dart-sonata.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M-PLUS on Sonata Board with Basler camera on ISP0";
+};
