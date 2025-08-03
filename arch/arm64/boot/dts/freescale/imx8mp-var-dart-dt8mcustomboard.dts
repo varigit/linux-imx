@@ -855,3 +855,5 @@
 		>;
 	};
 };
+
+#include "imx8mp-android.dtsi"
