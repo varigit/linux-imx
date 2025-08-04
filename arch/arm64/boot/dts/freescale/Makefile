@@ -880,6 +880,11 @@ dtb-$(CONFIG_ARCH_MXC) += imx95-19x19-verdin-rm692c9.dtb
 imx95-19x19-verdin-root-dtbs := imx95-19x19-verdin.dtb imx95-19x19-verdin-root.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx95-19x19-verdin-root.dtb imx95-19x19-verdin-inmate.dtb
 
+dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-dt8mcustomboard.dtb \
+			  imx95-var-dart-1.0-dt8mcustomboard.dtb \
+			  imx95-var-dart-sonata.dtb \
+			  imx95-var-dart-1.0-sonata.dtb
+
 dtb-$(CONFIG_ARCH_S32) += s32g274a-evb.dtb
 dtb-$(CONFIG_ARCH_S32) += s32g274a-rdb2.dtb
 dtb-$(CONFIG_ARCH_S32) += s32g399a-rdb3.dtb
