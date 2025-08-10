@@ -207,6 +207,11 @@
 		gpio-controller;
 		#gpio-cells = <2>;
 	};
+
+	st33ktpm2i: st33ktpm2i@2e {
+		compatible = "infineon,slb9673";
+		reg = <0x2e>;
+	};
 };
 
 /* pin conflicts */
