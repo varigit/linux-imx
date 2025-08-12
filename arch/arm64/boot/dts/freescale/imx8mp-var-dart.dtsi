@@ -83,6 +83,14 @@
 			sound-dai = <&sai3>;
 		};
 	};
+
+	vddio_phy0: vddio-phy0 {
+		compatible = "regulator-fixed";
+		regulator-name = "vddio_phy0_1v8";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		regulator-always-on;
+	};
 };
 
 &A53_0 {
@@ -120,7 +128,7 @@
 			reset-gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
 			reset-deassert-us = <100000>;
-			vddio-supply = <&vddio0>;
+			vddio-supply = <&vddio_phy0>;
 			mxl-8611x,led0_cfg = <(
 				MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
 				MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
@@ -131,11 +139,6 @@
 				MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
 				MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
 			)>;
-
-			vddio0: vddio-regulator {
-				regulator-min-microvolt = <1800000>;
-				regulator-max-microvolt = <1800000>;
-			};
 		};
 	};
 };
