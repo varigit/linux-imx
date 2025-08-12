@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2025 Variscite Ltd.
+ */
+
+&i2c2 {
+	/* GPIO Expander 3 */
+	pca9534: gpio@22 {
+		compatible = "nxp,pca9534";
+		reg = <0x22>;
+		gpio-controller;
+		#gpio-cells = <2>;
+
+		/*
+		 * RGB_SEL
+		 * output-lo: Configure mux for DARTs LVDS
+		 * output-hi: Configure mux for DART-MX91 RGB2LVDS
+		 */
+		rgb_sel {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "rgb_sel";
+		};
+	};
+};
+
+&i2c4 {
+	/* TPM */
+	st33ktpm2xi2c: st33ktpm2xi2c@2e {
+		compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
+		reg = <0x2e>;
+		label = "tpm";
+		reset-gpios = <&pca9534 0 GPIO_ACTIVE_HIGH>;
+	};
+};
