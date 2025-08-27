@@ -152,21 +152,6 @@
 	status = "disabled";
 };
 
-/*
-gpio5_io09 is the reboot pin. This needs to drive high very early in boot to avoid a loop
-*/
-&gpio5 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_hog>;
-
-	gpio5_io09_high: gpio5-io09-high {
-		gpio-hog;
-		gpios = <9 GPIO_ACTIVE_HIGH>;
-		output-high;
-		line-name = "gpio5_io09_boot_high";
-	};
-};
-
 &ecspi1 {
 	status = "okay";
     pinctrl-names = "default";
