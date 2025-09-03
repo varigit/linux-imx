@@ -156,6 +156,16 @@
 };
 
 &iomuxc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hog>;
+
+	pinctrl_hog: hoggrp {
+		fsl,pins = <
+			/* GPIO Expanders shared IRQ */
+			MX91_PAD_PDM_BIT_STREAM1__GPIO1_IO10            0x31e
+		>;
+	};
+
 	pinctrl_captouch: captouchgrp {
 		fsl,pins = <
 			MX91_PAD_CCM_CLKO2__GPIO3_IO27			0x31e
@@ -257,12 +267,6 @@
 			MX91_PAD_GPIO_IO13__LPSPI8_SIN			0x31e
 			MX91_PAD_GPIO_IO14__LPSPI8_SOUT			0x31e
 			MX91_PAD_GPIO_IO15__LPSPI8_SCK			0x31e
-		>;
-	};
-
-	pinctrl_pca6408: pca6408grp {
-		fsl,pins = <
-			MX91_PAD_PDM_BIT_STREAM1__GPIO1_IO10		0x31e
 		>;
 	};
 
@@ -437,8 +441,6 @@
 		reg = <0x20>;
 		gpio-controller;
 		#gpio-cells = <2>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_pca6408>;
 		interrupt-parent = <&gpio1>;
 		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
 	};

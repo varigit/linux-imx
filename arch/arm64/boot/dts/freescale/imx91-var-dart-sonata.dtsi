@@ -221,10 +221,8 @@
 		reg = <0x20>;
 		gpio-controller;
 		#gpio-cells = <2>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_pca6408>;
 		interrupt-parent = <&gpio1>;
-		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
+		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
 	};
 
 	pca6408_2: gpio@21 {
@@ -240,6 +238,8 @@
 		reg = <0x22>;
 		gpio-controller;
 		#gpio-cells = <2>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
 	};
 
 	st33ktpm2i: st33ktpm2i@2e {
