@@ -226,7 +226,7 @@
 };
 
 &i2c2 {
-	clock-frequency = <400000>;
+	clock-frequency = <100000>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c2>;
 	scl-gpios = <&gpio5 16 GPIO_ACTIVE_HIGH>;
@@ -235,7 +235,7 @@
 };
 &i2c3 {
 	status = "okay";
-	clock-frequency = <400000>;
+	clock-frequency = <100000>;
 
 	/* DS1337 RTC module */
 	rtc@68 {
