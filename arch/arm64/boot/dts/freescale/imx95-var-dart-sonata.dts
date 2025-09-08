@@ -415,7 +415,7 @@
 		interrupt-parent = <&gpio5>;
 		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
 
-		pcie2-sel-hog {
+		pcie2_sel_hog: pcie2-sel-hog {
 			gpio-hog;
 			gpios = <6 GPIO_ACTIVE_HIGH>;
 			output-low;
@@ -513,7 +513,7 @@
 	status = "okay";
 
 	/* Resistive touch controller */
-	ads7846@0 {
+	ads7846: ads7846@0 {
 		compatible = "ti,ads7846";
 		reg = <0>;
 		pinctrl-names = "default";
