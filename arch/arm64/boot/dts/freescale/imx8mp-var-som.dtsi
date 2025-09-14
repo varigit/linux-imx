@@ -82,11 +82,6 @@
 		reset-gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
 	};
 
-	reserved-memory {
-		/* cma region is provided by kernel command line as cma=<size>M */
-		/delete-node/ linux,cma;
-	};
-
 	sound-wm8904 {
 		compatible = "simple-audio-card";
 		simple-audio-card,bitclock-master = <&dailink_master>;
