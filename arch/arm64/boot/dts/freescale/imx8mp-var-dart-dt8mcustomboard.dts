@@ -157,14 +157,6 @@
 			};
 		};
 	};
-
-	vddio_phy1: vddio-phy1 {
-		compatible = "regulator-fixed";
-		regulator-name = "vddio_phy1_1v8";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-		regulator-always-on;
-	};
 };
 
 &aud2htx {
@@ -187,7 +179,12 @@
 			reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
 			reset-deassert-us = <20000>;
-			vddio-supply = <&vddio_phy1>;
+			vddio-supply = <&vddio1>;
+
+			vddio1: vddio-regulator {
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
 		};
 	};
 };
