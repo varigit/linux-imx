@@ -41,6 +41,7 @@
 			gpio = <&lsio_gpio1 28 GPIO_ACTIVE_HIGH>;
 			enable-active-high;
 			regulator-off-in-suspend;
+			regulator-boot-on;
 		};
 	};
 
