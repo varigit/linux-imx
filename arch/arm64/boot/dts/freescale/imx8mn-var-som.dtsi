@@ -58,6 +58,7 @@
 		regulator-enable-ramp-delay = <20000>;
 		gpio = <&gpio2 9 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
+		regulator-boot-on;
 	};
 
 	sound-spdif {
