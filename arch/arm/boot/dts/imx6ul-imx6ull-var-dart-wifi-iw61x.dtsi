@@ -45,4 +45,5 @@
 	vmmc-supply = <&reg_sd1_vmmc>;
 	mmc-pwrseq = <&iw61x_pwrseq>;
 	status = "okay";
+	fsl,sdio-async-interrupt-enabled;
 };
