@@ -881,3 +881,13 @@
 	bus-width = <4>;
 	status = "okay";
 };
+
+#include "imx95-android.dtsi"
+
+/* BT */
+&lpuart5 {
+	bluetooth {
+		compatible = "nxp,88w8987-bt";
+		status = "okay";
+	};
+};
