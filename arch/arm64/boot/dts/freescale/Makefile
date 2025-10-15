@@ -944,3 +944,6 @@ imx8mp-evk-revb4-powersave-non-rpmsg-dtbs := imx8mp-evk-powersave-non-rpmsg.dtb 
 
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk-revb4-powersave-non-rpmsg.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk-revb4-powersave.dtb
+
+dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-sonata.dtb imx95-var-dart-sonata-m7.dtb \
+                          imx95-var-dart-dt8mcustomboard.dtb imx95-var-dart-dt8mcustomboard-m7.dtb
