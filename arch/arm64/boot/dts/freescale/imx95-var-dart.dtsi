@@ -52,6 +52,16 @@
 		regulator-name = "+V3.3_SW";
 	};
 
+	reg_bt_buf: bt-buffer {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_buf>;
+		regulator-name = "BT_BUF";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio4 28 GPIO_ACTIVE_LOW>;
+	};
+
 	reg_audio: regulator-audio-vdd {
 		compatible = "regulator-fixed";
 		regulator-name = "wm8904_supply";
@@ -217,7 +227,7 @@
 /* BT */
 &lpuart5 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart5>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart5>;
 	status = "okay";
 
 	bluetooth {
@@ -282,7 +292,7 @@
 };
 
 &scmi_iomuxc {
-	pinctrl_bt: btgrp {
+	pinctrl_bt_buf: btgrp {
 		fsl,pins = <
 			IMX95_PAD_CCM_CLKO3__GPIO4_IO_BIT28				0x31e
 		>;
