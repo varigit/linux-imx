@@ -37,10 +37,6 @@
 	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_wifi>;
 	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_wifi>;
 	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_wifi>;
-	assigned-clocks = <&clks IMX6UL_CLK_USDHC1_SEL>, <&clks IMX6UL_CLK_USDHC1>;
-	assigned-clock-parents = <&clks IMX6UL_CLK_PLL2_PFD2>;
-	assigned-clock-rates = <0>, <132000000>;
-	fsl,tuning-step = <2>;
 	keep-power-in-suspend;
 	non-removable;
 	vmmc-supply = <&reg_sd1_vmmc>;
