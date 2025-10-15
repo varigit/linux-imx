@@ -213,7 +213,7 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
 	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-	struct codec_priv *codec_priv;
+	struct codec_priv *codec_priv = &priv->codec_priv;
 	struct snd_soc_dai *codec_dai;
 	struct cpu_priv *cpu_priv = &priv->cpu_priv;
 	struct device *dev = rtd->card->dev;
