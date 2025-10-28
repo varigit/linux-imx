@@ -32,7 +32,7 @@
 
 &iomuxc {
 	pinctrl_wifi_pwr_3v3: wifipwr3v3grp {
-		fsl,pins = < >;
+		fsl,pins = <>;
 	};
 
 	pinctrl_iw612_spi: iw612_spi_grp {
@@ -44,4 +44,8 @@
 
 &reg_wifi_3v3 {
 	status = "disabled";
+};
+
+&usdhc1 {
+	vmmc-supply = <>;
 };
