@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ * Copyright 2025 Variscite Ltd.
+ */
+
+#include "imx8mm-var-dart-dt8mcustomboard.dts"
+#include "imx8mm-var-dart-sonata.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M-MINI on Sonata-Board";
+};
