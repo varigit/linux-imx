@@ -255,6 +255,10 @@
 	};
 };
 
+&netc_timer {
+	status = "okay";
+};
+
 &pcie0 {
 	status = "disabled";
 };
