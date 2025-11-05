@@ -6,8 +6,8 @@
 /dts-v1/;
 
 #include "imx91-var-som.dtsi"
-#include "imx91-var-som-symphony.dtsi"
+#include "imx91-var-som-symphony-1.x.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX91 on Symphony-Board";
+	model = "Variscite VAR-SOM-MX91 on Symphony-Board 1.x";
 };
