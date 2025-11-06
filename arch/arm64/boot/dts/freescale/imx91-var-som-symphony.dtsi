@@ -206,6 +206,20 @@
 	status = "okay";
 };
 
+&gpio2 {
+	/*
+	 * Drive this line low when it is not
+	 * controlled by the pwm-imx-tpm driver.
+	 * The pin is configured as a GPIO to
+	 * avoid floating when PWM is inactive.
+	 */
+        tpm4-hog {
+                gpio-hog;
+                gpios = <5 GPIO_ACTIVE_HIGH>;
+                output-low;
+        };
+};
+
 &iomuxc {
 	pinctrl_extcon: extcongrp {
 		fsl,pins = <
@@ -350,6 +364,12 @@
 	pinctrl_tpm4: tpm4grp {
 		fsl,pins = <
 			MX91_PAD_GPIO_IO05__TPM4_CH0			0x51e
+		>;
+	};
+
+	pinctrl_tpm4_sleep: tpm4sleepgrp {
+		fsl,pins = <
+			MX91_PAD_GPIO_IO05__GPIO2_IO5			0x51e
 		>;
 	};
 
@@ -569,7 +589,8 @@
 
 &tpm4 {
 	pinctrl-0 = <&pinctrl_tpm4>;
-	pinctrl-names = "default";
+	pinctrl-1 = <&pinctrl_tpm4_sleep>;
+	pinctrl-names = "default", "sleep";
 	status = "okay";
 };
 
