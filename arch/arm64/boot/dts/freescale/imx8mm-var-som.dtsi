@@ -43,6 +43,7 @@
 		regulator-max-microvolt = <3300000>;
 		gpio = <&gpio2 9 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
+		regulator-boot-on;
 	};
 
 	reg_phy_vddio: regulator-phy-vddio {
