@@ -19,4 +19,16 @@
 		output-low;
 		line-name = "wlan_spi_en_b";
 	};
+
+	/*
+	 * PCIE2_SEL
+	 * Configure mux for routing WLAN_SPI_TXD_1V8
+	 * through J2.81 to J1.63, looping back the signal
+	 */
+	pcie2_sel {
+		gpio-hog;
+		gpios = <6 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "pcie2_sel";
+	};
 };
