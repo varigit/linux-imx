@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
- * Copyright 2022 NXP
- * Copyright 2023-2025 Variscite Ltd.
+ * Copyright 2025 Variscite Ltd.
  */
 
 / {
@@ -234,7 +233,17 @@
 			eee-broken-1000t;
 			reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
-			reset-deassert-us = <20000>;
+			reset-deassert-us = <100000>;
+			mxl-8611x,led0_cfg = <(
+				MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
+				MXL8611X_LEDX_CFG_TRAFFIC_ACT_BLINK_IND
+			)>;
+			mxl-8611x,led1_cfg = <(
+				MXL8611X_LEDX_CFG_LINK_UP_10MB_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
+				MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
+			)>;
 			vddio-supply = <&vddio1>;
 
 			vddio1: vddio-regulator {
@@ -501,11 +510,45 @@
 		wakeup-source;
 	};
 
+	pca6408: gpio@21 {
+		compatible = "nxp,pcal6408";
+		reg = <0x21>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		status = "okay";
+
+		/*
+		 * RGB_SEL
+		 * output-low: Configure mux for VAR-SOMs LVDS
+		 * output-high: Configure mux for VAR-SOM-MX91 RGB2LVDS
+		 */
+		rgb_sel {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "rgb_sel";
+		};
+
+		/* Need to deassert the TPM2 reset signal */
+		tpm_en {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "tpm_en";
+		};
+	};
+
 	/* DS1337 RTC module */
 	rtc@68 {
-		status = "okay";
 		compatible = "dallas,ds1337";
 		reg = <0x68>;
+		status = "okay";
+	};
+
+	st33ktpm2i: st33ktpm2i@2e {
+		compatible = "infineon,slb9673";
+		reg = <0x2e>;
+		status = "okay";
 	};
 };
 

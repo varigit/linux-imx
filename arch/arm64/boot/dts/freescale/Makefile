@@ -779,6 +779,15 @@ imx93-var-som-wbe-symphony-ld-dtbs := imx93-var-som-wbe-symphony.dtb imx93-var-s
 dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-symphony-ld.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-wbe-symphony-ld.dtb
 
+imx93-var-som-symphony-1.x-dtbs := imx93-var-som-symphony.dtb imx93-var-som-symphony-1.x.dtbo
+imx93-var-som-symphony-1.x-m33-dtbs := imx93-var-som-symphony-m33.dtb imx93-var-som-symphony-1.x.dtbo
+
+dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-symphony-1.x.dtb \
+			  imx93-var-som-symphony-1.x-m33.dtb
+
+imx93-var-som-symphony-1.x-ld-dtbs := imx93-var-som-symphony-1.x.dtb imx93-var-som-ld.dtbo
+dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-symphony-1.x-ld.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx93-var-dart-dt8mcustomboard.dtb \
 			  imx93-var-dart-dt8mcustomboard-m33.dtb
 
