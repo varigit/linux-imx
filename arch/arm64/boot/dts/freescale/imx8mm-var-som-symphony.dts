@@ -214,10 +214,59 @@
 		status = "okay";
 	};
 
+	/* GPIO Expander */
+	pca6408: gpio@21 {
+		compatible = "nxp,pcal6408";
+		standard-regs-fallback;
+		reg = <0x21>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		status = "okay";
+
+		/*
+		 * RGB_SEL
+		 * output-lo: Configure mux for VAR-SOMs LVDS
+		 * output-hi: Configure mux for VAR-SOM-MX91 RGB2LVDS
+		 */
+		rgb_sel {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "rgb_sel";
+		};
+
+		/*
+		 * The SEC_RSTN line for the TPM2 module has an external
+		 * pull-down, keeping the module in reset by default.
+		 * Drive this signal high to release the TPM2 from reset.
+		 */
+		sec_rstn {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "sec_rstn";
+		};
+	};
+
 	/* DS1337 RTC module */
 	rtc@68 {
 		compatible = "dallas,ds1337";
 		reg = <0x68>;
+		status = "okay";
+	};
+
+	/* TPMv2 */
+	st33ktpm2xi2c: st33ktpm2xi2c@2e {
+		compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
+		label = "tpm";
+		reg = <0x2e>;
+		/*
+		 * reset-gpios is not used by the TPM driver, but forces
+		 * probe ordering: ensures GPIO expander is initialized
+		 * and sec_rstn GPIO hog has released TPM from reset
+		 * before the TPM driver probes.
+		 */
+		reset-gpios = <&pca6408 4 GPIO_ACTIVE_LOW>;
 		status = "okay";
 	};
 };
@@ -300,9 +349,7 @@
 };
 
 &pcie0 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_pcie0>;
-	reset-gpio = <&gpio4 21 GPIO_ACTIVE_LOW>;
+	reset-gpio = <&pca6408 1 GPIO_ACTIVE_LOW>;
 	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>, <&pcie0_refclk>,
 		 <&clk IMX8MM_CLK_PCIE1_AUX>;
 	assigned-clocks = <&clk IMX8MM_CLK_PCIE1_AUX>,
@@ -535,12 +582,6 @@
 	pinctrl_pca9534: pca9534grp {
 		fsl,pins = <
 			MX8MM_IOMUXC_GPIO1_IO07_GPIO1_IO7		0x16
-		>;
-	};
-
-	pinctrl_pcie0: pcie0grp {
-		fsl,pins = <
-			MX8MM_IOMUXC_SAI2_RXFS_GPIO4_IO21		0x41
 		>;
 	};
 };
