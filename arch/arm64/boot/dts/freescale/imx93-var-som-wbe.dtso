@@ -1,9 +1,17 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
- * Copyright 2023-2024 Variscite Ltd.
+ * Device tree overlay to support the VAR-SOM-MX93 featuring
+ * WiFi/BT chipset with 802.15.4, used on the Symphony-Board
+ *
+ * Copyright 2025 Variscite Ltd.
  */
 
-#include "imx93-var-som.dtsi"
+/dts-v1/;
+/plugin/;
+
+&{/} {
+	model = "Variscite VAR-SOM-MX93 2.x and newer with 802.15.4 on Symphony-Board";
+};
 
 &ads7846_ts {
 	status = "disabled";
