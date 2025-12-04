@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay to support the VAR-SOM-MX8X on Symphony Board 1.x
+ *
+ * Copyright 2025 Variscite Ltd.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+#include <dt-bindings/pinctrl/pads-imx8qxp.h>
+
+&iomuxc {
+	pinctrl_pcieb: pciebgrp {
+		fsl,pins = <
+			IMX8QXP_SAI1_RXD_LSIO_GPIO0_IO29			0x60000021
+		>;
+	};
+};
+
+&pcal6408 {
+	status = "disabled";
+};
+
+&pcieb {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pcieb>;
+	reset-gpio = <&lsio_gpio0 29 GPIO_ACTIVE_LOW>;
+};
+
+&st33ktpm2xi2c {
+	status = "disabled";
+};
+
