@@ -333,11 +333,60 @@
 		wakeup-source;
 	};
 
+	/* GPIO Expander */
+	pca6408: gpio@21 {
+		compatible = "nxp,pcal6408";
+		standard-regs-fallback;
+		reg = <0x21>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		status = "okay";
+
+		/*
+		* RGB_SEL
+		* output-lo: Configure mux for VAR-SOMs LVDS
+		* output-hi: Configure mux for VAR-SOM-MX91 RGB2LVDS
+		*/
+		rgb_sel {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "rgb_sel";
+		};
+
+		/*
+		 * The SEC_RSTN line for the TPM2 module has an external
+		 * pull-down, keeping the module in reset by default.
+		 * Drive this signal high to release the TPM2 from reset.
+		 */
+		sec_rstn {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "sec_rstn";
+		};
+	};
+
 	/* DS1337 RTC module */
 	rtc@68 {
 		status = "okay";
 		compatible = "dallas,ds1337";
 		reg = <0x68>;
+	};
+
+	/* TPMv2 */
+	st33ktpm2xi2c: st33ktpm2xi2c@2e {
+		compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
+		reg = <0x2e>;
+		label = "tpm";
+		/*
+		* reset-gpios is not used by the TPM driver, but forces
+		* probe ordering: ensures GPIO expander is initialized
+		* and sec_rstn GPIO hog has released TPM from reset
+		* before the TPM driver probes.
+		*/
+		reset-gpios = <&pca6408 4 GPIO_ACTIVE_LOW>;
+		status = "okay";
 	};
 };
 

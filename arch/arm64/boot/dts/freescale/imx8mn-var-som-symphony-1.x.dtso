@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay to support the VAR-SOM-MX8M-NANO on Symphony Board 1.x
+ *
+ * Copyright 2025 Variscite Ltd.
+ */
+
+/dts-v1/;
+/plugin/;
+
+&pca6408 {
+	status = "disabled";
+};
+
+&st33ktpm2xi2c {
+	status = "disabled";
+};
