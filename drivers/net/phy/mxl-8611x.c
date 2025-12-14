@@ -642,9 +642,6 @@ static int mxl86110_config_init(struct phy_device *phydev)
 	if (ret < 0)
 		goto error;
 
-	if (ret < 0)
-		goto error;
-
 	if (MXL8611x_UTP_DISABLE_AUTO_SLEEP_FEATURE_CUSTOM == 1) {
 		/* disable auto sleep */
 		ret = mxlphy_modify_extended_reg(phydev, MXL8611x_UTP_EXT_SLEEP_CTRL_REG,
