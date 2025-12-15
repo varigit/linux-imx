@@ -951,6 +951,11 @@ dtb-$(CONFIG_ARCH_MXC) += imx95-15x15-frdm-dual-os08a20-isp.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx95-15x15-frdm-aud-hat.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx95-15x15-frdm-8mic-reve.dtb
 
+dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-sonata.dtb \
+			  imx95-var-dart-sonata-m7.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-dt8mcustomboard.dtb \
+			  imx95-var-dart-dt8mcustomboard-m7.dtb
+
 dtb-$(CONFIG_ARCH_S32) += s32g274a-evb.dtb
 dtb-$(CONFIG_ARCH_S32) += s32g274a-rdb2.dtb
 dtb-$(CONFIG_ARCH_S32) += s32g399a-rdb3.dtb
