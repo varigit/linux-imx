@@ -276,6 +276,18 @@
 		output-low;
 		line-name = "cam_buf_en";
 	};
+
+	/*
+	 * Drive this line low when it is not
+	 * controlled by the pwm-imx-tpm driver.
+	 * The pin is configured as a GPIO to
+	 * avoid floating when PWM is inactive.
+	 */
+        tpm3-hog {
+                gpio-hog;
+                gpios = <24 GPIO_ACTIVE_HIGH>;
+                output-low;
+        };
 };
 
 &wdog3 {
@@ -400,6 +412,12 @@
 	pinctrl_tpm3: tpm3grp {
 		fsl,pins = <
 			MX93_PAD_GPIO_IO24__TPM3_CH3			0x51e
+		>;
+	};
+
+	pinctrl_tpm3_sleep: tpm3sleepgrp {
+		fsl,pins = <
+			MX93_PAD_GPIO_IO24__GPIO2_IO24			0x51e
 		>;
 	};
 
@@ -685,7 +703,8 @@
 
 &tpm3 {
 	pinctrl-0 = <&pinctrl_tpm3>;
-	pinctrl-names = "default";
+	pinctrl-1 = <&pinctrl_tpm3_sleep>;
+	pinctrl-names = "default", "sleep";
 	status = "okay";
 };
 
