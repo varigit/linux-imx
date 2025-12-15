@@ -1483,7 +1483,8 @@ properties:
 
       - description: Variscite DART-MX95 based Boards
         items:
-          - const: variscite,var-dart-mx95-sonata # Variscite DART-MX95 SOM on Sonata Development Board
+          - enum:
+              - variscite,var-dart-mx95-sonata # Variscite DART-MX95 SOM on Sonata Development Board
           - const: variscite,var-dart-mx95 # Variscite DART-MX95 SOM
           - const: fsl,imx95
 
