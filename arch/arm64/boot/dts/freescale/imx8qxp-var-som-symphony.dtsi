@@ -234,7 +234,6 @@
 			reg = <5>;
 			qca,disable-smarteee;
 			vddio-supply = <&vddio1>;
-			adi,phy-mode-override = "rgmii";
 			reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
 			reset-deassert-us = <20000>;
