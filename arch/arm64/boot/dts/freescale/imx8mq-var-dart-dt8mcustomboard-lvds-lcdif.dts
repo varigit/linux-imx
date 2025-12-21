@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
- * Device tree overlay to support LVDS LCDIF on DART-MX8M
+ * Device tree to support LVDS LCDIF on DART-MX8M
  *
  * Copyright 2017 NXP
  * Copyright 2018-2024 Variscite Ltd.
  */
 
-/dts-v1/;
-/plugin/;
-
-#include <dt-bindings/clock/imx8mq-clock.h>
+#include "imx8mq-var-dart-dt8mcustomboard.dtsi"
 #include "imx8mq-var-dart-lvds-panel.dtsi"
+
+/ {
+	model = "Variscite DART-MX8M on DT8MCustomBoard LVDS";
+};
 
 &backlight {
 	status = "okay";
@@ -52,10 +53,33 @@
 				 <&clk IMX8MQ_VIDEO_PLL1>,
 				 <&clk IMX8MQ_CLK_27M>;
 	assigned-clock-rate = <126000000>, <0>, <0>, <1134000000>;
+
+        port {
+                lcdif_mipi_dsi: endpoint {
+                        remote-endpoint = <&mipi_dsi_in>;
+                };
+        };
+
 };
 
 &mipi_dsi {
-	status = "okay";
+        status = "okay";
+
+        ports {
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                port@0 {
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        reg = <0>;
+
+                        mipi_dsi_in: endpoint@1 {
+                                reg = <1>;
+                                remote-endpoint = <&lcdif_mipi_dsi>;
+                        };
+                };
+        };
 };
 
 &pwm1 {
