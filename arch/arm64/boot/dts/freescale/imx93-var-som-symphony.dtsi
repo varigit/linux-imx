@@ -119,12 +119,20 @@
 		};
 	};
 
-	/*
-	 * Needed only for Symphony <= v1.5
-	 */
+	reg_fec_phy_vsel: regulator-fec-phy-vsel {
+		compatible = "regulator-fixed";
+		regulator-name = "fec-phy-vsel";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&pca9534 6 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-always-on;
+	};
+
 	reg_fec_phy: regulator-fec-phy {
 		compatible = "regulator-fixed";
 		regulator-name = "fec-phy";
+		vin-supply = <&reg_fec_phy_vsel>;
 		regulator-min-microvolt = <1800000>;
 		regulator-max-microvolt = <1800000>;
 		regulator-enable-ramp-delay = <20000>;
