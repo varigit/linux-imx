@@ -652,6 +652,46 @@ static int mxl86110_enable_led_activity_blink(struct phy_device *phydev)
 }
 
 /**
+ * mxl86110_default_leds_configuration - Set default LED configuration on PHY
+ * @phydev: Pointer to the PHY device structure
+ *
+ * Configure the PHY LEDs with a sensible default setup that provides clear
+ * visual feedback for network activity and link speed:
+ * - LED0: Activity indicator - blinks on RX/TX traffic
+ * - LED1: Link speed indicator - ON for 10/100/1000 Mbps
+ *
+ * This configuration is applied during PHY initialization before any activity
+ * blink settings are enabled. Further LED customization can be performed via
+ * the /sys/class/leds interface.
+ *
+ * Return: 0 on success or a negative errno code on failure.
+ */
+static int mxl86110_default_leds_configuration(struct phy_device *phydev)
+{
+	int ret;
+
+	/* LED0: Activity indication (RX/TX with blink) */
+	ret = __mxl86110_modify_extended_reg(phydev,
+					     MXL86110_LED0_CFG_REG,
+					     0xFFFF, /* clear all */
+					     MXL86110_LEDX_CFG_LINK_UP_RX_ACT_ON |
+					     MXL86110_LEDX_CFG_LINK_UP_TX_ACT_ON |
+					     MXL86110_LEDX_CFG_BLINK);
+	if (ret < 0)
+		return ret;
+
+	/* LED1: Link speed indication (10/100/1000) */
+	ret = __mxl86110_modify_extended_reg(phydev,
+					     MXL86110_LED1_CFG_REG,
+					     0xFFFF,
+					     MXL86110_LEDX_CFG_LINK_UP_10MB_ON |
+					     MXL86110_LEDX_CFG_LINK_UP_100MB_ON |
+					     MXL86110_LEDX_CFG_LINK_UP_1GB_ON);
+
+	return ret;
+}
+
+/**
  * mxl86110_config_rgmii_delay() - configure RGMII delays
  * @phydev: pointer to the phy_device
  *
@@ -728,6 +768,10 @@ static int mxl86110_config_init(struct phy_device *phydev)
 		goto out;
 
 	ret = mxl86110_enable_led_activity_blink(phydev);
+	if (ret < 0)
+		goto out;
+
+	ret = mxl86110_default_leds_configuration(phydev);
 	if (ret < 0)
 		goto out;
 
