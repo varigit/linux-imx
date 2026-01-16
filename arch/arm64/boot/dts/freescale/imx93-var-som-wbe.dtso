@@ -18,6 +18,9 @@
 };
 
 &lpspi8 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
 	/* 802.15.4 SPI device */
 	spidev@0 {
 		pinctrl-names = "default";
