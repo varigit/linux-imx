@@ -10,6 +10,22 @@
 		#size-cells = <2>;
 		ranges;
 
+		/*
+		 * When modifying this region, update also
+		 * M4_DDR_START and M4_DDR_END macros of the mcu_rdc
+		 * node of the imx8mp-var-common-u-boot.dtsi U-Boot
+		 * device tree.
+		 *
+		 * They are defined in imx8mp-sec-def.h and represent
+		 * MRSA and MREA, respectively, of the RDC memory region.
+		 *
+		 * MRSA calculation:
+		 * 0x7B000000 - 0x40000000 =  0x3B000000 // Desired Start - DDR Base
+		 * 0x3B000000 / 2 = 0x1D800000           // Right-shift 1 bit
+		 * MREA calculation:
+		 * 0x7C000000 - 0x40000000 =  0x3C000000 // Desired End - DDR Base
+		 * 0x3C000000 / 2 = 0x1E000000           // Right-shift 1 bit
+		 */
 		m7_reserved: m7@7b000000 {
 			no-map;
 			reg = <0 0x7b000000 0 0x1000000>;
