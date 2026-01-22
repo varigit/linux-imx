@@ -367,11 +367,12 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_captouch>;
 		interrupt-parent = <&lsio_gpio0>;
-		interrupts = <24 0>;
+		interrupts = <24 IRQ_TYPE_LEVEL_LOW>;
 		touchscreen-size-x = <800>;
 		touchscreen-size-y = <480>;
 		touchscreen-inverted-x;
 		touchscreen-inverted-y;
+		wakeup-source;
 	};
 
 	/* DS1337 RTC module */
