@@ -317,11 +317,12 @@
 		compatible = "edt,edt-ft5406";
 		reg = <0x38>;
 		interrupt-parent = <&lsio_gpio1>;
-		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
 		touchscreen-size-x = <800>;
 		touchscreen-size-y = <480>;
 		touchscreen-inverted-x;
 		touchscreen-inverted-y;
+		wakeup-source;
 		status = "disabled";
 	};
 
