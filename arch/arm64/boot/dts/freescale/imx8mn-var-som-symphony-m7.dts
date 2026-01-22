@@ -27,6 +27,21 @@
 		#size-cells = <2>;
 		ranges;
 
+		/*
+		 * When modifying this region, update also M4_EVK_DDR4_START
+		 * and M4_EVK_DDR4_END macros of the mcu_rdc node of the
+		 * imx8mn-var-som-symphony-u-boot.dtsi U-Boot device tree
+		 *
+		 * They are defined in imx8mn-sec-def.h and represent
+		 * MRSA and MREA, respectively, of the RDC memory region.
+		 *
+		 * MRSA calculation:
+		 * 0x7E000000 - 0x40000000 =  0x3E000000 // Desired Start - DDR Base
+		 * 0x3E000000 / 2 = 0x1F000000           // Right-shift 1 bit
+		 * MREA calculation:
+		 * 0x7F000000 - 0x40000000 =  0x3F000000 // Desired End - DDR Base
+		 * 0x3F000000 / 2 = 0x1F800000           // Right-shift 1 bit
+		 */
 		m_core_reserved: m_core@7e000000 {
 			no-map;
 			reg = <0 0x7e000000 0 0x1000000>;
