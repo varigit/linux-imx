@@ -190,8 +190,12 @@ static inline unsigned int blk_rq_get_max_segments(struct request *rq)
 static inline unsigned int blk_queue_get_max_sectors(struct request_queue *q,
 						     enum req_op op)
 {
-	if (unlikely(op == REQ_OP_DISCARD || op == REQ_OP_SECURE_ERASE))
+	if (unlikely(op == REQ_OP_DISCARD))
 		return min(q->limits.max_discard_sectors,
+			   UINT_MAX >> SECTOR_SHIFT);
+
+	if (unlikely(op == REQ_OP_SECURE_ERASE))
+		return min(q->limits.max_secure_erase_sectors,
 			   UINT_MAX >> SECTOR_SHIFT);
 
 	if (unlikely(op == REQ_OP_WRITE_ZEROES))
