@@ -497,7 +497,12 @@ static int pxp_g_fmt_video_output(struct file *file, void *fh,
 {
 	struct v4l2_pix_format *pf = &f->fmt.pix;
 	struct pxps *pxp = video_get_drvdata(video_devdata(file));
-	struct pxp_data_format *fmt = pxp->s0_fmt;
+	struct pxp_data_format *fmt;
+
+	if (!pxp->s0_fmt)
+		return -EINVAL;
+
+	fmt = pxp->s0_fmt;
 
 	pf->width = pxp->pxp_conf.s0_param.width;
 	pf->height = pxp->pxp_conf.s0_param.height;
