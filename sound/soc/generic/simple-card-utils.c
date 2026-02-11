@@ -449,6 +449,7 @@ int simple_util_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_dai *sdai;
 	struct simple_util_priv *priv = snd_soc_card_get_drvdata(rtd->card);
 	struct simple_dai_props *props = simple_priv_to_props(priv, rtd->num);
+	enum simple_util_sysclk_order order = props->sysclk_order;
 	unsigned int mclk, mclk_fs = 0;
 	int i, ret;
 
@@ -482,16 +483,32 @@ int simple_util_hw_params(struct snd_pcm_substream *substream,
 				return ret;
 		}
 
-		for_each_rtd_codec_dais(rtd, i, sdai) {
-			ret = snd_soc_dai_set_sysclk(sdai, 0, mclk, SND_SOC_CLOCK_IN);
-			if (ret && ret != -ENOTSUPP)
-				return ret;
-		}
+		if (order == SIMPLE_SYSCLK_ORDER_CPU_FIRST) {
+			/* CPU first */
+			for_each_rtd_cpu_dais(rtd, i, sdai) {
+				ret = snd_soc_dai_set_sysclk(sdai, 0, mclk, SND_SOC_CLOCK_OUT);
+				if (ret && ret != -ENOTSUPP)
+					return ret;
+			}
 
-		for_each_rtd_cpu_dais(rtd, i, sdai) {
-			ret = snd_soc_dai_set_sysclk(sdai, 0, mclk, SND_SOC_CLOCK_OUT);
-			if (ret && ret != -ENOTSUPP)
-				return ret;
+			for_each_rtd_codec_dais(rtd, i, sdai) {
+				ret = snd_soc_dai_set_sysclk(sdai, 0, mclk, SND_SOC_CLOCK_IN);
+				if (ret && ret != -ENOTSUPP)
+					return ret;
+			}
+		} else {
+			/* default: codec first */
+			for_each_rtd_codec_dais(rtd, i, sdai) {
+				ret = snd_soc_dai_set_sysclk(sdai, 0, mclk, SND_SOC_CLOCK_IN);
+				if (ret && ret != -ENOTSUPP)
+					return ret;
+			}
+
+			for_each_rtd_cpu_dais(rtd, i, sdai) {
+				ret = snd_soc_dai_set_sysclk(sdai, 0, mclk, SND_SOC_CLOCK_OUT);
+				if (ret && ret != -ENOTSUPP)
+					return ret;
+			}
 		}
 	}
 
