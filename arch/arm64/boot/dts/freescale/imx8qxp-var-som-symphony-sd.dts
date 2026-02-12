@@ -34,3 +34,5 @@
 	vmmc-supply = <&reg_usdhc2_vmmc>;
 	status = "okay";
 };
+
+#include "imx8qxp-android.dtsi"

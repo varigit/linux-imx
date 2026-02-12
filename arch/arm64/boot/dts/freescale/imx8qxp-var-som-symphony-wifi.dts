@@ -53,3 +53,5 @@
 		compatible = "brcm,bcm4329-fmac";
 	};
 };
+
+#include "imx8qxp-android.dtsi"
