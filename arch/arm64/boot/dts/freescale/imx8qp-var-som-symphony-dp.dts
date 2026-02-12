@@ -24,3 +24,5 @@
 
 	model = "Variscite VAR-SOM-MX8 i.MX8QP on Symphony-Board DP";
 };
+
+#include "imx8qm-android.dtsi"

@@ -24,3 +24,5 @@
 
 	model = "Variscite VAR-SOM-MX8 i.MX8QP on SP8Custom-Board LVDS";
 };
+
+#include "imx8qm-android.dtsi"
