@@ -7,6 +7,47 @@
 
 / {
 	model = "Variscite VAR-SOM-MX8X on Symphony-Board WIFI";
+
+	reg_wifi_vbat: regulator-wifi-vbat {
+		compatible = "regulator-fixed";
+		regulator-name = "WIFI_VBAT";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&lsio_gpio3 16 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	reg_wifi_vddio: regulator-wifi-vddio {
+		compatible = "regulator-fixed";
+		regulator-name = "WIFI_VDDIO";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		gpio = <&lsio_gpio3 13 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	reg_wifi: regulator-wifi {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi>;
+		regulator-name = "WIFI_PWR";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&lsio_gpio3 9 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		vin-supply = <&reg_wifi_vddio>;
+	};
+
+	reg_bt_buf: bt-buffer {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_buf>;
+		regulator-name = "BT_BUF";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&lsio_gpio1 29 GPIO_ACTIVE_LOW>;
+		vin-supply = <&reg_wifi_vbat>;
+	};
 };
 
 &iomuxc {
@@ -15,11 +56,40 @@
 			IMX8QXP_USDHC1_VSELECT_LSIO_GPIO4_IO20	0x00000021
 		>;
 	};
+
+	pinctrl_wifi_reg: wifireg {
+		fsl,pins = <
+			IMX8QXP_QSPI0A_SCLK_LSIO_GPIO3_IO16		0x06000021
+			IMX8QXP_QSPI0A_DQS_LSIO_GPIO3_IO13		0x06000021
+		>;
+	};
+
+	/* Override pinctrl_wifi from SOM dtsi: only 32K clock + WL_REG_ON */
+	pinctrl_wifi: wifigrp {
+		fsl,pins = <
+			IMX8QXP_SCU_BOOT_MODE3_SCU_DSC_RTC_CLOCK_OUTPUT_32K	0x20
+			IMX8QXP_QSPI0A_DATA0_LSIO_GPIO3_IO09		0x06000021
+		>;
+	};
 };
 
 /* Bluetooth */
 &lpuart0 {
+	uart-has-rtscts;
 	status = "okay";
+
+	bluetooth {
+		compatible = "brcm,bcm4329-bt";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_en>;
+		clocks = <&xtal32k>;
+		clock-names = "txco";
+		max-speed = <3000000>;
+		vbat-supply = <&reg_bt_buf>;
+		vddio-supply = <&reg_wifi_vddio>;
+		shutdown-gpios = <&lsio_gpio3 10 GPIO_ACTIVE_HIGH>;
+		brcm,bt-pcm-int-params = [01 00 00 00 00];
+	};
 };
 
 /* WIFI 1.8V voltage select */
@@ -40,13 +110,16 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_wifi_reg>;
+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_wifi_reg>;
+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_wifi_reg>;
 	bus-width = <4>;
 	non-removable;
 	keep-power-in-suspend;
 	status = "okay";
+
+	vmmc-supply = <&reg_wifi>;
+	vqmmc-supply = <&reg_wifi_vbat>;
 
 	brcmf: bcrmf@1 {
 		reg = <1>;

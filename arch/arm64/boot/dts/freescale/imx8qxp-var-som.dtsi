@@ -199,11 +199,16 @@
 		>;
 	};
 
-	pinctrl_bt: btgrp {
+	pinctrl_bt_en: btengrp {
 		fsl,pins = <
-			IMX8QXP_QSPI0A_DATA1_LSIO_GPIO3_IO10			0x06000021
-			IMX8QXP_MIPI_DSI1_I2C0_SCL_LSIO_GPIO1_IO29		0x06000021
+			IMX8QXP_QSPI0A_DATA1_LSIO_GPIO3_IO10			0x06000021 /* BT_REG_ON */
 			IMX8QXP_QSPI0A_DATA2_LSIO_GPIO3_IO11			0x06000021
+		>;
+	};
+
+	pinctrl_bt_buf: btbufgrp {
+		fsl,pins = <
+			IMX8QXP_MIPI_DSI1_I2C0_SCL_LSIO_GPIO1_IO29		0x06000021 /* BT_BUF    */
 		>;
 	};
 
@@ -415,7 +420,7 @@
 /* Bluetooth */
 &lpuart0 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_lpuart0>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_lpuart0>;
 	dma-names = "tx","rx";
 	dmas = <&edma2 9 0 0>,
 		<&edma2 8 0 1>;
