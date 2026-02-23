@@ -188,6 +188,7 @@ static int simple_link_init(struct simple_util_priv *priv,
 	enum snd_soc_trigger_order trigger_start = SND_SOC_TRIGGER_ORDER_DEFAULT;
 	enum snd_soc_trigger_order trigger_stop  = SND_SOC_TRIGGER_ORDER_DEFAULT;
 	bool playback_only = 0, capture_only = 0;
+	bool cpu_first = false;
 	int ret;
 
 	ret = simple_util_parse_daifmt(dev, node, codec,
@@ -208,6 +209,12 @@ static int simple_link_init(struct simple_util_priv *priv,
 	of_property_read_u32(cpu,	PREFIX	"mclk-fs", &dai_props->mclk_fs);
 	of_property_read_u32(codec,		"mclk-fs", &dai_props->mclk_fs);
 	of_property_read_u32(codec,	PREFIX	"mclk-fs", &dai_props->mclk_fs);
+
+	cpu_first |= of_property_read_bool(top,         "sysclk-cpu-first");
+	cpu_first |= of_property_read_bool(top, PREFIX  "sysclk-cpu-first");
+	cpu_first |= of_property_read_bool(node,        "sysclk-cpu-first");
+	cpu_first |= of_property_read_bool(node, PREFIX "sysclk-cpu-first");
+	dai_props->sysclk_order = cpu_first;
 
 	graph_util_parse_trigger_order(priv, top,	&trigger_start, &trigger_stop);
 	graph_util_parse_trigger_order(priv, node,	&trigger_start, &trigger_stop);
