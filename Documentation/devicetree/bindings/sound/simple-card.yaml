@@ -35,6 +35,13 @@ definitions:
     description: see tdm-slot.txt.
     $ref: /schemas/types.yaml#/definitions/uint32
 
+  sysclk-cpu-first:
+    description:
+      When mclk-fs is used, configure CPU DAI sysclk before codec DAI sysclk
+      so the codec sees the final MCLK rate.
+      This property only affects the mclk-fs code path.
+    $ref: /schemas/types.yaml#/definitions/flag
+
   system-clock-frequency:
     description: |
       If a clock is specified and a multiplication factor is given with
@@ -194,6 +201,8 @@ properties:
     $ref: "#/definitions/format"
   simple-audio-card,mclk-fs:
     $ref: "#/definitions/mclk-fs"
+  simple-audio-card,sysclk-cpu-first:
+    $ref: "#/definitions/sysclk-cpu-first"
   simple-audio-card,aux-devs:
     $ref: "#/definitions/aux-devs"
   simple-audio-card,additional-devs:
@@ -251,6 +260,8 @@ patternProperties:
         $ref: "#/definitions/format"
       mclk-fs:
         $ref: "#/definitions/mclk-fs"
+      sysclk-cpu-first:
+        $ref: "#/definitions/sysclk-cpu-first"
       aux-devs:
         $ref: "#/definitions/aux-devs"
       convert-rate:
