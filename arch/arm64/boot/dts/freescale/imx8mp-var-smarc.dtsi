@@ -298,11 +298,13 @@
 		status = "okay";
 	};
 
-
 	/* PCF85263A RTC module */
 	rtc@51 {
 		compatible = "nxp,pcf85263";
 		reg = <0x51>;
+		interrupt-parent = <&pcal6416>;
+		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
+		wakeup-source;
 		status = "okay";
 	};
 
@@ -564,8 +566,8 @@
 
 	pinctrl_pcal6416: pcal6416grp {
 		fsl,pins = <
-		MX8MP_IOMUXC_SAI1_RXD3__GPIO4_IO05					0xc0
-			MX8MP_IOMUXC_SAI1_RXD1__GPIO4_IO03 				0xc0
+			MX8MP_IOMUXC_SAI1_RXD3__GPIO4_IO05				0xc0
+			MX8MP_IOMUXC_SAI1_RXD1__GPIO4_IO03				0xc0
 		>;
 	};
 };
