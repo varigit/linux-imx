@@ -63,7 +63,7 @@
 		simple-audio-card,bitclock-master = <&dailink_master>;
 		simple-audio-card,format = "i2s";
 		simple-audio-card,frame-master = <&dailink_master>;
-		simple-audio-card,name = "wm8904-smr-audio";
+		simple-audio-card,name = "wm8904-audio";
 		simple-audio-card,routing =
 			"Headphone Jack", "HPOUTL",
 			"Headphone Jack", "HPOUTR",
