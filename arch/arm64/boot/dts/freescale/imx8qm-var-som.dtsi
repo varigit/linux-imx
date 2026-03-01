@@ -128,6 +128,27 @@
 			"CPU-Capture", "Capture";
 		status = "okay";
 	};
+
+	reg_wifi: regulator-wifi {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi>;
+		regulator-name = "WIFI_PWR";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&lsio_gpio0 31 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	reg_bt_buf: bt-buffer {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_buf>;
+		regulator-name = "BT_BUF";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&lsio_gpio4 26 GPIO_ACTIVE_LOW>;
+	};
 };
 
 &acm {
@@ -426,7 +447,16 @@
 			fsl,pins = <
 				IMX8QM_SCU_GPIO0_07_SCU_DSC_RTC_CLOCK_OUTPUT_32K	0xc600004c /* WIFI_32K_CLK */
 				IMX8QM_SCU_GPIO0_03_LSIO_GPIO0_IO31			0x06000021 /* WIFI_REG_ON  */
+			>;
+		};
+		pinctrl_bt_en: btengrp {
+			fsl,pins = <
 				IMX8QM_SCU_GPIO0_02_LSIO_GPIO0_IO30			0x00000021 /* BT_REG_ON    */
+			>;
+		};
+
+		pinctrl_bt_buf: btbufgrp {
+			fsl,pins = <
 				IMX8QM_QSPI1A_DATA0_LSIO_GPIO4_IO26			0x00000021 /* BT_BUF       */
 			>;
 		};
@@ -442,6 +472,19 @@
 	pinctrl-0 = <&pinctrl_lpuart1>;
 	uart-has-rtscts;
 	status = "okay";
+
+	bluetooth {
+		compatible = "brcm,bcm4329-bt";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_en>;
+		clocks = <&xtal32k>;
+		clock-names = "txco";
+		max-speed = <3000000>;
+		vbat-supply = <&reg_bt_buf>;
+		vddio-supply = <&reg_wifi>;
+		shutdown-gpios = <&lsio_gpio0 30 GPIO_ACTIVE_HIGH>;
+		brcm,bt-pcm-int-params = [01 00 00 00 00];
+	};
 };
 
 &lpspi2 {
@@ -568,10 +611,13 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc3>, <&pinctrl_wifi>;
-	pinctrl-1 = <&pinctrl_usdhc3_100mhz>, <&pinctrl_wifi>;
-	pinctrl-2 = <&pinctrl_usdhc3_200mhz>, <&pinctrl_wifi>;
+	pinctrl-0 = <&pinctrl_usdhc3>;
+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
 	bus-width = <4>;
+	non-removable;
+	keep-power-in-suspend;
+	vmmc-supply = <&reg_wifi>;
 	status = "okay";
 
 	brcmf: bcrmf@1 {

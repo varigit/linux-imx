@@ -146,6 +146,3 @@
 	trusty;
 };
 
-&lpuart1 {
-       /delete-node/ bluetooth;
-};
