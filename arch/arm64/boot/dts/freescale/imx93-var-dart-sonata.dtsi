@@ -7,9 +7,6 @@
 #include "imx93-var-dart-dt8mcustomboard.dtsi"
 
 &ethphy1 {
-	reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
-	reset-assert-us = <15000>;
-	reset-deassert-us = <100000>;
 	mxl-8611x,led0_cfg = <(
 		MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
 		MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
@@ -55,4 +52,9 @@
 		MX93_PAD_ENET2_TXC__ENET1_RGMII_TXC		0x58e
 		MX93_PAD_ENET2_TX_CTL__ENET1_RGMII_TX_CTL	0x57e
 	>;
+};
+
+&reg_fec_phy_rst {
+	off-on-delay-us = <15000>;
+	startup-delay-us = <100000>;
 };

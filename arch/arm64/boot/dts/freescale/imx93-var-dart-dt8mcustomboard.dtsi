@@ -153,6 +153,19 @@
 		regulator-max-microvolt = <1800000>;
 	};
 
+	reg_fec_phy_rst: regulator-fec-phy-rst {
+		compatible = "regulator-fixed";
+		regulator-name = "fec-phy-rst";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		gpio = <&pca6408_2 0 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-boot-on;
+		regulator-always-on;
+		off-on-delay-us = <10000>;
+		startup-delay-us = <20000>;
+	};
+
 	reserved-memory {
 		#address-cells = <2>;
 		#size-cells = <2>;
@@ -226,15 +239,14 @@
 };
 
 &eqos {
+	/* Create devlink to ensure EQOS probes after FEC PHY reset deassertion */
+	phys-out-of-reset-supply = <&reg_fec_phy_rst>;
 	mdio {
 		ethphy1: ethernet-phy@1 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <1>;
 			at803x,eee-disabled;
 			eee-broken-1000t;
-			reset-gpios = <&pca6408_2 0 GPIO_ACTIVE_LOW>;
-			reset-assert-us = <10000>;
-			reset-deassert-us = <20000>;
 			vddio-supply = <&vddio1>;
 
 			vddio1: vddio-regulator {
