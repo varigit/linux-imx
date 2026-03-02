@@ -100,6 +100,19 @@
 		regulator-always-on;
 	};
 
+	reg_fec_phy_rst: regulator-fec-phy-rst {
+		compatible = "regulator-fixed";
+		regulator-name = "fec-phy-rst";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&pca9534 5 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-boot-on;
+		regulator-always-on;
+		off-on-delay-us = <10000>;
+		startup-delay-us = <100000>;
+	};
+
 	backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&pwm1 0 1000000 0>;
@@ -177,15 +190,13 @@
 };
 
 &eqos {
+	phys-out-of-reset-supply = <&reg_fec_phy_rst>;
 	mdio {
 		ethphy1: ethernet-phy@5 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <5>;
 			qca,disable-smarteee;
 			eee-broken-1000t;
-			reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
-			reset-assert-us = <10000>;
-			reset-deassert-us = <100000>;
 			vddio-supply = <&vddio1>;
 
 			mxl-8611x,led0_cfg = <(
