@@ -31,9 +31,21 @@
 };
 
 &iomuxc {
+    pinctrl_wifi_pwr_3v3: wifipwr3v3grp {
+		fsl,pins = <>;
+	};
+
 	pinctrl_iw612_spi: iw612_spi_grp {
 		fsl,pins = <
 			MX8MN_IOMUXC_SD1_DATA5_GPIO2_IO7		0xc1	/* 802.15.4 IRQ */
 		>;
 	};
+};
+
+&reg_wifi_3v3 {
+	status = "disabled";
+};
+
+&usdhc1 {
+	vmmc-supply = <>;
 };
