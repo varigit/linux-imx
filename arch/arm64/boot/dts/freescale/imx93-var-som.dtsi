@@ -420,7 +420,7 @@
 		interrupt-parent = <&gpio4>;
 		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
 		spi-max-frequency = <1000000>;
-		pendown-gpio = <&gpio4 29 0>;
+		pendown-gpio = <&gpio4 29 GPIO_ACTIVE_LOW>;
 		vcc-supply = <&buck5>;
 
 		ti,x-min = /bits/ 16 <125>;
