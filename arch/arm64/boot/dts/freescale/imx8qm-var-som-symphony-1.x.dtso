@@ -12,10 +12,12 @@
 #include <dt-bindings/pinctrl/pads-imx8qm.h>
 
 &iomuxc {
-	pinctrl_pciea: pcieagrp {
-		fsl,pins = <
-			IMX8QM_SAI1_RXFS_LSIO_GPIO3_IO14			0x00000021
-		>;
+	imx8qm-var-som {
+		pinctrl_pciea: pcieagrp {
+			fsl,pins = <
+				IMX8QM_SAI1_RXFS_LSIO_GPIO3_IO14			0x00000021
+			>;
+		};
 	};
 };
 
