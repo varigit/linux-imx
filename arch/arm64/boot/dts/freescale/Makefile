@@ -1012,6 +1012,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx95-19x19-evk-pcie1-ep.dtb
 imx95-19x19-evk-ap1302-dtbs := imx95-19x19-evk.dtb imx95-19x19-evk-ap1302.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx95-19x19-evk-ap1302.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx95-tqma9596sa-mb-smarc-2.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-sonata.dtb
 
 imx95-15x15-evk-pcie-dtbs = imx95-15x15-evk.dtb imx95-15x15-evk-pcie.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx95-15x15-evk-pcie.dtb
