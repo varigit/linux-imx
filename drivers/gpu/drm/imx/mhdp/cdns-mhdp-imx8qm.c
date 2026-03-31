@@ -604,13 +604,6 @@ int cdns_mhdp_firmware_write_section(struct imx_mhdp_device *imx_mhdp,
 	return 0;
 }
 
-static void cdns_mhdp_firmware_load_cont(const struct firmware *fw, void *context)
-{
-	struct imx_mhdp_device *imx_mhdp = context;
-
-	imx_mhdp->fw = fw;
-}
-
 static int cdns_mhdp_firmware_load(struct imx_mhdp_device *imx_mhdp)
 {
 	const u8 *iram;
@@ -629,26 +622,30 @@ static int cdns_mhdp_firmware_load(struct imx_mhdp_device *imx_mhdp)
 	if (!imx_mhdp->firmware_name)
 		goto out;
 
+	/* Load firmware synchronously if not already cached */
 	if (!imx_mhdp->fw) {
-		ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_NOUEVENT,
-						imx_mhdp->firmware_name,
-						imx_mhdp->mhdp.dev, GFP_KERNEL,
-						imx_mhdp,
-						cdns_mhdp_firmware_load_cont);
+		ret = request_firmware(&imx_mhdp->fw,
+				       imx_mhdp->firmware_name,
+				       imx_mhdp->mhdp.dev);
 		if (ret < 0) {
 			DRM_ERROR("failed to load firmware\n");
-			return -ENOENT;
+			return ret;
 		}
-	} else {
-		iram = imx_mhdp->fw->data + FW_IRAM_OFFSET;
-		dram = iram + FW_IRAM_SIZE;
-
-		cdns_mhdp_firmware_write_section(imx_mhdp, iram, FW_IRAM_SIZE, ADDR_IMEM);
-		cdns_mhdp_firmware_write_section(imx_mhdp, dram, FW_DRAM_SIZE, ADDR_DMEM);
 	}
 
+	iram = imx_mhdp->fw->data + FW_IRAM_OFFSET;
+	dram = iram + FW_IRAM_SIZE;
+
+	cdns_mhdp_firmware_write_section(imx_mhdp, iram,
+					 FW_IRAM_SIZE, ADDR_IMEM);
+	cdns_mhdp_firmware_write_section(imx_mhdp, dram,
+					 FW_DRAM_SIZE, ADDR_DMEM);
+
 out:
-	/* un-reset ucpu */
+	/*
+	 * Un-reset uCPU only after firmware is fully loaded
+	 * and written to device memory.
+	 */
 	cdns_mhdp_bus_write(0, &imx_mhdp->mhdp, APB_CTRL);
 	DRM_INFO("Started firmware!\n");
 
