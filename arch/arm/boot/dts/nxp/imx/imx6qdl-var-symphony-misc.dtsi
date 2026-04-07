@@ -110,6 +110,54 @@
 	pinctrl-0 = <&pinctrl_i2c3>;
 	status = "okay";
 
+	/* GPIO Expander */
+	pcal6408: gpio@21 {
+		compatible = "nxp,pcal6408";
+		reg = <0x21>;
+		standard-regs-fallback;
+		gpio-controller;
+		#gpio-cells = <2>;
+		status = "okay";
+
+		/*
+		* RGB_SEL
+		* output-lo: Configure mux for VAR-SOMs LVDS
+		* output-hi: Configure mux for VAR-SOM-MX91 RGB2LVDS
+		*/
+		rgb_sel {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "rgb_sel";
+		};
+
+		/*
+		* The SEC_RSTN line for the TPM2 module has an external
+		* pull-down, keeping the module in reset by default.
+		* Drive this signal high to release the TPM2 from reset.
+		*/
+		sec_resetn {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "sec_rstn";
+		};
+	};
+
+	/* TPM */
+	st33ktpm2xi2c: st33ktpm2xi2c@2e {
+		compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
+		reg = <0x2e>;
+		/*
+		* reset-gpios is not used by the TPM driver, but forces
+		* probe ordering: ensures GPIO expander is initialized
+		* and sec_rstn GPIO hog has released TPM from reset
+		* before the TPM driver probes.
+		*/
+		reset-gpios = <&pcal6408 4 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
 	/* Touch */
 	cap_touch: ft5x06_ts@38 {
 		compatible = "edt,edt-ft5x06";
@@ -175,12 +223,6 @@
 		pinctrl_pca9534: pca9534grp {
 			fsl,pins = <
 				MX6QDL_PAD_GPIO_3__GPIO1_IO03		0x80000000
-			>;
-		};
-
-		pinctrl_pcie: pciegrp {
-			fsl,pins = <
-				MX6QDL_PAD_DISP0_DAT23__GPIO5_IO17	0x80000000 /* reset# */
 			>;
 		};
 
@@ -261,9 +303,7 @@
 };
 
 &pcie {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_pcie>;
-	reset-gpio    = <&gpio5 17 GPIO_ACTIVE_LOW>;
+	reset-gpio = <&pcal6408 1 GPIO_ACTIVE_LOW>;
 	/* Symphony board has been designed for iMX8 families SoMs and
 	 * provides an external clock source (U6).
 	 * To use iMX6 SoMs, there are 2 possible choices:
