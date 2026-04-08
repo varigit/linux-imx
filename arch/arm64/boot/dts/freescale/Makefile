@@ -635,16 +635,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb imx8ulp-evk-lpspi-slave.dtb \
 dtb-$(CONFIG_ARCH_MXC) += imx91-11x11-evk.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx91-tqma9131-mba91xxca.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-dart-sonata.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx93-9x9-qsb.dtb \
-			  imx93-9x9-qsb-can1.dtb \
-			  imx93-9x9-qsb-flexspi-m2.dtb \
-			  imx93-9x9-qsb-tianma-wvga-panel.dtb \
-			  imx93-9x9-qsb-ontat-wvga-panel.dtb \
-			  imx93-9x9-qsb-mt9m114.dtb \
-			  imx93-9x9-qsb-lpspi.dtb imx93-9x9-qsb-lpspi-slave.dtb \
-			  imx93-9x9-qsb-aud-hat.dtb \
-			  imx93-9x9-qsb-ld.dtb \
-			  imx93-9x9-qsb-rpmsg.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx91-var-som-symphony.dtb
 
 imx93-9x9-qsb-i3c-dtbs += imx93-9x9-qsb.dtb imx93-9x9-qsb-i3c.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx93-9x9-qsb-i3c.dtb
