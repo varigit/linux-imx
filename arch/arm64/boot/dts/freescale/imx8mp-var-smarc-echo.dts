@@ -561,12 +561,6 @@
 		>;
 	};
 
-	pinctrl_pcie: pciegrp {
-		fsl,pins = <
-			MX8MP_IOMUXC_SAI2_RXFS__GPIO4_IO21				0x40
-		>;
-	};
-
 	pinctrl_pwm1: pwm1grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_SPDIF_EXT_CLK__PWM1_OUT				0x116
@@ -753,9 +747,7 @@
 };
 
 &pcie {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_pcie>;
-	reset-gpio = <&gpio4 21 GPIO_ACTIVE_LOW>;
+	reset-gpio = <&pcal6416 14 GPIO_ACTIVE_LOW>;
 	ext_osc = <1>;
 	l1ss-disabled;
 	status = "okay";
