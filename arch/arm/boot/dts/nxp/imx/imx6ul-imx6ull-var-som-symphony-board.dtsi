@@ -65,6 +65,24 @@
 	pinctrl-0 = <&pinctrl_i2c1>;
 	status = "okay";
 
+	/* USB Type-C Controller */
+	extcon_ptn5150: typec@3d {
+		compatible = "nxp,ptn5150";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_extcon>;
+		reg = <0x3d>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <3 IRQ_TYPE_NONE>;
+		irq-is-id-quirk;
+		status ="okay";
+
+		port {
+			typec1_dr_sw: endpoint {
+				remote-endpoint = <&usb1_drd_sw>;
+			};
+		};
+	};
+
 	/* GPIO expander */
 	pca9534:gpio@20 {
 		compatible = "nxp,pca9534";
@@ -96,6 +114,12 @@
 	pinctrl_ecspi4_cs: ecspi4csgrp {
 		fsl,pins = <
 			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x100b1
+		>;
+	};
+
+	pinctrl_extcon: extcongrp {
+		fsl,pins = <
+			MX6UL_PAD_SNVS_TAMPER3__GPIO5_IO03		0x1b0b0
 		>;
 	};
 
@@ -262,11 +286,18 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usb_otg1_id>;
 	dr_mode = "otg";
-	disable-over-current;
-	srp-disable;
 	hnp-disable;
+	srp-disable;
 	adp-disable;
+	usb-role-switch;
+	disable-over-current;
 	status = "okay";
+
+	port {
+		usb1_drd_sw: endpoint {
+			remote-endpoint = <&typec1_dr_sw>;
+		};
+	};
 };
 
 &usbotg2 {
