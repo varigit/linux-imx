@@ -7,6 +7,18 @@
 
 / {
 	model = "Variscite VAR-SOM-MX8X on Symphony-Board SD";
+
+	regulators {
+		reg_usdhc2_vmmc: regulator-usdhc2-vmmc {
+			compatible = "regulator-fixed";
+			regulator-name = "sd_pwr";
+			regulator-min-microvolt = <3000000>;
+			regulator-max-microvolt = <3000000>;
+			gpio = <&lsio_gpio1 7 GPIO_ACTIVE_HIGH>;
+			off-on-delay = <3480>;
+			enable-active-high;
+		};
+	};
 };
 
 &iomuxc {
