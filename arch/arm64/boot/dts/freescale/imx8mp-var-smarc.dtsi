@@ -296,6 +296,13 @@
 		pinctrl-0 = <&pinctrl_pcal6416>;
 		reset-gpios = <&gpio4 3 GPIO_ACTIVE_LOW>;
 		status = "okay";
+		usbh_grst_hog {
+			/* Keep hub reset deasserted by leaving line driven high. */
+			gpio-hog;
+			gpios = <11 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "usb_hub_grst_n";
+		};
 	};
 
 	/* PCF85263A RTC module */
