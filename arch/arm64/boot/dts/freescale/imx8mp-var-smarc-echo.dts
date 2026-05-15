@@ -852,6 +852,9 @@
 
 &usb_dwc3_1 {
 	dr_mode = "host";
+	/* Prevent controller from entering U1/U2 power-saving states. */
+	snps,dis-u1-entry-quirk;
+	snps,dis-u2-entry-quirk;
 	status = "okay";
 };
 
