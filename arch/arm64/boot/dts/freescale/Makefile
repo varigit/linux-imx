@@ -265,6 +265,13 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-dt8mcustomboard-basler-isp0-m7.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-dt8mcustomboard-basler-isp0.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-dart-wbe-dt8mcustomboard-m7.dtb
 
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-echo.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-echo-basler-isp0.dtb
+
+imx8mp-var-smarc-wbe-echo-dtbs := imx8mp-var-smarc-echo.dtb imx8mp-var-smarc-wbe.dtbo
+
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-wbe-echo.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-2nd-ov5640-m7.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-2nd-ov5640.dtb
@@ -273,8 +280,6 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-basler-isi0.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-basler-isp0-m7.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-basler-isp0.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-m7.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-echo.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-echo-basler-isp0.dtb
 
 imx8mp-var-som-symphony-1.x-dtbs := imx8mp-var-som-symphony.dtb imx8mp-var-som-symphony-1.x.dtbo
 imx8mp-var-som-symphony-1.x-2nd-ov5640-m7-dtbs := imx8mp-var-som-symphony-2nd-ov5640-m7.dtb imx8mp-var-som-symphony-1.x.dtbo
