@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay to support the VAR-SMARC-MX8M-PLUS with wbe (802.15.4)
+ *
+ * Copyright 2026 Variscite Ltd.
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+
+#include "imx8mp-pinfunc.h"
+
+/dts-v1/;
+/plugin/;
+
+&ecspi1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi1>;
+	cs-gpios = <&gpio5 17 GPIO_ACTIVE_LOW>;
+	status = "okay";
+
+	spidev@0 {
+		compatible = "var,spidev";
+		reg = <0>;
+		spi-max-frequency = <1000000>;
+		status = "okay";
+	};
+};
+
+&iomuxc {
+	pinctrl_ecspi1: ecspi1grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_I2C1_SCL__ECSPI1_SCLK				0x12
+			MX8MP_IOMUXC_I2C1_SDA__ECSPI1_MOSI				0x12
+			MX8MP_IOMUXC_I2C2_SCL__ECSPI1_MISO				0x12
+			MX8MP_IOMUXC_I2C2_SDA__GPIO5_IO17				0x12
+		>;
+	};
+};
