@@ -209,6 +209,11 @@
 	};
 };
 
+&lpm {
+	soc-supply = <&buck1>;
+	status = "okay";
+};
+
 /* BT module */
 &lpuart5 {
 	pinctrl-names = "default";
