@@ -29,6 +29,12 @@
 		stdout-path = &lpuart1;
 	};
 
+	clk_ov5640: clock-osc-24m {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <24000000>;
+	};
+
 	clk_osc_can0: clock-osc-40m {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -221,6 +227,16 @@
 		wakeup-source;
 	};
 
+	ov5640_mipi0: camera@3c {
+		compatible = "ovti,ov5640";
+		reg = <0x3c>;
+		clock-names = "xclk";
+		clocks = <&clk_ov5640>;
+		assigned-clock-rates = <24000000>;
+		powerdown-gpios = <&pca6408_1 3 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&pca6408_1 1 GPIO_ACTIVE_LOW>;
+	};
+
 	typec@3d {
 		compatible = "nxp,ptn5150";
 		reg = <0x3d>;
@@ -280,6 +296,16 @@
 		reg = <0x2e>;
 		label = "tpm";
 		reset-gpios = <&pca9534 0 GPIO_ACTIVE_HIGH>;
+	};
+
+	ov5640_mipi1: camera@3c {
+		compatible = "ovti,ov5640";
+		reg = <0x3c>;
+		clock-names = "xclk";
+		clocks = <&clk_ov5640>;
+		assigned-clock-rates = <24000000>;
+		powerdown-gpios = <&pca6408_1 2 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&pca6408_1 0 GPIO_ACTIVE_LOW>;
 	};
 };
 
