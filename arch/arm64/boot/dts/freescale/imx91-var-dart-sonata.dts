@@ -152,6 +152,12 @@
 			size = <0 0x10000000>;
 			linux,cma-default;
 		};
+
+		ele_reserved: ele-reserved@95f00000 {
+			compatible = "shared-dma-pool";
+			reg = <0 0x95f00000 0 0x100000>;
+			no-map;
+		};
 	};
 };
 
@@ -163,6 +169,10 @@
 /* Use external instead of internal RTC */
 &bbnsm_rtc {
 	status = "disabled";
+};
+
+&ele_fw2 {
+	memory-region = <&ele_reserved>;
 };
 
 &eqos {
