@@ -66,6 +66,13 @@
 		clock-frequency = <24000000>;
 	};
 
+	ethosu {
+		compatible = "arm,ethosu";
+		fsl,cm33-proc = <&cm33>;
+		memory-region = <&ethosu_mem>;
+		power-domains = <&mlmix>;
+	};
+
 	lvds_panel {
 		compatible = "sgd,gktw70sdae4se", "panel-lvds";
 		backlight = <&backlight>;
@@ -486,6 +493,14 @@
 			};
 		};
 	};
+};
+
+&mu1 {
+	status = "okay";
+};
+
+&mu2 {
+	status = "okay";
 };
 
 &tpm3 {
