@@ -229,6 +229,10 @@
 	status = "disabled";
 };
 
+&ele_fw2 {
+	memory-region = <&ele_reserved>;
+};
+
 &epxp {
 	status = "okay";
 };
