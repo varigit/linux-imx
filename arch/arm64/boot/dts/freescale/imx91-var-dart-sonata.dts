@@ -41,6 +41,37 @@
 		stdout-path = &lpuart1;
 	};
 
+	lvds_panel: lvds-panel {
+		compatible = "sgd,gktw70sdae4se", "panel-lvds";
+		backlight = <&backlight>;
+		width-mm = <153>;
+		height-mm = <87>;
+		label = "gktw70sdae4se";
+		data-mapping = "jeida-24";
+
+		panel-timing {
+			clock-frequency = <30000000>;
+			hactive = <800>;
+			vactive = <480>;
+			hback-porch = <40>;
+			hfront-porch = <40>;
+			vback-porch = <29>;
+			vfront-porch = <13>;
+			hsync-len = <48>;
+			vsync-len = <3>;
+			hsync-active = <0>;
+			vsync-active = <0>;
+			pixelclk-active = <1>;
+			de-active = <1>;
+		};
+
+		port {
+			lvds_input: endpoint {
+				remote-endpoint = <&dpi_to_lvds_bridge_output>;
+			};
+		};
+	};
+
 	gpio-keys {
 		compatible = "gpio-keys";
 
@@ -185,6 +216,33 @@
 	status = "okay";
 };
 
+&gpio2 {
+	/* avoid power leakage */
+	disp-clk-hog {
+		gpio-hog;
+		gpios = <0 GPIO_ACTIVE_HIGH>;
+		output-low;
+	};
+
+	disp-de-hog {
+		gpio-hog;
+		gpios = <1 GPIO_ACTIVE_HIGH>;
+		output-low;
+	};
+
+	disp-vsync-hog {
+		gpio-hog;
+		gpios = <2 GPIO_ACTIVE_HIGH>;
+		output-low;
+	};
+
+	disp-hsync-hog {
+		gpio-hog;
+		gpios = <3 GPIO_ACTIVE_HIGH>;
+		output-low;
+	};
+};
+
 &lpi2c1 {
 	clock-frequency = <400000>;
 	pinctrl-names = "default", "sleep", "gpio";
@@ -265,6 +323,13 @@
 		compatible = "dallas,ds1337";
 		reg = <0x68>;
 	};
+
+	backlight: backlight@2c {
+		compatible = "maxim,ds1050z";
+		reg = <0x2c>;
+		/* 25/32 ≈ 78% brightness (32 = 100% PWM duty cycle) */
+		default-brightness = <25>;
+	};
 };
 
 /* Console (J10) */
@@ -279,6 +344,33 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart6>;
 	status = "okay";
+};
+
+&lcdif {
+	assigned-clock-rates = <300000000>, <30000000>, <333333334>, <133333333>;
+	status = "okay";
+};
+
+&media_blk_ctrl {
+	status = "okay";
+};
+
+&parallel_disp_fmt {
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_lcdif>;
+	pinctrl-1 = <&pinctrl_lcdif_gpio>;
+	fsl,interface-pix-fmt = "rgb888";
+	status = "okay";
+
+	ports {
+		port@1 {
+			reg = <1>;
+
+			dpi_to_lvds_bridge_output: endpoint {
+				remote-endpoint = <&lvds_input>;
+			};
+		};
+	};
 };
 
 &usbotg1 {
@@ -381,6 +473,66 @@
 		fsl,pins = <
 			MX91_PAD_PDM_CLK__CAN1_TX			0x139e
 			MX91_PAD_PDM_BIT_STREAM0__CAN1_RX		0x139e
+		>;
+	};
+
+	pinctrl_lcdif: lcdifgrp {
+		fsl,pins = <
+			MX91_PAD_GPIO_IO00__MEDIAMIX_DISP_CLK		0x31e
+			MX91_PAD_GPIO_IO01__MEDIAMIX_DISP_DE		0x31e
+			MX91_PAD_GPIO_IO02__MEDIAMIX_DISP_VSYNC		0x31e
+			MX91_PAD_GPIO_IO03__MEDIAMIX_DISP_HSYNC		0x31e
+
+			MX91_PAD_GPIO_IO06__MEDIAMIX_DISP_DATA2		0x31e
+			MX91_PAD_GPIO_IO07__MEDIAMIX_DISP_DATA3		0x31e
+			MX91_PAD_GPIO_IO08__MEDIAMIX_DISP_DATA4		0x31e
+			MX91_PAD_GPIO_IO09__MEDIAMIX_DISP_DATA5		0x31e
+			MX91_PAD_GPIO_IO10__MEDIAMIX_DISP_DATA6		0x31e
+			MX91_PAD_GPIO_IO11__MEDIAMIX_DISP_DATA7		0x31e
+
+			MX91_PAD_GPIO_IO14__MEDIAMIX_DISP_DATA10	0x31e
+			MX91_PAD_GPIO_IO15__MEDIAMIX_DISP_DATA11	0x31e
+			MX91_PAD_GPIO_IO16__MEDIAMIX_DISP_DATA12	0x31e
+			MX91_PAD_GPIO_IO17__MEDIAMIX_DISP_DATA13	0x31e
+			MX91_PAD_GPIO_IO18__MEDIAMIX_DISP_DATA14	0x31e
+			MX91_PAD_GPIO_IO19__MEDIAMIX_DISP_DATA15	0x31e
+
+			MX91_PAD_GPIO_IO22__MEDIAMIX_DISP_DATA18	0x31e
+			MX91_PAD_GPIO_IO23__MEDIAMIX_DISP_DATA19	0x31e
+			MX91_PAD_GPIO_IO24__MEDIAMIX_DISP_DATA20	0x31e
+			MX91_PAD_GPIO_IO25__MEDIAMIX_DISP_DATA21	0x31e
+			MX91_PAD_GPIO_IO26__MEDIAMIX_DISP_DATA22	0x31e
+			MX91_PAD_GPIO_IO27__MEDIAMIX_DISP_DATA23	0x31e
+		>;
+	};
+
+	pinctrl_lcdif_gpio: lcdifgpiogrp {
+		fsl,pins = <
+			MX91_PAD_GPIO_IO00__GPIO2_IO0			0x51e
+			MX91_PAD_GPIO_IO01__GPIO2_IO1			0x51e
+			MX91_PAD_GPIO_IO02__GPIO2_IO2			0x51e
+			MX91_PAD_GPIO_IO03__GPIO2_IO3			0x51e
+
+			MX91_PAD_GPIO_IO06__GPIO2_IO6			0x51e
+			MX91_PAD_GPIO_IO07__GPIO2_IO7			0x51e
+			MX91_PAD_GPIO_IO08__GPIO2_IO8			0x51e
+			MX91_PAD_GPIO_IO09__GPIO2_IO9			0x51e
+			MX91_PAD_GPIO_IO10__GPIO2_IO10			0x51e
+			MX91_PAD_GPIO_IO11__GPIO2_IO11			0x51e
+
+			MX91_PAD_GPIO_IO14__GPIO2_IO14			0x51e
+			MX91_PAD_GPIO_IO15__GPIO2_IO15			0x51e
+			MX91_PAD_GPIO_IO16__GPIO2_IO16			0x51e
+			MX91_PAD_GPIO_IO17__GPIO2_IO17			0x51e
+			MX91_PAD_GPIO_IO18__GPIO2_IO18			0x51e
+			MX91_PAD_GPIO_IO19__GPIO2_IO19			0x51e
+
+			MX91_PAD_GPIO_IO22__GPIO2_IO22			0x51e
+			MX91_PAD_GPIO_IO23__GPIO2_IO23			0x51e
+			MX91_PAD_GPIO_IO24__GPIO2_IO24			0x51e
+			MX91_PAD_GPIO_IO25__GPIO2_IO25			0x51e
+			MX91_PAD_GPIO_IO26__GPIO2_IO26			0x51e
+			MX91_PAD_GPIO_IO27__GPIO2_IO27			0x51e
 		>;
 	};
 
