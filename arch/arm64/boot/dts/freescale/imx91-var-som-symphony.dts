@@ -454,6 +454,7 @@
 	cd-gpios = <&gpio3 00 GPIO_ACTIVE_LOW>;
 	no-mmc;
 	no-sdio;
+	fsl,cd-gpio-wakeup-disable;
 	vmmc-supply = <&reg_usdhc2_vmmc>;
 	status = "okay";
 };
