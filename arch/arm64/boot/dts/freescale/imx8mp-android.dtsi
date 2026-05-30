@@ -46,10 +46,6 @@
 	};
 };
 
-&{/reserved-memory/linux,cma} {
-	status = "disabled";
-};
-
 &resmem {
 	ramoops@94400000 {
 		compatible = "ramoops";
