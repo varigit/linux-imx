@@ -186,6 +186,10 @@
 	status = "disabled";
 };
 
+&ele_fw2 {
+	memory-region = <&ele_reserved>;
+};
+
 &eqos {
 	mdio {
 		ethphy1: ethernet-phy@5 {
