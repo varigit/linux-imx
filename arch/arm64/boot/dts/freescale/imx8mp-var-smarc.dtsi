@@ -103,6 +103,16 @@
 	};
 };
 
+&gpio2 {
+       bt_en_hog: bt-en-hog {
+               gpio-hog;
+               gpios = <11 GPIO_ACTIVE_HIGH>;
+               output-high;
+               line-name = "bt_en";
+               status = "okay";
+       };
+};
+
 &A53_0 {
 	cpu-supply = <&buck2>;
 };
