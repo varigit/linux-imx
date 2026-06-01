@@ -139,10 +139,19 @@
 		label = "tpm";
 		reset-gpios = <&pcal6408 4 GPIO_ACTIVE_LOW>;
 	};
+
+	rtc@68 {
+		compatible = "dallas,ds1337";
+		reg = <0x68>;
+	};
 };
 
 &snvs_pwrkey {
 	status = "okay";
+};
+
+&snvs_rtc {
+	status = "disabled";
 };
 
 /* Console */
