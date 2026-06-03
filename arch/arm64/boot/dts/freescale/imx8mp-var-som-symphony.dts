@@ -106,6 +106,12 @@
 	status = "okay";
 };
 
+&flexcan2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_flexcan2>;
+	status = "okay";
+};
+
 &hdmi_pai {
 	status = "okay";
 };
@@ -354,6 +360,13 @@
 			MX8MP_IOMUXC_ECSPI2_MOSI__ECSPI2_MOSI				0x12
 			MX8MP_IOMUXC_ECSPI2_MISO__ECSPI2_MISO				0x12
 			MX8MP_IOMUXC_ECSPI2_SS0__GPIO5_IO13				0x12
+		>;
+	};
+
+	pinctrl_flexcan2: flexcan2grp {
+		fsl,pins = <
+			MX8MP_IOMUXC_UART3_RXD__CAN2_TX					0x154
+			MX8MP_IOMUXC_UART3_TXD__CAN2_RX					0x154
 		>;
 	};
 
