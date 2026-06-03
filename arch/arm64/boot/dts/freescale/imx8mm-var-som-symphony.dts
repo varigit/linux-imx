@@ -132,6 +132,10 @@
 	remote-endpoint = <&panel_in_bridge>;
 };
 
+&csi {
+	status = "okay";
+};
+
 &ethphy {
 	leds {
 		#address-cells = <1>;
@@ -150,6 +154,15 @@
 			function = LED_FUNCTION_LAN;
 			linux,default-trigger = "netdev";
 		};
+	};
+};
+
+&gpio4 {
+	cam-buf-hog {
+		gpio-hog;
+		gpios = <5 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "cam_buf_en";
 	};
 };
 
@@ -190,6 +203,26 @@
 			gpios = <7 GPIO_ACTIVE_HIGH>;
 			output-low;
 			line-name = "enet_sel";
+		};
+	};
+
+	ov5640_mipi1: camera@3c {
+		compatible = "ovti,ov5640_mipi";
+		reg = <0x3c>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_csi1>;
+		clocks = <&clk IMX8MM_CLK_CLKO1>;
+		clock-names = "csi_mclk";
+		csi_id = <0>;
+		pwn-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
+		rst-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+		mclk = <24000000>;
+		mclk_source = <0>;
+
+		port {
+			ov5640_mipi1_ep: endpoint {
+				remote-endpoint = <&mipi1_sensor_ep>;
+			};
 		};
 	};
 
@@ -256,6 +289,24 @@
 	status = "okay";
 };
 
+&mipi_csi {
+	status = "okay";
+
+	ports {
+		port@0 {
+			reg = <0>;
+
+			mipi1_sensor_ep: endpoint {
+				remote-endpoint = <&ov5640_mipi1_ep>;
+				data-lanes = <2>;
+				csis-hs-settle = <13>;
+				csis-clk-settle = <2>;
+				csis-wclk;
+			};
+		};
+	};
+};
+
 &pcie_phy {
 	clocks = <&pcie0_refclk>;
 	clock-names = "ref";
@@ -277,6 +328,19 @@
 	assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_50M>,
 				 <&clk IMX8MM_SYS_PLL2_250M>;
 	status = "okay";
+};
+
+&pgc_gpu {
+	assigned-clocks = <&clk IMX8MM_CLK_GPU_AXI>,
+			  <&clk IMX8MM_CLK_GPU_AHB>;
+	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_800M>,
+				 <&clk IMX8MM_SYS_PLL1_800M>;
+	assigned-clock-rates = <800000000>, <400000000>;
+	/delete-property/ power-domains;
+};
+
+&pgc_gpumix {
+	status = "disabled";
 };
 
 &pwm1 {
@@ -374,6 +438,14 @@
 	pinctrl_captouch: captouchgrp {
 		fsl,pins = <
 			MX8MM_IOMUXC_SPDIF_RX_GPIO5_IO4		0x16
+		>;
+	};
+
+	pinctrl_csi1: csi1grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_GPIO1_IO13_GPIO1_IO13	0x19
+			MX8MM_IOMUXC_ECSPI2_MISO_GPIO5_IO12	0x19
+			MX8MM_IOMUXC_SAI1_RXD3_GPIO4_IO5	0x19
 		>;
 	};
 
