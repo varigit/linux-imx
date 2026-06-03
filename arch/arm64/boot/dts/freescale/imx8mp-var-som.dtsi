@@ -55,6 +55,11 @@
 		regulator-max-microvolt = <1800000>;
 	};
 
+	reserved-memory {
+		/* cma region is provided by kernel command line as cma=<size>M */
+		/delete-node/ linux,cma;
+	};
+
 	sound {
 		compatible = "simple-audio-card";
 		simple-audio-card,bitclock-master = <&codec_dai>;
@@ -369,6 +374,12 @@
 	pinctrl-0 = <&pinctrl_wdog>;
 	fsl,ext-reset-output;
 	status = "okay";
+};
+
+/* Move gpu_reserved to support SOMs with <= 1GB memory */
+&gpu_reserved {
+	reg = <0x0 0x60000000 0 0x10000000>;
+	no-map;
 };
 
 &iomuxc {
