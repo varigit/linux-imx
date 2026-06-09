@@ -16,6 +16,12 @@
 	model = "Variscite DART-MX8M-PLUS Module";
 	compatible = "variscite,var-dart-mx8mp", "fsl,imx8mp";
 
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x0 0x40000000 0 0xc0000000>,
+		      <0x1 0x00000000 0 0xc0000000>;
+	};
+
 	reg_audio_supply: regulator-3p3v {
 		compatible = "regulator-fixed";
 		regulator-name = "wm8904-supply";
@@ -29,6 +35,11 @@
 		regulator-name = "vddio-1v8";
 		regulator-min-microvolt = <1800000>;
 		regulator-max-microvolt = <1800000>;
+	};
+
+	reserved-memory {
+		/* cma region is provided by kernel command line as cma=<size>M */
+		/delete-node/ linux,cma;
 	};
 
 	sound-wm8904 {
@@ -110,6 +121,12 @@
 			vddio-supply = <&reg_phy_vddio>;
 		};
 	};
+};
+
+/* Move gpu_reserved to support SOMs with <= 1GB memory */
+&gpu_reserved {
+	reg = <0x0 0x60000000 0 0x10000000>;
+	no-map;
 };
 
 &i2c1 {
