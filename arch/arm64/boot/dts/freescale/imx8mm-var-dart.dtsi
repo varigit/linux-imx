@@ -21,6 +21,10 @@
 		reg = <0x0 0x40000000 0 0x80000000>;
 	};
 
+	reserved-memory {
+		/delete-node/ linux,cma;
+	};
+
 	reg_audio_supply: regulator-3p3v {
 		compatible = "regulator-fixed";
 		regulator-name = "wm8904-supply";
