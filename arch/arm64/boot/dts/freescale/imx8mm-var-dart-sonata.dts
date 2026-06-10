@@ -190,6 +190,10 @@
 	remote-endpoint = <&panel_in_bridge>;
 };
 
+&csi {
+	status = "okay";
+};
+
 &ethphy0 {
 	leds {
 		#address-cells = <1>;
@@ -249,6 +253,24 @@
 		touchscreen-inverted-x;
 		touchscreen-inverted-y;
 		wakeup-source;
+	};
+
+	ov5640_mipi1: camera@3c {
+		compatible = "ovti,ov5640_mipi";
+		reg = <0x3c>;
+		clocks = <&clk IMX8MM_CLK_CLKO1>;
+		clock-names = "csi_mclk";
+		csi_id = <0>;
+		pwn-gpios = <&pca6408_1 3 GPIO_ACTIVE_HIGH>;
+		rst-gpios = <&pca6408_1 1 GPIO_ACTIVE_LOW>;
+		mclk = <24000000>;
+		mclk_source = <0>;
+
+		port {
+			ov5640_mipi1_ep: endpoint {
+				remote-endpoint = <&mipi1_sensor_ep>;
+			};
+		};
 	};
 
 	extcon_ptn5150: typec@3d {
@@ -311,6 +333,24 @@
 		reg = <0x2e>;
 		label = "tpm";
 		reset-gpios = <&pca9534 0 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&mipi_csi {
+	status = "okay";
+
+	ports {
+		port@0 {
+			reg = <0>;
+
+			mipi1_sensor_ep: endpoint {
+				remote-endpoint = <&ov5640_mipi1_ep>;
+				data-lanes = <2>;
+				csis-hs-settle = <13>;
+				csis-clk-settle = <2>;
+				csis-wclk;
+			};
+		};
 	};
 };
 
