@@ -118,6 +118,16 @@
 	fsl,magic-packet;
 	status = "okay";
 
+	/* FEC and Ethernet PHY drivers are built as modules.
+	 * When suspend/resume happens, the FEC driver may
+	 * probe while the PHY reset pin is still asserted.
+	 * Let the FEC driver control the reset line, assuring
+	 * the PHY is out of reset during MDIO discovery
+	 */
+	phy-reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+	phy-reset-duration = <10>;
+	phy-reset-post-delay = <20>;
+
 	mdio {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -126,13 +136,6 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <0>;
 			qca,disable-smarteee;
-			vddio-supply = <&vddh>;
-			reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-			reset-assert-us = <10000>;
-			reset-deassert-us = <20000>;
-
-			vddh: vddh-regulator {
-			};
 		};
 	};
 };
