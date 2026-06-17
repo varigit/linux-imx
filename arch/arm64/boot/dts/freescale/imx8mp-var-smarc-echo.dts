@@ -89,28 +89,24 @@
 			label = "Back";
 			linux,code = <KEY_BACK>;
 			gpios = <&pca6408_1 7 GPIO_ACTIVE_LOW>;
-			wakeup-source;
 		};
 
 		up {
 			label = "Up";
 			linux,code = <KEY_UP>;
 			gpios = <&pca6408_1 5 GPIO_ACTIVE_LOW>;
-			wakeup-source;
 		};
 
 		home {
 			label = "Home";
 			linux,code = <KEY_HOME>;
 			gpios = <&pca6408_1 4 GPIO_ACTIVE_LOW>;
-			wakeup-source;
 		};
 
 		down {
 			label = "Down";
 			linux,code = <KEY_DOWN>;
 			gpios = <&pca6408_1 6 GPIO_ACTIVE_LOW>;
-			wakeup-source;
 		};
 	};
 
@@ -366,7 +362,6 @@
 		touchscreen-size-y = <480>;
 		touchscreen-inverted-x;
 		touchscreen-inverted-y;
-		wakeup-source;
 		status = "okay";
 	};
 
