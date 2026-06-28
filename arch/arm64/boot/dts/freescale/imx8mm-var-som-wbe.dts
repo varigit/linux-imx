@@ -1,0 +1,39 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay to support the VAR-SOM-MX8M-MINI 2.0 with wbe (802.15.4)
+ *
+ * Copyright 2025 Variscite Ltd.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include "imx8mm-pinfunc.h"
+
+&ecspi1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	pinctrl-0 = <&pinctrl_ecspi1>, <&pinctrl_iw612_spi>;
+
+	/* Disable resistive touch controller on CS0 */
+	ads7846@0 {
+		reg = <0>;
+		status = "disabled";
+	};
+
+	/* Enable 802.15.4 SPI device on CS0 */
+	spidev@0 {
+		reg = <0>;
+		compatible = "var,spidev";
+		spi-max-frequency = <1000000>;
+		status = "okay";
+	};
+};
+
+&iomuxc {
+	pinctrl_iw612_spi: iw612_spi_grp {
+		fsl,pins = <
+			MX8MM_IOMUXC_SD1_DATA5_GPIO2_IO7		0xc1	/* 802.15.4 IRQ */
+		>;
+	};
+};
