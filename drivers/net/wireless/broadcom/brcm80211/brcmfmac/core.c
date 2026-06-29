@@ -678,8 +678,13 @@ fail:
 	return -EBADE;
 }
 
-void brcmf_net_detach(struct net_device *ndev, bool locked)
+void brcmf_net_detach(struct net_device *ndev, bool locked, bool *ndev_freed)
 {
+	bool freed = false;
+
+	if (!ndev)
+		goto out;
+
 	if (ndev->reg_state == NETREG_REGISTERED) {
 		if (locked)
 			cfg80211_unregister_netdevice(ndev);
@@ -688,7 +693,12 @@ void brcmf_net_detach(struct net_device *ndev, bool locked)
 	} else {
 		brcmf_cfg80211_free_netdev(ndev);
 		free_netdev(ndev);
+		freed = true;
 	}
+
+out:
+	if (ndev_freed)
+		*ndev_freed = freed;
 }
 
 static int brcmf_net_mon_open(struct net_device *ndev)
@@ -848,6 +858,7 @@ struct brcmf_if *brcmf_add_if(struct brcmf_pub *drvr, s32 bsscfgidx, s32 ifidx,
 {
 	struct brcmf_if *ifp;
 	struct net_device *ndev;
+	bool ndev_freed;
 
 	brcmf_dbg(TRACE, "Enter, bsscfgidx=%d, ifidx=%d\n", bsscfgidx, ifidx);
 
@@ -861,7 +872,9 @@ struct brcmf_if *brcmf_add_if(struct brcmf_pub *drvr, s32 bsscfgidx, s32 ifidx,
 			bphy_err(drvr, "ERROR: netdev:%s already exists\n",
 				 ifp->ndev->name);
 			netif_stop_queue(ifp->ndev);
-			brcmf_net_detach(ifp->ndev, false);
+			brcmf_net_detach(ifp->ndev, false, &ndev_freed);
+			if (ndev_freed)
+				ifp->ndev = NULL;
 			drvr->iflist[bsscfgidx] = NULL;
 		} else {
 			brcmf_dbg(INFO, "netdev:%s ignore IF event\n",
@@ -914,6 +927,7 @@ static void brcmf_del_if(struct brcmf_pub *drvr, s32 bsscfgidx,
 {
 	struct brcmf_if *ifp;
 	int ifidx;
+	bool ndev_freed;
 
 	ifp = drvr->iflist[bsscfgidx];
 	if (!ifp) {
@@ -939,7 +953,9 @@ static void brcmf_del_if(struct brcmf_pub *drvr, s32 bsscfgidx,
 			cancel_work_sync(&ifp->multicast_work);
 			cancel_work_sync(&ifp->ndoffload_work);
 		}
-		brcmf_net_detach(ifp->ndev, locked);
+		brcmf_net_detach(ifp->ndev, locked, &ndev_freed);
+		if (ndev_freed)
+			ifp->ndev = NULL;
 	} else {
 		/* Only p2p device interfaces which get dynamically created
 		 * end up here. In this case the p2p module should be informed
@@ -1197,6 +1213,7 @@ static int brcmf_bus_started(struct brcmf_pub *drvr, struct cfg80211_ops *ops)
 	struct brcmf_bus *bus_if = drvr->bus_if;
 	struct brcmf_if *ifp;
 	struct brcmf_if *p2p_ifp;
+	bool ndev_freed;
 
 	brcmf_dbg(TRACE, "\n");
 
@@ -1281,9 +1298,16 @@ fail:
 		brcmf_cfg80211_detach(drvr->config);
 		drvr->config = NULL;
 	}
-	brcmf_net_detach(ifp->ndev, false);
-	if (p2p_ifp)
-		brcmf_net_detach(p2p_ifp->ndev, false);
+	if (ifp->ndev) {
+		brcmf_net_detach(ifp->ndev, false, &ndev_freed);
+		if (ndev_freed)
+			ifp->ndev = NULL;
+	}
+	if (p2p_ifp && p2p_ifp->ndev) {
+		brcmf_net_detach(p2p_ifp->ndev, false, &ndev_freed);
+		if (ndev_freed)
+			p2p_ifp->ndev = NULL;
+	}
 	drvr->iflist[0] = NULL;
 	drvr->iflist[1] = NULL;
 	if (drvr->settings->ignore_probe_fail)
@@ -1413,6 +1437,7 @@ void brcmf_detach(struct device *dev)
 	s32 i;
 	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
 	struct brcmf_pub *drvr = bus_if->drvr;
+	bool ndev_freed;
 
 	brcmf_dbg(TRACE, "Enter\n");
 
@@ -1439,7 +1464,9 @@ void brcmf_detach(struct device *dev)
 	brcmf_proto_detach(drvr);
 
 	if (drvr->mon_if) {
-		brcmf_net_detach(drvr->mon_if->ndev, false);
+		brcmf_net_detach(drvr->mon_if->ndev, false, &ndev_freed);
+		if (ndev_freed)
+			drvr->mon_if->ndev = NULL;
 		drvr->mon_if = NULL;
 	}
 

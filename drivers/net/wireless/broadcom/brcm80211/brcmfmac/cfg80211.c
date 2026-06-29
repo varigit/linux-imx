@@ -695,11 +695,13 @@ static int brcmf_mon_del_vif(struct wiphy *wiphy, struct wireless_dev *wdev)
 {
 	struct brcmf_cfg80211_info *cfg = wiphy_to_cfg(wiphy);
 	struct net_device *ndev = wdev->netdev;
+	bool ndev_freed;
 
 	ndev->netdev_ops->ndo_stop(ndev);
 
-	brcmf_net_detach(ndev, true);
-
+	brcmf_net_detach(ndev, true, &ndev_freed);
+	if (ndev_freed)
+		wdev->netdev = NULL;
 	cfg->pub->mon_if = NULL;
 
 	return 0;
