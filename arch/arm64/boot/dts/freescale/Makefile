@@ -600,6 +600,8 @@ dtb-${CONFIG_ARCH_MXC} += imx8qm-mek-revd-ov5640-csi0.dtb
 dtb-${CONFIG_ARCH_MXC} += imx8qm-mek-revd-ov5640-csi1.dtb
 dtb-${CONFIG_ARCH_MXC} += imx8qm-mek-revd-ov5640-dual.dtb
 
+dtb-${CONFIG_ARCH_MXC} += imx8qm-var-som-symphony.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-aster.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-eval-v3.dtb
