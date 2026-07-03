@@ -986,8 +986,9 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
 				 "EVERVISION-FT5726NEi");
 			break;
 		default:
-			snprintf(model_name, EDT_NAME_LEN,
-				 "generic ft5x06 (%02x)",
+			strscpy(model_name, "generic ft5x06", EDT_NAME_LEN);
+			dev_warn(&client->dev,
+				 "unknown model ID 0x%02x, using generic ft5x06\n",
 				 rdbuf[0]);
 			break;
 		}
