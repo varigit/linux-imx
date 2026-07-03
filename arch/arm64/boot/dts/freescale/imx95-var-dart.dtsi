@@ -156,6 +156,8 @@
 };
 
 &enetc_port0 {
+	/delete-property/ nvmem-cells;
+	/delete-property/ nvmem-cell-names;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_enetc0>;
 	phy-handle = <&ethphy0>;
