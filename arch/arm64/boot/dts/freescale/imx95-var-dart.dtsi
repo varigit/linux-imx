@@ -226,6 +226,10 @@
 	status = "okay";
 };
 
+&netc_blk_ctrl {
+	status = "okay";
+};
+
 &netc_emdio {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_emdio>, <&pinctrl_phy0res>;
@@ -260,6 +264,10 @@
 };
 
 &netc_timer {
+	status = "okay";
+};
+
+&netcmix_blk_ctrl {
 	status = "okay";
 };
 
