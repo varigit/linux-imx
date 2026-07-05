@@ -176,8 +176,8 @@
 	pinctrl-0 = <&pinctrl_lpi2c8>;
 	pinctrl-1 = <&pinctrl_lpi2c8_gpio>;
 	pinctrl-2 = <&pinctrl_lpi2c8_gpio>;
-	scl-gpios = <&gpio2 10 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-	sda-gpios = <&gpio2 11 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	sda-gpios = <&gpio2 10 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	scl-gpios = <&gpio2 11 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 	status = "okay";
 
 	wm8904: audio-codec@1a {
