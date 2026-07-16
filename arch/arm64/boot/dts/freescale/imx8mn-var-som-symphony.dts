@@ -191,6 +191,26 @@
 		};
 	};
 
+	ov5640_mipi1: camera@3c {
+		compatible = "ovti,ov5640_mipi";
+		reg = <0x3c>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_csi1>;
+		clocks = <&clk IMX8MN_CLK_CLKO1>;
+		clock-names = "csi_mclk";
+		csi_id = <0>;
+		pwn-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
+		rst-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+		mclk = <24000000>;
+		mclk_source = <0>;
+
+		port {
+			ov5640_mipi1_ep: endpoint {
+				remote-endpoint = <&mipi1_sensor_ep>;
+			};
+		};
+	};
+
 	/*
 	 * For Symphony board version <= 1.4, the PTN5150 IRQ pin is connected
 	 * to GPIO1_IO11 on the SoM (R106 present, R132 absent). From Symphony
@@ -268,6 +288,28 @@
 	status = "okay";
 };
 
+&isi {
+	status = "okay";
+};
+
+&mipi_csi {
+	status = "okay";
+
+	ports {
+		port@0 {
+			reg = <0>;
+
+			mipi1_sensor_ep: endpoint {
+				remote-endpoint = <&ov5640_mipi1_ep>;
+				data-lanes = <2>;
+				csis-hs-settle = <13>;
+				csis-clk-settle = <2>;
+				csis-wclk;
+			};
+		};
+	};
+};
+
 &pwm1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pwm1>;
@@ -335,6 +377,13 @@
 	pinctrl_captouch: captouchgrp {
 		fsl,pins = <
 			MX8MN_IOMUXC_SPDIF_RX_GPIO5_IO4		0x16
+		>;
+	};
+
+	pinctrl_csi1: csi1grp {
+		fsl,pins = <
+			MX8MN_IOMUXC_GPIO1_IO13_GPIO1_IO13	0x19
+			MX8MN_IOMUXC_ECSPI2_MISO_GPIO5_IO12	0x19
 		>;
 	};
 
