@@ -180,7 +180,7 @@
 		pinctrl-0 = <&pinctrl_can>;
 		clocks = <&clk40m>;
 		interrupt-parent = <&gpio1>;
-		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
+		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
 		microchip,rx-int-gpios = <&gpio5 4 GPIO_ACTIVE_LOW>;
 		spi-max-frequency = <20000000>;
 	};
@@ -482,7 +482,6 @@
 			MX8MM_IOMUXC_ECSPI1_MISO_ECSPI1_MISO		0x13
 			MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x13
 			MX8MM_IOMUXC_GPIO1_IO12_GPIO1_IO12		0x13
-			MX8MM_IOMUXC_SAI2_RXC_GPIO4_IO22		0x13
 		>;
 	};
 

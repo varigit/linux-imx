@@ -337,12 +337,14 @@
 			line-name = "pcie2_sel";
 		};
 
-		/* RGB_SEL */
+		/* RGB_SEL
+		 * Keep signal low and not floating
+		 */
 		lvds-brg-enable-hog {
 			gpio-hog;
 			gpios = <7 GPIO_ACTIVE_HIGH>;
 			output-low;
-			line-name = "rgb_sel";
+			line-name = "lvds_brg_en";
 		};
 	};
 
