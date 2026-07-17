@@ -298,12 +298,9 @@
 
 &pciea{
 	phys = <&hsio_phy 0 PHY_TYPE_PCIE 0>;
+	reset-gpio = <&pca6408 1 GPIO_ACTIVE_LOW>;
 	phy-names = "pcie-phy";
 	status = "okay";
-};
-
-&pciea_port0 {
-	reset-gpios = <&pca6408 1 GPIO_ACTIVE_LOW>;
 };
 
 &usb3_phy {
