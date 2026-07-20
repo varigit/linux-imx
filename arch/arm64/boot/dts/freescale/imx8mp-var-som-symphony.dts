@@ -197,6 +197,7 @@
 			reg = <5>;
 			qca,disable-smarteee;
 			eee-broken-1000t;
+			ti,min-output-impedance;
 			vddio-supply = <&vddio1>;
 
 			mxl-8611x,led0_cfg = <(
