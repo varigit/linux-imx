@@ -863,7 +863,7 @@ void brcmf_sdiod_freezer_uncount(struct brcmf_sdio_dev *sdiodev)
 
 int brcmf_sdiod_remove(struct brcmf_sdio_dev *sdiodev)
 {
-	sdiodev->state = BRCMF_SDIOD_DOWN;
+	brcmf_sdiod_change_state(sdiodev, BRCMF_SDIOD_DOWN);
 	if (sdiodev->bus) {
 		brcmf_sdio_remove(sdiodev->bus);
 		sdiodev->bus = NULL;
