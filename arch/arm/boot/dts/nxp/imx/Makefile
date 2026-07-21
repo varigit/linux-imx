@@ -579,6 +579,10 @@ dtb-$(CONFIG_SOC_IMX7D) += \
 	imx7d-var-som-nand-m4.dtb \
 	imx7d-var-som-nand-wm8731.dtb \
 	imx7d-var-som-nand.dtb \
+	imx7d-var-som-v2-emmc.dtb \
+	imx7d-var-som-v2-emmc-m4.dtb \
+	imx7d-var-som-v2-nand.dtb \
+	imx7d-var-som-v2-nand-m4.dtb \
 	imx7d-zii-rmu2.dtb \
 	imx7d-zii-rpu2.dtb \
 	imx7s-colibri-aster.dtb \

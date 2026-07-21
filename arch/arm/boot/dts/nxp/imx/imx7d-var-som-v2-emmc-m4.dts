@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0+ OR MIT
+//
+// Copyright (C) 2026 Variscite Ltd.
+
+/dts-v1/;
+
+#include "imx7d-var-som-v2-emmc.dts"
+#include "imx7d-var-som-m4.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-MX7_V2 M4 with eMMC flash & WM8904 on VAR-MX7CustomBoard";
+};
