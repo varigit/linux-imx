@@ -41,6 +41,21 @@
 		#size-cells = <2>;
 		ranges;
 
+		decoder_boot: decoder_boot@84000000 {
+			no-map;
+			reg = <0 0x84000000 0 0x2000000>;
+		};
+
+		encoder1_boot: encoder1_boot@86000000 {
+			no-map;
+			reg = <0 0x86000000 0 0x200000>;
+		};
+
+		encoder2_boot: encoder2_boot@86200000 {
+			no-map;
+			reg = <0 0x86200000 0 0x200000>;
+		};
+
 		vdev0vring0: memory@90000000 {
 			reg = <0 0x90000000 0 0x8000>;
 			no-map;
@@ -116,6 +131,26 @@
 			compatible = "shared-dma-pool";
 			reg = <0 0x94300000 0 0x100000>;
 			no-map;
+		};
+
+		decoder_rpc: decoder_rpc@92000000 {
+			no-map;
+			reg = <0 0x92000000 0 0x100000>;
+		};
+
+		encoder1_rpc: encoder1_rpc@94400000 {
+			no-map;
+			reg = <0 0x94400000 0 0x700000>;
+		};
+
+		encoder2_rpc: encoder1_rpc@94b00000 {
+			no-map;
+			reg = <0 0x94b00000 0 0x700000>;
+		};
+
+		gpu_reserved: memory@8800000000 {
+			no-map;
+			reg = <0x8 0x80000000 0 0x10000000>;
 		};
 
 		/* global autoconfigured region for contiguous allocations */
@@ -338,10 +373,17 @@
 				cooling-device = <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
 						 <&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
 						 <&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-						 <&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+						 <&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+						 <&A72_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+						 <&A72_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+						 <&imx8_gpu_ss 0 1>;
 			};
 		};
 	};
+};
+
+&imx8_gpu_ss {
+	memory-region = <&gpu_reserved>;
 };
 
 /* eMMC */
@@ -371,6 +413,35 @@
 		compatible = "brcm,bcm4329-fmac";
 		reg = <1>;
 	};
+};
+
+&vpu {
+	compatible = "nxp,imx8qm-vpu";
+	status = "okay";
+};
+
+&vpu_core0 {
+	reg = <0x2d080000 0x10000>;
+	memory-region = <&decoder_boot>, <&decoder_rpc>;
+	status = "okay";
+};
+
+&vpu_core1 {
+	reg = <0x2d090000 0x10000>;
+	memory-region = <&encoder1_boot>, <&encoder1_rpc>;
+	status = "okay";
+};
+
+&vpu_core2 {
+	reg = <0x2d0a0000 0x10000>;
+	memory-region = <&encoder2_boot>, <&encoder2_rpc>;
+	status = "okay";
+};
+
+&vpu_dsp {
+	memory-region = <&dsp_vdev0buffer>, <&dsp_vdev0vring0>,
+			<&dsp_vdev0vring1>, <&dsp_reserved>;
+	status = "okay";
 };
 
 &iomuxc {
