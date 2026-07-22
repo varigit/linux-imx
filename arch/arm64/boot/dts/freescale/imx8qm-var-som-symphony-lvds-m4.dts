@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*       
+ * Copyright (C) 2026 Variscite Ltd. - https://www.variscite.com/
+ *
+ */
+
+#include "imx8qm-var-som-symphony-lvds.dts"
+#include "imx8qm-var-m4.dtsi"
+
+/ {
+	model = "Variscite VAR-SOM-MX8 i.MX8QM on Symphony-Board LVDS+M4";
+	compatible = "variscite,var-som-imx8qm-symphony",
+		     "variscite,var-som-imx8qm", "fsl,imx8qm";
+};

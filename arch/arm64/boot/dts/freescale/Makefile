@@ -600,7 +600,13 @@ dtb-${CONFIG_ARCH_MXC} += imx8qm-mek-revd-ov5640-csi0.dtb
 dtb-${CONFIG_ARCH_MXC} += imx8qm-mek-revd-ov5640-csi1.dtb
 dtb-${CONFIG_ARCH_MXC} += imx8qm-mek-revd-ov5640-dual.dtb
 
-dtb-${CONFIG_ARCH_MXC} += imx8qm-var-som-symphony.dtb
+dtb-${CONFIG_ARCH_MXC} += imx8qm-var-som-symphony.dtb \
+			  imx8qm-var-som-symphony-dp.dtb \
+			  imx8qm-var-som-symphony-hdmi.dtb \
+			  imx8qm-var-som-symphony-lvds.dtb \
+			  imx8qm-var-som-symphony-dp-m4.dtb \
+			  imx8qm-var-som-symphony-hdmi-m4.dtb \
+			  imx8qm-var-som-symphony-lvds-m4.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-aster.dtb
