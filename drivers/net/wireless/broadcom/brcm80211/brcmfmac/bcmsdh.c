@@ -1055,6 +1055,9 @@ static int brcmf_ops_sdio_probe(struct sdio_func *func,
 		return -ENOMEM;
 	}
 
+	init_completion(&sdiodev->fw_init_done);
+	complete_all(&sdiodev->fw_init_done);
+
 	/* store refs to functions used. mmc_card does
 	 * not hold the F0 function pointer.
 	 */
@@ -1200,8 +1203,17 @@ static int brcmf_ops_sdio_resume(struct device *dev)
 	if (!sdiodev->wowl_enabled) {
 		/* bus was powered off and device removed, probe again */
 		ret = brcmf_sdiod_probe(sdiodev);
-		if (ret)
+		if (ret) {
 			brcmf_err("Failed to probe device on resume\n");
+			return ret;
+		}
+
+		/* Asynchronous firmware initialization might still be in progress */
+		if (!wait_for_completion_timeout(&sdiodev->fw_init_done, msecs_to_jiffies(5000))) {
+			dev_err(dev, "Timeout waiting for firmware initialization\n");
+			return -ETIMEDOUT;
+		}
+
 	} else {
 		if (sdiodev->settings->bus.sdio.oob_irq_supported)
 			disable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
