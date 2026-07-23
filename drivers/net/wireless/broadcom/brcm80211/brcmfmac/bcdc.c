@@ -368,6 +368,9 @@ brcmf_proto_bcdc_txcomplete(struct device *dev, struct sk_buff *txp,
 	struct brcmf_bcdc *bcdc = bus_if->drvr->proto->pd;
 	struct brcmf_if *ifp;
 
+	if (!bcdc || !bcdc->fws)
+		return;
+
 	/* await txstatus signal for firmware if active */
 	if (brcmf_fws_fc_active(bcdc->fws)) {
 		brcmf_fws_bustxcomplete(bcdc->fws, txp, success);
@@ -484,7 +487,11 @@ void brcmf_proto_bcdc_detach(struct brcmf_pub *drvr)
 {
 	struct brcmf_bcdc *bcdc = drvr->proto->pd;
 
+	if (!bcdc)
+		return;
+
 	drvr->proto->pd = NULL;
 	brcmf_fws_detach(bcdc->fws);
+	bcdc->fws = NULL;
 	kfree(bcdc);
 }
