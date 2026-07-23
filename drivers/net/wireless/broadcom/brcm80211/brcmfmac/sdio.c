@@ -4561,12 +4561,15 @@ void brcmf_sdio_remove(struct brcmf_sdio *bus)
 		/* De-register interrupt handler */
 		brcmf_sdiod_intr_unregister(bus->sdiodev);
 
+		bus->dpc_triggered = false;
+		cancel_work_sync(&bus->datawork);
+		if (bus->brcmf_wq) {
+			destroy_workqueue(bus->brcmf_wq);
+			bus->brcmf_wq = NULL;
+		}
+
 		brcmf_detach(bus->sdiodev->dev);
 		brcmf_free(bus->sdiodev->dev);
-
-		cancel_work_sync(&bus->datawork);
-		if (bus->brcmf_wq)
-			destroy_workqueue(bus->brcmf_wq);
 
 		if (bus->ci) {
 			if (bus->sdiodev->state != BRCMF_SDIOD_NOMEDIUM) {
