@@ -271,6 +271,8 @@
 };
 
 &enetc_port2 {
+	/delete-property/ nvmem-cells;
+	/delete-property/ nvmem-cell-names;
 	managed = "in-band-status";
 	phy-mode = "10gbase-r";
 	sfp = <&sfp0>;
