@@ -1,0 +1,81 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2025 Variscite Ltd.
+ */
+
+#include "imx95-var-dart-sonata.dts"
+
+/ {
+	model = "Variscite DART-MX95 M7 on Sonata-Board";
+
+	reserved-memory {
+		m7_reserved: m7@80000000 {
+			no-map;
+			reg = <0 0x80000000 0 0x1000000>;
+		};
+	};
+};
+
+&edma1 {
+	status = "disabled";
+};
+
+&edma2 {
+	status = "disabled";
+};
+
+&flexcan1 {
+	status = "disabled";
+};
+
+&lpi2c1 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
+
+&lpi2c2 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
+
+&lpi2c4 {
+	status = "disabled";
+};
+
+&lpspi1 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
+
+&lpspi2 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
+
+&lpuart1 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
+
+&lpuart2 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
+
+&lpuart3 {
+	status = "disabled";
+};
+
+&lpuart8 {
+	status = "disabled";
+};
+
+&micfil {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
+
+&sai1 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
