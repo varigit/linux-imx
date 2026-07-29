@@ -199,6 +199,7 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <5>;
 			eee-broken-1000t;
+			ti,min-output-impedance;
 			mxl-8611x,led0_cfg = <(
 				MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
 				MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
