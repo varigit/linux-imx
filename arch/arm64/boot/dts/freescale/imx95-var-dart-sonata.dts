@@ -187,6 +187,13 @@
 		enable-active-high;
 		regulator-always-on;
 	};
+
+	sfp0: sfp {
+		compatible = "sff,sfp";
+		i2c-bus = <&lpi2c3>;
+		los-gpios = <&pca9534 1 GPIO_ACTIVE_HIGH>;
+		maximum-power-milliwatt = <2000>;
+	};
 };
 
 &combo_rx {
@@ -274,13 +281,8 @@
 
 &enetc_port2 {
 	phy-mode = "10gbase-r";
+	sfp = <&sfp0>;
 	status = "okay";
-
-	fixed-link {
-		speed = <10000>;
-		full-duplex;
-		link-gpios = <&pca9534 1 GPIO_ACTIVE_LOW>;
-	};
 };
 
 &flexcan1 {
