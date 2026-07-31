@@ -499,6 +499,8 @@
 		interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
 		#gpio-cells = <2>;
 		wakeup-source;
+		/* Dummy supply to ensure pca9534 probes after pca6408 asserts RGB_SEL. */
+		rgb-sel-assert-supply = <&pca6408>;
 		status = "okay";
 	};
 
