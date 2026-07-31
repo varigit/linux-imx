@@ -79,3 +79,14 @@
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
 };
+
+/* eDMA2 is reserved for the M7; use PIO for Linux peripherals. */
+&lpi2c3 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
+
+&lpi2c8 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
+};
