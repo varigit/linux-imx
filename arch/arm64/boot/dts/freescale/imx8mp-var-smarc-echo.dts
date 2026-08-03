@@ -40,6 +40,13 @@
 		regulator-always-on;
 	};
 
+	echo_base_per_3v3: regulator-base-per-3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "BASE_PER_3V3";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+	};
+
 	sound-wm8904-echo {
 		compatible = "simple-audio-card";
 		simple-audio-card,bitclock-master = <&echo_dailink_master>;
@@ -333,6 +340,7 @@
 		compatible = "nxp,pcal6408";
 		standard-regs-fallback;
 		reg = <0x20>;
+		vcc-supply = <&echo_base_per_3v3>;
 		gpio-controller;
 		#gpio-cells = <2>;
 		pinctrl-names = "default";
@@ -345,6 +353,7 @@
 		compatible = "nxp,pcal6408";
 		standard-regs-fallback;
 		reg = <0x21>;
+		vcc-supply = <&echo_base_per_3v3>;
 		gpio-controller;
 		#gpio-cells = <2>;
 	};
@@ -861,4 +870,3 @@
 	bus-width = <4>;
 	status = "okay";
 };
-
