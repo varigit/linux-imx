@@ -221,6 +221,7 @@
 
 	bluetooth {
 		compatible = "nxp,88w8987-bt";
+		status = "okay";
 	};
 };
 
