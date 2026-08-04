@@ -709,9 +709,14 @@ static int dwc_csi_wait_for_phy_stopstate(struct dwc_csi_device *csidev)
 	u32 val;
 	int ret;
 
-	/* Check if lanes are in stop state */
-	phy_stopstate = CSI2RX_DPHY_STOPSTATE_CLK_LANE;
-	phy_stopstate |= GENMASK(csidev->bus.num_data_lanes - 1, 0);
+	/*
+	 * A continuous CSI-2 clock remains in HS state after the sensor stream
+	 * has been enabled. Only require clock-lane stop state for endpoints
+	 * which declare a non-continuous clock.
+	 */
+	phy_stopstate = GENMASK(csidev->bus.num_data_lanes - 1, 0);
+	if (csidev->bus.flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK)
+		phy_stopstate |= CSI2RX_DPHY_STOPSTATE_CLK_LANE;
 	ret = readl_poll_timeout(csidev->regs + CSI2RX_DPHY_STOPSTATE,
 				 val, (val & phy_stopstate) == phy_stopstate,
 				 10, 10000);
