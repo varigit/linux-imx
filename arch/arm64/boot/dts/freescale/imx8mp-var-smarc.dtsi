@@ -31,6 +31,20 @@
 		regulator-always-on;
 	};
 
+	hub_grst: regulator-usb-hub-rst {
+		compatible = "regulator-fixed";
+		regulator-name = "hub_grst";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&pcal6416 11 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+
+		vin-supply = <&hub_1v1>;
+		regulator-always-on;
+
+		startup-delay-us = <10000>;   /* 10 ms after enabling reset regulator */
+	};
+
 	iw612_pwrseq: iw612_pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		post-power-on-delay-ms = <100>;
