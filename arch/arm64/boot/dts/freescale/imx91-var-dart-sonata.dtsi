@@ -44,6 +44,13 @@
 		gpio = <&pca9534 7 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
 	};
+
+	reg_sec_rstn: regulator-sec-rstn {
+		compatible = "regulator-fixed";
+		regulator-name = "sec-rstn";
+		gpio = <&pca9534 0 GPIO_ACTIVE_HIGH>;
+		enable-active-low;
+	};
 };
 
 &ethphy1 {
@@ -242,6 +249,7 @@
 
 	st33ktpm2i: st33ktpm2i@2e {
 		compatible = "infineon,slb9673";
+		vcc-supply = <&reg_sec_rstn>;
 		reg = <0x2e>;
 	};
 
