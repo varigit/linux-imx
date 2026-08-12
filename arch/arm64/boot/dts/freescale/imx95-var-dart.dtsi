@@ -111,6 +111,12 @@
 			reg = <0 0x88220000 0 0x1000>;
 			no-map;
 		};
+
+		ele_reserved: ele-reserved@a4120000 {
+			compatible = "shared-dma-pool";
+			reg = <0 0xa4120000 0 0x100000>;
+			no-map;
+		};
 	};
 
 	sound-wm8904 {
@@ -148,6 +154,10 @@
 		reset-gpios = <&gpio4 29 GPIO_ACTIVE_LOW>, /* WIFI_RESET */
 			      <&gpio2 27 GPIO_ACTIVE_LOW>; /* WIFI_PWR_EN */
 	};
+};
+
+&ele_if0 {
+	memory-region = <&ele_reserved>;
 };
 
 &adc1 {
