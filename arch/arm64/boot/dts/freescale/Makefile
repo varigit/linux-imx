@@ -968,6 +968,12 @@ imx95-var-dart-wbe-sonata-m7-dtbs := imx95-var-dart-sonata-m7.dtb imx95-var-dart
 dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-wbe-sonata.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-wbe-sonata-m7.dtb
 
+dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-v2-sonata.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-v2-sonata-m7.dtb
+
+imx95-var-dart-v2-sonata-neutron-dtbs := imx95-var-dart-v2-sonata.dtb imx95-var-dart-neutron.dtbo
+dtb-$(CONFIG_ARCH_MXC) += imx95-var-dart-v2-sonata-neutron.dtb
+
 dtb-$(CONFIG_ARCH_S32) += s32g274a-evb.dtb
 dtb-$(CONFIG_ARCH_S32) += s32g274a-rdb2.dtb
 dtb-$(CONFIG_ARCH_S32) += s32g399a-rdb3.dtb

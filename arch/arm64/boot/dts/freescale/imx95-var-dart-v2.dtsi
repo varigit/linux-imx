@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree include file to support the DART-MX95_V2 SOM
+ *
+ * Copyright 2026 Variscite Ltd.
+ */
+
+&netc_emdio {
+	/delete-node/ethernet-phy@0;
+	ethphy0: ethernet-phy@4 {
+		reg = <4>;
+		compatible = "ethernet-phy-ieee802.3-c22";
+		reset-gpios = <&gpio2 18 GPIO_ACTIVE_LOW>;
+		reset-assert-us = <10000>;
+		reset-deassert-us = <100000>;
+		ti,min-output-impedance;
+	};
+};
+
+&scmi_iomuxc {
+	pinctrl_phy0res: phy0resgrp{
+		fsl,pins = <
+			IMX95_PAD_GPIO_IO18__GPIO2_IO_BIT18				0x31e
+		>;
+	};
+};
