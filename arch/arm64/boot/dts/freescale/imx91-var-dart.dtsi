@@ -440,6 +440,7 @@
 	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
 	bus-width = <8>;
 	non-removable;
+	fsl,tuning-step = <1>;
 	status = "okay";
 };
 
@@ -455,6 +456,7 @@
 	non-removable;
 	wakeup-source;
 	keep-power-in-suspend;
+	fsl,tuning-step = <1>;
 	status = "okay";
 };
 
