@@ -394,20 +394,24 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
 	imx6ul-var-dart-6ulcustomboard-nand-wifi-brcm-wm8731.dtb \
 	imx6ul-var-som-concerto-board-emmc-sd-card.dtb \
 	imx6ul-var-som-concerto-board-emmc-sd-card-wm8731.dtb \
-	imx6ul-var-som-concerto-board-emmc-wifi.dtb \
-	imx6ul-var-som-concerto-board-emmc-wifi-wm8731.dtb \
+	imx6ul-var-som-concerto-board-emmc-wifi-iw61x.dtb \
+	imx6ul-var-som-concerto-board-emmc-wifi-brcm.dtb \
+	imx6ul-var-som-concerto-board-emmc-wifi-brcm-wm8731.dtb \
 	imx6ul-var-som-concerto-board-nand-sd-card.dtb \
 	imx6ul-var-som-concerto-board-nand-sd-card-wm8731.dtb \
-	imx6ul-var-som-concerto-board-nand-wifi.dtb \
-	imx6ul-var-som-concerto-board-nand-wifi-wm8731.dtb \
+	imx6ul-var-som-concerto-board-nand-wifi-iw61x.dtb \
+	imx6ul-var-som-concerto-board-nand-wifi-brcm.dtb \
+	imx6ul-var-som-concerto-board-nand-wifi-brcm-wm8731.dtb \
 	imx6ul-var-som-symphony-board-emmc-sd-card.dtb \
 	imx6ul-var-som-symphony-board-emmc-sd-card-wm8731.dtb \
-	imx6ul-var-som-symphony-board-emmc-wifi.dtb \
-	imx6ul-var-som-symphony-board-emmc-wifi-wm8731.dtb \
+	imx6ul-var-som-symphony-board-emmc-wifi-iw61x.dtb \
+	imx6ul-var-som-symphony-board-emmc-wifi-brcm.dtb \
+	imx6ul-var-som-symphony-board-emmc-wifi-brcm-wm8731.dtb \
 	imx6ul-var-som-symphony-board-nand-sd-card.dtb \
 	imx6ul-var-som-symphony-board-nand-sd-card-wm8731.dtb \
-	imx6ul-var-som-symphony-board-nand-wifi.dtb \
-	imx6ul-var-som-symphony-board-nand-wifi-wm8731.dtb \
+	imx6ul-var-som-symphony-board-nand-wifi-iw61x.dtb \
+	imx6ul-var-som-symphony-board-nand-wifi-brcm.dtb \
+	imx6ul-var-som-symphony-board-nand-wifi-brcm-wm8731.dtb \
 	imx6ull-14x14-evk.dtb \
 	imx6ull-14x14-evk-emmc.dtb \
 	imx6ull-14x14-evk-btwifi.dtb \
@@ -458,20 +462,24 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
 	imx6ull-var-dart-6ulcustomboard-nand-wifi-brcm-wm8731.dtb \
 	imx6ull-var-som-concerto-board-emmc-sd-card.dtb \
 	imx6ull-var-som-concerto-board-emmc-sd-card-wm8731.dtb \
-	imx6ull-var-som-concerto-board-emmc-wifi.dtb \
-	imx6ull-var-som-concerto-board-emmc-wifi-wm8731.dtb \
+	imx6ull-var-som-concerto-board-emmc-wifi-iw61x.dtb \
+	imx6ull-var-som-concerto-board-emmc-wifi-brcm.dtb \
+	imx6ull-var-som-concerto-board-emmc-wifi-brcm-wm8731.dtb \
 	imx6ull-var-som-concerto-board-nand-sd-card.dtb \
 	imx6ull-var-som-concerto-board-nand-sd-card-wm8731.dtb \
-	imx6ull-var-som-concerto-board-nand-wifi.dtb \
-	imx6ull-var-som-concerto-board-nand-wifi-wm8731.dtb \
+	imx6ull-var-som-concerto-board-nand-wifi-iw61x.dtb \
+	imx6ull-var-som-concerto-board-nand-wifi-brcm.dtb \
+	imx6ull-var-som-concerto-board-nand-wifi-brcm-wm8731.dtb \
 	imx6ull-var-som-symphony-board-emmc-sd-card.dtb \
 	imx6ull-var-som-symphony-board-emmc-sd-card-wm8731.dtb \
-	imx6ull-var-som-symphony-board-emmc-wifi.dtb \
-	imx6ull-var-som-symphony-board-emmc-wifi-wm8731.dtb \
+	imx6ull-var-som-symphony-board-emmc-wifi-iw61x.dtb \
+	imx6ull-var-som-symphony-board-emmc-wifi-brcm.dtb \
+	imx6ull-var-som-symphony-board-emmc-wifi-brcm-wm8731.dtb \
 	imx6ull-var-som-symphony-board-nand-sd-card.dtb \
 	imx6ull-var-som-symphony-board-nand-sd-card-wm8731.dtb \
-	imx6ull-var-som-symphony-board-nand-wifi.dtb \
-	imx6ull-var-som-symphony-board-nand-wifi-wm8731.dtb \
+	imx6ull-var-som-symphony-board-nand-wifi-iw61x.dtb \
+	imx6ull-var-som-symphony-board-nand-wifi-brcm.dtb \
+	imx6ull-var-som-symphony-board-nand-wifi-brcm-wm8731.dtb \
 	imx6ulz-var-dart-6ulcustomboard-emmc-sd-card.dtb \
 	imx6ulz-var-dart-6ulcustomboard-emmc-sd-card-wm8731.dtb \
 	imx6ulz-var-dart-6ulcustomboard-emmc-wifi-iw61x.dtb \
@@ -484,20 +492,24 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
 	imx6ulz-var-dart-6ulcustomboard-nand-wifi-brcm-wm8731.dtb \
 	imx6ulz-var-som-concerto-board-emmc-sd-card.dtb \
 	imx6ulz-var-som-concerto-board-emmc-sd-card-wm8731.dtb \
-	imx6ulz-var-som-concerto-board-emmc-wifi.dtb \
-	imx6ulz-var-som-concerto-board-emmc-wifi-wm8731.dtb \
+	imx6ulz-var-som-concerto-board-emmc-wifi-iw61x.dtb \
+	imx6ulz-var-som-concerto-board-emmc-wifi-brcm.dtb \
+	imx6ulz-var-som-concerto-board-emmc-wifi-brcm-wm8731.dtb \
 	imx6ulz-var-som-concerto-board-nand-sd-card.dtb \
 	imx6ulz-var-som-concerto-board-nand-sd-card-wm8731.dtb \
-	imx6ulz-var-som-concerto-board-nand-wifi.dtb \
-	imx6ulz-var-som-concerto-board-nand-wifi-wm8731.dtb \
+	imx6ulz-var-som-concerto-board-nand-wifi-iw61x.dtb \
+	imx6ulz-var-som-concerto-board-nand-wifi-brcm.dtb \
+	imx6ulz-var-som-concerto-board-nand-wifi-brcm-wm8731.dtb \
 	imx6ulz-var-som-symphony-board-emmc-sd-card.dtb \
 	imx6ulz-var-som-symphony-board-emmc-sd-card-wm8731.dtb \
-	imx6ulz-var-som-symphony-board-emmc-wifi.dtb \
-	imx6ulz-var-som-symphony-board-emmc-wifi-wm8731.dtb \
+	imx6ulz-var-som-symphony-board-emmc-wifi-iw61x.dtb \
+	imx6ulz-var-som-symphony-board-emmc-wifi-brcm.dtb \
+	imx6ulz-var-som-symphony-board-emmc-wifi-brcm-wm8731.dtb \
 	imx6ulz-var-som-symphony-board-nand-sd-card.dtb \
 	imx6ulz-var-som-symphony-board-nand-sd-card-wm8731.dtb \
-	imx6ulz-var-som-symphony-board-nand-wifi.dtb \
-	imx6ulz-var-som-symphony-board-nand-wifi-wm8731.dtb \
+	imx6ulz-var-som-symphony-board-nand-wifi-iw61x.dtb \
+	imx6ulz-var-som-symphony-board-nand-wifi-brcm.dtb \
+	imx6ulz-var-som-symphony-board-nand-wifi-brcm-wm8731.dtb \
 	imx6ulz-14x14-evk.dtb \
 	imx6ulz-14x14-evk-btwifi.dtb \
 	imx6ulz-14x14-evk-emmc.dtb \
