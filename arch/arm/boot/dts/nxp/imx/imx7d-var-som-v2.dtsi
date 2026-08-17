@@ -12,6 +12,14 @@
 	};
 };
 
+&ethphy0 {
+	ti,min-output-impedance;
+};
+
+&ethphy1 {
+	ti,min-output-impedance;
+};
+
 &fec1 {
 	phy-mode = "rgmii";
 };
