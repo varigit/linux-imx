@@ -275,17 +275,20 @@
 };
 
 &usbh {
+	disable-over-current;
 	status = "okay";
 	vbus-supply = <&reg_hsic_hub_pwr_on>;
 };
 
 &usbotg1 {
+	disable-over-current;
 	vbus-supply = <&reg_usb_otg1_vbus>;
 	dr_mode = "host";
 	status = "okay";
 };
 
 &usbotg2 {
+	disable-over-current;
 	vbus-supply = <&reg_usb_otg2_vbus>;
 	dr_mode = "host";
 	status = "okay";
