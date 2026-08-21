@@ -595,6 +595,12 @@ dtb-$(CONFIG_SOC_IMX7D) += \
 	imx7d-sdb-usd-wifi.dtb \
 	imx7d-sdb-pcie-ep.dtb \
 	imx7d-smegw01.dtb \
+	imx7d-var-som-emmc-mx7customboard.dtb \
+	imx7d-var-som-emmc-wm8731-mx7customboard.dtb \
+	imx7d-var-som-nand-mx7customboard.dtb \
+	imx7d-var-som-nand-wm8731-mx7customboard.dtb \
+	imx7d-var-som-v2-emmc-mx7customboard.dtb \
+	imx7d-var-som-v2-nand-mx7customboard.dtb \
 	imx7d-12x12-lpddr3-val.dtb \
 	imx7d-12x12-lpddr3-val-sai.dtb \
 	imx7d-zii-rmu2.dtb \
