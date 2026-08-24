@@ -368,7 +368,7 @@
 /* BT */
 &uart3 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart3>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart3>, <&pinctrl_bt>, <&pinctrl_lpsr_bt>;
 	assigned-clocks = <&clks IMX7D_UART3_ROOT_SRC>;
 	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
 	uart-has-rtscts;
@@ -624,6 +624,12 @@
 };
 
 &iomuxc_lpsr {
+	pinctrl_lpsr_bt: btlpsrgrp {
+		fsl,pins = <
+			MX7D_PAD_LPSR_GPIO1_IO06__GPIO1_IO6		0x36  /* bt uart/pcm buf, 5k PU */
+		>;
+	};
+
 	pinctrl_sai1_mclk: sai1grp_mclk {
 		fsl,pins = <
 			MX7D_PAD_LPSR_GPIO1_IO01__SAI1_MCLK		0x1f
