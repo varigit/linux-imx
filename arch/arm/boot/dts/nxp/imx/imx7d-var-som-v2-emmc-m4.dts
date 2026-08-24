@@ -8,5 +8,5 @@
 #include "imx7d-var-som-m4.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX7_V2 M4 with eMMC flash & WM8904 on VAR-MX7CustomBoard";
+	model = "Variscite VAR-SOM-MX7-5G_V2 M4 with eMMC flash & WM8904 on VAR-MX7CustomBoard";
 };

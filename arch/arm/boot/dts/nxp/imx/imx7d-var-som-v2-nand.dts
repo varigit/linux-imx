@@ -10,5 +10,5 @@
 #include "imx7d-var-som-mx7customboard.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX7_V2 with NAND flash & WM8904 on VAR-MX7CustomBoard";
+	model = "Variscite VAR-SOM-MX7-5G_V2 with NAND flash & WM8904 on VAR-MX7CustomBoard";
 };
