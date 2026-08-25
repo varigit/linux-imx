@@ -71,8 +71,11 @@
 
 &i2c1 {
 	clock-frequency = <100000>;
-	pinctrl-names = "default";
+	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c1>;
+	pinctrl-1 = <&pinctrl_i2c1_gpio>;
+	scl-gpios = <&gpio5 27 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	sda-gpios = <&gpio5 26 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 	status = "okay";
 
 	hdmi_edid: edid@50 {
@@ -97,8 +100,11 @@
 
 &i2c3 {
 	clock-frequency = <100000>;
-	pinctrl-names = "default";
+	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_i2c3>;
+	pinctrl-1 = <&pinctrl_i2c3_gpio>;
+	scl-gpios = <&gpio1 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	sda-gpios = <&gpio7 11 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 	status = "okay";
 
 	cap_touch: ft5x06_ts@38 {
@@ -160,10 +166,24 @@
 			>;
 		};
 
+		pinctrl_i2c1_gpio: i2c1gpiogrp {
+			fsl,pins = <
+				MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26	0x1b0b0
+				MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27	0x1b0b0
+			>;
+		};
+
 		pinctrl_i2c3: i2c3grp {
 			fsl,pins = <
 				MX6QDL_PAD_GPIO_5__I2C3_SCL		0x4001b8b1
 				MX6QDL_PAD_GPIO_16__I2C3_SDA		0x4001b8b1
+			>;
+		};
+
+		pinctrl_i2c3_gpio: i2c3gpiogrp {
+			fsl,pins = <
+				MX6QDL_PAD_GPIO_5__GPIO1_IO05		0x1b0b0
+				MX6QDL_PAD_GPIO_16__GPIO7_IO11		0x1b0b0
 			>;
 		};
 
