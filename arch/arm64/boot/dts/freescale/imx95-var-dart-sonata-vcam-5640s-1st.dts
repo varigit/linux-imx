@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Variscite Sonata carrier board for DART-MX95 with VCAM-5640S-1ST on CSI0.
+ *
+ * Copyright (C) 2026 Variscite Ltd.
+ */
+
+#include "imx95-var-dart-sonata.dts"
+
+/ {
+	model = "Variscite DART-MX95 on Sonata-Board with VCAM-5640S-1ST";
+};
+
+&ov5640_mipi1 {
+	status = "disabled";
+};
+
+&mipi_csi1 {
+	status = "disabled";
+};
+
+&csi_pixel_formatter_1 {
+	status = "disabled";
+};
