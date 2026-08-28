@@ -293,13 +293,6 @@
 			line-name = "usb3_sel";
 		};
 
-		enet_rst_hog {
-			gpio-hog;
-			gpios = <5 GPIO_ACTIVE_HIGH>;
-			output-low;
-			line-name = "enet_rst";
-		};
-
 		som_vsel_hog {
 			gpio-hog;
 			gpios = <6 GPIO_ACTIVE_HIGH>;
@@ -310,8 +303,21 @@
 		enet_sel_hog {
 			gpio-hog;
 			gpios = <7 GPIO_ACTIVE_HIGH>;
-			output-low;
+			output-high;
 			line-name = "enet_sel";
+		};
+	};
+};
+
+&fec1 {
+	mdio {
+		carrier_phy: ethernet-phy@5 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <5>;
+			reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <100000>;
+			ti,mac-interface-isolate;
 		};
 	};
 };
