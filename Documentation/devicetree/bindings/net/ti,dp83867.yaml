@@ -58,6 +58,12 @@ properties:
         cell takes precedence over ti,max-output-impedance, which in
         turn takes precedence over ti,min-output-impedance.
 
+  ti,mac-interface-isolate:
+    type: boolean
+    description: |
+      Isolate the PHY from the MAC-side interface while retaining access
+      through the management interface.
+
   tx-fifo-depth:
     $ref: /schemas/types.yaml#/definitions/uint32
     description: |
