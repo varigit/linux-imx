@@ -172,6 +172,7 @@ struct dp83867_private {
 	u32 rx_fifo_depth;
 	int io_impedance;
 	int port_mirroring;
+	bool mac_interface_isolate;
 	bool rxctrl_strap_quirk;
 	bool set_clk_output;
 	u32 clk_output_sel;
@@ -607,6 +608,9 @@ static int dp83867_of_init(struct phy_device *phydev)
 	if (ret)
 		return ret;
 
+	dp83867->mac_interface_isolate =
+		of_property_read_bool(of_node, "ti,mac-interface-isolate");
+
 	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
 							    "ti,dp83867-rxctrl-strap-quirk");
 
@@ -701,6 +705,16 @@ static int dp83867_of_init(struct phy_device *phydev)
 }
 #endif /* CONFIG_OF_MDIO */
 
+static int dp83867_config_isolation(struct phy_device *phydev)
+{
+	struct dp83867_private *dp83867 = phydev->priv;
+
+	if (!dp83867->mac_interface_isolate)
+		return 0;
+
+	return phy_set_bits(phydev, MII_BMCR, BMCR_ISOLATE);
+}
+
 static int dp83867_suspend(struct phy_device *phydev)
 {
 	/* Disable PHY Interrupts */
@@ -728,6 +742,7 @@ static int dp83867_resume(struct phy_device *phydev)
 static int dp83867_probe(struct phy_device *phydev)
 {
 	struct dp83867_private *dp83867;
+	int ret;
 
 	dp83867 = devm_kzalloc(&phydev->mdio.dev, sizeof(*dp83867),
 			       GFP_KERNEL);
@@ -736,7 +751,11 @@ static int dp83867_probe(struct phy_device *phydev)
 
 	phydev->priv = dp83867;
 
-	return dp83867_of_init(phydev);
+	ret = dp83867_of_init(phydev);
+	if (ret)
+		return ret;
+
+	return dp83867_config_isolation(phydev);
 }
 
 static int dp83867_config_init(struct phy_device *phydev)
@@ -744,6 +763,10 @@ static int dp83867_config_init(struct phy_device *phydev)
 	struct dp83867_private *dp83867 = phydev->priv;
 	int ret, val, bs;
 	u16 delay;
+
+	ret = dp83867_config_isolation(phydev);
+	if (ret)
+		return ret;
 
 	/* Force speed optimization for the PHY even if it strapped */
 	ret = phy_modify(phydev, DP83867_CFG2, DP83867_DOWNSHIFT_EN,
@@ -940,6 +963,17 @@ static int dp83867_config_init(struct phy_device *phydev)
 	return 0;
 }
 
+static int dp83867_config_aneg(struct phy_device *phydev)
+{
+	int ret;
+
+	ret = genphy_config_aneg(phydev);
+	if (ret)
+		return ret;
+
+	return dp83867_config_isolation(phydev);
+}
+
 static int dp83867_phy_reset(struct phy_device *phydev)
 {
 	int err;
@@ -1035,6 +1069,7 @@ static struct phy_driver dp83867_driver[] = {
 
 		.probe          = dp83867_probe,
 		.config_init	= dp83867_config_init,
+		.config_aneg	= dp83867_config_aneg,
 		.soft_reset	= dp83867_phy_reset,
 
 		.read_status	= dp83867_read_status,
