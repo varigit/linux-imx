@@ -1,0 +1,121 @@
+/*
+ * Copyright (C) 2022 Variscite Ltd. - https://www.variscite.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include "imx6ul-imx6ull-var-som-symphony-board.dtsi"
+
+&ecspi4 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	fsl,spi-num-chipselects = <1>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi4 &pinctrl_ecspi4_cs>;
+	cs-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
+	status = "okay";
+
+	spidev@0 {
+		compatible = "var,spidev";
+		spi-max-frequency = <12000000>;
+		reg = <0>;
+		status = "okay";
+	};
+};
+
+&i2c3 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_i2c3>;
+	pinctrl-1 = <&pinctrl_i2c3_gpio>;
+	scl-gpios = <&gpio2 8 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	sda-gpios = <&gpio2 9 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	status = "okay";
+
+	ft5x06_ts@38 {
+		compatible = "edt,edt-ft5x06";
+		reg = <0x38>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_ft5x06_ts_gpio>;
+		interrupt-parent = <&gpio3>;
+		interrupts = <6 0>;
+		touchscreen-size-x = <800>;
+		touchscreen-size-y = <480>;
+		touchscreen-inverted-x;
+		touchscreen-inverted-y;
+	};
+
+	/* GPIO Expander */
+	pcal6408: gpio@21 {
+		compatible = "nxp,pcal6408";
+		reg = <0x21>;
+		standard-regs-fallback;
+		gpio-controller;
+		#gpio-cells = <2>;
+		status = "okay";
+
+		/*
+		* RGB_SEL
+		* output-lo: Configure mux for VAR-SOMs LVDS
+		* output-hi: Configure mux for VAR-SOM-MX91 RGB2LVDS
+		*/
+		rgb_sel {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "rgb_sel";
+		};
+
+		/*
+		* The SEC_RSTN line for the TPM2 module has an external
+		* pull-down, keeping the module in reset by default.
+		* Drive this signal high to release the TPM2 from reset.
+		*/
+		sec_resetn {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "sec_rstn";
+		};
+	};
+
+	/* DS1337 RTC module */
+	rtc@68 {
+		compatible = "dallas,ds1337";
+		reg = <0x68>;
+		pinctrl-names = "default";
+	};
+
+	/* TPM */
+	st33ktpm2xi2c: st33ktpm2xi2c@2e {
+		compatible = "infineon,slb9673";
+		reg = <0x2e>;
+		/*
+		* reset-gpios is not used by the TPM driver, but forces
+		* probe ordering: ensures GPIO expander is initialized
+		* and sec_rstn GPIO hog has released TPM from reset
+		* before the TPM driver probes.
+		*/
+		reset-gpios = <&pcal6408 4 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+};
+
+&i2c4 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_i2c4>;
+	pinctrl-1 = <&pinctrl_i2c4_gpio>;
+	scl-gpios = <&gpio2 10 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	sda-gpios = <&gpio2 11 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	status = "okay";
+};
+
+/* ttymxc6 UART */
+&uart7 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart7>;
+	status = "okay";
+};
