@@ -264,6 +264,7 @@
 };
 
 &lcdif {
+	video-mem-size = <0x00400000>; /* 4 MiB */
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_lcdif_dat
 		     &pinctrl_lcdif_ctrl>;
