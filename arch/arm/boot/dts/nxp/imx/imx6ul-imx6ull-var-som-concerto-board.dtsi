@@ -74,7 +74,6 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			micrel,rmii-reference-clock-select-25-mhz;
 			micrel,led-mode = <1>;
-			reset-names = "phy";
 			reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
 			reset-deassert-us = <100000>;
@@ -87,7 +86,6 @@
 			compatible = "ethernet-phy-ieee802.3-c22";
 			micrel,rmii-reference-clock-select-25-mhz;
 			micrel,led-mode = <0>;
-			reset-names = "phy";
 			reset-gpios = <&gpio5 5 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
 			reset-deassert-us = <100000>;
