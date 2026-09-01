@@ -228,6 +228,13 @@
 		>;
 	};
 
+	pinctrl_lpi2c0_gpio: lpi2c0gpiogrp {
+		fsl,pins = <
+			IMX8QXP_MIPI_CSI0_GPIO0_00_LSIO_GPIO3_IO08		0x06000021
+			IMX8QXP_MIPI_CSI0_GPIO0_01_LSIO_GPIO3_IO07		0x06000021
+		>;
+	};
+
 	pinctrl_lpspi3: lpspi3grp {
 		fsl,pins = <
 			IMX8QXP_SPI3_SCK_ADMA_SPI3_SCK				0x0600004c
@@ -365,8 +372,11 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	clock-frequency = <100000>;
-	pinctrl-names = "default";
+	pinctrl-names = "default", "gpio";
 	pinctrl-0 = <&pinctrl_lpi2c0>;
+	pinctrl-1 = <&pinctrl_lpi2c0_gpio>;
+	scl-gpios = <&lsio_gpio3 8 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	sda-gpios = <&lsio_gpio3 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 	status = "okay";
 
 	wm8904: codec@1a {
