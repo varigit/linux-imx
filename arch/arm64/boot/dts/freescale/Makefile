@@ -331,6 +331,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-echo.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-echo-basler-isp0.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-echo-m7.dtb
 imx8mp-var-smarc-wbe-echo-dtbs := imx8mp-var-smarc-echo.dtb imx8mp-var-smarc-wbe.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-wbe-echo.dtb
 
