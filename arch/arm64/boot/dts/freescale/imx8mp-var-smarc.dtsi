@@ -368,6 +368,7 @@
 			0xffff /* GPIO3 => don't touch */
 			0xffff /* GPIO4 => don't touch */
 		>;
+		wlf,in1l-as-dmicdat1;
 		status = "okay";
 	};
 };
