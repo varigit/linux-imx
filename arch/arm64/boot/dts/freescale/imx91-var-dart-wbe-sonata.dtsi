@@ -1,0 +1,119 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree include file to support the DART-MX91 SoM featuring
+ * WiFi/BT chipset with 802.15.4, used on the Sonata-Board
+ *
+ * Copyright 2026 Variscite Ltd.
+ */
+
+/ {
+	reg_sec_rstn: regulator-sec-rstn {
+		compatible = "regulator-fixed";
+		regulator-name = "sec-rstn";
+		gpio = <&pca9534 0 GPIO_ACTIVE_HIGH>;
+		enable-active-low;
+	};
+};
+
+&ethphy1 {
+	mxl-8611x,led0_cfg = <(
+		MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
+		MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
+		MXL8611X_LEDX_CFG_TRAFFIC_ACT_BLINK_IND
+	)>;
+	mxl-8611x,led1_cfg = <(
+		MXL8611X_LEDX_CFG_LINK_UP_10MB_ON |
+		MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
+		MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
+	)>;
+};
+
+&iomuxc {
+	pinctrl_fec: fecgrp {
+		fsl,pins = <
+			MX91_PAD_ENET2_RD0__ENET2_RGMII_RD0		0x57e
+			MX91_PAD_ENET2_RD1__ENET2_RGMII_RD1		0x57e
+			MX91_PAD_ENET2_RD2__ENET2_RGMII_RD2		0x57e
+			MX91_PAD_ENET2_RD3__ENET2_RGMII_RD3		0x37e  /* Enable pull-up to strap MXL86110 MDIO address */
+			MX91_PAD_ENET2_RXC__ENET2_RGMII_RXC		0x5fe
+			MX91_PAD_ENET2_RX_CTL__ENET2_RGMII_RX_CTL	0x57e
+			MX91_PAD_ENET2_TD0__ENET2_RGMII_TD0		0x57e
+			MX91_PAD_ENET2_TD1__ENET2_RGMII_TD1		0x57e
+			MX91_PAD_ENET2_TD2__ENET2_RGMII_TD2		0x57e
+			MX91_PAD_ENET2_TD3__ENET2_RGMII_TD3		0x57e
+			MX91_PAD_ENET2_TXC__ENET2_RGMII_TXC		0x5fe
+			MX91_PAD_ENET2_TX_CTL__ENET2_RGMII_TX_CTL	0x57e
+		>;
+	};
+
+	pinctrl_fec_sleep: fecsleepgrp {
+		fsl,pins = <
+			MX91_PAD_ENET2_RD0__GPIO4_IO24			0x51e
+			MX91_PAD_ENET2_RD1__GPIO4_IO25			0x51e
+			MX91_PAD_ENET2_RD2__GPIO4_IO26			0x51e
+			MX91_PAD_ENET2_RD3__GPIO4_IO27			0x31e  /* Enable pull-up to strap MXL86110 MDIO address */
+			MX91_PAD_ENET2_RXC__GPIO4_IO23			0x51e
+			MX91_PAD_ENET2_RX_CTL__GPIO4_IO22		0x51e
+			MX91_PAD_ENET2_TD0__GPIO4_IO19			0x51e
+			MX91_PAD_ENET2_TD1__GPIO4_IO18			0x51e
+			MX91_PAD_ENET2_TD2__GPIO4_IO17			0x51e
+			MX91_PAD_ENET2_TD3__GPIO4_IO16			0x51e
+			MX91_PAD_ENET2_TXC__GPIO4_IO21			0x51e
+			MX91_PAD_ENET2_TX_CTL__GPIO4_IO20		0x51e
+		>;
+	};
+};
+
+&lpi2c1 {
+	pca9534: gpio@22 {
+		compatible = "nxp,pca9534";
+		reg = <0x22>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
+
+		wlanspi-buf-en {
+			gpio-hog;
+			gpios = <2 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "wlan_spi_en_b";
+		};
+
+		pcie2-sel {
+			gpio-hog;
+			gpios = <6 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "pcie2_sel";
+		};
+
+		rgb-sel {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "rgb_sel";
+		};
+	};
+};
+
+&lpi2c7 {
+	st33ktpm2i: st33ktpm2i@2e {
+		compatible = "infineon,slb9673";
+		vcc-supply = <&reg_sec_rstn>;
+		reg = <0x2e>;
+	};
+};
+
+&lpspi8 {
+	cs-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>,
+		   <&gpio2 1 GPIO_ACTIVE_LOW>;
+};
+
+&pca6408_1 {
+	interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
+};
+
+&reg_fec_phy_rst {
+	off-on-delay-us = <15000>;
+	startup-delay-us = <100000>;
+};

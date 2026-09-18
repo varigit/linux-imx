@@ -883,18 +883,21 @@ dtb-$(CONFIG_ARCH_MXC) += imx91-var-dart-dt8mcustomboard.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-dart-sonata.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-som-symphony.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-som-symphony-1.x.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx91-var-dart-wbe-sonata.dtb
 
 imx91-var-som-wbe-symphony-1.x-dtbs := imx91-var-som-symphony-1.x.dtb imx91-var-som-wbe.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-som-wbe-symphony-1.x.dtb
 
 imx91-var-dart-dt8mcustomboard-ld-dtbs := imx91-var-dart-dt8mcustomboard.dtb imx91-var-som-ld.dtbo
 imx91-var-dart-sonata-ld-dtbs := imx91-var-dart-sonata.dtb imx91-var-som-ld.dtbo
+imx91-var-dart-wbe-sonata-ld-dtbs := imx91-var-dart-wbe-sonata.dtb imx91-var-som-ld.dtbo
 imx91-var-som-symphony-ld-dtbs := imx91-var-som-symphony.dtb imx91-var-som-ld.dtbo
 imx91-var-som-symphony-1.x-ld-dtbs := imx91-var-som-symphony-1.x.dtb imx91-var-som-ld.dtbo
 imx91-var-som-wbe-symphony-1.x-ld-dtbs := imx91-var-som-wbe-symphony-1.x.dtb imx91-var-som-ld.dtbo
 
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-dart-dt8mcustomboard-ld.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-dart-sonata-ld.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx91-var-dart-wbe-sonata-ld.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-som-symphony-ld.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-som-symphony-1.x-ld.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx91-var-som-wbe-symphony-1.x-ld.dtb
