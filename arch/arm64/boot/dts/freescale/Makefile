@@ -270,8 +270,10 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-echo-basler-isp0.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-echo-m7.dtb
 
 imx8mp-var-smarc-wbe-echo-dtbs := imx8mp-var-smarc-echo.dtb imx8mp-var-smarc-wbe.dtbo
+imx8mp-var-smarc-wbe-echo-m7-dtbs := imx8mp-var-smarc-echo-m7.dtb imx8mp-var-smarc-wbe.dtbo
 
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-wbe-echo.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-smarc-wbe-echo-m7.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony-2nd-ov5640-m7.dtb
