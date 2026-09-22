@@ -719,8 +719,11 @@ static int dwc_csi_wait_for_phy_stopstate(struct dwc_csi_device *csidev)
 	ret = readl_poll_timeout(csidev->regs + CSI2RX_DPHY_STOPSTATE,
 				 val, (val & phy_stopstate) == phy_stopstate,
 				 10, 10000);
-	if (ret)
-		dev_err(dev, "Lanes are not in stop state(%#x)\n", val);
+	if (ret) {
+		dev_warn(dev,
+			 "Lanes are not in stop state(%#x), continuing\n", val);
+		return 0;
+	}
 
 	return ret;
 }
