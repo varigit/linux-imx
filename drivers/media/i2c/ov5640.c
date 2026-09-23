@@ -1531,7 +1531,7 @@ static int ov5640_set_mipi_pclk(struct ov5640_dev *sensor)
 	 * 2 * sample_period = (mipi_clk * 2 * num_lanes / bpp) * (bpp / 8) / 2
 	 */
 	num_lanes = sensor->ep.bus.mipi_csi2.num_data_lanes;
-	sample_rate = (link_freq * num_lanes * 2) / 16;
+	sample_rate = (link_freq * mipi_div * num_lanes * 2) / 16;
 	pclk_period = 2000000000UL / sample_rate;
 
 	/* Program the clock tree registers. */
@@ -2926,6 +2926,18 @@ static int ov5640_update_pixel_rate(struct ov5640_dev *sensor)
 
 	sensor->current_link_freq = link_freq;
 
+	/*
+	 * Higher link rates require the clock tree to be programmed with
+	 * 'mipi_div' = 1; this has the effect of halving the actual output
+	 * pixel rate in the MIPI domain.
+	 *
+	 * Adjust the pixel rate and link frequency control value to report it
+	 * correctly to userspace.
+	 */
+	if (link_freq > OV5640_LINK_RATE_MAX) {
+		pixel_rate /= 2;
+		link_freq /= 2;
+	}
 	sensor->current_pixel_rate = pixel_rate;
 
 	for (i = 0; i < ARRAY_SIZE(ov5640_csi2_link_freqs); ++i) {
