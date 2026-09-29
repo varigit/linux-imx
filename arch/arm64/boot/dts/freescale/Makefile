@@ -232,6 +232,13 @@ imx8mm-var-dart-wbe-sonata-m4-dtbs := \
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-wbe-sonata.dtb \
 			  imx8mm-var-dart-wbe-sonata-m4.dtb
 
+imx8mm-var-som-wbe-symphony-dtbs := \
+	imx8mm-var-som-symphony.dtb imx8mm-var-som-wbe.dtbo
+imx8mm-var-som-wbe-symphony-m4-dtbs := \
+	imx8mm-var-som-symphony-m4.dtb imx8mm-var-som-wbe.dtbo
+dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-wbe-symphony.dtb \
+			  imx8mm-var-som-wbe-symphony-m4.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony-legacy.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-venice-gw71xx-0x.dtb
