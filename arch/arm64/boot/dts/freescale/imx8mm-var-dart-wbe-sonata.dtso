@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay for DART-MX8M-MINI WBE on Sonata (802.15.4).
+ *
+ * Copyright 2025-2026 Variscite Ltd.
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+
+/dts-v1/;
+/plugin/;
+
+&pca9534 {
+	wlan_spi_en_b {
+		gpio-hog;
+		gpios = <2 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "wlan_spi_en_b";
+	};
+
+	pcie2_sel {
+		gpio-hog;
+		gpios = <6 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "pcie2_sel";
+	};
+};
