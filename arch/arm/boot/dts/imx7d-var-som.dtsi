@@ -65,7 +65,7 @@
 		assigned-clock-rates = <0>, <12288000>;
 
 		sound_master: simple-audio-card,cpu {
-			sound-dai = <&sai1 0>;
+			sound-dai = <&sai1>;
 		};
 
 		simple-audio-card,codec {
@@ -932,7 +932,7 @@
 };
 
 &sai1 {
-	#sound-dai-cells = <1>;
+	#sound-dai-cells = <0>;
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&pinctrl_sai1 &pinctrl_sai1_mclk>;
 	pinctrl-1 = <&pinctrl_sai1_sleep &pinctrl_sai1_mclk_sleep>;
