@@ -1062,6 +1062,30 @@ static int rproc_handle_resources(struct rproc *rproc,
 	if (!rproc->table_ptr)
 		return 0;
 
+	/*
+	 * Check for an invalid rproc->table_ptr->num value.
+	 *
+	 * When non-RPMsg M7 firmware is started from U-Boot, the resource-table
+	 * memory may be left uninitialized. This can leave rproc->table_ptr
+	 * with invalid properties and cause kernel hangs.
+	 *
+	 * RPMsg firmware initializes the resource table:
+	 *   https://github.com/varigit/freertos-variscite/blob/mcuxpresso_sdk_2.10.x-var01/boards/dart_mx8mp/multicore_examples/rpmsg_lite_pingpong_rtos/linux_remote/main_remote.c#L172
+	 * Other firmware does not initialize the table because it is unused,
+	 * but rproc_handle_resources() is still called.
+	 *
+	 * Kernel resource-table type:
+	 *   https://source.codeaurora.org/external/imx/linux-imx/tree/include/linux/remoteproc.h?h=lf-5.10.y#n73
+	 * FreeRTOS resource-table type:
+	 *   https://github.com/varigit/freertos-variscite/blob/mcuxpresso_sdk_2.10.x-var01/boards/som_mx8mp/multicore_examples/rpmsg_lite_pingpong_rtos/linux_remote/rsc_table.h#L29
+	 */
+
+	if ((int)rproc->table_ptr->num < 0) {
+		WARN_ON(rproc->table_ptr->num);
+		rproc->table_ptr->num = 0;
+		return 0;
+	}
+
 	return rsc_table_for_each_entry(rproc->table_ptr, rproc->table_sz,
 					&rproc->dev, rproc_handle_rsc_entry, &d);
 }
