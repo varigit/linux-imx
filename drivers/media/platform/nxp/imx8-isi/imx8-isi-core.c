@@ -508,18 +508,19 @@ static int mxc_isi_probe(struct platform_device *pdev)
 		return ret;
 	}
 
-	pm_runtime_enable(dev);
+	ret = devm_pm_runtime_enable(dev);
+	if (ret)
+		return ret;
 
 	ret = pm_runtime_resume_and_get(dev);
 	if (ret) {
 		dev_err_probe(dev, ret, "Failed to enable ISI\n");
-		pm_runtime_disable(dev);
 		return ret;
 	}
 
 	ret = mxc_isi_crossbar_init(isi);
 	if (ret) {
-		dev_err(dev, "Failed to initialize crossbar: %d\n", ret);
+		dev_err(dev, "Failed to initialize crossbar\n");
 		goto err_pm;
 	}
 
@@ -538,20 +539,22 @@ static int mxc_isi_probe(struct platform_device *pdev)
 		goto err_xbar;
 	}
 
+	pm_runtime_put(dev);
 	mxc_isi_debug_init(isi);
 
-	pm_runtime_put(dev);
 	return 0;
 
 err_xbar:
+	while (i--)
+		mxc_isi_pipe_cleanup(&isi->pipes[i]);
 	mxc_isi_crossbar_cleanup(&isi->crossbar);
 err_pm:
 	pm_runtime_put(dev);
-	pm_runtime_disable(isi->dev);
+
 	return ret;
 }
 
-static int mxc_isi_remove(struct platform_device *pdev)
+static void mxc_isi_remove(struct platform_device *pdev)
 {
 	struct mxc_isi_dev *isi = platform_get_drvdata(pdev);
 	unsigned int i;
@@ -564,12 +567,8 @@ static int mxc_isi_remove(struct platform_device *pdev)
 		mxc_isi_pipe_cleanup(pipe);
 	}
 
-	mxc_isi_crossbar_cleanup(&isi->crossbar);
 	mxc_isi_v4l2_cleanup(isi);
-
-	pm_runtime_disable(isi->dev);
-
-	return 0;
+	mxc_isi_crossbar_cleanup(&isi->crossbar);
 }
 
 static const struct of_device_id mxc_isi_of_match[] = {
@@ -583,7 +582,7 @@ MODULE_DEVICE_TABLE(of, mxc_isi_of_match);
 
 static struct platform_driver mxc_isi_driver = {
 	.probe		= mxc_isi_probe,
-	.remove		= mxc_isi_remove,
+	.remove_new	= mxc_isi_remove,
 	.driver = {
 		.of_match_table = mxc_isi_of_match,
 		.name		= MXC_ISI_DRIVER_NAME,
