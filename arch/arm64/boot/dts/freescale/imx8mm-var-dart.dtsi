@@ -130,6 +130,7 @@
 			reset-assert-us = <10000>;
 			reset-deassert-us = <200000>;
 			vddio-supply = <&reg_phy_vddio>;
+			ti,min-output-impedance;
 		};
 	};
 };
