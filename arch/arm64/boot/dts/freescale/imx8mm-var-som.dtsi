@@ -9,6 +9,11 @@
 / {
 	model = "Variscite VAR-SOM-MX8MM module";
 
+	display-subsystem {
+		compatible = "fsl,imx-display-subsystem";
+		ports = <&lcdif_disp0>;
+	};
+
 	memory@40000000 {
 		device_type = "memory";
 		reg = <0x0 0x40000000 0 0x80000000>;
@@ -382,6 +387,8 @@
 
 &lcdif {
 	status = "okay";
+
+	lcdif_disp0: port {};
 };
 
 &mipi_dsi {
