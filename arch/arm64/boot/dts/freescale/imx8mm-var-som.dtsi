@@ -405,6 +405,7 @@
 
 &mipi_dsi_out {
 	remote-endpoint = <&bridge_in_dsi>;
+	attach-bridge;
 };
 
 &sai5 {
