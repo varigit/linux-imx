@@ -66,7 +66,3 @@
        /delete-node/ bluetooth;
 };
 
-/* Disable uart3 which conflicts with the mute pin of 8mic board */
-&uart3 {
-    status = "disabled";
-};
