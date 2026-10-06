@@ -42,34 +42,36 @@
 
 	sound {
 		compatible = "simple-audio-card";
-		simple-audio-card,name = "wm8731audio";
+		simple-audio-card,name = "wm8904audio";
 		simple-audio-card,widgets =
 			"Headphone", "Headphone Jack",
-			"Line", "Line Jack",
-			"Microphone", "Mic Jack";
+			"Microphone", "Microphone Jack",
+			"Line", "Line In Jack";
 		simple-audio-card,routing =
-			"Headphone Jack", "RHPOUT",
-			"Headphone Jack", "LHPOUT",
-			"LLINEIN", "Line Jack",
-			"RLINEIN", "Line Jack",
-			"MICIN", "Mic Bias",
-			"Mic Bias", "Mic Jack";
+			"Headphone Jack", "HPOUTL",
+			"Headphone Jack", "HPOUTR",
+			"IN1L", "Microphone Jack",
+			"IN1R", "Microphone Jack",
+			"IN2L", "Line In Jack",
+			"IN2R", "Line In Jack",
+			"Microphone Jack", "MICBIAS";
+		simple-audio-card,mclk-fs = <256>;
 		simple-audio-card,format = "i2s";
 		simple-audio-card,bitclock-master = <&sound_master>;
 		simple-audio-card,frame-master = <&sound_master>;
-		/*simple-audio-card,bitclock-inversion;*/
 
 		assigned-clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_SRC>,
 				  <&clks IMX7D_AUDIO_MCLK_ROOT_CLK>;
 		assigned-clock-parents = <&clks IMX7D_PLL_AUDIO_POST_DIV>;
 		assigned-clock-rates = <0>, <12288000>;
 
-		sound_master: simple-audio-card,cpu {
-			sound-dai = <&sai1>;
+		sound_master: simple-audio-card,codec {
+			sound-dai = <&wm8904>;
 		};
 
-		simple-audio-card,codec {
-			sound-dai = <&wm8731>;
+		simple-audio-card,cpu {
+			sound-dai = <&sai1>;
+			system-clock-direction-out;
 			system-clock-frequency = <12288000>;
 		};
 	};
@@ -453,13 +455,32 @@
 	sda-gpios = <&gpio4 11 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 
-	wm8731: wm8731@1a {
+	wm8904: wm8904@1a {
 		#sound-dai-cells = <0>;
 		AVDD-supply = <&vgen6_reg>;
-		compatible = "wlf,wm8731";
+		compatible = "wlf,wm8904";
 		reg = <0x1a>;
 		clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_CLK>;
 		clock-names = "mclk";
+		num-drc-cfgs = <5>;
+		drc-cfg-names = "default", "peaklimiter", "tradition", "soft", "music";
+		drc-cfg-regs =
+				/* coded default: KNEE_IP = KNEE_OP = 0, HI_COMP = LO_COMP = 1  */
+				<0x01af 0x3248 0x0000 0x0000>,
+				/* coded default: KNEE_IP = -24, KNEE_OP = -6, HI_COMP = 1/4, LO_COMP = 1 */
+				<0x04af 0x324b 0x0010 0x0408>,
+				/* coded default: KNEE_IP = -42, KNEE_OP = -3, HI_COMP = 0, LO_COMP = 1 */
+				<0x04af 0x324b 0x0028 0x0704>,
+				/* coded default: KNEE_IP = -45, KNEE_OP = -9, HI_COMP = 1/8, LO_COMP = 1 */
+				<0x04af 0x324b 0x0018 0x078c>,
+				/* coded default: KNEE_IP = -30, KNEE_OP = -10.5, HI_COMP = 1/4, LO_COMP = 1 */
+				<0x04af 0x324b 0x0010 0x050e>;
+		gpio-cfg = <
+			0x0018 /* GPIO1 => DMIC_CLK */
+			0xffff /* GPIO2 => don't touch */
+			0xffff /* GPIO3 => don't touch */
+			0xffff /* GPIO4 => don't touch */
+		>;
 		status = "okay";
 	};
 
@@ -939,7 +960,8 @@
 	assigned-clocks = <&clks IMX7D_SAI1_ROOT_SRC>,
 			  <&clks IMX7D_SAI1_ROOT_CLK>;
 	assigned-clock-parents = <&clks IMX7D_PLL_AUDIO_POST_DIV>;
-	assigned-clock-rates = <0>, <36864000>;
+	/* Set IMX7D_SAI1_ROOT_CLK to 12.288 MHz */
+	assigned-clock-rates = <0>, <12288000>;
 	status = "okay";
 };
 

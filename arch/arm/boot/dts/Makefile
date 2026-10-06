@@ -761,9 +761,13 @@ dtb-$(CONFIG_SOC_IMX7D) += \
 	imx7d-zii-rmu2.dtb \
 	imx7d-zii-rpu2.dtb \
 	imx7d-var-som-emmc.dtb \
+	imx7d-var-som-emmc-wm8731.dtb \
 	imx7d-var-som-nand.dtb \
+	imx7d-var-som-nand-wm8731.dtb \
 	imx7d-var-som-emmc-m4.dtb \
+	imx7d-var-som-emmc-m4-wm8731.dtb \
 	imx7d-var-som-nand-m4.dtb \
+	imx7d-var-som-nand-m4-wm8731.dtb \
 	imx7s-colibri-eval-v3.dtb \
 	imx7s-mba7.dtb \
 	imx7s-warp.dtb
