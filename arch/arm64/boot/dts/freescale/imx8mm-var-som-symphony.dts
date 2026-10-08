@@ -65,6 +65,13 @@
 		};
 	};
 
+	/* The camera expansion board supplies its own sensor clock. */
+	camera_clk: camera-clock {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <24000000>;
+	};
+
 	pcie0_refclk: pcie0-refclk {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -210,21 +217,20 @@
 	};
 
 	ov5640_mipi1: camera@3c {
-		compatible = "ovti,ov5640_mipi";
+		compatible = "ovti,ov5640";
 		reg = <0x3c>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_csi1>;
-		clocks = <&clk IMX8MM_CLK_CLKO1>;
-		clock-names = "csi_mclk";
-		csi_id = <0>;
-		pwn-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
-		rst-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-		mclk = <24000000>;
-		mclk_source = <0>;
+		clocks = <&camera_clk>;
+		clock-names = "xclk";
+		powerdown-gpios = <&gpio5 12 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
 
 		port {
 			ov5640_mipi1_ep: endpoint {
 				remote-endpoint = <&mipi1_sensor_ep>;
+				clock-lanes = <0>;
+				data-lanes = <1 2>;
 			};
 		};
 	};
@@ -310,10 +316,7 @@
 
 			mipi1_sensor_ep: endpoint {
 				remote-endpoint = <&ov5640_mipi1_ep>;
-				data-lanes = <2>;
-				csis-hs-settle = <13>;
-				csis-clk-settle = <2>;
-				csis-wclk;
+				data-lanes = <1 2>;
 			};
 		};
 	};
