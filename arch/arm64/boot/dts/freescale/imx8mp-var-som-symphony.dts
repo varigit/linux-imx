@@ -168,6 +168,8 @@
 			reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
 			reset-assert-us = <10000>;
 			reset-deassert-us = <20000>;
+			/* Symphony v2.1 uses a TI DP83867; ignored by other PHYs */
+			ti,min-output-impedance;
 			vddio-supply = <&reg_phy_vddio>;
 		};
 	};
