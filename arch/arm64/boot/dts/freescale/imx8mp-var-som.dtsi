@@ -11,6 +11,7 @@
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/usb/pd.h>
 #include "imx8mp.dtsi"
+#include "imx8mp-android.dtsi"
 
 / {
 	model = "Variscite VAR-SOM-MX8M Plus module";
