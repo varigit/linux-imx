@@ -202,6 +202,13 @@
 		output-low;
 		line-name = "cam_buf";
 	};
+
+	bt_buf_hog: bt-buf-hog {
+		gpio-hog;
+		gpios = <4 GPIO_ACTIVE_LOW>;
+		output-high;
+		line-name = "bt_buf";
+	};
 };
 
 &hdmi_pavi {

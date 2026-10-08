@@ -193,6 +193,15 @@
 	no-map;
 };
 
+&gpio2 {
+	bt_en_hog: bt-en-hog {
+		gpio-hog;
+		gpios = <11 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "bt_en";
+	};
+};
+
 &i2c1 {
 	clock-frequency = <400000>;
 	pinctrl-names = "default", "gpio";
@@ -632,7 +641,7 @@
 	uart-has-rtscts;
 	status = "okay";
 
-	bluetooth_iw61x: bluetooth {
+	bluetooth_iw61x: bluetooth_iw61x {
 		compatible = "nxp,88w8987-bt";
 		status = "okay";
 	};
