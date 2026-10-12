@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (C) 2026 Variscite Ltd. - https://www.variscite.com/
+ *
+ */
+
+&i2c2 {
+	/* GPIO Expander 3 */
+	pca9534: gpio@22 {
+		compatible = "nxp,pca9534";
+		reg = <0x22>;
+		gpio-controller;
+		#gpio-cells = <2>;
+
+		/*
+		 * ETH10G_SEL
+		 * output-lo: Configure mux for DART-MX8MP DSI
+		 * output-hi: Configure mux for 10G Ethernet (not supported by 8MP)
+		 */
+		eth10g_sel {
+			gpio-hog;
+			gpios = <5 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "eth10g_sel";
+		};
+
+		/*
+		 * PCIE2_SEL
+		 * output-lo: Configure mux for DART-MX95 PCIE2
+		 * output-hi: Configure mux for DART-MX8MP DSI
+		 */
+		pcie2_sel {
+			gpio-hog;
+			gpios = <6 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "pcie2_sel";
+		};
+
+		/*
+		 * RGB_SEL
+		 * output-lo: Configure mux for DARTs LVDS
+		 * output-hi: Configure mux for DART-MX91 RGB2LVDS
+		 */
+		rgb_sel {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-low;
+			line-name = "rgb_sel";
+		};
+	};
+};
+
+&ethphy1 {
+	reset-deassert-us = <100000>;
+	mxl-8611x,led0_cfg = <(
+		MXL8611X_LEDX_CFG_LINK_UP_RX_ACT_ON |
+		MXL8611X_LEDX_CFG_LINK_UP_TX_ACT_ON |
+		MXL8611X_LEDX_CFG_TRAFFIC_ACT_BLINK_IND
+	)>;
+	mxl-8611x,led1_cfg = <(
+		MXL8611X_LEDX_CFG_LINK_UP_10MB_ON |
+		MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
+		MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
+	)>;
+};
+
+&i2c4 {
+	/* TPM 2.0 */
+	st33ktpm2xi2c: st33ktpm2xi2c@2e {
+		compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
+		reg = <0x2e>;
+		label = "tpm";
+		reset-gpios = <&pca9534 0 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&pinctrl_fec {
+	fsl,pins = <
+		MX8MP_IOMUXC_SAI1_RXD4__ENET1_RGMII_RD0				0x90
+		MX8MP_IOMUXC_SAI1_RXD5__ENET1_RGMII_RD1				0x90
+		MX8MP_IOMUXC_SAI1_RXD6__ENET1_RGMII_RD2				0x90
+		MX8MP_IOMUXC_SAI1_RXD7__ENET1_RGMII_RD3				0x1d0 /* Enable pull-up to strap MXL86110 MDIO address */
+		MX8MP_IOMUXC_SAI1_TXC__ENET1_RGMII_RXC				0x90
+		MX8MP_IOMUXC_SAI1_TXFS__ENET1_RGMII_RX_CTL			0x90
+		MX8MP_IOMUXC_SAI1_TXD0__ENET1_RGMII_TD0				0x00
+		MX8MP_IOMUXC_SAI1_TXD1__ENET1_RGMII_TD1				0x00
+		MX8MP_IOMUXC_SAI1_TXD2__ENET1_RGMII_TD2				0x00
+		MX8MP_IOMUXC_SAI1_TXD3__ENET1_RGMII_TD3				0x00
+		MX8MP_IOMUXC_SAI1_TXD4__ENET1_RGMII_TX_CTL			0x00
+		MX8MP_IOMUXC_SAI1_TXD5__ENET1_RGMII_TXC				0x00
+	>;
+};
