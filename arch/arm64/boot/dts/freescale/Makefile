@@ -184,6 +184,11 @@ imx8mm-var-dart-3.x-wbe-sonata-m4-dtbs := \
 	imx8mm-var-dart-wbe-sonata.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-3.x-wbe-sonata-m4.dtb
 
+imx8mm-var-som-symphony-dtbs := \
+	imx8mm-var-som-symphony-2.0.dtb \
+	imx8mm-var-som-symphony-2.1.dtbo
+dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx8mn-bsh-smm-s2.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mn-bsh-smm-s2pro.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb imx8mn-evk-rm67191.dtb imx8mn-evk-rm67199.dtb \
