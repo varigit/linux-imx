@@ -4,7 +4,7 @@
  * Copyright 2019-2026 Variscite Ltd.
  */
 
-#include "imx8mm-var-dart-sonata.dts"
+#include "imx8mm-var-dart-2.x-sonata.dts"
 #include "imx8mm-var-m4.dtsi"
 
 / {
