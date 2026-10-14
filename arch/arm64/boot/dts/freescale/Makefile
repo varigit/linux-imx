@@ -108,7 +108,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-dt8mcustomboard.dtb \
 			  imx8mm-var-som-symphony.dtb \
 			  imx8mm-var-som-symphony-m4.dtb \
 			  imx8mm-var-dart-2.x-sonata.dtb \
-			  imx8mm-var-dart-sonata-m4.dtb
+			  imx8mm-var-dart-2.x-sonata-m4.dtb
 
 imx8mm-var-dart-1.x-dt8mcustomboard-dtbs := imx8mm-var-dart-dt8mcustomboard.dtb imx8mm-var-dart-1.x.dtbo
 imx8mm-var-dart-1.x-dt8mcustomboard-m4-dtbs := imx8mm-var-dart-dt8mcustomboard-m4.dtb imx8mm-var-dart-1.x.dtbo
@@ -130,10 +130,10 @@ imx8mm-var-som-wbe-symphony-1.x-dtbs := imx8mm-var-som-wbe-symphony.dtb imx8mm-v
 imx8mm-var-som-wbe-symphony-1.x-m4-dtbs := imx8mm-var-som-wbe-symphony-m4.dtb imx8mm-var-som-symphony-1.x.dtbo
 
 imx8mm-var-dart-1.x-sonata-dtbs := imx8mm-var-dart-2.x-sonata.dtb imx8mm-var-dart-1.x.dtbo
-imx8mm-var-dart-1.x-sonata-m4-dtbs := imx8mm-var-dart-sonata-m4.dtb imx8mm-var-dart-1.x.dtbo
+imx8mm-var-dart-1.x-sonata-m4-dtbs := imx8mm-var-dart-2.x-sonata-m4.dtb imx8mm-var-dart-1.x.dtbo
 
 imx8mm-var-dart-wbe-sonata-dtbs := imx8mm-var-dart-2.x-sonata.dtb imx8mm-var-dart-wbe.dtbo imx8mm-var-dart-wbe-sonata.dtbo
-imx8mm-var-dart-wbe-sonata-m4-dtbs := imx8mm-var-dart-sonata-m4.dtb imx8mm-var-dart-wbe.dtbo imx8mm-var-dart-wbe-sonata.dtbo
+imx8mm-var-dart-wbe-sonata-m4-dtbs := imx8mm-var-dart-2.x-sonata-m4.dtb imx8mm-var-dart-wbe.dtbo imx8mm-var-dart-wbe-sonata.dtbo
 
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-1.x-dt8mcustomboard.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-1.x-dt8mcustomboard-m4.dtb
