@@ -165,6 +165,11 @@ imx8mm-var-dart-3.x-sonata-dtbs := \
 	imx8mm-var-dart-tpm.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-3.x-sonata.dtb
 
+imx8mm-var-dart-3.x-sonata-m4-dtbs := \
+	imx8mm-var-dart-2.x-sonata-m4.dtb \
+	imx8mm-var-dart-tpm.dtbo
+dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-3.x-sonata-m4.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx8mn-bsh-smm-s2.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mn-bsh-smm-s2pro.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb imx8mn-evk-rm67191.dtb imx8mn-evk-rm67199.dtb \
