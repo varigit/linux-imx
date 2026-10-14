@@ -218,10 +218,10 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-1.x-sonata.dtb \
 
 imx8mm-var-som-1.x-symphony-2.0-dtbs := \
 	imx8mm-var-som-symphony-2.0.dtb imx8mm-var-som-1.x.dtbo
-imx8mm-var-som-1.x-symphony-m4-dtbs := \
+imx8mm-var-som-1.x-symphony-2.0-m4-dtbs := \
 	imx8mm-var-som-symphony-2.0-m4.dtb imx8mm-var-som-1.x.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-1.x-symphony-2.0.dtb \
-			  imx8mm-var-som-1.x-symphony-m4.dtb
+			  imx8mm-var-som-1.x-symphony-2.0-m4.dtb
 
 imx8mm-var-dart-2.x-wbe-sonata-dtbs := \
 	imx8mm-var-dart-2.x-sonata.dtb imx8mm-var-dart-wbe.dtbo \
