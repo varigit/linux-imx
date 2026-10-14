@@ -232,11 +232,11 @@ imx8mm-var-dart-2.x-wbe-sonata-m4-dtbs := \
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-2.x-wbe-sonata.dtb \
 			  imx8mm-var-dart-2.x-wbe-sonata-m4.dtb
 
-imx8mm-var-som-wbe-symphony-dtbs := \
+imx8mm-var-som-wbe-symphony-2.0-dtbs := \
 	imx8mm-var-som-symphony-2.0.dtb imx8mm-var-som-wbe.dtbo
 imx8mm-var-som-wbe-symphony-m4-dtbs := \
 	imx8mm-var-som-symphony-2.0-m4.dtb imx8mm-var-som-wbe.dtbo
-dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-wbe-symphony.dtb \
+dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-wbe-symphony-2.0.dtb \
 			  imx8mm-var-som-wbe-symphony-m4.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony-2.0.dtb
