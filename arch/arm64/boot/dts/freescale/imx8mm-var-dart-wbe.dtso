@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
- * Device tree overlay for DART-MX8M-MINI 2.0 WBE (802.15.4) modules.
+ * Device tree overlay for DART-MX8M-MINI WBE (802.15.4) modules.
  *
  * Copyright 2025-2026 Variscite Ltd.
  */
