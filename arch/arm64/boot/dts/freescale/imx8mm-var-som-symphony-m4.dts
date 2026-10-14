@@ -4,7 +4,7 @@
  * Copyright 2019-2026 Variscite Ltd.
  */
 
-#include "imx8mm-var-som-symphony.dts"
+#include "imx8mm-var-som-symphony-2.0.dts"
 #include "imx8mm-var-m4.dtsi"
 
 / {
