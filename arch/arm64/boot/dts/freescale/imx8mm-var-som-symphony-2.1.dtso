@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Device tree overlay for Symphony Board 2.1 and newer
+ *
+ * Copyright 2026 Variscite Ltd.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+&pca9534 {
+	enet-rst-hog {
+		status = "disabled";
+	};
+
+	enet-sel-hog {
+		status = "disabled";
+	};
+
+	enet-sel-2-1-hog {
+		gpio-hog;
+		gpios = <7 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "enet_sel";
+	};
+};
+
+&fec1 {
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		carrier_phy: ethernet-phy@5 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <5>;
+			reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <100000>;
+			ti,mac-interface-isolate;
+		};
+	};
+};
