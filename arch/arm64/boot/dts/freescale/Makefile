@@ -119,9 +119,9 @@ imx8mm-var-dart-wbe-dt8mcustomboard-m4-dtbs := imx8mm-var-dart-dt8mcustomboard-m
 imx8mm-var-som-symphony-1.x-dtbs := imx8mm-var-som-symphony-2.0.dtb imx8mm-var-som-symphony-1.x.dtbo
 imx8mm-var-som-symphony-1.x-m4-dtbs := imx8mm-var-som-symphony-2.0-m4.dtb imx8mm-var-som-symphony-1.x.dtbo
 
-imx8mm-var-som-1.x-symphony-dtbs := imx8mm-var-som-symphony-2.0.dtb imx8mm-var-som-1.x.dtbo
+imx8mm-var-som-1.x-symphony-2.0-dtbs := imx8mm-var-som-symphony-2.0.dtb imx8mm-var-som-1.x.dtbo
 imx8mm-var-som-1.x-symphony-m4-dtbs := imx8mm-var-som-symphony-2.0-m4.dtb imx8mm-var-som-1.x.dtbo
-imx8mm-var-som-1.x-symphony-1.x-dtbs := imx8mm-var-som-1.x-symphony.dtb imx8mm-var-som-symphony-1.x.dtbo
+imx8mm-var-som-1.x-symphony-1.x-dtbs := imx8mm-var-som-1.x-symphony-2.0.dtb imx8mm-var-som-symphony-1.x.dtbo
 imx8mm-var-som-1.x-symphony-1.x-m4-dtbs := imx8mm-var-som-1.x-symphony-m4.dtb imx8mm-var-som-symphony-1.x.dtbo
 
 imx8mm-var-som-wbe-symphony-dtbs := imx8mm-var-som-symphony-2.0.dtb imx8mm-var-som-wbe.dtbo
@@ -144,7 +144,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-wbe-dt8mcustomboard-m4.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony-1.x.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony-1.x-m4.dtb
 
-dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-1.x-symphony.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-1.x-symphony-2.0.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-1.x-symphony-m4.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-1.x-symphony-1.x.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-1.x-symphony-1.x-m4.dtb
