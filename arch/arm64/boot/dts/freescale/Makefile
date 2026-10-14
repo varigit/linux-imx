@@ -290,6 +290,11 @@ imx8mm-var-som-wbe-symphony-dtbs := \
 	imx8mm-var-som-symphony-2.1.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-wbe-symphony.dtb
 
+imx8mm-var-som-wbe-symphony-m4-dtbs := \
+	imx8mm-var-som-wbe-symphony-2.0-m4.dtb \
+	imx8mm-var-som-symphony-2.1.dtbo
+dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-wbe-symphony-m4.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-venice-gw71xx-0x.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-venice-gw72xx-0x.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-venice-gw73xx-0x.dtb
