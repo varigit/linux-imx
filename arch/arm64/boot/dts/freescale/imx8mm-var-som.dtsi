@@ -7,7 +7,7 @@
 #include "imx8mm.dtsi"
 
 / {
-	model = "Variscite VAR-SOM-MX8MM module";
+	model = "Variscite VAR-SOM-MX8M-MINI module";
 
 	display-subsystem {
 		status = "disabled";
