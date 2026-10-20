@@ -361,6 +361,16 @@
 	status = "okay";
 };
 
+&sai2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_sai2>;
+	assigned-clocks = <&clks IMX7D_SAI2_ROOT_SRC>,
+			  <&clks IMX7D_SAI2_ROOT_CLK>;
+	assigned-clock-parents = <&clks IMX7D_PLL_AUDIO_POST_DIV>;
+	assigned-clock-rates = <0>, <36864000>;
+	status = "disabled";
+};
+
 &sdma {
 	status = "okay";
 };
@@ -560,6 +570,15 @@
 			MX7D_PAD_ENET1_CRS__GPIO7_IO14		0x10
 			MX7D_PAD_ENET1_COL__GPIO7_IO15		0x10
 			MX7D_PAD_ENET1_TX_CLK__GPIO7_IO12	0x10
+		>;
+	};
+
+	pinctrl_sai2: sai2grp {
+		fsl,pins = <
+			MX7D_PAD_SAI2_TX_BCLK__SAI2_TX_BCLK	0x1f
+			MX7D_PAD_SAI2_TX_SYNC__SAI2_TX_SYNC	0x1f
+			MX7D_PAD_SAI2_TX_DATA__SAI2_TX_DATA0	0x30
+			MX7D_PAD_SAI2_RX_DATA__SAI2_RX_DATA0	0x1f
 		>;
 	};
 
