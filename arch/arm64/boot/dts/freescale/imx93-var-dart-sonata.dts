@@ -246,6 +246,10 @@
 	status = "disabled";
 };
 
+&dphy_rx {
+	status = "okay";
+};
+
 &ele_fw2 {
 	memory-region = <&ele_reserved>;
 };
