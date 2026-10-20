@@ -603,6 +603,15 @@ dtb-$(CONFIG_SOC_IMX7D) += \
 	imx7s-colibri-iris-v2.dtb \
 	imx7s-mba7.dtb \
 	imx7s-warp.dtb
+
+imx7d-var-som-v2-emmc-bt-sco-dtbs := imx7d-var-som-v2-emmc.dtb imx7d-var-som-bt-sco.dtbo
+imx7d-var-som-v2-nand-bt-sco-dtbs := imx7d-var-som-v2-nand.dtb imx7d-var-som-bt-sco.dtbo
+
+dtb-$(CONFIG_SOC_IMX7D) += \
+	imx7d-var-som-bt-sco.dtbo \
+	imx7d-var-som-v2-emmc-bt-sco.dtb \
+	imx7d-var-som-v2-nand-bt-sco.dtb
+
 dtb-$(CONFIG_SOC_IMX7ULP) += \
 	imx7ulp-com.dtb \
 	imx7ulp-evk.dtb \
