@@ -1022,8 +1022,10 @@ dtb-$(CONFIG_ARCH_MXC) += imx93-var-dart-sonata.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-symphony.dtb
 
 imx93-var-dart-sonata-ld-dtbs := imx93-var-dart-sonata.dtb imx93-var-dart-ld.dtbo
+imx93-var-dart-sonata-m33-dtbs := imx93-var-dart-sonata.dtb imx93-var-dart-m33.dtbo
 
-dtb-$(CONFIG_ARCH_MXC) += imx93-var-dart-sonata-ld.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx93-var-dart-sonata-ld.dtb \
+			  imx93-var-dart-sonata-m33.dtb
 
 imx93-var-som-symphony-ld-dtbs := imx93-var-som-symphony.dtb imx93-var-som-ld.dtbo
 
