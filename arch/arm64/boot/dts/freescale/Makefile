@@ -1025,6 +1025,10 @@ imx93-var-dart-sonata-ld-dtbs := imx93-var-dart-sonata.dtb imx93-var-dart-ld.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx93-var-dart-sonata-ld.dtb
 
+imx93-var-som-symphony-ld-dtbs := imx93-var-som-symphony.dtb imx93-var-som-ld.dtbo
+
+dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-symphony-ld.dtb
+
 dtb-$(CONFIG_ARCH_MXC) += imx91-9x9-qsb.dtb \
 			  imx91-9x9-qsb-can1.dtb \
 			  imx91-9x9-qsb-flexspi-nand.dtb \
