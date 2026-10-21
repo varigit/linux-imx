@@ -252,7 +252,6 @@
 		ethphy1: ethernet-phy@5 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <5>;
-			qca,disable-smarteee;
 			eee-broken-1000t;
 			ti,min-output-impedance;
 			mxl-8611x,led0_cfg = <(
@@ -265,12 +264,6 @@
 				MXL8611X_LEDX_CFG_LINK_UP_100MB_ON |
 				MXL8611X_LEDX_CFG_LINK_UP_1GB_ON
 			)>;
-			vddio-supply = <&vddio1>;
-
-			vddio1: vddio-regulator {
-				regulator-min-microvolt = <1800000>;
-				regulator-max-microvolt = <1800000>;
-			};
 		};
 	};
 };
