@@ -11,6 +11,7 @@
 /dts-v1/;
 
 #include "imx8mm.dtsi"
+#include "imx8mm-android.dtsi"
 
 / {
 	model = "Variscite DART-MX8M-MINI Module";

@@ -5,6 +5,7 @@
  */
 
 #include "imx8mm.dtsi"
+#include "imx8mm-android.dtsi"
 
 / {
 	model = "Variscite VAR-SOM-MX8M-MINI module";
