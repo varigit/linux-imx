@@ -52,6 +52,41 @@ properties:
 
 allOf:
   - $ref: tpm-common.yaml#
+  - if:
+      properties:
+        compatible:
+          contains:
+            const: tcg,tpm-tis-i2c
+    then:
+      properties:
+        reset-duration-us:
+          description:
+            Minimum time in microseconds to hold reset asserted before
+            releasing it. Presence requests a fresh reset during probe,
+            which may discard TPM state and measurements made by firmware.
+            Omit this property when a fresh reset is not required. The reset
+            provider may still assert reset when the control is acquired.
+            Select the duration according to the TPM and board requirements.
+          minimum: 1
+          maximum: 1000000
+
+        reset-post-deassert-us:
+          description:
+            Minimum time in microseconds to wait after releasing reset before
+            accessing the TPM. This delay does not request a fresh reset.
+            Select the delay according to the TPM and board requirements.
+            No additional delay is applied when this property is omitted.
+          maximum: 1000000
+          default: 0
+      dependentSchemas:
+        reset-duration-us:
+          anyOf:
+            - required: [resets]
+            - required: [reset-gpios]
+        reset-post-deassert-us:
+          anyOf:
+            - required: [resets]
+            - required: [reset-gpios]
 
 required:
   - compatible
@@ -60,6 +95,21 @@ required:
 unevaluatedProperties: false
 
 examples:
+  - |
+    #include <dt-bindings/gpio/gpio.h>
+    i2c {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        tpm@2e {
+            compatible = "st,st33ktpm2xi2c", "tcg,tpm-tis-i2c";
+            reg = <0x2e>;
+            reset-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
+            reset-duration-us = <1000>;
+            reset-post-deassert-us = <50000>;
+        };
+    };
+
   - |
     i2c {
         #address-cells = <1>;
