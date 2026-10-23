@@ -322,6 +322,8 @@
 		reg = <0x2e>;
 		label = "tpm";
 		reset-gpios = <&pcal6408 4 GPIO_ACTIVE_LOW>;
+		reset-duration-us = <2000>;
+		reset-post-deassert-us = <50000>;
 	};
 
 	/* Capacitive touch controller */
