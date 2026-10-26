@@ -12,6 +12,8 @@
 
 #include <linux/i2c.h>
 #include <linux/crc-ccitt.h>
+#include <linux/delay.h>
+#include <linux/property.h>
 #include <linux/reset.h>
 #include "tpm_tis_core.h"
 
@@ -54,6 +56,11 @@
 #define TPM_STS_READ_ZERO 0x23
 #define TPM_INTF_CAPABILITY_ZERO 0x0FFFF000
 #define TPM_I2C_INTERFACE_CAPABILITY_ZERO 0x80000000
+
+struct tpm_tis_i2c_reset_timings {
+	unsigned int assert_us;
+	unsigned int deassert_us;
+};
 
 struct tpm_tis_i2c_phy {
 	struct tpm_tis_data priv;
@@ -330,6 +337,7 @@ static const struct tpm_tis_phy_ops tpm_i2c_phy_ops = {
 
 static int tpm_tis_i2c_probe(struct i2c_client *dev)
 {
+	const struct tpm_tis_i2c_reset_timings *timings;
 	struct tpm_tis_i2c_phy *phy;
 	struct reset_control *reset;
 	const u8 crc_enable = 1;
@@ -347,16 +355,24 @@ static int tpm_tis_i2c_probe(struct i2c_client *dev)
 
 	set_bit(TPM_TIS_DEFAULT_CANCELLATION, &phy->priv.flags);
 	phy->i2c_client = dev;
+	timings = device_get_match_data(&dev->dev);
 
 	reset = devm_reset_control_get_optional_exclusive(&dev->dev, NULL);
 	if (IS_ERR(reset))
 		return dev_err_probe(&dev->dev, PTR_ERR(reset),
 				     "failed to get reset control\n");
 
+	/* Allow an already asserted reset to meet its minimum pulse width. */
+	if (reset && timings)
+		fsleep(timings->assert_us);
+
 	ret = reset_control_deassert(reset);
 	if (ret)
 		return dev_err_probe(&dev->dev, ret,
 				     "failed to deassert reset\n");
+
+	if (reset && timings)
+		fsleep(timings->deassert_us);
 
 	/* must precede all communication with the tpm */
 	ret = tpm_tis_i2c_init_guard_time(phy);
@@ -393,9 +409,19 @@ static const struct i2c_device_id tpm_tis_i2c_id[] = {
 MODULE_DEVICE_TABLE(i2c, tpm_tis_i2c_id);
 
 #ifdef CONFIG_OF
+/*
+ * ST33KTPM-IDevID datasheet DS15011, table 66: tWL >= 1 ms and
+ * tCMD <= 50 ms. Allow 2 ms for tWL to provide margin above the minimum.
+ */
+static const struct tpm_tis_i2c_reset_timings st33ktpm2xi2c_reset_timings = {
+	.assert_us = 2000,
+	.deassert_us = 50000,
+};
+
 static const struct of_device_id of_tis_i2c_match[] = {
 	{ .compatible = "infineon,slb9673", },
 	{ .compatible = "nuvoton,npct75x", },
+	{ .compatible = "st,st33ktpm2xi2c", .data = &st33ktpm2xi2c_reset_timings },
 	{ .compatible = "tcg,tpm-tis-i2c", },
 	{}
 };
