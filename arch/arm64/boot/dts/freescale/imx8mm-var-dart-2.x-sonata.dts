@@ -5,7 +5,7 @@
  */
 
 #include "imx8mm-var-dart-dt8mcustomboard.dts"
-#include "imx8mm-var-dart-sonata.dtsi"
+#include "imx8mm-var-dart-2.x-sonata.dtsi"
 
 / {
 	model = "Variscite DART-MX8M-MINI on Sonata-Board";
