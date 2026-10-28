@@ -176,6 +176,12 @@ imx8mm-var-dart-3.x-wbe-dt8mcustomboard-dtbs := \
 	imx8mm-var-dart-wbe.dtbo
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-3.x-wbe-dt8mcustomboard.dtb
 
+imx8mm-var-dart-3.x-wbe-dt8mcustomboard-m4-dtbs := \
+	imx8mm-var-dart-2.x-dt8mcustomboard-m4.dtb \
+	imx8mm-var-dart-tpm.dtbo \
+	imx8mm-var-dart-wbe.dtbo
+dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-3.x-wbe-dt8mcustomboard-m4.dtb
+
 imx8mm-var-dart-3.x-sonata-dtbs := \
 	imx8mm-var-dart-2.x-sonata.dtb \
 	imx8mm-var-dart-tpm.dtbo
