@@ -114,7 +114,7 @@ imx8mm-var-dart-1.x-dt8mcustomboard-dtbs := imx8mm-var-dart-2.x-dt8mcustomboard.
 imx8mm-var-dart-1.x-dt8mcustomboard-m4-dtbs := imx8mm-var-dart-2.x-dt8mcustomboard-m4.dtb imx8mm-var-dart-1.x.dtbo
 
 imx8mm-var-dart-2.x-wbe-dt8mcustomboard-dtbs := imx8mm-var-dart-2.x-dt8mcustomboard.dtb imx8mm-var-dart-wbe.dtbo
-imx8mm-var-dart-wbe-dt8mcustomboard-m4-dtbs := imx8mm-var-dart-2.x-dt8mcustomboard-m4.dtb imx8mm-var-dart-wbe.dtbo
+imx8mm-var-dart-2.x-wbe-dt8mcustomboard-m4-dtbs := imx8mm-var-dart-2.x-dt8mcustomboard-m4.dtb imx8mm-var-dart-wbe.dtbo
 
 imx8mm-var-som-symphony-1.x-dtbs := imx8mm-var-som-symphony-2.0.dtb imx8mm-var-som-symphony-1.x.dtbo
 imx8mm-var-som-symphony-1.x-m4-dtbs := imx8mm-var-som-symphony-2.0-m4.dtb imx8mm-var-som-symphony-1.x.dtbo
@@ -139,7 +139,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-1.x-dt8mcustomboard.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-1.x-dt8mcustomboard-m4.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-2.x-wbe-dt8mcustomboard.dtb
-dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-wbe-dt8mcustomboard-m4.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-dart-2.x-wbe-dt8mcustomboard-m4.dtb
 
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony-1.x.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony-1.x-m4.dtb
