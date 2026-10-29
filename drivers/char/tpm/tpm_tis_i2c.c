@@ -12,13 +12,8 @@
 
 #include <linux/i2c.h>
 #include <linux/crc-ccitt.h>
-#include <linux/delay.h>
-#include <linux/property.h>
 #include <linux/reset.h>
 #include "tpm_tis_core.h"
-
-/* Bound each firmware-specified delay to one second during probe. */
-#define TPM_RESET_DELAY_MAX_US	1000000
 
 /* TPM registers */
 #define TPM_I2C_LOC_SEL 0x00
@@ -339,8 +334,6 @@ static int tpm_tis_i2c_probe(struct i2c_client *dev)
 	struct reset_control *reset;
 	const u8 crc_enable = 1;
 	const u8 locality = 0;
-	u32 reset_duration_us = 0;
-	u32 reset_post_deassert_us = 0;
 	int ret;
 
 	phy = devm_kzalloc(&dev->dev, sizeof(struct tpm_tis_i2c_phy),
@@ -360,52 +353,10 @@ static int tpm_tis_i2c_probe(struct i2c_client *dev)
 		return dev_err_probe(&dev->dev, PTR_ERR(reset),
 				     "failed to get reset control\n");
 
-	if (reset) {
-		if (device_property_present(&dev->dev, "reset-duration-us")) {
-			ret = device_property_read_u32(&dev->dev,
-						       "reset-duration-us",
-						       &reset_duration_us);
-			if (ret)
-				return dev_err_probe(&dev->dev, ret,
-						     "failed to read reset duration\n");
-
-			if (!reset_duration_us ||
-			    reset_duration_us > TPM_RESET_DELAY_MAX_US)
-				return dev_err_probe(&dev->dev, -EINVAL,
-						     "invalid reset duration\n");
-		}
-
-		if (device_property_present(&dev->dev,
-					    "reset-post-deassert-us")) {
-			ret = device_property_read_u32(&dev->dev,
-						       "reset-post-deassert-us",
-						       &reset_post_deassert_us);
-			if (ret)
-				return dev_err_probe(&dev->dev, ret,
-						     "failed to read post-reset delay\n");
-
-			if (reset_post_deassert_us > TPM_RESET_DELAY_MAX_US)
-				return dev_err_probe(&dev->dev, -EINVAL,
-						     "invalid post-reset delay\n");
-		}
-
-		if (reset_duration_us) {
-			ret = reset_control_assert(reset);
-			if (ret)
-				return dev_err_probe(&dev->dev, ret,
-						     "failed to assert reset\n");
-
-			fsleep(reset_duration_us);
-		}
-
-		ret = reset_control_deassert(reset);
-		if (ret)
-			return dev_err_probe(&dev->dev, ret,
-					     "failed to deassert reset\n");
-
-		if (reset_post_deassert_us)
-			fsleep(reset_post_deassert_us);
-	}
+	ret = reset_control_deassert(reset);
+	if (ret)
+		return dev_err_probe(&dev->dev, ret,
+				     "failed to deassert reset\n");
 
 	/* must precede all communication with the tpm */
 	ret = tpm_tis_i2c_init_guard_time(phy);
