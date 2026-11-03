@@ -4,6 +4,15 @@
  * Copyright 2025 Variscite Ltd.
  */
 
+/ {
+	carrier_tpm_reset: carrier-tpm-reset {
+		compatible = "gpio-reset";
+		#reset-cells = <0>;
+		reset-gpios = <&pca9534 0 GPIO_ACTIVE_LOW>;
+		initially-in-reset;
+	};
+};
+
 &i2c2 {
 	/* GPIO Expander 3 */
 	pca9534: gpio@22 {
@@ -29,9 +38,9 @@
 &i2c4 {
 	/* TPM */
 	st33ktpm2xi2c: st33ktpm2xi2c@2e {
-		compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
+		compatible = "st,st33ktpm2xi2c", "tcg,tpm-tis-i2c";
 		reg = <0x2e>;
 		label = "tpm";
-		reset-gpios = <&pca9534 0 GPIO_ACTIVE_LOW>;
+		resets = <&carrier_tpm_reset>;
 	};
 };
