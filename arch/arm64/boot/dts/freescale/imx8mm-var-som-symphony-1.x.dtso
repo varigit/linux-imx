@@ -23,6 +23,10 @@
 	status = "disabled";
 };
 
+&carrier_tpm_reset {
+	status = "disabled";
+};
+
 &pcie0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pcie0>;
