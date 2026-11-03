@@ -11,6 +11,17 @@
 #include <dt-bindings/gpio/gpio.h>
 #include "imx8mm-pinfunc.h"
 
+&{/} {
+	tpm_reset: tpm-reset {
+		compatible = "gpio-reset";
+		#reset-cells = <0>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_tpm_reset>;
+		reset-gpios = <&gpio4 31 GPIO_ACTIVE_LOW>;
+		initially-in-reset;
+	};
+};
+
 &i2c1 {
 	#address-cells = <1>;
 	#size-cells = <0>;
@@ -19,11 +30,8 @@
 		status = "okay";
 		compatible = "st,st33ktpm2xi2c", "tcg,tpm-tis-i2c";
 		reg = <0x2e>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_tpm_reset>;
 		label = "tpm";
-		/* active-low TPM reset line. */
-		reset-gpios = <&gpio4 31 GPIO_ACTIVE_LOW>;
+		resets = <&tpm_reset>;
 	};
 };
 
