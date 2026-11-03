@@ -13,6 +13,13 @@
 		stdout-path = &uart4;
 	};
 
+	carrier_tpm_reset: carrier-tpm-reset {
+		compatible = "gpio-reset";
+		#reset-cells = <0>;
+		reset-gpios = <&pca6408 4 GPIO_ACTIVE_LOW>;
+		initially-in-reset;
+	};
+
 	backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&pwm1 0 1000000 0>;
@@ -234,18 +241,6 @@
 			output-low;
 			line-name = "rgb_sel";
 		};
-
-		/*
-		 * The SEC_RSTN line for the TPM2 module has an external
-		 * pull-down, keeping the module in reset by default.
-		 * Drive this signal high to release the TPM2 from reset.
-		 */
-		sec_rstn {
-			gpio-hog;
-			gpios = <4 GPIO_ACTIVE_HIGH>;
-			output-high;
-			line-name = "sec_rstn";
-		};
 	};
 
 	/* DS1337 RTC module */
@@ -257,16 +252,10 @@
 
 	/* TPMv2 */
 	st33ktpm2xi2c: st33ktpm2xi2c@2e {
-		compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
+		compatible = "st,st33ktpm2xi2c", "tcg,tpm-tis-i2c";
 		label = "tpm";
 		reg = <0x2e>;
-		/*
-		 * reset-gpios is not used by the TPM driver, but forces
-		 * probe ordering: ensures GPIO expander is initialized
-		 * and sec_rstn GPIO hog has released TPM from reset
-		 * before the TPM driver probes.
-		 */
-		reset-gpios = <&pca6408 4 GPIO_ACTIVE_LOW>;
+		resets = <&carrier_tpm_reset>;
 		status = "okay";
 	};
 };
