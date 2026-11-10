@@ -30,21 +30,7 @@
 		regulator-max-microvolt = <1100000>;
 		gpio = <&pcal6416 10 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
-		regulator-always-on;
-	};
-
-	hub_grst: regulator-usb-hub-rst {
-		compatible = "regulator-fixed";
-		regulator-name = "hub_grst";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		gpio = <&pcal6416 11 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-
-		vin-supply = <&hub_1v1>;
-		regulator-always-on;
-
-		startup-delay-us = <10000>;   /* 10 ms after enabling reset regulator */
+		startup-delay-us = <10000>;
 	};
 
 	iw612_pwrseq: iw612_pwrseq {
@@ -635,6 +621,27 @@
 	bluetooth_iw61x: bluetooth {
 		compatible = "nxp,88w8987-bt";
 		status = "okay";
+	};
+};
+
+&usb_dwc3_1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	hub_2_0: hub@1 {
+		compatible = "usb451,8142";
+		reg = <1>;
+		peer-hub = <&hub_3_0>;
+		reset-gpios = <&pcal6416 11 GPIO_ACTIVE_LOW>;
+		vdd-supply = <&hub_1v1>;
+	};
+
+	hub_3_0: hub@2 {
+		compatible = "usb451,8140";
+		reg = <2>;
+		peer-hub = <&hub_2_0>;
+		reset-gpios = <&pcal6416 11 GPIO_ACTIVE_LOW>;
+		vdd-supply = <&hub_1v1>;
 	};
 };
 
