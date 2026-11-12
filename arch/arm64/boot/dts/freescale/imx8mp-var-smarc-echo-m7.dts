@@ -31,3 +31,8 @@
 &flexcan1 {
 	status = "disabled";
 };
+
+/* The USB-C role controller is on I2C2. */
+&usb_dwc3_0 {
+	status = "disabled";
+};

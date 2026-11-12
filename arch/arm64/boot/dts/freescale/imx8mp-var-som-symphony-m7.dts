@@ -28,6 +28,11 @@
 	status = "disabled";
 };
 
+/* The PCIe reset GPIO is provided by the expander on I2C4. */
+&pcie {
+	status = "disabled";
+};
+
 &flexcan2 {
 	status = "disabled";
 };
