@@ -9,6 +9,11 @@
 
 / {
 	model = "Variscite DART-MX8M-MINI M4 on Sonata-Board";
+
+	/* The buttons use a GPIO expander on I2C4. */
+	gpio-keys {
+		status = "disabled";
+	};
 };
 
 /* M4 may use ECSPI1, GPIO4, GPT1, I2C4, WDOG1, PWM3, SDMA1/3, and UART3. */
@@ -30,4 +35,23 @@
 
 &ft5x06_ts {
 	/delete-property/ reset-gpios;
+};
+
+/* The camera is unavailable with I2C4 reserved for the M4. */
+&csi {
+	status = "disabled";
+};
+
+&mipi_csi {
+	status = "disabled";
+};
+
+/* The camera reset and power-down use a GPIO expander on I2C4. */
+&ov5640_mipi1 {
+	status = "disabled";
+};
+
+/* The PCIe reset uses a GPIO expander on I2C4. */
+&pcie0 {
+	status = "disabled";
 };
