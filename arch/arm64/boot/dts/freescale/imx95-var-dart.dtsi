@@ -156,12 +156,24 @@
 		};
 	};
 
+	reg_wifi_pwr: regulator-wifi-pwr {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi_pwr>;
+		regulator-name = "WIFI_PWR_EN";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio2 27 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
 	wifi_pwrseq: wifi-pwrseq {
 		compatible = "mmc-pwrseq-simple";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wifi_en>;
 		post-power-on-delay-ms = <100>;
 		power-off-delay-us = <10000>;
-		reset-gpios = <&gpio4 29 GPIO_ACTIVE_LOW>, /* WIFI_RESET */
-			      <&gpio2 27 GPIO_ACTIVE_LOW>; /* WIFI_PWR_EN */
+		reset-gpios = <&gpio4 29 GPIO_ACTIVE_LOW>; /* WIFI_RESET */
 	};
 };
 
@@ -235,11 +247,14 @@
 /* BT */
 &lpuart5 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart5>, <&pinctrl_bt>;
+	pinctrl-0 = <&pinctrl_uart5>;
 	status = "okay";
 
 	bluetooth {
 		compatible = "nxp,88w8987-bt";
+		/* Mux BT_EN to GPIO here: gpio-hog nodes do not apply pinctrl */
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_en>;
 		status = "okay";
 	};
 };
@@ -313,10 +328,11 @@
 /* WiFi */
 &usdhc3 {
 	pinctrl-names = "default","state_100mhz","state_200mhz","sleep";
-	pinctrl-0 = <&pinctrl_usdhc3>, <&pinctrl_usdhc3_gpio>;
-	pinctrl-1 = <&pinctrl_usdhc3_100mhz>, <&pinctrl_usdhc3_gpio>;
-	pinctrl-2 = <&pinctrl_usdhc3_200mhz>, <&pinctrl_usdhc3_gpio>;
-	pinctrl-3 = <&pinctrl_usdhc3>, <&pinctrl_usdhc3_gpio>;
+	pinctrl-0 = <&pinctrl_usdhc3>;
+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
+	pinctrl-3 = <&pinctrl_usdhc3>;
+	vmmc-supply = <&reg_wifi_pwr>;
 	mmc-pwrseq = <&wifi_pwrseq>;
 	bus-width = <4>;
 	non-removable;
@@ -331,7 +347,7 @@
 };
 
 &scmi_iomuxc {
-	pinctrl_bt: btgrp {
+	pinctrl_bt_en: btengrp {
 		fsl,pins = <
 			IMX95_PAD_CCM_CLKO3__GPIO4_IO_BIT28				0x31e
 		>;
@@ -448,10 +464,15 @@
 		>;
 	};
 
-	pinctrl_usdhc3_gpio: usdhc3gpiogrp {
+	pinctrl_wifi_en: wifiengrp {
 		fsl,pins = <
-			IMX95_PAD_GPIO_IO27__GPIO2_IO_BIT27				0x31e
-			IMX95_PAD_CCM_CLKO4__GPIO4_IO_BIT29				0x31e
+			IMX95_PAD_CCM_CLKO4__GPIO4_IO_BIT29				0x31e	/* WIFI_RESET */
+		>;
+	};
+
+	pinctrl_wifi_pwr: wifipwrgrp {
+		fsl,pins = <
+			IMX95_PAD_GPIO_IO27__GPIO2_IO_BIT27				0x31e	/* WIFI_PWR_EN */
 		>;
 	};
 
@@ -495,6 +516,22 @@
 &lpuart5 {
 	bluetooth {
 		compatible = "nxp,88w8987-bt";
+		/* Mux BT_EN to GPIO here: gpio-hog nodes do not apply pinctrl */
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_bt_en>;
 		status = "okay";
+	};
+};
+
+/*
+ * Keep the IW612 Bluetooth enabled, as on DART-MX8M-MINI. The pad is muxed
+ * to GPIO by pinctrl_bt_en in the Bluetooth node.
+ */
+&gpio4 {
+	bt_en_hog: bt-en-hog {
+		gpio-hog;
+		gpios = <28 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "bt_en";
 	};
 };
