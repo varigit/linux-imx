@@ -474,3 +474,13 @@
 		>;
 	};
 };
+
+#include "imx95-android.dtsi"
+
+/* imx95-android.dtsi deletes the Bluetooth node, restore it */
+&lpuart5 {
+	bluetooth {
+		compatible = "nxp,88w8987-bt";
+		status = "okay";
+	};
+};
