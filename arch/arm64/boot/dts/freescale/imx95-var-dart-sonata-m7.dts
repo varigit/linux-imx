@@ -14,40 +14,42 @@
 			reg = <0 0x80000000 0 0x1000000>;
 		};
 	};
+
+	/* SAI3 requires eDMA2, which is reserved for the Cortex-M7. */
+	sound-wm8904 {
+		status = "disabled";
+	};
 };
 
+/* Reserve the peripherals used by the Cortex-M7 firmware. */
 &edma1 {
-	status = "disabled";
+	status = "reserved";
 };
 
 &edma2 {
-	status = "disabled";
+	status = "reserved";
 };
 
 &flexcan1 {
-	status = "disabled";
+	status = "reserved";
 };
 
-&lpi2c1 {
-	/delete-property/ dmas;
-	/delete-property/ dma-names;
-};
-
-&lpi2c2 {
+/* Keep Linux I2C, SPI and UART controllers running in PIO mode. */
+&lpi2c3 {
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
 };
 
 &lpi2c4 {
-	status = "disabled";
+	status = "reserved";
 };
 
-&lpspi1 {
+&lpi2c8 {
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
 };
 
-&lpspi2 {
+&lpspi7 {
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
 };
@@ -57,36 +59,19 @@
 	/delete-property/ dma-names;
 };
 
-&lpuart2 {
-	/delete-property/ dmas;
-	/delete-property/ dma-names;
+&lpuart3 {
+	status = "reserved";
 };
 
-&lpuart3 {
-	status = "disabled";
+&lpuart5 {
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 };
 
 &lpuart8 {
+	status = "reserved";
+};
+
+&sai3 {
 	status = "disabled";
-};
-
-&micfil {
-	/delete-property/ dmas;
-	/delete-property/ dma-names;
-};
-
-&sai1 {
-	/delete-property/ dmas;
-	/delete-property/ dma-names;
-};
-
-/* eDMA2 is reserved for the M7; use PIO for Linux peripherals. */
-&lpi2c3 {
-	/delete-property/ dmas;
-	/delete-property/ dma-names;
-};
-
-&lpi2c8 {
-	/delete-property/ dmas;
-	/delete-property/ dma-names;
 };
