@@ -127,7 +127,7 @@
 		status = "okay";
 
 		panel-timing {
-			clock-frequency = <33000000>;
+			clock-frequency = <24750000>;
 			hactive = <800>;
 			vactive = <480>;
 			hback-porch = <40>;
